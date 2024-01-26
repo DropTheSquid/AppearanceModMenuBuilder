@@ -1,0 +1,3 @@
+[submodule "MassEffectModBuilder"]
+	path = MassEffectModBuilder
+	url = https://github.com/DropTheSquid/MassEffectModBuilder.git

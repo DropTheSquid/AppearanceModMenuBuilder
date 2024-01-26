@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "LE1 merge": {
+      "commandName": "Project",
+      "commandLineArgs": "LE1 merge"
+    },
+    "LE1 dlc": {
+      "commandName": "Project",
+      "commandLineArgs": "LE1 dlc"
+    }
+  }
+}

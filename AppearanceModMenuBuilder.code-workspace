@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../M3Mods/LE1/AppearanceModMenu"
+		},
+		{
+			"path": "../../UDK/Custom/Development/Src/Core"
+		}
+	],
+	"settings": {}
+}

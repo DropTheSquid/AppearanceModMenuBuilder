@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<tlkFile Name="GlobalTlk_tlk">
+	<string>
+		<id>210210210</id>
+		<flags>1</flags>
+		<data>AppearanceModMenu</data>
+	</string>
+	<!--<string>
+		<id>210210211</id>
+		<flags>1</flags>
+		<data>Customize Appearance</data>
+	</string>
+	<string>
+		<id>210210212</id>
+		<flags>1</flags>
+		<data>Do you want to accept the appearances and start the game?
+You can customize characters' appearances at any time from the Inventory screen or by loading Save 1 to replay the prologue.</data>
+	</string>
+	<string>
+		<id>210210213</id>
+		<flags>1</flags>
+		<data>Appearance Modification Menu Settings</data>
+	</string>
+	<string>
+		<id>210210214</id>
+		<flags>1</flags>
+		<data>Casual Appearance</data>
+	</string>
+	<string>
+		<id>210210215</id>
+		<flags>1</flags>
+		<data>Combat Appearance</data>
+	</string>
+	<string>
+		<id>210210216</id>
+		<flags>1</flags>
+		<data>Romance Appearance</data>
+	</string>
+	<string>
+		<id>210210216</id>
+		<flags>1</flags>
+		<data>Romance Appearance</data>
+	</string>
+	<string>
+		<id>210210217</id>
+		<flags>1</flags>
+		<data>Select a Character</data>
+	</string>
+	<string>
+		<id>210210218</id>
+		<flags>1</flags>
+		<data>This is a special stringref which, within AMM, will resolve to Shepard's full name. It's a neat touch. Use this in menu names and stuff</data>
+	</string>-->
+</tlkFile>

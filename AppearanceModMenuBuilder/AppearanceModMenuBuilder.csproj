@@ -1,10 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Folder Include="Resources\LE1\dlc\" />
+		<Folder Include="Resources\LE1\cookedPCConsole\" />
+		<Folder Include="Resources\LE1\Startup\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\MassEffectModBuilder\MassEffectModBuilder\MassEffectModBuilder.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="$(SolutionDir)AppearanceModMenuBuilder\resources\**" CopyToOutputDirectory="Always" />
+	</ItemGroup>
 
 </Project>
