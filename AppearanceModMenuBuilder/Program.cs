@@ -1,17 +1,9 @@
 ﻿using LegendaryExplorerCore.Packages;
-using LegendaryExplorerCore.Unreal;
 using MassEffectModBuilder;
 using MassEffectModBuilder.DLCTasks;
+using MassEffectModBuilder.LEXHelpers;
 using MassEffectModBuilder.MergeTasks;
 using MassEffectModBuilder.UtilityTasks;
-
-ModBuilder LE1ModBuilder = new()
-{
-    Game = MEGame.LE1,
-    ModDLCName = "DLC_MOD_AMM",
-    ModOutputPathBase = @"C:\src\M3Mods\LE1\AppearanceModMenu",
-    StartupName = "Startup_MOD_AMM.pcc"
-};
 
 string game = args.Length > 0 ? args[0] : "";
 string mode = args.Length > 1 ? args[1] : "";
@@ -20,13 +12,22 @@ const string MergeModName = "AMM";
 
 if (game == "")
 {
-    throw new Exception("You must specific the game target in the first command line arg");
+    throw new Exception("You must specify the game target in the first command line arg");
 }
+
 // TODO add more supported targets here eventually
 else if (game != "LE1")
 {
     throw new Exception($"unsupported game target {game}");
 }
+
+ModBuilder LE1ModBuilder = new()
+{
+    Game = MEGame.LE1,
+    ModDLCName = "DLC_MOD_AMM",
+    ModOutputPathBase = @"C:\src\M3Mods\LE1\AppearanceModMenu",
+    StartupName = "Startup_MOD_AMM.pcc"
+};
 
 switch (mode)
 {
@@ -62,32 +63,31 @@ switch (mode)
             .AddTask(new CopyFiles(@"Resources\LE1\dlc", context => context.DLCBaseFolder))
             // copy anyting else I need (eventually?)
             //.AddTask(new CopyFiles(@"Resources\LE1\cookedPCConsole", context => context.CookedPCConsoleFolder))
+            // make sure the startup file has a correct object referencer
             .AddTask(new InitializeStartup())
+            // make sure the merge class is added to the startup file so that the game will not insta crash if the basegame changes are reverted
             .AddTask(new AddMergeClassesToStartup("SFXGame.pcc", "AppearanceUpdater"))
+            // compile some classes into the startup file and 
             .AddTask(new AddClassesToStartup(@"Resources\LE1\Startup"))
+            // add an instance of the class at a hardercoded location, add it to the object referencer
             .AddTask(new CustomTask(context =>
             {
                 var startup = context.GetStartupFile();
 
                 var newExport = ExportCreator.CreateExport(startup, "AMM_AppearanceUpdaterInstance", "AMM_AppearanceUpdater", indexed: false);
 
-                // experiment to add stuff to the object referencer
-                var objectReferencer = startup.FindExport("CombinedStartupReferencer") ?? throw new Exception("Could not find object referencer");
-                var referenceProp = objectReferencer.GetProperties()?.GetProp<ArrayProperty<ObjectProperty>>("ReferencedObjects");
-
-                referenceProp ??= new ArrayProperty<ObjectProperty>("ReferencedObjects");
-                referenceProp.Add(new ObjectProperty(newExport));
-                objectReferencer.WriteProperty(referenceProp);
+                startup.AddToObjectReferencer(newExport);
 
                 startup.Save();
             }))
+            // compile tlks
             .AddTask(new ImportGame1TlkLocaliazation(MELocalization.INT, @"Resources\LE1\tlk\GlobalTlk_tlk.xml"))
             .AddTask(new OutputTlk())
             .Build();
         // TODO
         break;
     case "":
-        throw new Exception($"you must specific the build mode in the second command line arg");
+        throw new Exception($"you must specify the build mode in the second command line arg");
     default:
         throw new Exception($"unsupported build mode {mode}");
 }
