@@ -28,7 +28,8 @@ namespace AppearanceModMenuBuilder.LE1
                     task.RunModTask(context);
                 }))
                 .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "BioPawn.PostBeginPlay", @"Resources\LE1\SFXGame\BioPawn.PostBeginPlay.uc"))
-                // TODO add more merge mod tasks
+                .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "BioSPGame.SpawnPlayerSquadMembers", @"Resources\LE1\SFXGame\BioSPGame.SpawnPlayerSquadMembers.uc"))
+                // TODO add more merge mod tasks to handle fixing the appearance when the game screws it up
                 // generate the actual json for the merge mod
                 .AddTask(new GenerateMergeJson());
         }
