@@ -11,7 +11,7 @@ namespace AppearanceModMenuBuilder.LE1
         public static ModBuilder AddDlcTasks(this ModBuilder builder)
         {
             return builder
-                // clean the DLC directory and any loose files at the root of the mod, like the moddesc
+                // clean the DLC directory
                 .AddTask(new CleanDlcDirectory())
                 // copy the moddesc
                 .AddTask(new CopyFiles(@"Resources\LE1", context => context.ModOutputPathBase))
@@ -24,22 +24,28 @@ namespace AppearanceModMenuBuilder.LE1
                 // make sure the merge class is added to the startup file so that the game will not insta crash if the basegame changes are reverted
                 .AddTask(new AddMergeClassesToStartup("SFXGame.pcc", "AMM_AppearanceUpdater_Base"))
                 // compile some classes into the startup file
-                .AddTask(new AddClassesToFile(@"Resources\LE1\Startup", context => context.GetStartupFile(), ([], @"Resources\LE1\Shared\testClass.uc")))
-                // add an instance of the class at a hardercoded location, add it to the object referencer
+                .AddTask(new AddClassesToFile(
+                    context => context.GetStartupFile(),
+                    LooseClassCompile.GetClassesFromDirectories(@"Resources\LE1\Startup", @"Resources\LE1\Shared")))
+                // add an instance of the handler class at a hardercoded location, add it to the object referencer
                 .AddTask(new CustomTask(context =>
                 {
                     var startup = context.GetStartupFile();
 
                     var newExport = ExportCreator.CreateExport(startup, "AMM_AppearanceUpdater", "AMM_AppearanceUpdater", indexed: true);
 
-                    startup.AddToObjectReferencer(newExport);
+                    startup.GetObjectReferencer().AddToObjectReferencer(newExport);
 
                     startup.Save();
                 }))
-                //.AddTask(new CustomTask(context =>
-                //{
-                //    var dlcFile = MEPackageHandler.CreateAndOpenPackage(Path.Combine(context.CookedPCConsoleFolder, "test.pcc"), context.Game);
-                //}))
+                // add a new file with shared classes in it
+                .AddTask(new CustomTask(context =>
+                {
+                    var dlcFile = MEPackageHandler.CreateAndOpenPackage(Path.Combine(context.CookedPCConsoleFolder, "test.pcc"), context.Game);
+                    dlcFile.AddObjectReferencer();
+                    var compileTask = new AddClassesToFile(_ => dlcFile, LooseClassCompile.GetClassesFromDirectories(@"Resources\LE1\Shared"));
+                    compileTask.RunModTask(context);
+                }))
                 // compile tlks
                 .AddTask(new ImportGame1TlkLocaliazation(MELocalization.INT, @"Resources\LE1\tlk\GlobalTlk_tlk.xml"))
                 .AddTask(new OutputTlk());

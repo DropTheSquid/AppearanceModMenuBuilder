@@ -1,5 +1,6 @@
 ﻿using LegendaryExplorerCore.Packages;
 using MassEffectModBuilder;
+using MassEffectModBuilder.LEXHelpers;
 using MassEffectModBuilder.MergeTasks;
 using MassEffectModBuilder.UtilityTasks;
 
@@ -14,7 +15,7 @@ namespace AppearanceModMenuBuilder.LE1
                 // clear the merge mod directory
                 .AddTask(new CleanMergeModDirectory())
                 // compile the components for a merge mod
-                .AddTask(new AddNewClass("SFXGame.pcc", @"Resources\LE1\SFXGame\AMM_AppearanceUpdater_Base.uc", MergeModName) { SkipMergeMod = true })
+                .AddTask(new AddNewClasses("SFXGame.pcc", MergeModName, LooseClassCompile.GetClassFromFile(@"Resources\LE1\SFXGame\AMM_AppearanceUpdater_Base.uc")) { SkipMergeMod = true })
                 .AddTask(new CustomTask(context =>
                 {
                     // custom task that adds an instance of AppearanceUpdater to the basegame; this can serve as the default instance and also let me check whether the basegame changes are in place
