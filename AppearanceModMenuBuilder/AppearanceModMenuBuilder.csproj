@@ -7,11 +7,6 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<Folder Include="Resources\LE1\dlc\" />
-		<Folder Include="Resources\LE1\cookedPCConsole\" />
-		<Folder Include="Resources\LE1\Startup\" />
-	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\MassEffectModBuilder\MassEffectModBuilder\MassEffectModBuilder.csproj" />

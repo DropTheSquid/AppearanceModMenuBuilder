@@ -1,4 +1,5 @@
-class AMM_AppearanceUpdater extends AppearanceUpdater;
+class AMM_AppearanceUpdater extends AMM_AppearanceUpdater_Base
+    config(Game);
 
 public function UpdatePawnAppearance(BioPawn target, string source)
 {

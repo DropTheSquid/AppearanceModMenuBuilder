@@ -7,6 +7,10 @@
     "LE1 dlc": {
       "commandName": "Project",
       "commandLineArgs": "LE1 dlc"
+    },
+    "LE1 full": {
+      "commandName": "Project",
+      "commandLineArgs": "LE1 full"
     }
   }
 }

@@ -8,5 +8,5 @@ public function PostBeginPlay()
     Mesh.SetTraceBlocking(default.Mesh.BlockZeroExtent, default.Mesh.BlockNonZeroExtent);
     Mesh.SetActorCollision(default.Mesh.CollideActors, default.Mesh.BlockActors, default.Mesh.AlwaysCheckCollision);
 	// added in
-	Class'AppearanceUpdater'.static.UpdatePawnAppearanceStatic(self, "BioPawn.PostBeginPlay");
+	Class'AMM_AppearanceUpdater_Base'.static.UpdatePawnAppearanceStatic(self, "BioPawn.PostBeginPlay");
 }
