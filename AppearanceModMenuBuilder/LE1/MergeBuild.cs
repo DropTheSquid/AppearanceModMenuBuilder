@@ -27,8 +27,14 @@ namespace AppearanceModMenuBuilder.LE1
                     var task = new UpdateAsset("SFXGame.pcc", MergeModName, "AMM_AppearanceUpdater_Base_0", "AMM_AppearanceUpdater_Base_0", mergePkg.FilePath, true);
                     task.RunModTask(context);
                 }))
+                // add hook to cover most pawns who are not modified after loading in
                 .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "BioPawn.PostBeginPlay", @"Resources\LE1\SFXGame\BioPawn.PostBeginPlay.uc"))
+                // hook to cover player and squadmates after they get more dynamically spawned in
                 .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "BioSPGame.SpawnPlayerSquadMembers", @"Resources\LE1\SFXGame\BioSPGame.SpawnPlayerSquadMembers.uc"))
+                // hook to handle romance player pawn
+                .AddTask(new AddOrReplaceOnClass("SFXGame.pcc", MergeModName, "BioSeqAct_CopyPlayerHeadToTarget", @"Resources\LE1\SFXGame\BioSeqAct_CopyPlayerHeadToTarget.Deactivated.uc"))
+                // hhok to handle casual outfits, helmet override, and a variety of cutscene changes
+                .AddTask(new AddOrReplaceOnClass("SFXGame.pcc", MergeModName, "BioSeqAct_ModifyPropertyPawn", @"Resources\LE1\SFXGame\BioSeqAct_ModifyPropertyPawn.Deactivated.uc"))
                 // TODO add more merge mod tasks to handle fixing the appearance when the game screws it up
                 // generate the actual json for the merge mod
                 .AddTask(new GenerateMergeJson());
