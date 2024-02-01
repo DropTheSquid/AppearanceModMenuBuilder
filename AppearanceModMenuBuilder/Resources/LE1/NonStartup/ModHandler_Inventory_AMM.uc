@@ -8,12 +8,13 @@ public function OnPanelAdded()
 {
     Super.OnPanelAdded();
 	LogInternal("New handler added");
+	// TODO save the GUi resources so it stays in memory
 }
 
 // Functions
 public function HandleEvent(byte nCommand, const out array<string> Parameters)
 {
-	// TODO comment what command this is. needs to be looked up in scaleform
+	// this is the event InitializeInventory, which is called at various points during the UI's operation
     if (int(nCommand) == 1)
     {
         ASSetAMMButtonText(string(srCustomizeAppearance));

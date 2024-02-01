@@ -53,6 +53,13 @@ namespace AppearanceModMenuBuilder.LE1
                 pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqEvent_RemoteEvent_12"),
                 pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_0"));
 
+            // another trigger for the ForceTexture remote event, to update after new armor etc is equipped
+            AddPawnAppearanceUpdateSeqAct(
+                pcc,
+                mainSeq,
+                pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqEvent_RemoteEvent_19"),
+                pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_0"));
+
             // and Character Creation, which has several different pawns for no good reason
             AddPawnAppearanceUpdateSeqAct(
                 pcc,
