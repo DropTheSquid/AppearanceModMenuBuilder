@@ -5,12 +5,12 @@
 		<flags>1</flags>
 		<data>AppearanceModMenu</data>
 	</string>
-	<!--<string>
+	<string>
 		<id>210210211</id>
 		<flags>1</flags>
 		<data>Customize Appearance</data>
 	</string>
-	<string>
+	<!--<string>
 		<id>210210212</id>
 		<flags>1</flags>
 		<data>Do you want to accept the appearances and start the game?

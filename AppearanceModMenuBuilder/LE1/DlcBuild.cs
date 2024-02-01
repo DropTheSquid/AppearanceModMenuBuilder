@@ -32,9 +32,10 @@ namespace AppearanceModMenuBuilder.LE1
                 {
                     var startup = context.GetStartupFile();
                     var newExport = ExportCreator.CreateExport(startup, "AMM_AppearanceUpdater", "AMM_AppearanceUpdater", indexed: true);
-                    startup.GetObjectReferencer()!.AddToObjectReferencer(newExport);
+                    startup.GetOrCreateObjectReferencer().AddToObjectReferencer(newExport);
                     startup.Save();
                 }))
+                .AddTask(new BuildInventoryHandlerTask())
                 // add a new file with shared classes in it
                 //.AddTask(new CustomTask(context =>
                 //{
