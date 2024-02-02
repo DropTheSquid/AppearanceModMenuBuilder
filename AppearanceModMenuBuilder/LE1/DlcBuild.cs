@@ -26,7 +26,8 @@ namespace AppearanceModMenuBuilder.LE1
                 // compile some classes into the startup file
                 .AddTask(new AddClassesToFile(
                     context => context.GetStartupFile(),
-                    LooseClassCompile.GetClassesFromDirectories(@"Resources\LE1\Startup", @"Resources\LE1\Shared")))
+                    [..LooseClassCompile.GetClassesFromDirectories(@"Resources\LE1\Startup"),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AMM_Pawn_Parameters.uc", ["Mod_GameContent"])]))
                 // add an instance of the handler class at a hardercoded location, add it to the object referencer
                 .AddTask(new CustomTask(context =>
                 {
