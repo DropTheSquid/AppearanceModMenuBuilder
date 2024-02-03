@@ -1,7 +1,5 @@
-﻿using LegendaryExplorerCore.GameFilesystem;
-using LegendaryExplorerCore.Kismet;
+﻿using LegendaryExplorerCore.Kismet;
 using LegendaryExplorerCore.Packages;
-using LegendaryExplorerCore.Unreal.Classes;
 using MassEffectModBuilder;
 using MassEffectModBuilder.DLCTasks;
 using MassEffectModBuilder.LEXHelpers;
@@ -14,8 +12,7 @@ namespace AppearanceModMenuBuilder.LE1
         public void RunModTask(ModBuilderContext context)
         {
             // I am getting the vanilla version of BIOG_UIWorld and copying it into my mod, then programatically modifying it
-            if (!PackageHelpers.TryGetHighestMountedOfficialFile(UIWorldFileName, context.Game, out var packagePath))
-            if (packagePath == null)
+            if (!PackageHelpers.TryGetHighestMountedOfficialFile(UIWorldFileName, context.Game, out var packagePath) || packagePath == null)
             {
                 throw new Exception($"Could not find basegame file {UIWorldFileName}");
             }

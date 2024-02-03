@@ -1,4 +1,5 @@
 ﻿using LegendaryExplorerCore.Packages;
+using LegendaryExplorerCore.Packages.CloningImportingAndRelinking;
 using MassEffectModBuilder;
 using MassEffectModBuilder.DLCTasks;
 using MassEffectModBuilder.LEXHelpers;
@@ -35,6 +36,27 @@ namespace AppearanceModMenuBuilder.LE1
                     var newExport = ExportCreator.CreateExport(startup, "AMM_AppearanceUpdater", "AMM_AppearanceUpdater", indexed: true);
                     startup.GetOrCreateObjectReferencer().AddToObjectReferencer(newExport);
                     startup.Save();
+                }))
+                // temp adding meshes to startup so I can hopefully fix things freezing periodically
+                .AddTask(new CustomTask(context =>
+                {
+                    if (!PackageHelpers.TryGetHighestMountedOfficialFile("BIOG_HMM_ARM_NKD_R.pcc", context.Game, out var packagePath))
+                    {
+                        throw new Exception("could not find basegmae file BIOG_HMM_ARM_NKD_R");
+                    }
+                    var sourceFile = MEPackageHandler.OpenMEPackage(packagePath);
+                    var targetFile = context.GetStartupFile();
+
+                    var meshExport = sourceFile.FindExport("NKDa.HMM_ARM_NKDa_MDL");
+                    var matExport = sourceFile.FindExport("NKDa.HMM_ARM_NKDa_MAT_1a");
+
+                    EntryExporter.ExportExportToPackage(meshExport, targetFile, out var newMeshExport);
+                    EntryExporter.ExportExportToPackage(matExport, targetFile, out var newMatExport);
+
+                    targetFile.GetObjectReferencer()?.AddToObjectReferencer((ExportEntry)newMeshExport);
+                    targetFile.GetObjectReferencer()?.AddToObjectReferencer((ExportEntry)newMatExport);
+
+                    targetFile.Save();
                 }))
                 .AddTask(new BuildInventoryHandlerTask())
                 // add a new file with shared classes in it

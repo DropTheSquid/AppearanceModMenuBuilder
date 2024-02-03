@@ -17,7 +17,22 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 	{
 		LogInternal("did not find params for pawn"@target@target.Tag);
 	}
-	target.Mesh.SetScale(0.6);
+	TestReplaceMesh(target);
+	// target.Mesh.SetScale(0.6);
+}
+
+private function TestReplaceMesh(BioPawn target)
+{
+	local AppearanceMesh appearanceMesh;
+	local Array<string> matStrings;
+
+	// human male naked mesh; don't worry about it
+	class'AMM_Utilities'.static.LoadSkeletalMesh("BIOG_HMM_ARM_NKD_R.NKDa.HMM_ARM_NKDa_MDL", AppearanceMesh.Mesh);
+
+	// reasonable materials for that mesh
+	matStrings.AddItem("BIOG_HMM_ARM_NKD_R.NKDa.HMM_ARM_NKDa_MAT_1a");
+	class'AMM_Utilities'.static.LoadMaterials(matStrings, AppearanceMesh.Materials);
+	class'AMM_Utilities'.static.ReplaceMesh(target, target.Mesh, AppearanceMesh);
 }
 
 defaultproperties
