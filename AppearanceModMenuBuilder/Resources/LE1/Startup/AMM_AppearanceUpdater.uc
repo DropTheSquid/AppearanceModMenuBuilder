@@ -6,17 +6,19 @@ var Pawn_Parameter_Handler paramHandler;
 public function UpdatePawnAppearance(BioPawn target, string source)
 {
 	local AMM_Pawn_Parameters params;
+	local bool haveParams;
 
-	LogInternal("dlc appearance update for target"@target@"from source"@source);
-	// test that this is having an effect which will be overwritten by native appearance update
-	if (paramHandler.GetPawnParams(target, params))
+	LogInternal("appearance update for target"@PathName(target)@Target.Tag@"from source"@source);
+	if (haveParams)
 	{
-		LogInternal("found params for pawn"@target@target.Tag@params);
+		LogInternal("found params for pawn"@target@target.Tag@params@"Leaving them alone");
 	}
 	else
 	{
 		LogInternal("did not find params for pawn"@target@target.Tag);
+		
 	}
+	// test that this is having an effect which will be overwritten by native appearance update
 	TestReplaceMesh(target);
 	// target.Mesh.SetScale(0.6);
 }

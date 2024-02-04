@@ -29,8 +29,11 @@ namespace AppearanceModMenuBuilder.LE1
                 }))
                 // add hook to cover most pawns who are not modified after loading in
                 .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "BioPawn.PostBeginPlay", @"Resources\LE1\SFXGame\BioPawn.PostBeginPlay.uc"))
-                // hook to cover player and squadmates after they get more dynamically spawned in
-                .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "BioSPGame.SpawnPlayerSquadMembers", @"Resources\LE1\SFXGame\BioSPGame.SpawnPlayerSquadMembers.uc"))
+                // hook to cover player after they get more dynamically spawned in
+                .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "BioSPGame.SpawnPlayer", @"Resources\LE1\SFXGame\BioSPGame.SpawnPlayer.uc"))
+                // hook to cover henchmen after they get more dynamically spawned in
+                // need to update here so it covers invocations of this function from native, such as the SpawnHenchman seq act
+                .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "BioSPGame.SpawnHenchman", @"Resources\LE1\SFXGame\BioSPGame.SpawnHenchman.uc"))
                 // hook to handle romance player pawn
                 .AddTask(new AddOrReplaceOnClass("SFXGame.pcc", MergeModName, "BioSeqAct_CopyPlayerHeadToTarget", @"Resources\LE1\SFXGame\BioSeqAct_CopyPlayerHeadToTarget.Deactivated.uc"))
                 // hhok to handle casual outfits, helmet override, and a variety of cutscene changes
