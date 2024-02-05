@@ -91,31 +91,31 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
     local int i;
     local MaterialInstanceConstant MIC;
     
-    LogInternal("replacing mesh on SMC" @ smc @ PathName(smc.SkeletalMesh) @ "With new mesh" @ PathName(AppearanceMesh.Mesh));
+    // LogInternal("replacing mesh on SMC" @ smc @ PathName(smc.SkeletalMesh) @ "With new mesh" @ PathName(AppearanceMesh.Mesh));
 	if (smc == None)
 	{
-		LogInternal("why is the smc None?"@targetPawn);
 		return;
 	}
     smc.SetSkeletalMesh(AppearanceMesh.Mesh);
 	smc.Materials.Length = AppearanceMesh.Materials.Length;
     for (i = 0; i < AppearanceMesh.Materials.Length; i++)
     {
-		// by reusing the smc, I avoid creating a new one or needing to call SetMaterial, which seems to be the really problematic part
-		// however, this does mean the params stay, so if they had a skintone, it carries over. This will cause problems. 
-		// I could clear all params I suppose. 
-		// also I should make sure this is behaving how I think it is; for example, is Kirahhe green because MIC is none? I don't think so, but gotta make sure
-		// For characters that actually have any params on their MICs, I need to cache that stuff somehow so I can restore it later. 
-		// maybe I do that at the same time I pull stuff off?
-		// could save a list of params by pawn path, and periodically purge the cache if they are no longer in memory
-		// and this gets used to restore if we turn them back to vanilla later. 
-		// this could work
+		// reuse existing MICs when possible; it makes the game much more stable. I am not sure why
+		// TODO cache any params on these that I am wiping out so I can restore them to their vanilla look
+		// even if they have weird specific params
         MIC = MaterialInstanceConstant(smc.Materials[i]);
-        if (MIC != None)
+        if (MIC != None && MIC.outer == targetPawn)
         {
 			MIC.ClearParameterValues();
             MIC.SetParent(AppearanceMesh.Materials[i]);
         }
+		else
+		{
+			// if they do not have a suitable MIC, make one and point it at the right parent.
+			MIC = new (targetPawn) Class'BioMaterialInstanceConstant';
+			MIC.SetParent(AppearanceMesh.Materials[i]);
+			smc.SetMaterial(i, MIC);
+		}
 
 		// old code that caused crashes:
 		// MIC = new (targetPawn) Class'BioMaterialInstanceConstant';

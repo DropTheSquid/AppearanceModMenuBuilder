@@ -28,11 +28,14 @@ private function TestReplaceMesh(BioPawn target)
 	local AppearanceMesh appearanceMesh;
 	local Array<string> matStrings;
 
-	// human male naked mesh; don't worry about it
-	class'AMM_Utilities'.static.LoadSkeletalMesh("BIOG_HMM_ARM_NKD_R.NKDa.HMM_ARM_NKDa_MDL", AppearanceMesh.Mesh);
+	// Tali mesh edited to have 4 materials
+	class'AMM_Utilities'.static.LoadSkeletalMesh("Qrn_Arm_MultiMaterial.LGTa.QRN_FAC_ARM_LGTa_MDL", AppearanceMesh.Mesh);
 
 	// reasonable materials for that mesh
-	matStrings.AddItem("BIOG_HMM_ARM_NKD_R.NKDa.HMM_ARM_NKDa_MAT_1a");
+	matStrings.AddItem("Qrn_Arm_MultiMaterial.LGTa.QRN_FAC_ARM_LGTa_MAT_1a");
+	matStrings.AddItem("Qrn_Arm_MultiMaterial.LGTa.QRN_FAC_ARM_LGTa_MAT_1b");
+	matStrings.AddItem("Qrn_Arm_MultiMaterial.LGTa.QRN_FAC_ARM_LGTa_MAT_2a");
+	matStrings.AddItem("Qrn_Arm_MultiMaterial.LGTa.QRN_FAC_ARM_LGTa_MAT_2b");
 	class'AMM_Utilities'.static.LoadMaterials(matStrings, AppearanceMesh.Materials);
 	class'AMM_Utilities'.static.ReplaceMesh(target, target.Mesh, AppearanceMesh);
 }
