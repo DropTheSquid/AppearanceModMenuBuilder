@@ -37,15 +37,8 @@ namespace AppearanceModMenuBuilder.LE1
                     startup.GetOrCreateObjectReferencer().AddToObjectReferencer(newExport);
                     startup.Save();
                 }))
+                .AddTask(new OutfitSpecListBuilder())
                 .AddTask(new BuildInventoryHandlerTask())
-                // add a new file with shared classes in it
-                //.AddTask(new CustomTask(context =>
-                //{
-                //    var dlcFile = MEPackageHandler.CreateAndOpenPackage(Path.Combine(context.CookedPCConsoleFolder, "test.pcc"), context.Game);
-                //    dlcFile.AddObjectReferencer();
-                //    var compileTask = new AddClassesToFile(_ => dlcFile, LooseClassCompile.GetClassesFromDirectories(@"Resources\LE1\Shared"));
-                //    compileTask.RunModTask(context);
-                //}))
                 .AddTask(new BuildUIWorldTask())
                 // compile tlks
                 .AddTask(new ImportGame1TlkLocaliazation(MELocalization.INT, @"Resources\LE1\tlk\GlobalTlk_tlk.xml"))
