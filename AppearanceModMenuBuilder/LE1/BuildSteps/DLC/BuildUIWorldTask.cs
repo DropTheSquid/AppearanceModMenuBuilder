@@ -4,7 +4,7 @@ using MassEffectModBuilder;
 using MassEffectModBuilder.DLCTasks;
 using MassEffectModBuilder.LEXHelpers;
 
-namespace AppearanceModMenuBuilder.LE1
+namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 {
     internal class BuildUIWorldTask : IModBuilderTask
     {
@@ -38,7 +38,7 @@ namespace AppearanceModMenuBuilder.LE1
 
             // add a sequence action to update whenever the character record changes is set up/changes characters
             AddPawnAppearanceUpdateSeqAct(
-                pcc, 
+                pcc,
                 mainSeq,
                 pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqEvent_RemoteEvent_16"),
                 pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_5"));

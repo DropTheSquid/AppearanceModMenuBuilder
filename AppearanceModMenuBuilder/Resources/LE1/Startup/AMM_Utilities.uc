@@ -1,5 +1,18 @@
 class AMM_Utilities extends Object;
 
+struct PawnAppearanceIds 
+{
+	// the id of the spec to use
+    var int bodyAppearanceId;
+    var int helmetAppearanceId;
+    var int breatherAppearanceId;
+	var appearanceSettings m_appearanceSettings;
+    // various bools which can be encoded in an int for most characters
+    struct appearanceSettings
+    {
+        //TODO override helmet preference, etc
+    };
+};
 enum eGender
 {
     Either,

@@ -22,9 +22,9 @@
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Player]
 ; menuRootPath=amm_submenus.Shepard.AppearanceSubmenu_Shepard
 ; defaultBreatherSpec=-11
-; +AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1500), helmetAppearanceLookup=(plotIntId=1501), breatherAppearanceLookup=(plotIntId=1502), appearanceFlagsLookup=(plotIntId=1503))
-; +AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1504), helmetAppearanceLookup=(plotIntId=1505), breatherAppearanceLookup=(plotIntId=1506), appearanceFlagsLookup=(plotIntId=1507))
-; +AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1508), helmetAppearanceLookup=(plotIntId=1509), breatherAppearanceLookup=(plotIntId=1510), appearanceFlagsLookup=(plotIntId=1511), FrameworkFileName="BIONPC_Player_Naked")
++AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1500), helmetAppearanceLookup=(plotIntId=1501), breatherAppearanceLookup=(plotIntId=1502), appearanceFlagsLookup=(plotIntId=1503))
++AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1504), helmetAppearanceLookup=(plotIntId=1505), breatherAppearanceLookup=(plotIntId=1506), appearanceFlagsLookup=(plotIntId=1507))
++AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1508), helmetAppearanceLookup=(plotIntId=1509), breatherAppearanceLookup=(plotIntId=1510), appearanceFlagsLookup=(plotIntId=1511), FrameworkFileName="BIONPC_Player_Naked")
 ; You can override this to affect the appearance of Shepard in the character creator
 ; CharacterCreatorBodyAppearanceId=44
 
@@ -43,7 +43,7 @@ Tag=Human_Female
 romancePawnTag=Human_Female_Naked
 +alternateTags=Human_Female_Naked
 gender=Female
-; outfitSpecListPath=AMM_OutfitSpec.HMF_OutfitSpecs
+outfitSpecListPath=outfitSpecs.HMF_OutfitSpec
 ; helmetSpecListPath=AMM_HelmetSpec.HMF_HelmetSpecs
 ; breatherSpecListPath=AMM_BreatherSpec.HMF_BreatherSpecs
 

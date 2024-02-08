@@ -6,20 +6,41 @@ var Pawn_Parameter_Handler paramHandler;
 public function UpdatePawnAppearance(BioPawn target, string source)
 {
 	local AMM_Pawn_Parameters params;
-	local bool haveParams;
+	local PawnAppearanceIds appearanceIds;
+	local OutfitSpecListBase outfitList;
+	local OutfitSpecBase outfitSpec;
 
 	LogInternal("appearance update for target"@PathName(target)@Target.Tag@"from source"@source);
-	if (haveParams)
+	if (paramHandler.GetPawnParams(target, params))
 	{
-		LogInternal("found params for pawn"@target@target.Tag@params@"Leaving them alone");
+		LogInternal("found params for pawn"@target@target.Tag@params);
+		LogInternal("appearanceType"@params.GetAppearanceType(target));
+		if (params.GetCurrentAppearanceIds(target, appearanceIds))
+		{
+			LogInternal("appearanceIds"@appearanceIds.bodyAppearanceId@appearanceIds.helmetAppearanceId);
+			outfitList = params.GetOutfitSpecList(target);
+			if (outfitList == None)
+			{
+				LogInternal("Could not get outfit list");
+			}
+			// temp adding 1 for testing
+			if (outfitList != none && outfitList.GetOutfitSpecById(appearanceIds.bodyAppearanceId + 1, outfitSpec))
+			{
+				LogInternal("Got outfit spec"@outfitSpec);
+				outfitSpec.ApplyOutfit(target);
+			}
+		}
+		else
+		{
+			LogInternal("Could not get appearance Ids");
+		}
 	}
 	else
 	{
 		LogInternal("did not find params for pawn"@target@target.Tag);
-		
 	}
 	// test that this is having an effect which will be overwritten by native appearance update
-	TestReplaceMesh(target);
+	//TestReplaceMesh(target);
 	// target.Mesh.SetScale(0.6);
 }
 

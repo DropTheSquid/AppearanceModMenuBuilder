@@ -2,24 +2,24 @@ Class AMM_Pawn_Parameters
     config(Game);
 
 // Types
-// struct AppearanceIdLookups 
-// {
-//     var string appearanceType;
-//     var AppearanceIdLookup bodyAppearanceLookup;
-//     var AppearanceIdLookup helmetAppearanceLookup;
-//     var AppearanceIdLookup breatherAppearanceLookup;
-//     var AppearanceIdLookup appearanceFlagsLookup;
-//     var string FrameworkFileName;
-// };
-// struct AppearanceIdLookup 
-// {
-//     var int plotIntId;
-//     var int defaultAppearanceId;
-// };
+struct AppearanceIdLookups 
+{
+    var string appearanceType;
+    var AppearanceIdLookup bodyAppearanceLookup;
+    var AppearanceIdLookup helmetAppearanceLookup;
+    var AppearanceIdLookup breatherAppearanceLookup;
+    var AppearanceIdLookup appearanceFlagsLookup;
+    // var string FrameworkFileName;
+};
+struct AppearanceIdLookup 
+{
+    var int plotIntId;
+    var int defaultAppearanceId;
+};
 
 // Variables
-// var transient OutfitSpecListBase __outfitSpecList;
-// var config string outfitSpecListPath;
+var transient OutfitSpecListBase __outfitSpecList;
+var config string outfitSpecListPath;
 // var transient HelmetSpecListBase __helmetSpecList;
 // var config string helmetSpecListPath;
 // var transient BreatherSpecListBase __breatherSpecList;
@@ -29,7 +29,7 @@ var config string Tag;
 var config array<string> alternateTags;
 var config eGender gender;
 // var config string menuRootPath;
-// var config array<AppearanceIdLookups> AppearanceIdLookupsList;
+var config array<AppearanceIdLookups> AppearanceIdLookupsList;
 
 // Functions
 public function bool matchesPawn(BioPawn targetPawn)
@@ -53,61 +53,74 @@ public function SpecialHandling(BioPawn targetPawn);
 
 public function string GetAppearanceType(BioPawn targetPawn)
 {
-    return "default";
+    return "";
+}
+public function bool GetAppearanceIds(string appearanceType, out PawnAppearanceIds PawnAppearanceIds)
+{
+	local BioGlobalVariableTable globalVars;
+    local AppearanceIdLookups lookups;
+    
+    globalVars = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo()).GetGlobalVariables();
+    if (!GetAppearanceIdLookup(appearanceType, lookups))
+    {
+        LogInternal("Could not get appearance ids for appearance type" @ appearanceType, );
+        return FALSE;
+    }
+    PawnAppearanceIds.bodyAppearanceId = GetAppearanceIdValue(lookups.bodyAppearanceLookup, globalVars);
+    PawnAppearanceIds.helmetAppearanceId = GetAppearanceIdValue(lookups.helmetAppearanceLookup, globalVars);
+    PawnAppearanceIds.breatherAppearanceId = GetAppearanceIdValue(lookups.breatherAppearanceLookup, globalVars);
+	return true;
+}
+public function bool GetCurrentAppearanceIds(BioPawn targetPawn, out PawnAppearanceIds PawnAppearanceIds)
+{
+	return GetAppearanceIds(GetAppearanceType(targetPawn), PawnAppearanceIds);
 }
 // public function bool GetAppearanceIds(string appearanceType, out PawnAppearanceIds PawnAppearanceIds)
 // {
-//     local BioGlobalVariableTable globalVars;
-//     local AppearanceIdLookups lookups;
-    
-//     globalVars = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo()).GetGlobalVariables();
-//     if (!GetAppearanceIdLookup(appearanceType, lookups))
-//     {
-//         LogInternal("Could not appearance ids for appearance type" @ appearanceType, );
-//         return FALSE;
-//     }
-//     PawnAppearanceIds.bodyAppearanceId = GetAppearanceIdValue(lookups.bodyAppearanceLookup, globalVars);
-//     PawnAppearanceIds.helmetAppearanceId = GetAppearanceIdValue(lookups.helmetAppearanceLookup, globalVars);
-//     PawnAppearanceIds.breatherAppearanceId = GetAppearanceIdValue(lookups.breatherAppearanceLookup, globalVars);
 //     PawnAppearanceIds.appearanceFlags = GetAppearanceIdValue(lookups.appearanceFlagsLookup, globalVars);
 //     return TRUE;
 // }
-// private final function int GetAppearanceIdValue(AppearanceIdLookup lookup, BioGlobalVariableTable globalVars)
-// {
-//     if (lookup.plotIntId != 0)
-//     {
-//         return globalVars.GetInt(lookup.plotIntId);
-//     }
-//     return lookup.defaultAppearanceId;
-// }
-// public function bool GetAppearanceIdLookup(string appearanceType, out AppearanceIdLookups lookups)
-// {
-//     local AppearanceIdLookups currentLookups;
+private final function int GetAppearanceIdValue(AppearanceIdLookup lookup, BioGlobalVariableTable globalVars)
+{
+    if (lookup.plotIntId != 0)
+    {
+        return globalVars.GetInt(lookup.plotIntId);
+    }
+    return lookup.defaultAppearanceId;
+}
+public function bool GetAppearanceIdLookup(string appearanceType, out AppearanceIdLookups lookups)
+{
+    local AppearanceIdLookups currentLookups;
     
-//     foreach AppearanceIdLookupsList(currentLookups, )
-//     {
-//         if (currentLookups.appearanceType ~= appearanceType)
-//         {
-//             lookups = currentLookups;
-//             return TRUE;
-//         }
-//     }
-//     return FALSE;
-// }
-// public function OutfitSpecListBase GetOutfitSpecList(BioPawn targetPawn)
-// {
-//     local Class<OutfitSpecListBase> specListClass;
+    foreach AppearanceIdLookupsList(currentLookups, )
+    {
+        if (currentLookups.appearanceType ~= appearanceType)
+        {
+            lookups = currentLookups;
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+public function OutfitSpecListBase GetOutfitSpecList(BioPawn targetPawn)
+{
+    local Class<OutfitSpecListBase> specListClass;
     
-//     if (__outfitSpecList == None)
-//     {
-//         specListClass = Class<OutfitSpecListBase>(DynamicLoadObject(outfitSpecListPath, Class'Class'));
-//         if (specListClass != None)
-//         {
-//             __outfitSpecList = new specListClass;
-//         }
-//     }
-//     return __outfitSpecList;
-// }
+    if (__outfitSpecList == None)
+    {
+		LogInternal("Getting outfit list for the first time");
+        specListClass = Class<OutfitSpecListBase>(DynamicLoadObject(outfitSpecListPath, Class'Class'));
+        if (specListClass != None)
+        {
+            __outfitSpecList = new specListClass;
+        }
+		else
+		{
+			LogInternal("could not load spec list"@outfitSpecListPath);
+		}
+    }
+    return __outfitSpecList;
+}
 // public function HelmetSpecListBase GetHelmetSpecList(BioPawn targetPawn)
 // {
 //     local Class<HelmetSpecListBase> specListClass;

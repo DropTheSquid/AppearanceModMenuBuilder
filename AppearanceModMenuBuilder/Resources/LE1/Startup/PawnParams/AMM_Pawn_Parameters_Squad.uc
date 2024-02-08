@@ -5,6 +5,7 @@ Class AMM_Pawn_Parameters_Squad extends AMM_Pawn_Parameters
 // Functions
 public function string GetAppearanceType(BioPawn targetPawn)
 {
+	// return casual or cambat based on whether the armor appearance is overriden
     return Class'AMM_Utilities'.static.IsPawnArmorAppearanceOverridden(targetPawn) ? "casual" : "combat";
 }
 // public function bool GetExistingPawn(out BioPawn existingPawn, string appearanceType)

@@ -19,7 +19,7 @@
                     // eg BIOG_QRN_ARM_LGT_R.LGTa.QRN_FAC_ARM_LGTa_MAT_1a
                     // eg BIOG_QRN_ARM_LGT_R.LGTa.QRN_FAC_ARM_LGTa_MAT_1b
                     // where 1 is the variant, and a/b is the material number within the variant
-                    materials[j] = $"{sharedPrefix}_Mat{CharFromInt(j)}";
+                    materials[j] = $"{sharedPrefix}_Mat_{i+1}{CharFromInt(j)}";
                 }
 
                 specs[i] = new SimpleOutfitSpec(id, mesh, materials);
@@ -32,7 +32,6 @@
             }
             else
             {
-
                 return [$"; {Comment}", .. specOutput];
             }
         }
