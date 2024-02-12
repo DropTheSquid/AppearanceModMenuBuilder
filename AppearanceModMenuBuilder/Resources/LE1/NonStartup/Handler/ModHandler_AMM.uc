@@ -54,9 +54,8 @@ public static function CustomUIHandlerInterface LaunchMenu(optional string Param
     
     LogInternal("Launching menu with param" @ Param, );
     manager = GetManager();
-    // EnsureHandlerAdded(manager);
     oNewPanel = manager.CreatePanel(default.MovieTag, FALSE);
-    // oNewPanel.AttachHandler(Class'ModHandler_AMM');
+	oNewPanel.AttachDefaultHandler();
     Handler = ModHandler_AMM(oNewPanel.ScriptHandlers[0]);
     Handler.launchParam = Param;
 	// TODO add this back in
@@ -64,8 +63,8 @@ public static function CustomUIHandlerInterface LaunchMenu(optional string Param
     // {
     //     Handler.RootSubmenuPath = Param;
     // }
-	// TODO is this needed?
-    // oNewPanel.bFullScreen = TRUE;
+	// ensures it isn't transparent during prologue/when launched from sequence
+    oNewPanel.bFullScreen = TRUE;
     manager.AddPanel(oNewPanel, FALSE, FALSE);
     if (Param ~= "prologue")
     {
@@ -73,14 +72,6 @@ public static function CustomUIHandlerInterface LaunchMenu(optional string Param
     }
     return Handler;
 }
-// private static final function EnsureHandlerAdded(MassEffectGuiManager manager)
-// {
-//     comment("Add an entry to the handler library if it is not already there.");
-//     if (manager.HandlerLibrary.Find('Tag', default.HandlerLibraryTemplate.Tag) == -1)
-//     {
-//         manager.HandlerLibrary.AddItem(default.HandlerLibraryTemplate);
-//     }
-// }
 // private final function menuState getMenuState()
 // {
 //     local menuState newState;

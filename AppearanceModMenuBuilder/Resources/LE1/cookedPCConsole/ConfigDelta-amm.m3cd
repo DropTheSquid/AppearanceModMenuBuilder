@@ -5,7 +5,7 @@
 ; remove vanilla inventory handler, add mod one
 -HandlerLibrary=(Tag=Inventory,				ZOrder=252,	HandlerClass="SFXGame.BioSFHandler_PCInventory",			PanelResource="GUI_SF_Inventory.PCInventory",						UseEdgeAA=true,	StrokeStyle=SF_MSS_Normal,	CurvePixelError=1)
 +HandlerLibrary=(Tag=Inventory,ZOrder=252,HandlerClass="Inventory_AMM.ModHandler_Inventory_AMM",PanelResource="Inventory_AMM.GUI.PCInventory",UseEdgeAA=true,StrokeStyle=SF_MSS_Normal,CurvePixelError=1)
-
++HandlerLibrary=(Tag=AMM,ZOrder=357,HandlerClass="AMM.Handler.ModHandler_AMM",PanelResource="AMM.Gui.ModMenu",UseEdgeAA=true,StrokeStyle=SF_MSS_Normal,CurvePixelError=1)
 
 [BioGame.ini PawnParams.Pawn_Parameter_Handler]
 ; add the pawn parameter specs for Shep and the squad

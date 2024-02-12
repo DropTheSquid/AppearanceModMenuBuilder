@@ -7,7 +7,6 @@ var stringref srCustomizeAppearance;
 public function OnPanelAdded()
 {
     Super.OnPanelAdded();
-	LogInternal("New handler added");
 	// TODO save the GUi resources so it stays in memory
 }
 
@@ -35,24 +34,19 @@ public function HandleInputEvent(BioGuiEvents Event, optional float fValue = 1.0
 }
 public function AmmPressEx()
 {
-    // local Class<CustomUIHandlerInterface> AMMClass;
-    // local CustomUIHandlerInterface AMM;
-    // local BioWorldInfo oBWI;
+    local Class<CustomUIHandlerInterface> AMMClass;
+    local CustomUIHandlerInterface AMM;
+    local BioWorldInfo oBWI;
     
-    // oBWI = BioWorldInfo(oWorldInfo);
-    // if (m_oLastSpawnedPawn != None)
-    // {
-    //     LogInternal("Destroying UI World Pawn from inventory before launching AMM" @ m_oLastSpawnedPawn, );
-    //     oBWI.m_UIWorld.DestroyPawn(m_oLastSpawnedPawn);
-    //     LogInternal("pawn destroyed maybe", );
-    // }
-    // AMMClass = Class<CustomUIHandlerInterface>(DynamicLoadObject("AMM.Handler.ModHandler_AMM", Class'Class'));
-    // LogInternal("AMMClass" @ AMMClass, );
-    // AMM = AMMClass.static.LaunchMenu(string(m_oLastSpawnedPawn.Tag));
-    // LogInternal("AMM instance" @ AMM, );
-    // AMM.SetOnCloseCallback(OnAMMClose);
-    // oPanel.SetMovieVisibility(FALSE);
-	LogInternal("You have pushed the AMM button");
+    oBWI = BioWorldInfo(oWorldInfo);
+    if (m_oLastSpawnedPawn != None)
+    {
+        oBWI.m_UIWorld.DestroyPawn(m_oLastSpawnedPawn);
+    }
+    AMMClass = Class<CustomUIHandlerInterface>(DynamicLoadObject("AMM.Handler.ModHandler_AMM", Class'Class'));
+    AMM = AMMClass.static.LaunchMenu(string(m_oLastSpawnedPawn.Tag));
+    AMM.SetOnCloseCallback(OnAMMClose);
+    oPanel.SetMovieVisibility(FALSE);
 }
 public function bool ASIsAMMButtonVisible()
 {
@@ -74,7 +68,6 @@ public function ASSetAMMButtonText(string text)
 public function bool OnAMMClose(BioSFHandler self)
 {
     oPanel.SetMovieVisibility(TRUE);
-    LogInternal("re-spawning UIWorld Pawn after AMM closed" @ m_oLastSpawnedPawn @ oOverrideDisplayCharacter, );
     Update3DCharacter();
     return FALSE;
 }

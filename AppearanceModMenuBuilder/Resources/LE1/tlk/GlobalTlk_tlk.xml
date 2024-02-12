@@ -10,13 +10,13 @@
 		<flags>1</flags>
 		<data>Customize Appearance</data>
 	</string>
-	<!--<string>
+	<string>
 		<id>210210212</id>
 		<flags>1</flags>
 		<data>Do you want to accept the appearances and start the game?
 You can customize characters' appearances at any time from the Inventory screen or by loading Save 1 to replay the prologue.</data>
 	</string>
-	<string>
+	<!--<string>
 		<id>210210213</id>
 		<flags>1</flags>
 		<data>Appearance Modification Menu Settings</data>
