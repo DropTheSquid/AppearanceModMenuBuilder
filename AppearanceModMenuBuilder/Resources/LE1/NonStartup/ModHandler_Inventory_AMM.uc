@@ -3,6 +3,8 @@ Class ModHandler_Inventory_AMM extends BioSFHandler_PCInventory
 
 // Variables
 var stringref srCustomizeAppearance;
+// hold onto a reference to this so it always stays in memory; without this, you can run into issues
+var GFxMovieInfo movieInfo;
 
 public function OnPanelAdded()
 {
@@ -68,6 +70,7 @@ public function ASSetAMMButtonText(string text)
 public function bool OnAMMClose(BioSFHandler self)
 {
     oPanel.SetMovieVisibility(TRUE);
+	// recreates the preview pawn
     Update3DCharacter();
     return FALSE;
 }
@@ -93,4 +96,5 @@ public function OnPanelRemoved()
 defaultproperties
 {
     srCustomizeAppearance = $210210211
+	movieInfo = GFXMovieInfo'GUI.PCInventory'
 }

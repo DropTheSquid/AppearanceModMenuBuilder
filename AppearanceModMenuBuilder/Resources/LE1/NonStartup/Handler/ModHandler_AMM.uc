@@ -34,13 +34,14 @@ var transient float msgBoxFadeInElapsedTime;
 var float msgBoxFadeInTime;
 var int maxOpacity;
 // var transient Pawn_Parameter_Handler paramHandler;
-// var transient AMM_Camera_Handler cameraHandler;
+var transient AMM_Camera_Handler cameraHandler;
 // var bool CameraDebug;
 // var transient int cameraDebugAxis;
 // var transient bool isAppearanceDirty;
 // var transient eMenuHelmetOverride chosenMenuHelmetVisibilityOverride;
 // var transient float TimeToWaitForPawnToSpawn;
 // var transient delegate<PawnHandlerUpdate> __PawnHandlerUpdate__Delegate;
+var GFxMovieInfo movieInfo;
 
 // Functions
 // public delegate function bool PawnHandlerUpdate(float deltaTime);
@@ -118,8 +119,8 @@ public function OnPanelAdded()
     LogInternal("Panel added; launch param:" @ launchParam @ "launched in prologue?"@launchedInPrologue);
     // pawnHandler = new (Self) Class'AMM_Pawn_Handler';
     // paramHandler = new Class'Pawn_Parameter_Handler';
-    // cameraHandler = new Class'AMM_Camera_Handler';
-    // cameraHandler.Initialize(Self);
+    cameraHandler = new Class'AMM_Camera_Handler';
+    cameraHandler.Initialize(Self);
     // if (paramHandler.GetPawnParamsByTag(launchParam, params))
     // {
     //     RootSubmenuPath = params.menuRootPath;
@@ -135,7 +136,7 @@ public function Close()
     // oBWI = BioWorldInfo(oWorldInfo);
     // LogInternal("Cleaning up pawn on close", );
     // pawnHandler.Cleanup();
-    // cameraHandler.Cleanup();
+    cameraHandler.Cleanup();
     // updater = AMM_AppearanceUpdater(Class'AMM_AppearanceUpdater'.static.GetInstance());
     // updater.appearanceTypeOverride = "";
     // updater.tempHelmetOverride = eMenuHelmetOverride.unchanged;
@@ -942,4 +943,6 @@ defaultproperties
     msgBoxFadeInTime = 0.25
     maxOpacity = 120
     // CameraDebug = FALSE
+	movieInfo = GFXMovieInfo'Gui.ModMenu'
+
 }

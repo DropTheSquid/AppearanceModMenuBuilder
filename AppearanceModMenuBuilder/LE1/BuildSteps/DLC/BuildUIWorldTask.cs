@@ -68,12 +68,27 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_33"),
                 pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_30"));
 
-            var NewRE = SequenceObjectCreator.CreateSequenceObject(pcc, "SeqEvent_RemoteEvent");
-            KismetHelper.AddObjectToSequence(NewRE, mainSeq);
-            KismetHelper.CreateOutputLink(NewRE, "Out", charCreateSeqAct);
+            // new remote event to trigger appearance update for character creation on demand
+            var CharCreateRE = SequenceObjectCreator.CreateSequenceObject(pcc, "SeqEvent_RemoteEvent");
+            KismetHelper.AddObjectToSequence(CharCreateRE, mainSeq);
+            KismetHelper.CreateOutputLink(CharCreateRE, "Out", charCreateSeqAct);
 
-            KismetHelper.SetComment(NewRE, "Triggered from code; updates the character create pawn(s)");
-            NewRE.WriteProperty(new NameProperty("re_amm_update_cc", "EventName"));
+            KismetHelper.SetComment(CharCreateRE, "Triggered from code; updates the character create pawn(s)");
+            CharCreateRE.WriteProperty(new NameProperty("re_amm_update_cc", "EventName"));
+
+            // new remote event to trigger the camera position update for inventory setup
+            var cameraInterp = pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqAct_Interp_2") 
+                ?? throw new Exception("Could not find camera interp in UI world to hook up to");
+            var cameraUpdateRE = SequenceObjectCreator.CreateSequenceObject(pcc, "SeqEvent_RemoteEvent");
+            KismetHelper.AddObjectToSequence(cameraUpdateRE, mainSeq);
+            KismetHelper.SetComment(cameraUpdateRE, "Triggered from code; updates the camera position");
+            cameraUpdateRE.WriteProperty(new NameProperty("re_AMM_UpdateCameraPosition", "EventName"));
+            KismetHelper.CreateOutputLink(cameraUpdateRE, "Out", cameraInterp, 0);
+
+            // hide the ugly black rectangle under the pawn's feet
+            var pedestalStaticMesh = pcc.FindExport("TheWorld.PersistentLevel.InterpActor_2.StaticMeshComponent_3")
+                ?? throw new Exception("Could not find pedestal static mesh in UI world to hide");
+            pedestalStaticMesh.WriteProperty(new BoolProperty(true, "HiddenGame"));
 
             pcc.Save();
         }
