@@ -15,7 +15,7 @@ public static function UpdatePawnAppearanceStatic(BioPawn target, string source)
 public function UpdatePawnAppearance(BioPawn target, string source);
 
 // can be called in the DLC mod to make sure the mod is actually installed
-protected static function bool IsMergeModInstalled(out AMM_AppearanceUpdater_Base basegamgeInstance)
+public static function bool IsMergeModInstalled(out AMM_AppearanceUpdater_Base basegamgeInstance)
 {
 	basegamgeInstance = AMM_AppearanceUpdater_Base(FindObject("SFXGame.AMM_AppearanceUpdater_Base_0", Class'Object'));
 	// this lives in SFXGame, so if it is not found, the user has reverted the basegame changes or they were not applied
@@ -23,7 +23,7 @@ protected static function bool IsMergeModInstalled(out AMM_AppearanceUpdater_Bas
 	return basegamgeInstance != None;
 }
 
-protected static function bool IsDlcModInstalled(out AMM_AppearanceUpdater_Base dlcInstance)
+public static function bool IsDlcModInstalled(out AMM_AppearanceUpdater_Base dlcInstance)
 {
 	dlcInstance = AMM_AppearanceUpdater_Base(FindObject("Startup_MOD_AMM.AMM_AppearanceUpdater_0", Class'Object'));
 	// this lives in the startup file, so if it if not found, the DLC mod is not installed

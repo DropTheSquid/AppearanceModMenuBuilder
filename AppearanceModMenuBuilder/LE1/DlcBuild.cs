@@ -21,6 +21,8 @@ namespace AppearanceModMenuBuilder.LE1
                 .AddTask(new CopyFiles(@"Resources\LE1\cookedPCConsole", context => context.CookedPCConsoleFolder))
                 // build the startup file
                 .AddTask(new BuildStartupFile())
+                // build the file with the actual menu in it
+                .AddTask(new BuildMenuFile())
                 // build the inventory file
                 .AddTask(new BuildInventoryHandlerTask())
                 // build UI world
