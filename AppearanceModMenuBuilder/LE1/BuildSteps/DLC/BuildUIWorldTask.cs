@@ -1,5 +1,6 @@
 ﻿using LegendaryExplorerCore.Kismet;
 using LegendaryExplorerCore.Packages;
+using LegendaryExplorerCore.Unreal;
 using MassEffectModBuilder;
 using MassEffectModBuilder.DLCTasks;
 using MassEffectModBuilder.LEXHelpers;
@@ -58,7 +59,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_0"));
 
             // and Character Creation, which has several different pawns for no good reason
-            AddPawnAppearanceUpdateSeqAct(
+            var charCreateSeqAct = AddPawnAppearanceUpdateSeqAct(
                 pcc,
                 mainSeq,
                 pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqEvent_RemoteEvent_22"),
@@ -66,6 +67,13 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_31"),
                 pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_33"),
                 pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_30"));
+
+            var NewRE = SequenceObjectCreator.CreateSequenceObject(pcc, "SeqEvent_RemoteEvent");
+            KismetHelper.AddObjectToSequence(NewRE, mainSeq);
+            KismetHelper.CreateOutputLink(NewRE, "Out", charCreateSeqAct);
+
+            KismetHelper.SetComment(NewRE, "Triggered from code; updates the character create pawn(s)");
+            NewRE.WriteProperty(new NameProperty("re_amm_update_cc", "EventName"));
 
             pcc.Save();
         }

@@ -36,8 +36,10 @@ namespace AppearanceModMenuBuilder.LE1
                 .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "BioSPGame.SpawnHenchman", @"Resources\LE1\SFXGame\BioSPGame.SpawnHenchman.uc"))
                 // hook to handle romance player pawn
                 .AddTask(new AddOrReplaceOnClass("SFXGame.pcc", MergeModName, "BioSeqAct_CopyPlayerHeadToTarget", @"Resources\LE1\SFXGame\BioSeqAct_CopyPlayerHeadToTarget.Deactivated.uc"))
-                // hhok to handle casual outfits, helmet override, and a variety of cutscene changes
+                // hook to handle casual outfits, helmet override, and a variety of cutscene changes
                 .AddTask(new AddOrReplaceOnClass("SFXGame.pcc", MergeModName, "BioSeqAct_ModifyPropertyPawn", @"Resources\LE1\SFXGame\BioSeqAct_ModifyPropertyPawn.Deactivated.uc"))
+                // hook to handle Character creator places that overwrite the appearance
+                .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "BioSFHandler_NewCharacter.UpdateCharacter", @"Resources\LE1\SFXGame\BioSFHandler_NewCharacter.UpdateCharacter.uc"))
                 // TODO add more merge mod tasks to handle fixing the appearance when the game screws it up
                 // generate the actual json for the merge mod
                 .AddTask(new GenerateMergeJson());
