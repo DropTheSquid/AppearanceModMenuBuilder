@@ -2,6 +2,7 @@ class AMM_AppearanceUpdater extends AMM_AppearanceUpdater_Base
     config(Game);
 
 var Pawn_Parameter_Handler paramHandler;
+var transient string outerWorldInfoPath;
 
 public function UpdatePawnAppearance(BioPawn target, string source)
 {
@@ -10,10 +11,11 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 	local OutfitSpecListBase outfitList;
 	local OutfitSpecBase outfitSpec;
 
+	UpdateOuterWorldInfo();
 	LogInternal("appearance update for target"@PathName(target)@Target.Tag@"from source"@source);
 	if (paramHandler.GetPawnParams(target, params))
 	{
-		LogInternal("found params for pawn"@target@target.Tag@params);
+		// LogInternal("found params for pawn"@target@target.Tag@params);
 		LogInternal("appearanceType"@params.GetAppearanceType(target));
 		if (params.GetCurrentAppearanceIds(target, appearanceIds))
 		{
@@ -24,7 +26,7 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 				LogInternal("Could not get outfit list");
 			}
 			// temp adding 1 for testing
-			if (outfitList != none && outfitList.GetOutfitSpecById(appearanceIds.bodyAppearanceId + 1, outfitSpec))
+			if (outfitList != none && outfitList.GetOutfitSpecById(appearanceIds.bodyAppearanceId, outfitSpec))
 			{
 				LogInternal("Got outfit spec"@outfitSpec);
 				outfitSpec.ApplyOutfit(target);
@@ -43,7 +45,35 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 	//TestReplaceMesh(target);
 	// target.Mesh.SetScale(0.6);
 }
+private function UpdateOuterWorldInfo()
+{
+	local BioWorldInfo tempWorldInfo;
 
+    tempWorldInfo = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo());
+    if (tempWorldInfo.GetPackageName() != 'BIOG_UIWorld')
+    {
+        outerWorldInfoPath = PathName(tempWorldInfo);
+    }
+}
+public static function bool IsInCharacterCreator(out BioSFHandler_NewCharacter ncHandler)
+{
+	local AMM_AppearanceUpdater_Base instance;
+	local BioWorldInfo BWI;
+    local string path;
+
+	if (GetInstance(instance))
+	{
+		path = AMM_AppearanceUpdater(instance).outerWorldInfoPath;
+		BWI = BioWorldInfo(FindObject(path, Class'BioWorldInfo'));
+		if (BWI != None)
+		{
+			ncHandler = BWI.m_UIWorld.m_oNCHandler;
+			return ncHandler != None;
+		}
+		return false;
+	}
+	return false;
+}
 private function TestReplaceMesh(BioPawn target)
 {
 	local AppearanceMesh appearanceMesh;

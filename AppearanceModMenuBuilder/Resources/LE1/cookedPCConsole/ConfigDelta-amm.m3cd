@@ -1,4 +1,4 @@
-[BioGame.ini Startup_MOD_AMM.AMM_AppearanceUpdater]
+; [BioGame.ini Startup_MOD_AMM.AMM_AppearanceUpdater]
 
 
 [BioUI.ini Engine.BioSFManager]
@@ -34,9 +34,17 @@ Tag=Human_Male
 romancePawnTag=Human_Male_Naked
 +alternateTags=Human_Male_Naked
 gender=Male
-; outfitSpecListPath=AMM_OutfitSpec.HMM_OutfitSpecs
+outfitSpecListPath=outfitSpecs.HMM_OutfitSpec
 ; helmetSpecListPath=AMM_HelmetSpec.HMM_HelmetSpecs
 ; breatherSpecListPath=AMM_BreatherSpec.HMM_BreatherSpecs
+; testing whether this works. Should not ship with this in
+CharacterCreatorBodyAppearanceId=1
+CharacterCreatorBodyAppearanceId_Soldier=2
+CharacterCreatorBodyAppearanceId_Engineer=3
+CharacterCreatorBodyAppearanceId_Adept=4
+CharacterCreatorBodyAppearanceId_Vanguard=5
+CharacterCreatorBodyAppearanceId_Sentinel=6
+CharacterCreatorBodyAppearanceId_Infiltrator=7
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_FShep]
 Tag=Human_Female
@@ -46,6 +54,14 @@ gender=Female
 outfitSpecListPath=outfitSpecs.HMF_OutfitSpec
 ; helmetSpecListPath=AMM_HelmetSpec.HMF_HelmetSpecs
 ; breatherSpecListPath=AMM_BreatherSpec.HMF_BreatherSpecs
+; testing whether this works. Should not ship with this in
+CharacterCreatorBodyAppearanceId=1
+CharacterCreatorBodyAppearanceId_Soldier=2
+CharacterCreatorBodyAppearanceId_Engineer=3
+CharacterCreatorBodyAppearanceId_Adept=4
+CharacterCreatorBodyAppearanceId_Vanguard=5
+CharacterCreatorBodyAppearanceId_Sentinel=6
+CharacterCreatorBodyAppearanceId_Infiltrator=7
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Kaidan]
 Tag=Hench_HumanMale

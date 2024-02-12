@@ -1,6 +1,15 @@
 ﻿namespace AppearanceModMenuBuilder.LE1.Models
 {
-    public record class VanillaOutfitList(int StartingId, string PackagePrefix, string MeshVariant, string BodyTypePrefix, int ModelVariants, int MaterialsPerVariant, string Comment = "") : IOutfitSpec
+    public enum OutfitType
+    {
+        NKD,
+        CTH,
+        LGT,
+        MED,
+        HVY
+    }
+
+    public record class VanillaOutfitList(int StartingId, string PackagePrefix, OutfitType Type, int MeshVariant, string BodyTypePrefix, int ModelVariants, int MaterialsPerVariant, string Comment = "") : IOutfitSpec
     {
         public IEnumerable<string> OutputOutfitConfigMergeLines()
         {
@@ -9,8 +18,9 @@
             for (int i = 0; i < ModelVariants; i++)
             {
                 var id = StartingId + i;
+                var meshVariantString = Type.ToString() + CharFromInt(MeshVariant);
                 // eg BIOG_QRN_ARM_LGT_R.LGTa.QRN_FAC_ARM_LGTa
-                var sharedPrefix = $"{PackagePrefix}.{MeshVariant}.{BodyTypePrefix}_ARM_{MeshVariant}";
+                var sharedPrefix = $"{PackagePrefix}.{meshVariantString}.{BodyTypePrefix}_ARM_{meshVariantString}";
                 // eg BIOG_QRN_ARM_LGT_R.LGTa.QRN_FAC_ARM_LGTa_MDL
                 var mesh = $"{sharedPrefix}_MDL";
                 string[] materials = new string[MaterialsPerVariant];
