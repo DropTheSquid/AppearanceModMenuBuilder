@@ -29,27 +29,32 @@ public function bool GetPawnParams(BioPawn target, out AMM_Pawn_Parameters param
     }
     return FALSE;
 }
-// public function bool GetPawnParamsByTag(coerce string Tag, out AMM_Pawn_Parameters params)
-// {
-//     local AMM_Pawn_Parameters currentParams;
-//     local BioGlobalVariableTable globalVars;
+public function bool GetPawnParamsByTag(coerce string Tag, out AMM_Pawn_Parameters params)
+{
+    local AMM_Pawn_Parameters currentParams;
+    local BioGlobalVariableTable globalVars;
     
-//     globalVars = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo()).GetGlobalVariables();
-//     populatePawnParams();
-//     if (Tag ~= "Player")
-//     {
-//         Tag = globalVars.GetBool(4639) ? "Human_Female" : "Human_Male";
-//     }
-//     foreach pawnParamList(currentParams, )
-//     {
-//         if (currentParams.Tag ~= Tag)
-//         {
-//             params = currentParams;
-//             return TRUE;
-//         }
-//     }
-//     return FALSE;
-// }
+	LogInternal("getting pawn params by tag"@Tag);
+    populatePawnParams();
+    if (Tag ~= "Player")
+    {
+		globalVars = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo()).GetGlobalVariables();
+        Tag = globalVars.GetBool(4639) ? "Human_Female" : "Human_Male";
+		LogInternal("coerced player tag to"@tag);
+    }
+    foreach pawnParamList(currentParams, )
+    {
+		LogInternal("checking"@currentParams.Tag);
+        if (currentParams.Tag ~= Tag)
+        {
+			LogInternal("found"@currentParams.Tag);
+            params = currentParams;
+            return TRUE;
+        }
+    }
+	LogInternal("not found"@Tag);
+    return FALSE;
+}
 private final function populatePawnParams()
 {
     local PawnParamSpec currentSpec;

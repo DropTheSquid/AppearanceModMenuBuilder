@@ -7,7 +7,7 @@
 +HandlerLibrary=(Tag=Inventory,ZOrder=252,HandlerClass="Inventory_AMM.ModHandler_Inventory_AMM",PanelResource="Inventory_AMM.GUI.PCInventory",UseEdgeAA=true,StrokeStyle=SF_MSS_Normal,CurvePixelError=1)
 +HandlerLibrary=(Tag=AMM,ZOrder=357,HandlerClass="AMM.Handler.ModHandler_AMM",PanelResource="AMM.Gui.ModMenu",UseEdgeAA=true,StrokeStyle=SF_MSS_Normal,CurvePixelError=1)
 
-[BioGame.ini PawnParams.Pawn_Parameter_Handler]
+[BioGame.ini Mod_GameContent.Pawn_Parameter_Handler]
 ; add the pawn parameter specs for Shep and the squad
 +pawnParamSpecs=(parameterPath="PawnParams.AMM_Pawn_Parameters_MShep")
 +pawnParamSpecs=(parameterPath="PawnParams.AMM_Pawn_Parameters_FShep")
@@ -73,7 +73,7 @@ gender=Male
 ; helmetSpecListPath=AMM_HelmetSpec.HMM_HelmetSpecs
 ; breatherSpecListPath=AMM_BreatherSpec.HMM_BreatherSpecs
 ; defaultBreatherSpec=-14
-; +AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1524), helmetAppearanceLookup=(plotIntId=1525), breatherAppearanceLookup=(plotIntId=1526), appearanceFlagsLookup=(plotIntId=1527), FrameworkFileName="BIONPC_Kaidan_Normandy")
++AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1524), helmetAppearanceLookup=(plotIntId=1525), breatherAppearanceLookup=(plotIntId=1526), appearanceFlagsLookup=(plotIntId=1527), FrameworkFileName="BIONPC_Kaidan_Normandy")
 ; +AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1528), helmetAppearanceLookup=(plotIntId=1529), breatherAppearanceLookup=(plotIntId=1530), appearanceFlagsLookup=(plotIntId=1531))
 ; +AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1532), helmetAppearanceLookup=(plotIntId=1533), breatherAppearanceLookup=(plotIntId=1534), appearanceFlagsLookup=(plotIntId=1535), FrameworkFileName="BIONPC_Kaidan_Romance")
 

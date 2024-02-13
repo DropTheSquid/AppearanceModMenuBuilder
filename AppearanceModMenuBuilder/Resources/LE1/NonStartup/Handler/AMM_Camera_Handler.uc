@@ -1,27 +1,29 @@
-Class AMM_Camera_Handler;
+Class AMM_Camera_Handler extends AMM_Handler_Helper;
 
 // Variables
-var transient ModHandler_AMM _outerMenu;
 var transient InterpTrackMove _interp;
-var transient BioWorldInfo BWI;
 var transient Vector _originalCameraPosition;
 var Vector MaxZoomedOutCameraPosition;
 var Vector MaxZoomedInHighCameraPosition;
 var Vector MaxZoomedInLowCameraPosition;
 
 // Functions
-public function Initialize(ModHandler_AMM outerMenu)
+public function Init(ModHandler_AMM outerMenu)
 {
-    _outerMenu = outerMenu;
+	super.Init(outerMenu);
+	// get the interp that determines camera position
     _interp = GetInterpData();
-    BWI = BioWorldInfo(_outerMenu.oWorldInfo);
+	// cache the original camera position
     _originalCameraPosition = GetCameraPositionRaw();
+	// set it where we want it
     SetCameraPositionRaw(MaxZoomedOutCameraPosition);
     CommitCamera();
 }
 public function Cleanup()
 {
+	// restore it to the original position
     SetCameraPositionRaw(_originalCameraPosition);
+	CommitCamera();
 }
 // public function SetCameraPosition(float height, float zoom)
 // {
@@ -62,6 +64,9 @@ public function Vector GetCameraPositionRaw()
 }
 public function CommitCamera()
 {
+	local BioWorldInfo BWI;
+
+	BWI = BioWorldInfo(_outerMenu.oWorldInfo);
     BWI.m_UIWorld.TriggerEvent('re_AMM_UpdateCameraPosition', BWI);
 }
 private final function InterpTrackMove GetInterpData()
@@ -75,7 +80,9 @@ private final function InterpTrackMove GetInterpData()
 //class default properties can be edited in the Properties tab for the class's Default__ object.
 defaultproperties
 {
+	// the position by default for outfits for all characters
     MaxZoomedOutCameraPosition = {X = -1974.85974, Y = -234.663101, Z = -9.0}
+	// Untested, but these are the high/low zoomed in positions
     MaxZoomedInHighCameraPosition = {X = -1316.85974, Y = -142.663101, Z = 95.0}
     MaxZoomedInLowCameraPosition = {X = -1316.85974, Y = -142.663101, Z = -84.0}
 }

@@ -14,10 +14,9 @@ Class ModHandler_AMM extends ModMenuBase;
 
 // Variables
 var name MovieTag;
-// var SFHandlerTemplate HandlerLibraryTemplate;
 var transient string launchParam;
 // var transient BioPawn nonUiWorldPawn;
-// var transient AMM_Pawn_Handler pawnHandler;
+var transient AMM_Pawn_Handler pawnHandler;
 var stringref srBack;
 var stringref srClose;
 var stringref srDefaultActionText;
@@ -33,7 +32,7 @@ var transient BioSFHandler_MessageBox oMsgBox;
 var transient float msgBoxFadeInElapsedTime;
 var float msgBoxFadeInTime;
 var int maxOpacity;
-// var transient Pawn_Parameter_Handler paramHandler;
+var transient Pawn_Parameter_Handler paramHandler;
 var transient AMM_Camera_Handler cameraHandler;
 // var bool CameraDebug;
 // var transient int cameraDebugAxis;
@@ -57,20 +56,21 @@ public static function CustomUIHandlerInterface LaunchMenu(optional string Param
     manager = GetManager();
     oNewPanel = manager.CreatePanel(default.MovieTag, FALSE);
 	oNewPanel.AttachDefaultHandler();
-    Handler = ModHandler_AMM(oNewPanel.ScriptHandlers[0]);
+	// ensures it isn't transparent during prologue/when launched from sequence
+    oNewPanel.bFullScreen = TRUE;
+    Handler = ModHandler_AMM(oNewPanel.GetDefaultHandler());
     Handler.launchParam = Param;
+	if (Param ~= "prologue")
+    {
+        Handler.launchedInPrologue = TRUE;
+    }
 	// TODO add this back in
     // if (Class'ModHandler_AMM'.static.LoadSubmenu(Param) != None)
     // {
     //     Handler.RootSubmenuPath = Param;
     // }
-	// ensures it isn't transparent during prologue/when launched from sequence
-    oNewPanel.bFullScreen = TRUE;
     manager.AddPanel(oNewPanel, FALSE, FALSE);
-    if (Param ~= "prologue")
-    {
-        Handler.launchedInPrologue = TRUE;
-    }
+    
     return Handler;
 }
 // private final function menuState getMenuState()
@@ -107,20 +107,19 @@ private static final function MassEffectGuiManager GetManager()
 {
     return MassEffectGuiManager(BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo()).GetLocalPlayerController().GetScaleFormManager());
 }
-// private static final function Log(string message)
-// {
-//     LogInternal(message, );
-// }
 public function OnPanelAdded()
 {
     local AMM_Pawn_Parameters params;
     
     GetManager().SetupBackground();
     LogInternal("Panel added; launch param:" @ launchParam @ "launched in prologue?"@launchedInPrologue);
-    // pawnHandler = new (Self) Class'AMM_Pawn_Handler';
-    // paramHandler = new Class'Pawn_Parameter_Handler';
+    pawnHandler = new (Self) Class'AMM_Pawn_Handler';
+	pawnHandler.Init(self);
+    paramHandler = new Class'Pawn_Parameter_Handler';
     cameraHandler = new Class'AMM_Camera_Handler';
-    cameraHandler.Initialize(Self);
+    cameraHandler.Init(self);
+	// testing a thing
+	pawnHandler.LoadPawn("Hench_HumanMale", "Casual");
     // if (paramHandler.GetPawnParamsByTag(launchParam, params))
     // {
     //     RootSubmenuPath = params.menuRootPath;
@@ -135,12 +134,35 @@ public function Close()
     
     // oBWI = BioWorldInfo(oWorldInfo);
     // LogInternal("Cleaning up pawn on close", );
-    // pawnHandler.Cleanup();
+    pawnHandler.Cleanup();
     cameraHandler.Cleanup();
     // updater = AMM_AppearanceUpdater(Class'AMM_AppearanceUpdater'.static.GetInstance());
     // updater.appearanceTypeOverride = "";
     // updater.tempHelmetOverride = eMenuHelmetOverride.unchanged;
     Super.Close();
+}
+public function LoadPawn(string tag, string appearanceType)
+{
+	local PawnLoadState state;
+
+	state = pawnHandler.LoadPawn(tag, appearanceType);
+	if (state == PawnLoadState.loaded)
+	{
+		LogInternal("pawn loaded synchronously"@tag@appearanceType);
+	}
+	else if (state == PawnLoadState.loading)
+	{
+		LogInternal("pawn loading asynchronously"@tag@appearanceType);
+	}
+	else if (state == PawnLoadState.failed)
+	{
+		LogInternal("pawn loading asynchronously"@tag@appearanceType);
+	}
+}
+
+public function UpdateAsyncPawnLoadingState(string tag, string appearanceType, PawnLoadState state)
+{
+	LogInternal("UpdateAsyncPawnLoadingState"@tag@appearanceType@state);
 }
 // public function SetRootSubmenu(string submenuPath)
 // {
@@ -184,7 +206,7 @@ public function Close()
 // }
 public event function Update(float fDeltaT)
 {
-    // __PawnHandlerUpdate__Delegate(fDeltaT);
+	pawnHandler.Update(fDeltaT);
 }
 // public function RefreshMenu(optional bool firstEnter = FALSE)
 // {
@@ -546,15 +568,15 @@ public function ASLoadedEx()
     
 	if (!class'AMM_AppearanceUpdater_Base'.static.IsMergeModInstalled(basegameInstance))
 	{
-        LogInternal("Closing menu, as it was installed incorrectly; If you are seeing this, you uninstalled or overwrote the basegame changes of AMM but left the DLC. remove the DLC to finish uninstalling it, or apply the mod again to make it work.", );
+        LogInternal("Closing menu, as it was installed incorrectly; If you are seeing this, you uninstalled or overwrote the basegame changes of AMM but left the DLC. Remove the DLC to finish uninstalling it, or apply the mod again to make it work.", );
         Super.Close();
         return;
     }
     ASSetBackButtonActive(TRUE);
     ASSetRightPaneVisibility(FALSE, FALSE);
     // comment("TODO use a stringref");
-    ASSetAuxButtonText("UNDO");
-    ASSetAuxButtonActive(TRUE);
+    // ASSetAuxButtonText("UNDO");
+    // ASSetAuxButtonActive(TRUE);
     // RefreshMenu(TRUE);
     // if (CameraDebug)
     // {
@@ -943,6 +965,6 @@ defaultproperties
     msgBoxFadeInTime = 0.25
     maxOpacity = 120
     // CameraDebug = FALSE
+	// holding onto this so that it definitely stays in memory. It is suspect otherwise, and it causes weird problems
 	movieInfo = GFXMovieInfo'Gui.ModMenu'
-
 }

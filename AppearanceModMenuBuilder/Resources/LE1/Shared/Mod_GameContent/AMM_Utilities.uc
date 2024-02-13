@@ -144,3 +144,9 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
         // }
     }
 }
+
+public static function bool IsFrameworkInstalled()
+{
+	LogInternal("checking for framework"@DynamicLoadObject("DLC_MOD_Framework_GlobalTlk.GlobalTlk_tlk", Class'Object'));
+	return DynamicLoadObject("DLC_MOD_Framework_GlobalTlk.GlobalTlk_tlk", Class'Object') != None;
+}

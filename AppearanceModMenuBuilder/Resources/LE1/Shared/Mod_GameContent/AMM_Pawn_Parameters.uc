@@ -9,7 +9,7 @@ struct AppearanceIdLookups
     var AppearanceIdLookup helmetAppearanceLookup;
     var AppearanceIdLookup breatherAppearanceLookup;
     var AppearanceIdLookup appearanceFlagsLookup;
-    // var string FrameworkFileName;
+    var string FrameworkFileName;
 };
 struct AppearanceIdLookup 
 {
@@ -49,12 +49,14 @@ public function bool matchesPawn(BioPawn targetPawn)
     }
     return FALSE;
 }
+
 public function SpecialHandling(BioPawn targetPawn);
 
 public function string GetAppearanceType(BioPawn targetPawn)
 {
     return "";
 }
+
 public function bool GetAppearanceIds(string appearanceType, out PawnAppearanceIds PawnAppearanceIds)
 {
 	local BioGlobalVariableTable globalVars;
@@ -71,15 +73,12 @@ public function bool GetAppearanceIds(string appearanceType, out PawnAppearanceI
     PawnAppearanceIds.breatherAppearanceId = GetAppearanceIdValue(lookups.breatherAppearanceLookup, globalVars);
 	return true;
 }
+
 public function bool GetCurrentAppearanceIds(BioPawn targetPawn, out PawnAppearanceIds PawnAppearanceIds)
 {
 	return GetAppearanceIds(GetAppearanceType(targetPawn), PawnAppearanceIds);
 }
-// public function bool GetAppearanceIds(string appearanceType, out PawnAppearanceIds PawnAppearanceIds)
-// {
-//     PawnAppearanceIds.appearanceFlags = GetAppearanceIdValue(lookups.appearanceFlagsLookup, globalVars);
-//     return TRUE;
-// }
+
 private final function int GetAppearanceIdValue(AppearanceIdLookup lookup, BioGlobalVariableTable globalVars)
 {
     if (lookup.plotIntId != 0)
@@ -88,6 +87,7 @@ private final function int GetAppearanceIdValue(AppearanceIdLookup lookup, BioGl
     }
     return lookup.defaultAppearanceId;
 }
+
 public function bool GetAppearanceIdLookup(string appearanceType, out AppearanceIdLookups lookups)
 {
     local AppearanceIdLookups currentLookups;
@@ -102,6 +102,28 @@ public function bool GetAppearanceIdLookup(string appearanceType, out Appearance
     }
     return FALSE;
 }
+
+public function bool GetFrameworkFileForAppearanceType(string appearanceType, out string frameworkFileName)
+{
+	local AppearanceIdLookups currentLookups;
+
+	LogInternal("GetFrameworkFileForAppearanceType checking if framework is installed");
+	if (class'AMM_Utilities'.static.IsFrameworkInstalled())
+	{
+		LogInternal("it is.");
+		foreach AppearanceIdLookupsList(currentLookups, )
+		{
+			if (currentLookups.appearanceType ~= appearanceType)
+			{
+				LogInternal("found lookups for appearance type"@appearanceType@currentLookups.FrameworkFileName);
+				frameworkFileName = currentLookups.FrameworkFileName;
+				return true;
+			}
+		}
+	}
+    return false;
+}
+
 public function OutfitSpecListBase GetOutfitSpecList(BioPawn targetPawn)
 {
     local Class<OutfitSpecListBase> specListClass;
@@ -121,6 +143,7 @@ public function OutfitSpecListBase GetOutfitSpecList(BioPawn targetPawn)
     }
     return __outfitSpecList;
 }
+
 // public function HelmetSpecListBase GetHelmetSpecList(BioPawn targetPawn)
 // {
 //     local Class<HelmetSpecListBase> specListClass;
@@ -153,9 +176,18 @@ public function OutfitSpecListBase GetOutfitSpecList(BioPawn targetPawn)
 // {
 //     return menuRootPath;
 // }
-// public function bool GetExistingPawn(out BioPawn existingPawn, string appearanceType);
 
-// public function bool spawnPawn(string appearanceType, out BioPawn spawnedPawn);
+// find an existing pawn, if possible
+public function bool GetExistingPawn(string appearanceType, out BioPawn existingPawn)
+{
+	return false;
+}
+
+// if there is not an existing pawn, but we can synchronously spawn one, do so
+public function bool SpawnPawn(string appearanceType, out BioPawn spawnedPawn)
+{
+	return false;
+}
 
 //class default properties can be edited in the Properties tab for the class's Default__ object.
 defaultproperties
