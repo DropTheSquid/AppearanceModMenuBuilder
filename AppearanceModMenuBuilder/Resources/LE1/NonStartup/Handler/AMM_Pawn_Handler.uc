@@ -1,5 +1,20 @@
 Class AMM_Pawn_Handler extends AMM_Handler_Helper;
 
+// should I separately keep track of pawns and files? Seems like coupling those is actually making it messy.
+// I need a list of pawns so I can quickly retrive a pawn I have already otherwise fetched
+// I need to know which of those pawns need to be destroyed (because they were spawned in specifically)
+// I need to know what state to put those back into
+
+// so, list of pawns with a bool for destroy plus tag and appearance type for quick lookup. The RealWorldPawnRecord
+
+// separately, I need a list of framework filenames and their original state, purely so that I can restore it at the end
+
+// I could hypothetically load multiple files in the background at once. I would like to keep that possibility open. 
+// it would feel more snappy if I could preload. 
+
+
+
+
 // a way to keep track of the real world pawns we spawn UI world pawns based on
 // some need to be left alone at the end, some need to be destroyed/streamed out
 struct RealWorldPawnRecord
@@ -11,11 +26,6 @@ struct RealWorldPawnRecord
 	var string appearanceType;
 	// if I spawned the pawn in, they should be destroyed at the end; if they were already there, they should not be. 
     var bool shouldBeDestroyed;
-
-	// var bool shouldBeStreamedOut;
-    
-    // var Name streamedInName;
-    // var originalStreamingState originalState;
 };
 enum PawnLoadState
 {
@@ -39,11 +49,16 @@ enum FrameworkStreamState
     visible,
 };
 
+// when we ask to put a file in a specific state. These are the states it can settle in
 enum DesiredStreamingState
 {
+	// it is not present in the levelStreaming list
 	NotPresent,
+	// it is present, but not currently loaded (think future/other parts of the level)
 	Unloaded,
+	// it is loaded, but not visible. think immediate next part of the level
 	Loaded,
+	// it is fully visible and can be used
 	Visible
 };
 
@@ -58,8 +73,9 @@ struct StreamInRequest
 	var FrameworkStreamState originalState;
 	// the state we want this file to be in
 	var DesiredStreamingState desiredState;
-	
+
 	var bool completed;
+
 	struct PawnId
 	{
 		var string tag;
@@ -67,30 +83,54 @@ struct StreamInRequest
 	};
 };
 
-// these will never actually be used, but the compiler insists on them being here
-// var transient delegate<WaitCallback> __WaitCallback__Delegate;
-// var transient delegate<SettledCallback> __SettledCallback__Delegate;
-// var transient delegate<FinishedLoadingPawnDelegate> __FinishedLoadingPawn__Delegate;
-
-// delegates for signature
-// public delegate function bool WaitCallback(PendingFrameworkStreamingRequest request);
-// public delegate function SettledCallback(PendingFrameworkStreamingRequest request, optional bool succeeded);
-
-// var delegate<FinishedLoadingPawnDelegate> __FinishedLoadingPawnDelegate__Delegate;
-
-var transient array<StreamInRequest> inProgressRequests;
-var transient array<StreamInRequest> queuedRequests;
+var transient array<StreamInRequest> streamingRequests;
 
 var transient array<RealWorldPawnRecord> pawnRecords;
-// var transient int currentPawnIndex;
-
-// public delegate function FinishedLoadingPawnDelegate(string tag, string appearanceType, bool successful);
+var transient BioPawn _currentDisplayedPawn;
 
 public function Cleanup()
 {
-	// TODO clean up any pawns that need to be destroyed/streamed out
+	local RealWorldPawnRecord currentRecord;
+	local StreamInRequest currentStreamRequest;
+
+	LogInternal("Doing a cleanup"@pawnRecords.Length@streamingRequests.Length);
+	if (_currentDisplayedPawn != None)
+	{
+		BioWorldInfo(_outerMenu.oWorldInfo).m_UIWorld.DestroyPawn(_currentDisplayedPawn);
+	}
+	// TODO clean up any pawns that need to be destroyed
+	foreach pawnRecords(currentRecord)
+	{
+		if (currentRecord.shouldBeDestroyed)
+		{
+			LogInternal("Destroying pawn"@PathName(currentRecord.pawn));
+			currentRecord.pawn.Destroy();
+		}
+	}
+	pawnRecords.Length = 0;
+	foreach streamingRequests(currentStreamRequest)
+	{
+		switch (currentStreamRequest.originalState)
+		{
+			case FrameworkStreamState.NotPresent:
+				LogInternal("hard streaming out"@currentStreamRequest.frameworkFileName);
+				SetLevelStreamingStatus(currentStreamRequest.frameworkFileName, DesiredStreamingState.NotPresent);
+				break;
+			case FrameworkStreamState.Loaded:
+			case FrameworkStreamState.loading:
+				LogInternal("unloading out"@currentStreamRequest.frameworkFileName);
+				SetLevelStreamingStatus(currentStreamRequest.frameworkFileName, DesiredStreamingState.Loaded);
+				break;
+			case FrameworkStreamState.StreamedOut:
+				LogInternal("soft streaming out"@currentStreamRequest.frameworkFileName);
+				SetLevelStreamingStatus(currentStreamRequest.frameworkFileName, DesiredStreamingState.Unloaded);
+				break;
+		}
+	}
+	streamingRequests.Length = 0;
 }
 
+// load (but do not yet display) a pawn. It will either do it synchronously or asynchronously
 public function PawnLoadState LoadPawn(string tag, string appearanceType)
 {
 	local RealWorldPawnRecord currentRecord;
@@ -103,7 +143,6 @@ public function PawnLoadState LoadPawn(string tag, string appearanceType)
 	{
 		if (currentRecord.tag == tag && currentRecord.appearanceType == appearanceType)
 		{
-			displayPawn(currentRecord.pawn);
 			return PawnLoadState.Loaded;
 		}
 	}
@@ -122,7 +161,6 @@ public function PawnLoadState LoadPawn(string tag, string appearanceType)
 			currentRecord.shouldBeDestroyed = false;
 			pawnRecords.AddItem(currentRecord);
 
-			displayPawn(pawn);
 			return PawnLoadState.loaded;
 		}
 		if (params.SpawnPawn(appearanceType, pawn))
@@ -134,7 +172,6 @@ public function PawnLoadState LoadPawn(string tag, string appearanceType)
 			currentRecord.shouldBeDestroyed = true;
 			pawnRecords.AddItem(currentRecord);
 
-			displayPawn(pawn);
 			return PawnLoadState.Loaded;
 		}
 		// next try streaming the pawn in
@@ -147,14 +184,44 @@ public function PawnLoadState LoadPawn(string tag, string appearanceType)
 		LogInternal("found params but couldn't find pawn for tag"@tag);
 		return PawnLoadState.failed;
 	}
-	// could not find any params for this tag; that's not great. 
+	// could not find any params for this tag; that's not great.
 	LogInternal("Could not find params for tag"@tag);
 	return PawnLoadState.failed;
 }
 
-private function displayPawn(BioPawn pawn)
+// display an already loaded pawn
+public function bool DisplayPawn(string tag, string appearanceType)
 {
-	// TODO
+	local RealWorldPawnRecord currentRecord;
+	local BioWorldInfo oBWI;
+	local BioPawn newDisplayPawn;
+
+	foreach pawnRecords(currentRecord)
+	{
+		if (currentRecord.tag == tag && currentRecord.appearanceType == appearanceType)
+		{
+			newDisplayPawn = currentRecord.pawn;
+			break;
+		}
+	}
+	oBWI = BioWorldInfo(_outerMenu.oWorldInfo);
+	if (newDisplayPawn == _currentDisplayedPawn)
+	{
+		// nothing to do
+		return true;
+	}
+	if (newDisplayPawn != _currentDisplayedPawn)
+	{
+		if (_currentDisplayedPawn != None)
+		{
+			oBWI.m_UIWorld.DestroyPawn(_currentDisplayedPawn);
+		}
+		_currentDisplayedPawn = newDisplayPawn;
+		oBWI.m_UIWorld.TriggerEvent('SetupInventory', _outerMenu.oWorldInfo);
+		oBWI.m_UIWorld.spawnPawn(_currentDisplayedPawn, 'InventorySpawnPoint', 'InventoryPawn');
+		return true;
+	}
+	return false;
 }
 
 private function LoadFrameworkFile(string tag, string appearanceType, string fileName)
@@ -164,7 +231,7 @@ private function LoadFrameworkFile(string tag, string appearanceType, string fil
 
 	LogInternal("LoadFrameworkFile"@tag@appearanceType@Filename);
 	// first, check if we already have a pending or in progress request for this
-	if (GetAsyncRequest(inProgressRequests, fileName, request, i))
+	if (GetAsyncRequest(streamingRequests, fileName, request, i))
 	{
 		// there is already a request in progress. See if it already has the requested tag and appearance type
 		// TODO support more than one
@@ -177,8 +244,9 @@ private function LoadFrameworkFile(string tag, string appearanceType, string fil
 	request.pawnIds[0].appearanceType = appearanceType;
 	request.originalState = GetFileStreamingState(fileName);
 	request.desiredState = DesiredStreamingState.visible;
-	inProgressRequests.AddItem(request);
+	streamingRequests.AddItem(request);
 }
+
 private function bool GetAsyncRequest(array<StreamInRequest> requests, string fileName, out StreamInRequest request, out int index)
 {
 	local int i;
@@ -229,132 +297,6 @@ private final function FrameworkStreamState GetFileStreamingState(string fileNam
     tempLevelStreaming = None;
     return FrameworkStreamState.NotPresent;
 }
-// private final function bool StreamInPawn(string tag, string appearanceType, string fileName)
-// {
-// 	local FrameworkStreamState originalState;
-// 	local StreamInRequest request;
-
-//     originalState = GetFileStreamingState(fileName);
-
-// 	request.pawnIds.Length = 1;
-//     // if (tempLevelStreaming.bShouldBeVisible)
-//     // {
-//     //     LogInternal("file" @ fileName @ "was already visible", );
-//     //     originalState = state;
-//     // }
-//     // else if (tempLevelStreaming.bShouldBeLoaded)
-//     // {
-//     //     LogInternal("file" @ fileName @ "was already loaded", );
-//     //     originalState = state;
-//     // }
-//     // else if (tempLevelStreaming != None)
-//     // {
-//     //     LogInternal("file" @ fileName @ "was not streamed in", );
-//     //     originalState = originalStreamingState.NotLoaded;
-//     // }
-//     // else
-//     // {
-//     //     LogInternal("file" @ fileName @ "was not present in the LevelStreaming list", );
-//     //     originalState = originalStreamingState.NotPresent;
-//     // }
-//     // if (state == FrameworkStreamState.NotStreamedIn)
-//     // {
-//     //     LogInternal("Starting to load in file" @ fileName $ "; waiting up to 2 seconds", );
-//     //     SetLevelStreamingStatus(Name(fileName), TRUE, FALSE);
-//     //     frameworkFileToWaitFor = fileName;
-//     //     pawnKeysToWaitFor = pawnKeys;
-//     //     appearanceTypeToWaitFor = appearanceType;
-//     //     WaitFor(2.0, IsFrameworkFileLoaded, FileIsLoaded);
-//     //     return FALSE;
-//     // }
-//     // else if (state == FrameworkStreamState.Loading)
-//     // {
-//     //     LogInternal("file is loading already. Not sure how we got here, but it's not an error case, just a weird one", );
-//     //     frameworkFileToWaitFor = fileName;
-//     //     pawnKeysToWaitFor = pawnKeys;
-//     //     appearanceTypeToWaitFor = appearanceType;
-//     //     WaitFor(2.0, IsFrameworkFileLoaded, FileIsLoaded);
-//     //     return FALSE;
-//     // }
-//     // else if (state == FrameworkStreamState.Loaded)
-//     // {
-//     //     LogInternal("file is loaded already. make it visible", );
-//     //     SetLevelStreamingStatus(Name(fileName), TRUE, TRUE);
-//     //     frameworkFileToWaitFor = fileName;
-//     //     pawnKeysToWaitFor = pawnKeys;
-//     //     appearanceTypeToWaitFor = appearanceType;
-//     //     WaitFor(2.0, IsFrameworkFileVisible, FileIsVisible);
-//     //     return FALSE;
-//     // }
-//     // else if (state == FrameworkStreamState.BecomingVisible)
-//     // {
-//     //     LogInternal("File is becoming visible. Again, an odd one we are very unlikely to hit, but not an error case", );
-//     //     frameworkFileToWaitFor = fileName;
-//     //     pawnKeysToWaitFor = pawnKeys;
-//     //     appearanceTypeToWaitFor = appearanceType;
-//     //     WaitFor(2.0, IsFrameworkFileVisible, FileIsVisible);
-//     //     return FALSE;
-//     // }
-//     // else if (state == FrameworkStreamState.visible)
-//     // {
-//     //     LogInternal("Pawn is already streamed in.", );
-//     //     frameworkFileToWaitFor = fileName;
-//     //     pawnKeysToWaitFor = pawnKeys;
-//     //     appearanceTypeToWaitFor = appearanceType;
-//     //     OriginalStreamedInState = 4;
-//     //     VisibleWaitDone();
-//     //     return TRUE;
-//     // }
-//     // return FALSE;
-// }
-// private function bool GetCurrentDisplayPawn(out RealWorldPawnRecord record)
-// {
-// 	if (currentPawnIndex >= 0 && currentPawnIndex < pawnRecords.Length)
-// 	{
-// 		record = pawnRecords[currentPawnIndex];
-// 		return true;
-// 	}
-// 	return false;
-// }
-
-// private final function WaitFor(float timeout, delegate<WaitCallback> callback, optional delegate<SettledCallback> endCallback)
-// {
-//     LogInternal("WaitFor" @ timeout @ callback @ endCallback, );
-//     if (callback())
-//     {
-//         LogInternal("WaitFor ended synchronously", );
-//         SettledCallback(TRUE);
-//         return;
-//     }
-//     remainingWaitTime = timeout;
-//     __WaitCallback__Delegate = callback;
-//     __SettledCallback__Delegate = endCallback;
-//     _outerMenu.__PawnHandlerUpdate__Delegate = WaitUpdate;
-// }
-// private final function bool WaitUpdate(float fDeltaT)
-// {
-//     LogInternal("WaitUpdate" @ remainingWaitTime @ __WaitCallback__Delegate @ __SettledCallback__Delegate, );
-//     if (remainingWaitTime > 0.0)
-//     {
-//         if (__WaitCallback__Delegate())
-//         {
-//             LogInternal("WaitFor ended asynchronously", );
-//             __SettledCallback__Delegate(TRUE);
-//         }
-//         else
-//         {
-//             remainingWaitTime -= fDeltaT;
-//         }
-//     }
-//     else
-//     {
-//         LogInternal("WaitFor timed out", );
-//         remainingWaitTime = 0.0;
-//         __SettledCallback__Delegate(FALSE);
-//     }
-//     return TRUE;
-// }
-
 
 public function update(float fDeltaT)
 {
@@ -363,10 +305,15 @@ public function update(float fDeltaT)
 	local LevelStreaming tempLevelStreaming;
 	local PawnId currentPawnId;
 	local int i;
-	local array<StreamInRequest> stillInProgress;
+	local BioPawn pawn;
+	local RealWorldPawnRecord newRecord;
 
-	foreach inProgressRequests(currentRequest, i)
+	foreach streamingRequests(currentRequest, i)
 	{
+		if (currentRequest.completed)
+		{
+			continue;
+		}
 		currentState = GetFileStreamingState(currentRequest.frameworkFileName, tempLevelStreaming);
 		LogInternal("update"@currentRequest.FrameworkFileName@currentState);
 		if (currentRequest.desiredState == DesiredStreamingState.visible)
@@ -377,9 +324,18 @@ public function update(float fDeltaT)
 					// good news! this is now in the desired state
 					foreach currentRequest.PawnIds(currentPawnId)
 					{
-						_outerMenu.UpdateAsyncPawnLoadingState(currentPawnId.tag, currentPawnId.appearanceType, PawnLoadState.loaded);
+						if (FindStreamedInPawn(currentPawnId.tag, currentRequest.FrameworkFileName, pawn))
+						{
+							newRecord.Tag = currentPawnId.tag;
+							newRecord.appearanceType = currentPawnId.appearanceType;
+							newRecord.Pawn = pawn;
+							// don't destroy pawns that are streamed in
+							newRecord.shouldBeDestroyed = false;
+							pawnRecords.AddItem(newRecord);
+							_outerMenu.UpdateAsyncPawnLoadingState(currentPawnId.tag, currentPawnId.appearanceType, PawnLoadState.loaded);
+							streamingRequests[i].completed = true;
+						}
 					}
-					inProgressRequests[i].completed = true;
 					break;
 				case FrameworkStreamState.BecomingVisible:
 				case FrameworkStreamState.loading:
@@ -418,7 +374,7 @@ public function update(float fDeltaT)
 					// This is now in the desired state!
 					// TODO do I need to do anything?
 					LogInternal("file"@currentRequest.frameworkFileName@"Is loaded, as desired");
-					inProgressRequests[i].completed = true;
+					streamingRequests[i].completed = true;
 					break;
 				case FrameworkStreamState.NotPresent:
 				case FrameworkStreamState.StreamedOut:
@@ -432,44 +388,33 @@ public function update(float fDeltaT)
 		else if (currentRequest.desiredState == DesiredStreamingState.Unloaded)
 		{
 			SetLevelStreamingStatus(currentRequest.frameworkFileName, DesiredStreamingState.Unloaded);
-			inProgressRequests[i].completed = true;
+			streamingRequests[i].completed = true;
 		}
 		else
 		{
 			SetLevelStreamingStatus(currentRequest.frameworkFileName, DesiredStreamingState.NotPresent);
-			inProgressRequests[i].completed = true;
-		}
-		if (!inProgressRequests[i].completed)
-		{
-			stillInProgress.AddItem(inProgressRequests[i]);
+			streamingRequests[i].completed = true;
 		}
 	}
-
-	// TODO now clear the completed ones
-	inProgressRequests = stillInProgress;
 }
-// {
-// 	local PendingFrameworkStreamingRequest currentRequest;
-// 	local delegate<WaitCallback> currentWaitCallback;
-// 	local delegate<SettledCallback> curentSettledCallback;
 
-// 	foreach inProgressRequests(currentRequest)
-// 	{
-// 		currentRequest.remainingWaitTime -= fDeltaT;
-// 		currentWaitCallback = currentRequest.WaitCallback;
-// 		curentSettledCallback = currentRequest.SettledCallback;
-// 		if (currentWaitCallback(currentRequest))
-// 		{
-// 			curentSettledCallback(currentRequest, true);
-// 			currentRequest.remainingWaitTime = -1;
-// 			// TODO remove the in progress request; hard to do while it is iterating
-// 		}
-// 		if (currentRequest.remainingWaitTime < 0)
-// 		{
-// 			curentSettledCallback(currentRequest, false);
-// 		}
-// 	}
-// }
+private function bool FindStreamedInPawn(string tag, string fileName, out BioPawn foundPawn)
+{
+    local Actor tempActor;
+    
+    // LogInternal("trying to find frameworked NPC" @ pawnKeys[0] @ fileName @ PathName(BioWorldInfo(Outer.oWorldInfo)), );
+    foreach BioWorldInfo(_outerMenu.oWorldInfo).AllActors(Class'Actor', tempActor, )
+    {
+        if (BioPawn(tempActor) != None && string(tempActor.GetPackageName()) ~= fileName && string(tempActor.Tag) ~= tag)
+        {
+			foundPawn = BioPawn(tempActor);
+			// LogInternal("found pawn" @ PathName(foundPawn) @ foundPawn.Tag, );
+			return TRUE;
+        }
+    }
+    // LogInternal("Could not find NPC", );
+    return FALSE;
+}
 
 private final function SetLevelStreamingStatus(coerce Name packageName, DesiredStreamingState desiredState)
 {
@@ -515,72 +460,11 @@ private final function HardUnload(coerce string fileName)
     for (i = 0; i < _outerMenu.oWorldInfo.StreamingLevels.Length; i++)
     {
         tempLevelStreaming = _outerMenu.oWorldInfo.StreamingLevels[i];
-        // if (tempLevelStreaming.OwningWorldName == 'None')
-        // {
-        //     LogInternal("note: LSK" @ tempLevelStreaming.packageName @ "has owning level None", );
-        // }
         if (string(tempLevelStreaming.packageName) ~= fileName)
         {
-            // LogInternal("normal unloading before hard unloading", );
             SetLevelStreamingStatus(tempLevelStreaming.packageName, DesiredStreamingState.Unloaded);
-			// LogInternal("removing from StreamingLevels list", );
 			_outerMenu.oWorldInfo.StreamingLevels.Remove(i, 1);
             return;
         }
     }
-    // LogInternal("no levelStreaming found to hard stream out", );
 }
-// private function HardLoad(coerce name fileName)
-// {
-//     local LevelStreamingKismet tempLevelStreaming;
-
-// 	tempLevelStreaming = new (_outerMenu.oWorldInfo.Outer.Outer) class'LevelStreamingKismet';
-    
-//     tempLevelStreaming.packageName = fileName;
-//     _outerMenu.oWorldInfo.StreamingLevels.AddItem(tempLevelStreaming);
-// }
-// public function SetupUIWorldPawn(string pawnKey, string appearanceType)
-// {
-    // local BioWorldInfo oBWI;
-    // local AMM_Pawn_Parameters params;
-    
-    // if (pawnKey ~= "None" && GetCurrentDisplayPawn() != None)
-    // {
-    //     LogInternal("destroying UI world pawn", );
-    //     oBWI = BioWorldInfo(_outerMenu.oWorldInfo);
-    //     oBWI.m_UIWorld.DestroyPawn(currentDisplayPawn.Pawn);
-    //     currentDisplayPawn.Pawn = None;
-    //     currentDisplayPawn.spawned = FALSE;
-    //     currentDisplayPawn.Tag = "";
-    //     currentDisplayPawn.appearanceType = "";
-    //     currentDisplayPawn.streamedInName = 'None';
-    // }
-    // if (pawnKey == currentDisplayPawn.Tag && appearanceType == currentDisplayPawn.appearanceType)
-    // {
-    //     LogInternal("No need to change UI world pawn", );
-    //     return;
-    // }
-    // if (_outerMenu.paramHandler.GetPawnParamsByTag(pawnKey, params))
-    // {
-    //     if (currentDisplayPawn.Pawn != None)
-    //     {
-    //         LogInternal("destroying pawn based on real world pawn", );
-    //         oBWI = BioWorldInfo(_outerMenu.oWorldInfo);
-    //         oBWI.m_UIWorld.DestroyPawn(currentDisplayPawn.Pawn);
-    //     }
-    //     if (GetPawn(pawnKey, params, appearanceType))
-    //     {
-    //         LogInternal("got a pawn; making a UI world version", );
-    //         spawnUIWorldPawn();
-    //         LogInternal("spawned", );
-    //     }
-    //     else
-    //     {
-    //         LogInternal("Could not get real world pawn to spawn UI world pawn based on it", );
-    //     }
-    // }
-    // else
-    // {
-    //     LogInternal("Could not find params for tag" @ pawnKey, );
-    // }
-// }

@@ -118,8 +118,7 @@ public function OnPanelAdded()
     paramHandler = new Class'Pawn_Parameter_Handler';
     cameraHandler = new Class'AMM_Camera_Handler';
     cameraHandler.Init(self);
-	// testing a thing
-	pawnHandler.LoadPawn("Hench_HumanMale", "Casual");
+	TestStreamPawn();
     // if (paramHandler.GetPawnParamsByTag(launchParam, params))
     // {
     //     RootSubmenuPath = params.menuRootPath;
@@ -127,6 +126,28 @@ public function OnPanelAdded()
     // SetRootSubmenu(RootSubmenuPath);
     Super.OnPanelAdded();
 }
+
+private function TestStreamPawn()
+{
+	local PawnLoadState state;
+
+	// testing a thing
+	state = pawnHandler.LoadPawn("Hench_HumanMale", "Casual");
+	if (state == PawnLoadState.Loaded)
+	{
+		LogInternal("Kaidan is already loaded");
+		pawnhandler.DisplayPawn("Hench_HumanMale", "Casual");
+	}
+	else if (state == PawnLoadState.failed)
+	{
+		LogInternal("How did this fail????");
+	}
+	else
+	{
+		LogInternal("Async loading Kaidan");
+	}
+}
+
 public function Close()
 {
     // local BioWorldInfo oBWI;
@@ -163,6 +184,7 @@ public function LoadPawn(string tag, string appearanceType)
 public function UpdateAsyncPawnLoadingState(string tag, string appearanceType, PawnLoadState state)
 {
 	LogInternal("UpdateAsyncPawnLoadingState"@tag@appearanceType@state);
+	TestStreamPawn();
 }
 // public function SetRootSubmenu(string submenuPath)
 // {
