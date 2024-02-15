@@ -28,7 +28,7 @@ var config string outfitSpecListPath;
 var config string Tag;
 var config array<string> alternateTags;
 var config eGender gender;
-// var config string menuRootPath;
+var config string menuRootPath;
 var config array<AppearanceIdLookups> AppearanceIdLookupsList;
 
 // Functions

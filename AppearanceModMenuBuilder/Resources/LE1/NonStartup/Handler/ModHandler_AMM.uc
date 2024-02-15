@@ -49,10 +49,10 @@ public static function CustomUIHandlerInterface LaunchMenu(optional string Param
     {
         Handler.launchedInPrologue = TRUE;
     }
-    // if (Class'ModHandler_AMM'.static.LoadSubmenu(Param) != None)
-    // {
-    //     Handler.RootSubmenuPath = Param;
-    // }
+    if (Class'ModHandler_AMM'.static.LoadSubmenu(Param) != None)
+    {
+        Handler.RootSubmenuPath = Param;
+    }
     manager.AddPanel(oNewPanel, FALSE, FALSE);
 
     return Handler;
@@ -106,11 +106,10 @@ public function OnPanelAdded()
 	// testPrestreaming();
 	// // setup buttons for testing displaying the loaded pawns
 	// SetupTestButtons();
-	// TODO add this back in
-    // if (paramHandler.GetPawnParamsByTag(launchParam, params))
-    // {
-    //     RootSubmenuPath = params.menuRootPath;
-    // }
+    if (paramHandler.GetPawnParamsByTag(launchParam, params))
+    {
+        RootSubmenuPath = params.menuRootPath;
+    }
     SetRootSubmenu(RootSubmenuPath);
     Super.OnPanelAdded();
 }
