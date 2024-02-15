@@ -20,56 +20,54 @@
 +pawnParamSpecs=(parameterPath="PawnParams.AMM_Pawn_Parameters_Jenkins")
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Player]
-; menuRootPath=amm_submenus.Shepard.AppearanceSubmenu_Shepard
+menuRootPath=amm_submenus.Shepard.AppearanceSubmenu_Shepard
 ; defaultBreatherSpec=-11
 +AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1500), helmetAppearanceLookup=(plotIntId=1501), breatherAppearanceLookup=(plotIntId=1502), appearanceFlagsLookup=(plotIntId=1503))
 +AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1504), helmetAppearanceLookup=(plotIntId=1505), breatherAppearanceLookup=(plotIntId=1506), appearanceFlagsLookup=(plotIntId=1507))
 +AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1508), helmetAppearanceLookup=(plotIntId=1509), breatherAppearanceLookup=(plotIntId=1510), appearanceFlagsLookup=(plotIntId=1511), FrameworkFileName="BIONPC_Player_Naked")
-; You can override this to affect the appearance of Shepard in the character creator
-; CharacterCreatorBodyAppearanceId=44
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_MShep]
 Tag=Human_Male
 ; TODO it would be nice if I didn't have to duplicate this
 romancePawnTag=Human_Male_Naked
-; +alternateTags=Human_Male_Naked
++alternateTags=Human_Male_Naked
 gender=Male
 outfitSpecListPath=outfitSpecs.HMM_OutfitSpec
 ; helmetSpecListPath=AMM_HelmetSpec.HMM_HelmetSpecs
 ; breatherSpecListPath=AMM_BreatherSpec.HMM_BreatherSpecs
 ; testing whether this works. Should not ship with this in
-CharacterCreatorBodyAppearanceId=1
-CharacterCreatorBodyAppearanceId_Soldier=2
-CharacterCreatorBodyAppearanceId_Engineer=3
-CharacterCreatorBodyAppearanceId_Adept=4
-CharacterCreatorBodyAppearanceId_Vanguard=5
-CharacterCreatorBodyAppearanceId_Sentinel=6
-CharacterCreatorBodyAppearanceId_Infiltrator=7
+; CharacterCreatorBodyAppearanceId=1
+; CharacterCreatorBodyAppearanceId_Soldier=2
+; CharacterCreatorBodyAppearanceId_Engineer=3
+; CharacterCreatorBodyAppearanceId_Adept=4
+; CharacterCreatorBodyAppearanceId_Vanguard=5
+; CharacterCreatorBodyAppearanceId_Sentinel=6
+; CharacterCreatorBodyAppearanceId_Infiltrator=7
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_FShep]
 Tag=Human_Female
 romancePawnTag=Human_Female_Naked
-; +alternateTags=Human_Female_Naked
++alternateTags=Human_Female_Naked
 gender=Female
 outfitSpecListPath=outfitSpecs.HMF_OutfitSpec
 ; helmetSpecListPath=AMM_HelmetSpec.HMF_HelmetSpecs
 ; breatherSpecListPath=AMM_BreatherSpec.HMF_BreatherSpecs
 ; testing whether this works. Should not ship with this in
-CharacterCreatorBodyAppearanceId=1
-CharacterCreatorBodyAppearanceId_Soldier=2
-CharacterCreatorBodyAppearanceId_Engineer=3
-CharacterCreatorBodyAppearanceId_Adept=4
-CharacterCreatorBodyAppearanceId_Vanguard=5
-CharacterCreatorBodyAppearanceId_Sentinel=6
-CharacterCreatorBodyAppearanceId_Infiltrator=7
+; CharacterCreatorBodyAppearanceId=1
+; CharacterCreatorBodyAppearanceId_Soldier=2
+; CharacterCreatorBodyAppearanceId_Engineer=3
+; CharacterCreatorBodyAppearanceId_Adept=4
+; CharacterCreatorBodyAppearanceId_Vanguard=5
+; CharacterCreatorBodyAppearanceId_Sentinel=6
+; CharacterCreatorBodyAppearanceId_Infiltrator=7
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Kaidan]
 Tag=Hench_HumanMale
 romancePawnTag=Hench_HumanMale_nkd
 +alternateTags=Hench_HumanMale_nkd
 gender=Male
-; menuRootPath=amm_submenus.Kaidan.AppearanceSubmenu_Kaidan
-; outfitSpecListPath=AMM_OutfitSpec.HMM_OutfitSpecs
+menuRootPath=amm_submenus.Kaidan.AppearanceSubmenu_Kaidan
+outfitSpecListPath=AMM_OutfitSpec.HMM_OutfitSpecs
 ; helmetSpecListPath=AMM_HelmetSpec.HMM_HelmetSpecs
 ; breatherSpecListPath=AMM_BreatherSpec.HMM_BreatherSpecs
 ; defaultBreatherSpec=-14
@@ -81,76 +79,76 @@ gender=Male
 Tag=Hench_HumanFemale
 romancePawnTag=hench_humanFemale_nkd
 gender=Female
-; menuRootPath=amm_submenus.Ashley.AppearanceSubmenu_Ashley
-; outfitSpecListPath=AMM_OutfitSpec.HMF_OutfitSpecs
+menuRootPath=amm_submenus.Ashley.AppearanceSubmenu_Ashley
+outfitSpecListPath=AMM_OutfitSpec.HMF_OutfitSpecs
 ; helmetSpecListPath=AMM_HelmetSpec.HMF_HelmetSpecs
 ; breatherSpecListPath=AMM_BreatherSpec.HMF_BreatherSpecs
 ; defaultBreatherSpec=-13
 +alternateTags=pro10_ash
 +alternateTags=hench_humanFemale_nkd
-; +AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1536), helmetAppearanceLookup=(plotIntId=1537), breatherAppearanceLookup=(plotIntId=1538), appearanceFlagsLookup=(plotIntId=1539), FrameworkFileName="BIONPC_Ashley_Normandy")
-; +AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1540), helmetAppearanceLookup=(plotIntId=1541), breatherAppearanceLookup=(plotIntId=1542), appearanceFlagsLookup=(plotIntId=1543))
-; +AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1544), helmetAppearanceLookup=(plotIntId=1545), breatherAppearanceLookup=(plotIntId=1546), appearanceFlagsLookup=(plotIntId=1547), FrameworkFileName="BIONPC_Ashley_Romance")
++AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1536), helmetAppearanceLookup=(plotIntId=1537), breatherAppearanceLookup=(plotIntId=1538), appearanceFlagsLookup=(plotIntId=1539), FrameworkFileName="BIONPC_Ashley_Normandy")
++AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1540), helmetAppearanceLookup=(plotIntId=1541), breatherAppearanceLookup=(plotIntId=1542), appearanceFlagsLookup=(plotIntId=1543))
++AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1544), helmetAppearanceLookup=(plotIntId=1545), breatherAppearanceLookup=(plotIntId=1546), appearanceFlagsLookup=(plotIntId=1547), FrameworkFileName="BIONPC_Ashley_Romance")
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Liara]
 Tag=Hench_Asari
 romancePawnTag=hench_asari_nkd
 +alternateTags=hench_asari_nkd
 gender=Female
-; menuRootPath=amm_submenus.Liara.AppearanceSubmenu_Liara
-; outfitSpecListPath=AMM_OutfitSpec.HMF_OutfitSpecs
+menuRootPath=amm_submenus.Liara.AppearanceSubmenu_Liara
+outfitSpecListPath=AMM_OutfitSpec.HMF_OutfitSpecs
 ; helmetSpecListPath=AMM_HelmetSpec.ASA_HelmetSpecs
 ; breatherSpecListPath=AMM_BreatherSpec.HMF_BreatherSpecs
 ; defaultBreatherSpec=-12
-; +AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1548), helmetAppearanceLookup=(plotIntId=1549), breatherAppearanceLookup=(plotIntId=1550), appearanceFlagsLookup=(plotIntId=1551), FrameworkFileName="BIONPC_Liara_Normandy")
-; +AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1552), helmetAppearanceLookup=(plotIntId=1553), breatherAppearanceLookup=(plotIntId=1554), appearanceFlagsLookup=(plotIntId=1555))
-; +AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1556), helmetAppearanceLookup=(plotIntId=1557), breatherAppearanceLookup=(plotIntId=1558), appearanceFlagsLookup=(plotIntId=1559), FrameworkFileName="BIONPC_Liara_Romance")
++AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1548), helmetAppearanceLookup=(plotIntId=1549), breatherAppearanceLookup=(plotIntId=1550), appearanceFlagsLookup=(plotIntId=1551), FrameworkFileName="BIONPC_Liara_Normandy")
++AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1552), helmetAppearanceLookup=(plotIntId=1553), breatherAppearanceLookup=(plotIntId=1554), appearanceFlagsLookup=(plotIntId=1555))
++AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1556), helmetAppearanceLookup=(plotIntId=1557), breatherAppearanceLookup=(plotIntId=1558), appearanceFlagsLookup=(plotIntId=1559), FrameworkFileName="BIONPC_Liara_Romance")
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Tali]
 Tag=hench_quarian
 gender=Female
-; menuRootPath=amm_submenus.Tali.AppearanceSubmenu_Tali
+menuRootPath=amm_submenus.Tali.AppearanceSubmenu_Tali
 +alternateTags=sta20_quarian
 +alternateTags=sta60_quarian
 +alternateTags=sta60_quarian_combat
-; outfitSpecListPath=AMM_OutfitSpec.QRN_OutfitSpecs
+outfitSpecListPath=AMM_OutfitSpec.QRN_OutfitSpecs
 ; helmetSpecListPath=AMM_HelmetSpec.QRN_HelmetSpecs
 ; breatherSpecListPath=AMM_BreatherSpec.QRN_BreatherSpecs
 ; defaultBreatherSpec=-2
-; +AppearanceIdLookupsList=(appearanceType="casual", bodyAppearanceLookup=(plotIntId=1560), helmetAppearanceLookup=(plotIntId=1561), breatherAppearanceLookup=(plotIntId=1562), appearanceFlagsLookup=(plotIntId=1563), FrameworkFileName="BIONPC_Tali_Normandy")
-; +AppearanceIdLookupsList=(appearanceType="combat", bodyAppearanceLookup=(plotIntId=1564), helmetAppearanceLookup=(plotIntId=1565), breatherAppearanceLookup=(plotIntId=1566), appearanceFlagsLookup=(plotIntId=1567))
++AppearanceIdLookupsList=(appearanceType="casual", bodyAppearanceLookup=(plotIntId=1560), helmetAppearanceLookup=(plotIntId=1561), breatherAppearanceLookup=(plotIntId=1562), appearanceFlagsLookup=(plotIntId=1563), FrameworkFileName="BIONPC_Tali_Normandy")
++AppearanceIdLookupsList=(appearanceType="combat", bodyAppearanceLookup=(plotIntId=1564), helmetAppearanceLookup=(plotIntId=1565), breatherAppearanceLookup=(plotIntId=1566), appearanceFlagsLookup=(plotIntId=1567))
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Garrus]
 Tag=hench_turian
 gender=Male
-; menuRootPath=amm_submenus.Garrus.AppearanceSubmenu_Garrus
-; outfitSpecListPath=AMM_OutfitSpec.TUR_OutfitSpecs
+menuRootPath=amm_submenus.Garrus.AppearanceSubmenu_Garrus
+outfitSpecListPath=AMM_OutfitSpec.TUR_OutfitSpecs
 ; helmetSpecListPath=AMM_HelmetSpec.TUR_HelmetSpecs
 ; breatherSpecListPath=AMM_BreatherSpec.TUR_BreatherSpecs
 ; defaultBreatherSpec=-10
-; +AppearanceIdLookupsList=(appearanceType="casual", bodyAppearanceLookup=(plotIntId=1568), helmetAppearanceLookup=(plotIntId=1569), breatherAppearanceLookup=(plotIntId=1570), appearanceFlagsLookup=(plotIntId=1571), FrameworkFileName="BIONPC_Garrus_Normandy")
-; +AppearanceIdLookupsList=(appearanceType="combat", bodyAppearanceLookup=(plotIntId=1572), helmetAppearanceLookup=(plotIntId=1573), breatherAppearanceLookup=(plotIntId=1574), appearanceFlagsLookup=(plotIntId=1575))
++AppearanceIdLookupsList=(appearanceType="casual", bodyAppearanceLookup=(plotIntId=1568), helmetAppearanceLookup=(plotIntId=1569), breatherAppearanceLookup=(plotIntId=1570), appearanceFlagsLookup=(plotIntId=1571), FrameworkFileName="BIONPC_Garrus_Normandy")
++AppearanceIdLookupsList=(appearanceType="combat", bodyAppearanceLookup=(plotIntId=1572), helmetAppearanceLookup=(plotIntId=1573), breatherAppearanceLookup=(plotIntId=1574), appearanceFlagsLookup=(plotIntId=1575))
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Wrex]
 Tag=hench_krogan
 gender=Male
-; menuRootPath=amm_submenus.Wrex.AppearanceSubmenu_Wrex
-; outfitSpecListPath=AMM_OutfitSpec.KRO_OutfitSpecs
+menuRootPath=amm_submenus.Wrex.AppearanceSubmenu_Wrex
+outfitSpecListPath=AMM_OutfitSpec.KRO_OutfitSpecs
 ; helmetSpecListPath=AMM_HelmetSpec.KRO_HelmetSpecs
 ; breatherSpecListPath=AMM_BreatherSpec.KRO_BreatherSpecs
 ; defaultBreatherSpec=-2
-; +AppearanceIdLookupsList=(appearanceType="casual", bodyAppearanceLookup=(plotIntId=1576), helmetAppearanceLookup=(plotIntId=1577), breatherAppearanceLookup=(plotIntId=1578), appearanceFlagsLookup=(plotIntId=1579), FrameworkFileName="BIONPC_Wrex_Normandy")
-; +AppearanceIdLookupsList=(appearanceType="combat", bodyAppearanceLookup=(plotIntId=1580), helmetAppearanceLookup=(plotIntId=1581), breatherAppearanceLookup=(plotIntId=1582), appearanceFlagsLookup=(plotIntId=1583))
++AppearanceIdLookupsList=(appearanceType="casual", bodyAppearanceLookup=(plotIntId=1576), helmetAppearanceLookup=(plotIntId=1577), breatherAppearanceLookup=(plotIntId=1578), appearanceFlagsLookup=(plotIntId=1579), FrameworkFileName="BIONPC_Wrex_Normandy")
++AppearanceIdLookupsList=(appearanceType="combat", bodyAppearanceLookup=(plotIntId=1580), helmetAppearanceLookup=(plotIntId=1581), breatherAppearanceLookup=(plotIntId=1582), appearanceFlagsLookup=(plotIntId=1583))
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Jenkins]
 Tag=Hench_Jenkins
 gender=Male
-; menuRootPath=amm_submenus.Jenkins.AppearanceSubmenu_Jenkins
+menuRootPath=amm_submenus.Jenkins.AppearanceSubmenu_Jenkins
 +alternateTags=nor10_jenkins
 +alternateTags=cutscene_jenkins
 +alternateTags=cutscene_jenkins2
-; outfitSpecListPath=AMM_OutfitSpec.HMM_OutfitSpecs
+outfitSpecListPath=AMM_OutfitSpec.HMM_OutfitSpecs
 ; helmetSpecListPath=AMM_HelmetSpec.HMM_HelmetSpecs
 ; breatherSpecListPath=AMM_BreatherSpec.HMM_BreatherSpecs
-; +AppearanceIdLookupsList=(appearanceType="casual", bodyAppearanceLookup=(plotIntId=1584), helmetAppearanceLookup=(plotIntId=1585), breatherAppearanceLookup=(plotIntId=1586), appearanceFlagsLookup=(plotIntId=1587), FrameworkFileName="BIONPC_Jenkins_Normandy")
-; +AppearanceIdLookupsList=(appearanceType="combat", bodyAppearanceLookup=(plotIntId=1588), helmetAppearanceLookup=(plotIntId=1589), breatherAppearanceLookup=(plotIntId=1590), appearanceFlagsLookup=(plotIntId=1591))
++AppearanceIdLookupsList=(appearanceType="casual", bodyAppearanceLookup=(plotIntId=1584), helmetAppearanceLookup=(plotIntId=1585), breatherAppearanceLookup=(plotIntId=1586), appearanceFlagsLookup=(plotIntId=1587), FrameworkFileName="BIONPC_Jenkins_Normandy")
++AppearanceIdLookupsList=(appearanceType="combat", bodyAppearanceLookup=(plotIntId=1588), helmetAppearanceLookup=(plotIntId=1589), breatherAppearanceLookup=(plotIntId=1590), appearanceFlagsLookup=(plotIntId=1591))
