@@ -10,7 +10,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
     {
         public void RunModTask(ModBuilderContext context)
         {
-            // make a new file to house the new Inventory handler and GUI
+            // make a new file to house the new AMM handler and GUI
             // Either this needs to live in a file called AMM or it needs to be under a package called that in startup for compatibility with Remove Window Reflections that already launches it
             var ammPackageFile = MEPackageHandler.CreateAndOpenPackage(Path.Combine(context.CookedPCConsoleFolder, "AMM.pcc"), context.Game);
 

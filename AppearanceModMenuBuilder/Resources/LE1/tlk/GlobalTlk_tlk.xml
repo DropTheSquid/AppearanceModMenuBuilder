@@ -16,10 +16,10 @@
 		<data>Do you want to accept the appearances and start the game?
 You can customize characters' appearances at any time from the Inventory screen or by loading Save 1 to replay the prologue.</data>
 	</string>
-	<!--<string>
+	<string>
 		<id>210210213</id>
 		<flags>1</flags>
-		<data>Appearance Modification Menu Settings</data>
+		<data>Select an appearance type</data>
 	</string>
 	<string>
 		<id>210210214</id>
@@ -50,5 +50,5 @@ You can customize characters' appearances at any time from the Inventory screen 
 		<id>210210218</id>
 		<flags>1</flags>
 		<data>This is a special stringref which, within AMM, will resolve to Shepard's full name. It's a neat touch. Use this in menu names and stuff</data>
-	</string>-->
+	</string>
 </tlkFile>

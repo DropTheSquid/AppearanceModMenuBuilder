@@ -27,6 +27,8 @@ namespace AppearanceModMenuBuilder.LE1
                 .AddTask(new BuildInventoryHandlerTask())
                 // build UI world
                 .AddTask(new BuildUIWorldTask())
+                // build submenus
+                .AddTask(new BuildSubmenuFile())
                 // compile tlks
                 .AddTask(new ImportGame1TlkLocaliazation(MELocalization.INT, @"Resources\LE1\tlk\GlobalTlk_tlk.xml"))
                 .AddTask(new OutputTlk());

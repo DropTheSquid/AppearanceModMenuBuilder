@@ -7,7 +7,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 {
     public class OutfitSpecListBuilder : IModBuilderTask
     {
-        private const string OutfitSpecListCLassTemplate = "Class {0} extends OutfitSpecListBase config(Game);";
+        private const string OutfitSpecListClassTemplate = "Class {0} extends OutfitSpecListBase config(Game);";
         private const string ConfigMergeName = "outfits";
         private const string containingPackage = "OutfitSpecs";
         private readonly List<ClassToCompile> classes = [];
@@ -33,7 +33,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
         private void AddOutfitSpecList(string specListName, params IOutfitSpec[] outfitSpecs)
         {
-            classes.Add(new ClassToCompile(specListName, string.Format(OutfitSpecListCLassTemplate, specListName), [containingPackage]));
+            classes.Add(new ClassToCompile(specListName, string.Format(OutfitSpecListClassTemplate, specListName), [containingPackage]));
 
             List<IOutfitSpec> specs = [];
             specs.AddRange(outfitSpecs);
