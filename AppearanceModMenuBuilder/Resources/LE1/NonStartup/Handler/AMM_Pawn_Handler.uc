@@ -88,6 +88,11 @@ var transient array<StreamInRequest> streamingRequests;
 var transient array<RealWorldPawnRecord> pawnRecords;
 var transient BioPawn _currentDisplayedPawn;
 
+private function log(string message)
+{
+	// I can comment this next line out to turn off logging
+	LogInternal(message);
+}
 public function Cleanup()
 {
 	local RealWorldPawnRecord currentRecord;
@@ -234,9 +239,11 @@ private function LoadFrameworkFile(string tag, string appearanceType, string fil
 	if (GetAsyncRequest(streamingRequests, fileName, request, i))
 	{
 		// there is already a request in progress. See if it already has the requested tag and appearance type
+		log("There is an in progress/finished request for framework file"@fileName);
 		// TODO support more than one
 		return;
 	}
+	log("Creating new streamInRequest for"@tag@appearanceType@fileName);
 	// TODO check for a queued one and move it into inProgress once that is supported
 	request.frameworkFileName = fileName;
 	request.pawnIds.Length = 1;
@@ -244,6 +251,7 @@ private function LoadFrameworkFile(string tag, string appearanceType, string fil
 	request.pawnIds[0].appearanceType = appearanceType;
 	request.originalState = GetFileStreamingState(fileName);
 	request.desiredState = DesiredStreamingState.visible;
+	request.completed = false;
 	streamingRequests.AddItem(request);
 }
 
@@ -315,7 +323,6 @@ public function update(float fDeltaT)
 			continue;
 		}
 		currentState = GetFileStreamingState(currentRequest.frameworkFileName, tempLevelStreaming);
-		LogInternal("update"@currentRequest.FrameworkFileName@currentState);
 		if (currentRequest.desiredState == DesiredStreamingState.visible)
 		{
 			switch (currentState)
@@ -401,18 +408,19 @@ public function update(float fDeltaT)
 private function bool FindStreamedInPawn(string tag, string fileName, out BioPawn foundPawn)
 {
     local Actor tempActor;
-    
-    // LogInternal("trying to find frameworked NPC" @ pawnKeys[0] @ fileName @ PathName(BioWorldInfo(Outer.oWorldInfo)), );
-    foreach BioWorldInfo(_outerMenu.oWorldInfo).AllActors(Class'Actor', tempActor, )
-    {
-        if (BioPawn(tempActor) != None && string(tempActor.GetPackageName()) ~= fileName && string(tempActor.Tag) ~= tag)
-        {
-			foundPawn = BioPawn(tempActor);
-			// LogInternal("found pawn" @ PathName(foundPawn) @ foundPawn.Tag, );
-			return TRUE;
-        }
-    }
-    // LogInternal("Could not find NPC", );
+	local AMM_Pawn_Parameters params;
+
+	if (_outerMenu.paramHandler.GetPawnParamsByTag(tag, params))
+	{
+		foreach BioWorldInfo(_outerMenu.oWorldInfo).AllActors(Class'Actor', tempActor, )
+		{
+			if (BioPawn(tempActor) != None && string(tempActor.GetPackageName()) ~= fileName && params.matchesPawn(BioPawn(tempActor)))
+			{
+				foundPawn = BioPawn(tempActor);
+				return TRUE;
+			}
+		}
+	}
     return FALSE;
 }
 
@@ -444,11 +452,11 @@ private final function SetLevelStreamingStatus(coerce Name packageName, DesiredS
 			LogInternal("unknown desired streaming state"@desiredState);
 			break;
 	}
-	LogInternal("SetLevelStreamingStatus"@packageName@desiredState@bShouldBeLoaded@bShouldBeVisible);
+	// LogInternal("SetLevelStreamingStatus"@packageName@desiredState@bShouldBeLoaded@bShouldBeVisible);
 	// actually make the internal request
     foreach _outerMenu.oWorldInfo.AllControllers(Class'PlayerController', PC)
     {
-		LogInternal("Calling internal set status on"@PathName(PC));
+		// LogInternal("Calling internal set status on"@PathName(PC));
         PC.ClientUpdateLevelStreamingStatus(packageName, bShouldBeLoaded, bShouldBeVisible, false);
     }
 }

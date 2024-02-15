@@ -118,7 +118,7 @@ public function OnPanelAdded()
     paramHandler = new Class'Pawn_Parameter_Handler';
     cameraHandler = new Class'AMM_Camera_Handler';
     cameraHandler.Init(self);
-	TestStreamPawn();
+	SetupTestButtons();
     // if (paramHandler.GetPawnParamsByTag(launchParam, params))
     // {
     //     RootSubmenuPath = params.menuRootPath;
@@ -127,16 +127,26 @@ public function OnPanelAdded()
     Super.OnPanelAdded();
 }
 
-private function TestStreamPawn()
+private function SetupTestButtons()
+{
+	ASSetAux2ButtonActive(TRUE, FALSE);
+	ASSetAux2ButtonText("Kaidan Casual");
+	ASSetActionButtonActive(true);
+	ASSetActionButtonText("Kaidan Romance");
+	ASSetAuxButtonActive(true);
+	ASSetAuxButtonText("Kaidan Combat");
+}
+
+private function TestStreamPawn(string appearanceType)
 {
 	local PawnLoadState state;
 
 	// testing a thing
-	state = pawnHandler.LoadPawn("Hench_HumanMale", "Casual");
+	state = pawnHandler.LoadPawn("Hench_HumanMale", appearanceType);
 	if (state == PawnLoadState.Loaded)
 	{
 		LogInternal("Kaidan is already loaded");
-		pawnhandler.DisplayPawn("Hench_HumanMale", "Casual");
+		pawnhandler.DisplayPawn("Hench_HumanMale", appearanceType);
 	}
 	else if (state == PawnLoadState.failed)
 	{
@@ -184,7 +194,7 @@ public function LoadPawn(string tag, string appearanceType)
 public function UpdateAsyncPawnLoadingState(string tag, string appearanceType, PawnLoadState state)
 {
 	LogInternal("UpdateAsyncPawnLoadingState"@tag@appearanceType@state);
-	TestStreamPawn();
+	TestStreamPawn(appearanceType);
 }
 // public function SetRootSubmenu(string submenuPath)
 // {
@@ -762,80 +772,83 @@ public final function SetMessageBoxBGOpacity(int opacity)
 //         ASSetAuxButtonActive(FALSE);
 //     }
 // // }
-// public function ActionButtonPressedEx(int selectedIndex)
-// {
-//     local AppearanceItemData selectedItem;
-//     local AppearanceSubmenu submenu;
-//     local AppearanceSubmenu currentSubmenu;
+public function ActionButtonPressedEx(int selectedIndex)
+{
+	TestStreamPawn("Romance");
+    // local AppearanceItemData selectedItem;
+    // local AppearanceSubmenu submenu;
+    // local AppearanceSubmenu currentSubmenu;
     
-//     if (CameraDebug)
-//     {
-//         Self.cameraHandler.DebugChangeAxis(FALSE, cameraDebugAxis);
-//     }
-//     currentSubmenu = GetCurrentSubmenu();
-//     if (!currentSubmenu.OnActionButtonPressed(Self, selectedIndex))
-//     {
-//         if (selectedIndex == -1 || selectedIndex > currentDisplayItems.Length)
-//         {
-//             return;
-//         }
-//         selectedItem = currentDisplayItems[selectedIndex];
-//         if (selectedItem.disabled)
-//         {
-//             return;
-//         }
-//         submenu = GetSubmenuFromItem(selectedItem);
-//         if (submenu != None)
-//         {
-//             PushSubmenuInstance(submenu);
-//         }
-//         else
-//         {
-//             currentSubmenu.scrollIndex = ASGetListScrollPosition();
-//             ApplyItem(selectedItem);
-//             RefreshMenu();
-//         }
-//     }
-// }
-// public function AuxButtonPressedEx(int selectedIndex)
-// {
-//     local AppearanceItemData selectedItem;
-//     local AppearanceSubmenu currentSubmenu;
+    // if (CameraDebug)
+    // {
+    //     Self.cameraHandler.DebugChangeAxis(FALSE, cameraDebugAxis);
+    // }
+    // currentSubmenu = GetCurrentSubmenu();
+    // if (!currentSubmenu.OnActionButtonPressed(Self, selectedIndex))
+    // {
+    //     if (selectedIndex == -1 || selectedIndex > currentDisplayItems.Length)
+    //     {
+    //         return;
+    //     }
+    //     selectedItem = currentDisplayItems[selectedIndex];
+    //     if (selectedItem.disabled)
+    //     {
+    //         return;
+    //     }
+    //     submenu = GetSubmenuFromItem(selectedItem);
+    //     if (submenu != None)
+    //     {
+    //         PushSubmenuInstance(submenu);
+    //     }
+    //     else
+    //     {
+    //         currentSubmenu.scrollIndex = ASGetListScrollPosition();
+    //         ApplyItem(selectedItem);
+    //         RefreshMenu();
+    //     }
+    // }
+}
+public function AuxButtonPressedEx(int selectedIndex)
+{
+	TestStreamPawn("Combat");
+    // local AppearanceItemData selectedItem;
+    // local AppearanceSubmenu currentSubmenu;
     
-//     if (CameraDebug)
-//     {
-//         Self.cameraHandler.DebugChangeAxis(TRUE, cameraDebugAxis);
-//     }
-//     else
-//     {
-//         currentSubmenu = GetCurrentSubmenu();
-//         if (!currentSubmenu.OnAuxButtonPressed(Self, selectedIndex))
-//         {
-//             selectedItem = currentDisplayItems[selectedIndex];
-//             comment("TODO undo probably?");
-//             LogInternal("This should eventually be an undo button", );
-//         }
-//     }
-// }
-// public function Aux2ButtonPressedEx(int selectedIndex)
-// {
-//     local AppearanceSubmenu currentSubmenu;
+    // if (CameraDebug)
+    // {
+    //     Self.cameraHandler.DebugChangeAxis(TRUE, cameraDebugAxis);
+    // }
+    // else
+    // {
+    //     currentSubmenu = GetCurrentSubmenu();
+    //     if (!currentSubmenu.OnAuxButtonPressed(Self, selectedIndex))
+    //     {
+    //         selectedItem = currentDisplayItems[selectedIndex];
+    //         comment("TODO undo probably?");
+    //         LogInternal("This should eventually be an undo button", );
+    //     }
+    // }
+}
+public function Aux2ButtonPressedEx(int selectedIndex)
+{
+	TestStreamPawn("Casual");
+    // local AppearanceSubmenu currentSubmenu;
     
-//     if (CameraDebug)
-//     {
-//         Self.cameraDebugAxis++;
-//         Self.SetAux2CameraDebug();
-//     }
-//     else
-//     {
-//         currentSubmenu = GetCurrentSubmenu();
-//         if (!currentSubmenu.OnAux2ButtonPressed(Self, selectedIndex))
-//         {
-//             SetRootSubmenu(Class'ModHandler_AMM'.default.RootSubmenuPath);
-//             RefreshMenu(TRUE);
-//         }
-//     }
-// }
+    // if (CameraDebug)
+    // {
+    //     Self.cameraDebugAxis++;
+    //     Self.SetAux2CameraDebug();
+    // }
+    // else
+    // {
+    //     currentSubmenu = GetCurrentSubmenu();
+    //     if (!currentSubmenu.OnAux2ButtonPressed(Self, selectedIndex))
+    //     {
+    //         SetRootSubmenu(Class'ModHandler_AMM'.default.RootSubmenuPath);
+    //         RefreshMenu(TRUE);
+    //     }
+    // }
+}
 // public function ApplyItem(AppearanceItemData item)
 // {
 //     local int boolId;
