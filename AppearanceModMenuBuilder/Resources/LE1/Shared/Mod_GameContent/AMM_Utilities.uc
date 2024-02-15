@@ -150,3 +150,7 @@ public static function bool IsFrameworkInstalled()
 	LogInternal("checking for framework"@DynamicLoadObject("DLC_MOD_Framework_GlobalTlk.GlobalTlk_tlk", Class'Object'));
 	return DynamicLoadObject("DLC_MOD_Framework_GlobalTlk.GlobalTlk_tlk", Class'Object') != None;
 }
+public static function bool DoesLevelExist(coerce string levelName)
+{
+	return DynamicLoadObject(string(levelName)$".TheWorld", class'World') != None;
+}

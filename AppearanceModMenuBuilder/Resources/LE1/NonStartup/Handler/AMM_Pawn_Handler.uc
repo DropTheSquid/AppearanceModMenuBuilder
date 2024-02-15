@@ -461,14 +461,14 @@ private final function SetLevelStreamingStatus(coerce Name packageName, DesiredS
 			break;
 	}
 	// LogInternal("SetLevelStreamingStatus"@packageName@desiredState@bShouldBeLoaded@bShouldBeVisible);
-	// actually make the internal request
+	// actually make the internal request	
     foreach _outerMenu.oWorldInfo.AllControllers(Class'PlayerController', PC)
     {
 		// LogInternal("Calling internal set status on"@PathName(PC));
         PC.ClientUpdateLevelStreamingStatus(packageName, bShouldBeLoaded, bShouldBeVisible, false);
     }
 }
-private final function HardUnload(coerce string fileName)
+private function HardUnload(coerce string fileName)
 {
     local int i;
     local LevelStreaming tempLevelStreaming;

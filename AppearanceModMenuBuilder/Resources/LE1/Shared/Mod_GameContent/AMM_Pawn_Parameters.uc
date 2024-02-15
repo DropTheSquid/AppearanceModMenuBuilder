@@ -107,17 +107,15 @@ public function bool GetFrameworkFileForAppearanceType(string appearanceType, ou
 {
 	local AppearanceIdLookups currentLookups;
 
-	LogInternal("GetFrameworkFileForAppearanceType checking if framework is installed");
 	if (class'AMM_Utilities'.static.IsFrameworkInstalled())
 	{
-		LogInternal("it is.");
 		foreach AppearanceIdLookupsList(currentLookups, )
 		{
 			if (currentLookups.appearanceType ~= appearanceType)
 			{
 				LogInternal("found lookups for appearance type"@appearanceType@currentLookups.FrameworkFileName);
 				frameworkFileName = currentLookups.FrameworkFileName;
-				return true;
+				return class'AMM_Utilities'.static.DoesLevelExist(frameworkFileName);
 			}
 		}
 	}

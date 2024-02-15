@@ -74,8 +74,8 @@ gender=Male
 ; breatherSpecListPath=AMM_BreatherSpec.HMM_BreatherSpecs
 ; defaultBreatherSpec=-14
 +AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1524), helmetAppearanceLookup=(plotIntId=1525), breatherAppearanceLookup=(plotIntId=1526), appearanceFlagsLookup=(plotIntId=1527), FrameworkFileName="BIONPC_Kaidan_Normandy")
-; TODO I should actually not have the framework file here
-+AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1528), helmetAppearanceLookup=(plotIntId=1529), breatherAppearanceLookup=(plotIntId=1530), appearanceFlagsLookup=(plotIntId=1531), FrameworkFileName="BIONPC_Kaidan")
+; TODO I should actually not have the framework file here/ also, I put a bad value in there for testing bad values
++AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1528), helmetAppearanceLookup=(plotIntId=1529), breatherAppearanceLookup=(plotIntId=1530), appearanceFlagsLookup=(plotIntId=1531), FrameworkFileName="BIONPC_Kaidan_NotReal")
 +AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1532), helmetAppearanceLookup=(plotIntId=1533), breatherAppearanceLookup=(plotIntId=1534), appearanceFlagsLookup=(plotIntId=1535), FrameworkFileName="BIONPC_Kaidan_Romance")
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Ashley]
