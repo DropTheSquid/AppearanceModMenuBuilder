@@ -41,6 +41,7 @@ var transient AMM_Camera_Handler cameraHandler;
 // var transient float TimeToWaitForPawnToSpawn;
 // var transient delegate<PawnHandlerUpdate> __PawnHandlerUpdate__Delegate;
 var GFxMovieInfo movieInfo;
+var transient string testAppearanceType;
 
 // Functions
 // public delegate function bool PawnHandlerUpdate(float deltaTime);
@@ -118,6 +119,9 @@ public function OnPanelAdded()
     paramHandler = new Class'Pawn_Parameter_Handler';
     cameraHandler = new Class'AMM_Camera_Handler';
     cameraHandler.Init(self);
+	// test streaming in several framework files upfront
+	testPrestreaming();
+	// setup buttons for testing displaying the loaded pawns
 	SetupTestButtons();
     // if (paramHandler.GetPawnParamsByTag(launchParam, params))
     // {
@@ -125,6 +129,13 @@ public function OnPanelAdded()
     // }
     // SetRootSubmenu(RootSubmenuPath);
     Super.OnPanelAdded();
+}
+private function testPrestreaming()
+{
+	local PawnLoadState state;
+	state = pawnHandler.LoadPawn("Hench_HumanMale", "casual");
+	state = pawnHandler.LoadPawn("Hench_HumanMale", "combat");
+	state = pawnHandler.LoadPawn("Hench_HumanMale", "romance");
 }
 
 private function SetupTestButtons()
@@ -142,6 +153,7 @@ private function TestStreamPawn(string appearanceType)
 	local PawnLoadState state;
 
 	// testing a thing
+	testappearanceType = appearanceType;
 	state = pawnHandler.LoadPawn("Hench_HumanMale", appearanceType);
 	if (state == PawnLoadState.Loaded)
 	{
@@ -193,8 +205,12 @@ public function LoadPawn(string tag, string appearanceType)
 
 public function UpdateAsyncPawnLoadingState(string tag, string appearanceType, PawnLoadState state)
 {
-	LogInternal("UpdateAsyncPawnLoadingState"@tag@appearanceType@state);
-	TestStreamPawn(appearanceType);
+	// only display if this is the one that was requested
+	if (appearanceType == testappearanceType)
+	{
+		TestStreamPawn(appearanceType);
+	}
+	// LogInternal("UpdateAsyncPawnLoadingState"@tag@appearanceType@state);
 }
 // public function SetRootSubmenu(string submenuPath)
 // {
@@ -774,7 +790,7 @@ public final function SetMessageBoxBGOpacity(int opacity)
 // // }
 public function ActionButtonPressedEx(int selectedIndex)
 {
-	TestStreamPawn("Romance");
+	TestStreamPawn("romance");
     // local AppearanceItemData selectedItem;
     // local AppearanceSubmenu submenu;
     // local AppearanceSubmenu currentSubmenu;
@@ -810,7 +826,7 @@ public function ActionButtonPressedEx(int selectedIndex)
 }
 public function AuxButtonPressedEx(int selectedIndex)
 {
-	TestStreamPawn("Combat");
+	TestStreamPawn("combat");
     // local AppearanceItemData selectedItem;
     // local AppearanceSubmenu currentSubmenu;
     
@@ -831,7 +847,7 @@ public function AuxButtonPressedEx(int selectedIndex)
 }
 public function Aux2ButtonPressedEx(int selectedIndex)
 {
-	TestStreamPawn("Casual");
+	TestStreamPawn("casual");
     // local AppearanceSubmenu currentSubmenu;
     
     // if (CameraDebug)

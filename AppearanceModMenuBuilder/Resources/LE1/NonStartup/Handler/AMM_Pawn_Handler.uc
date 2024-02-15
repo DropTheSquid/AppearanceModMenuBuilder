@@ -146,8 +146,10 @@ public function PawnLoadState LoadPawn(string tag, string appearanceType)
 	// first look to see if we already have a suitable pawn
 	foreach pawnRecords(currentRecord)
 	{
+		LogInternal("checking if pawn is already loaded"@currentRecord.tag@currentRecord.appearanceType);
 		if (currentRecord.tag == tag && currentRecord.appearanceType == appearanceType)
 		{
+			LogInternal("already loaded"@currentRecord.tag@currentRecord.appearanceType);
 			return PawnLoadState.Loaded;
 		}
 	}
@@ -182,7 +184,10 @@ public function PawnLoadState LoadPawn(string tag, string appearanceType)
 		// next try streaming the pawn in
 		if (params.GetFrameworkFileForAppearanceType(appearanceType, frameworkFileName))
 		{
-			LoadFrameworkFile(tag, appearanceType, FrameworkFileName);
+			if (LoadFrameworkFile(tag, appearanceType, FrameworkFileName))
+			{
+				return PawnLoadState.loaded;
+			}
 			return PawnLoadState.loading;
 		}
 		
@@ -229,7 +234,8 @@ public function bool DisplayPawn(string tag, string appearanceType)
 	return false;
 }
 
-private function LoadFrameworkFile(string tag, string appearanceType, string fileName)
+// returns true if it is already loaded, false if it is happening asynchronously
+private function bool LoadFrameworkFile(string tag, string appearanceType, string fileName)
 {
 	local StreamInRequest request;
 	local int i;
@@ -241,7 +247,7 @@ private function LoadFrameworkFile(string tag, string appearanceType, string fil
 		// there is already a request in progress. See if it already has the requested tag and appearance type
 		log("There is an in progress/finished request for framework file"@fileName);
 		// TODO support more than one
-		return;
+		return request.completed;
 	}
 	log("Creating new streamInRequest for"@tag@appearanceType@fileName);
 	// TODO check for a queued one and move it into inProgress once that is supported
@@ -253,6 +259,7 @@ private function LoadFrameworkFile(string tag, string appearanceType, string fil
 	request.desiredState = DesiredStreamingState.visible;
 	request.completed = false;
 	streamingRequests.AddItem(request);
+	return false;
 }
 
 private function bool GetAsyncRequest(array<StreamInRequest> requests, string fileName, out StreamInRequest request, out int index)
@@ -333,6 +340,7 @@ public function update(float fDeltaT)
 					{
 						if (FindStreamedInPawn(currentPawnId.tag, currentRequest.FrameworkFileName, pawn))
 						{
+							LogInternal("Adding a new pawn to the thing"@currentPawnId.tag@currentPawnId.appearanceType@currentRequest.FrameworkFileName);
 							newRecord.Tag = currentPawnId.tag;
 							newRecord.appearanceType = currentPawnId.appearanceType;
 							newRecord.Pawn = pawn;
