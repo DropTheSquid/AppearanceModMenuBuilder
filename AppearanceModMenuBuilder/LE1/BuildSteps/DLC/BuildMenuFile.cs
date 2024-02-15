@@ -36,6 +36,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\NonStartup\Handler\AMM_Handler_Helper.uc", ["Handler"]),
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\NonStartup\Handler\AMM_Pawn_Handler.uc", ["Handler"]),
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\NonStartup\Handler\AMM_Camera_Handler.uc", ["Handler"]),
+                LooseClassCompile.GetClassFromFile(@"Resources\LE1\NonStartup\Handler\AMM_DialogBox_Handler.uc", ["Handler"]),
+                LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AppearanceSubmenu.uc", ["Mod_GameContent"]),
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AMM_Pawn_Parameters.uc", ["Mod_GameContent"]),
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\Pawn_Parameter_Handler.uc", ["Mod_GameContent"]),
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\OutfitSpecBase.uc", ["Mod_GameContent"]),

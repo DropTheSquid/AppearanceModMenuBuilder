@@ -15,36 +15,22 @@ Class ModHandler_AMM extends ModMenuBase;
 // Variables
 var name MovieTag;
 var transient string launchParam;
-// var transient BioPawn nonUiWorldPawn;
 var transient AMM_Pawn_Handler pawnHandler;
 var stringref srBack;
 var stringref srClose;
 var stringref srDefaultActionText;
 var stringref srOpenSubmenu;
-var stringref srConfirmationText;
-var stringref srConfirmationConfirm;
-var stringref srConfirmationStay;
 // var transient array<AppearanceItemData> currentDisplayItems;
-// var transient array<AppearanceSubmenu> submenuStack;
-// var string RootSubmenuPath;
+var transient array<AppearanceSubmenu> submenuStack;
+var string RootSubmenuPath;
 var transient bool launchedInPrologue;
-var transient BioSFHandler_MessageBox oMsgBox;
-var transient float msgBoxFadeInElapsedTime;
-var float msgBoxFadeInTime;
-var int maxOpacity;
 var transient Pawn_Parameter_Handler paramHandler;
 var transient AMM_Camera_Handler cameraHandler;
-// var bool CameraDebug;
-// var transient int cameraDebugAxis;
+var transient AMM_DialogBox_Handler dialogHandler;
 // var transient bool isAppearanceDirty;
 // var transient eMenuHelmetOverride chosenMenuHelmetVisibilityOverride;
-// var transient float TimeToWaitForPawnToSpawn;
-// var transient delegate<PawnHandlerUpdate> __PawnHandlerUpdate__Delegate;
 var GFxMovieInfo movieInfo;
-var transient string testAppearanceType;
-
-// Functions
-// public delegate function bool PawnHandlerUpdate(float deltaTime);
+// var transient string testAppearanceType;
 
 // overrides the same function in CustomUIHandlerInterface; this signature must stay the same
 public static function CustomUIHandlerInterface LaunchMenu(optional string Param)
@@ -53,7 +39,7 @@ public static function CustomUIHandlerInterface LaunchMenu(optional string Param
     local ModHandler_AMM Handler;
     local MassEffectGuiManager manager;
     
-    LogInternal("Launching menu with param" @ Param, );
+    // LogInternal("Launching menu with param" @ Param, );
     manager = GetManager();
     oNewPanel = manager.CreatePanel(default.MovieTag, FALSE);
 	oNewPanel.AttachDefaultHandler();
@@ -120,9 +106,10 @@ public function OnPanelAdded()
     cameraHandler = new Class'AMM_Camera_Handler';
     cameraHandler.Init(self);
 	// test streaming in several framework files upfront
-	testPrestreaming();
-	// setup buttons for testing displaying the loaded pawns
-	SetupTestButtons();
+	// testPrestreaming();
+	// // setup buttons for testing displaying the loaded pawns
+	// SetupTestButtons();
+	// TODO add this back in
     // if (paramHandler.GetPawnParamsByTag(launchParam, params))
     // {
     //     RootSubmenuPath = params.menuRootPath;
@@ -130,134 +117,117 @@ public function OnPanelAdded()
     // SetRootSubmenu(RootSubmenuPath);
     Super.OnPanelAdded();
 }
-private function testPrestreaming()
-{
-	local PawnLoadState state;
-	state = pawnHandler.LoadPawn("Hench_HumanMale", "casual");
-	state = pawnHandler.LoadPawn("Hench_HumanMale", "combat");
-	state = pawnHandler.LoadPawn("Hench_HumanMale", "romance");
-}
+// private function testPrestreaming()
+// {
+// 	local PawnLoadState state;
+// 	state = pawnHandler.LoadPawn("Hench_HumanMale", "casual");
+// 	state = pawnHandler.LoadPawn("Hench_HumanMale", "combat");
+// 	state = pawnHandler.LoadPawn("Hench_HumanMale", "romance");
+// }
 
-private function SetupTestButtons()
-{
-	ASSetAux2ButtonActive(TRUE, FALSE);
-	ASSetAux2ButtonText("Kaidan Casual");
-	ASSetActionButtonActive(true);
-	ASSetActionButtonText("Kaidan Romance");
-	ASSetAuxButtonActive(true);
-	ASSetAuxButtonText("Kaidan Combat");
-}
+// private function SetupTestButtons()
+// {
+// 	ASSetAux2ButtonActive(TRUE, FALSE);
+// 	ASSetAux2ButtonText("Kaidan Casual");
+// 	ASSetActionButtonActive(true);
+// 	ASSetActionButtonText("Kaidan Romance");
+// 	ASSetAuxButtonActive(true);
+// 	ASSetAuxButtonText("Kaidan Combat");
+// }
 
-private function TestStreamPawn(string appearanceType)
-{
-	local PawnLoadState state;
+// private function TestStreamPawn(string appearanceType)
+// {
+// 	local PawnLoadState state;
 
-	// testing a thing
-	testappearanceType = appearanceType;
-	state = pawnHandler.LoadPawn("Hench_HumanMale", appearanceType);
-	if (state == PawnLoadState.Loaded)
-	{
-		LogInternal("Kaidan is already loaded");
-		pawnhandler.DisplayPawn("Hench_HumanMale", appearanceType);
-	}
-	else if (state == PawnLoadState.failed)
-	{
-		LogInternal("How did this fail????");
-	}
-	else
-	{
-		LogInternal("Async loading Kaidan");
-	}
-}
+// 	// testing a thing
+// 	testappearanceType = appearanceType;
+// 	state = pawnHandler.LoadPawn("Hench_HumanMale", appearanceType);
+// 	if (state == PawnLoadState.Loaded)
+// 	{
+// 		LogInternal("Kaidan is already loaded");
+// 		pawnhandler.DisplayPawn("Hench_HumanMale", appearanceType);
+// 	}
+// 	else if (state == PawnLoadState.failed)
+// 	{
+// 		LogInternal("How did this fail????");
+// 	}
+// 	else
+// 	{
+// 		LogInternal("Async loading Kaidan");
+// 	}
+// }
 
 public function Close()
 {
-    // local BioWorldInfo oBWI;
-    // local AMM_AppearanceUpdater updater;
-    
-    // oBWI = BioWorldInfo(oWorldInfo);
-    // LogInternal("Cleaning up pawn on close", );
     pawnHandler.Cleanup();
     cameraHandler.Cleanup();
+	if (dialogHandler != None)
+	{
+		dialogHandler.Cleanup();
+	}
     // updater = AMM_AppearanceUpdater(Class'AMM_AppearanceUpdater'.static.GetInstance());
     // updater.appearanceTypeOverride = "";
     // updater.tempHelmetOverride = eMenuHelmetOverride.unchanged;
     Super.Close();
 }
-public function LoadPawn(string tag, string appearanceType)
-{
-	local PawnLoadState state;
 
-	state = pawnHandler.LoadPawn(tag, appearanceType);
-	if (state == PawnLoadState.loaded)
-	{
-		LogInternal("pawn loaded synchronously"@tag@appearanceType);
-	}
-	else if (state == PawnLoadState.loading)
-	{
-		LogInternal("pawn loading asynchronously"@tag@appearanceType);
-	}
-	else if (state == PawnLoadState.failed)
-	{
-		LogInternal("pawn loading asynchronously"@tag@appearanceType);
-	}
-}
-
+// called by Pawn Handler when an async loaded pawn finishes loading or fails
 public function UpdateAsyncPawnLoadingState(string tag, string appearanceType, PawnLoadState state)
 {
 	// only display if this is the one that was requested
-	if (appearanceType == testappearanceType)
-	{
-		TestStreamPawn(appearanceType);
-	}
+	// if (appearanceType == testappearanceType)
+	// {
+	// 	TestStreamPawn(appearanceType);
+	// }
 	// LogInternal("UpdateAsyncPawnLoadingState"@tag@appearanceType@state);
 }
-// public function SetRootSubmenu(string submenuPath)
-// {
-//     submenuStack.Length = 0;
-//     submenuStack.AddItem(LoadSubmenu(submenuPath));
-// }
-// public static function AppearanceSubmenu LoadSubmenu(string submenuPath, optional ModHandler_AMM outerMenu)
-// {
-//     local Class<AppearanceSubmenu> SubmenuClass;
+
+public function SetRootSubmenu(string submenuPath)
+{
+    submenuStack.Length = 0;
+    submenuStack.AddItem(LoadSubmenu(submenuPath));
+}
+public static function AppearanceSubmenu LoadSubmenu(string submenuPath, optional ModHandler_AMM outerMenu)
+{
+    local Class<AppearanceSubmenu> SubmenuClass;
     
-//     SubmenuClass = Class<AppearanceSubmenu>(DynamicLoadObject(submenuPath, Class'Class'));
-//     if (SubmenuClass != None)
-//     {
-//         return new (outerMenu) SubmenuClass;
-//     }
-//     return None;
-// }
-// public function PushSubmenu(string submenuPath)
-// {
-//     PushSubmenuInstance(LoadSubmenu(submenuPath));
-// }
-// public function PushSubmenuInstance(AppearanceSubmenu instance)
-// {
-//     local AppearanceSubmenu currentSubmenu;
+    SubmenuClass = Class<AppearanceSubmenu>(DynamicLoadObject(submenuPath, Class'Class'));
+    if (SubmenuClass != None)
+    {
+        return new (outerMenu) SubmenuClass;
+    }
+    return None;
+}
+public function PushSubmenu(string submenuPath)
+{
+    PushSubmenuInstance(LoadSubmenu(submenuPath));
+}
+public function PushSubmenuInstance(AppearanceSubmenu instance)
+{
+    // local AppearanceSubmenu currentSubmenu;
     
-//     currentSubmenu = GetCurrentSubmenu();
-//     if (currentSubmenu != None)
-//     {
-//         currentSubmenu.scrollIndex = ASGetListScrollPosition();
-//     }
-//     submenuStack.AddItem(instance);
-//     RefreshMenu(TRUE);
-// }
-// public function PopSubmenu()
-// {
-//     if (submenuStack.Length > 0)
-//     {
-//         submenuStack.Length = submenuStack.Length - 1;
-//     }
-//     RefreshMenu(TRUE);
-// }
+    // currentSubmenu = GetCurrentSubmenu();
+    // if (currentSubmenu != None)
+    // {
+    //     currentSubmenu.scrollIndex = ASGetListScrollPosition();
+    // }
+    submenuStack.AddItem(instance);
+    RefreshMenu(TRUE);
+}
+public function PopSubmenu()
+{
+    if (submenuStack.Length > 0)
+    {
+        submenuStack.Length = submenuStack.Length - 1;
+    }
+    RefreshMenu(TRUE);
+}
 public event function Update(float fDeltaT)
 {
 	pawnHandler.Update(fDeltaT);
 }
-// public function RefreshMenu(optional bool firstEnter = FALSE)
-// {
+public function RefreshMenu(optional bool firstEnter = FALSE)
+{
 //     local AppearanceSubmenu currentMenu;
 //     local bool IsInCharacterSelect;
 //     local menuState state;
@@ -332,7 +302,7 @@ public event function Update(float fDeltaT)
 //         PopulateFromSubmenu(currentMenu);
 //         RenderMenu();
 //     }
-// }
+}
 // public function PopulateFromSubmenu(AppearanceSubmenu currentSubmenu)
 // {
 //     PopulateFromSubmenuClass(currentSubmenu);
@@ -602,14 +572,14 @@ public final function bool doesPackageExportExist(string packageName)
 //     }
 //     return None;
 // }
-// public function AppearanceSubmenu GetCurrentSubmenu()
-// {
-//     if (submenuStack.Length > 0)
-//     {
-//         return submenuStack[submenuStack.Length - 1];
-//     }
-//     return None;
-// }
+public function AppearanceSubmenu GetCurrentSubmenu()
+{
+    if (submenuStack.Length > 0)
+    {
+        return submenuStack[submenuStack.Length - 1];
+    }
+    return None;
+}
 public function ASLoadedEx()
 {
     local AMM_AppearanceUpdater_Base basegameInstance;
@@ -673,7 +643,9 @@ public function BackButtonPressedEx()
         // else 
 		if (launchedInPrologue)
         {
-            ConfirmExitDialog();
+			dialogHandler = new class'AMM_DialogBox_Handler';
+			dialogHandler.Init(self);
+            dialogHandler.ConfirmExitDialog();
         }
         else
         {
@@ -681,68 +653,25 @@ public function BackButtonPressedEx()
         }
     // }
 }
-public function ConfirmExitDialog()
-{
-    local BioMessageBoxOptionalParams stParams;
-    
-    oMsgBox = MassEffectGuiManager(oPanel.oParentManager).CreateMessageBox();
-    oMsgBox.SetInputDelegate(ConfirmationInputPressed);
-    msgBoxFadeInElapsedTime = 0.0;
-    oMsgBox.SetUpdateDelegate(MessageBoxUpdate);
-    stParams.srAText = srConfirmationConfirm;
-    stParams.srBText = srConfirmationStay;
-    oMsgBox.DisplayMessageBox(srConfirmationText, stParams);
-}
-public function ConfirmationInputPressed(bool bAPressed, int nContext, bool bYPressed)
+public function ConfirmExitDialogInputPressed(bool bAPressed)
 {
     if (bAPressed)
     {
-        // UpdateAllActorAppearances();
+        UpdateAllActorAppearances();
         Super.BackButtonPressedEx();
     }
-    oMsgBox = None;
 }
-// public function UpdateAllActorAppearances()
-// {
-//     local AppearanceUpdater instance;
-//     local Actor tempActor;
-    
-//     instance = Class'AppearanceUpdater'.static.GetInstance();
-//     foreach BioWorldInfo(oWorldInfo).AllActors(Class'Actor', tempActor, )
-//     {
-//         if (BioPawn(tempActor) != None)
-//         {
-//             instance.UpdatePawnAppearance(BioPawn(tempActor), "confirm exit");
-//         }
-//     }
-// }
-public function MessageBoxUpdate(float fDeltaT, BioSFHandler_MessageBox oMsgBoxParam)
+public function UpdateAllActorAppearances()
 {
-    local string sPendingEvent;
-    local int currentFrame;
-    
-    sPendingEvent = oMsgBoxParam.oPanel.GetVariableString("_root.sPendingEvent");
-    if (sPendingEvent == "")
+    local Actor tempActor;
+
+    foreach BioWorldInfo(oWorldInfo).AllActors(Class'Actor', tempActor, )
     {
-        if (msgBoxFadeInElapsedTime < msgBoxFadeInTime)
+        if (BioPawn(tempActor) != None)
         {
-            msgBoxFadeInElapsedTime += fDeltaT;
-            SetMessageBoxBGOpacity(int(msgBoxFadeInElapsedTime / msgBoxFadeInTime * float(maxOpacity)));
+			Class'AMM_AppearanceUpdater_Base'.static.UpdatePawnAppearanceStatic(BioPawn(tempActor), "AMM UpdateAllActorAppearances");
         }
     }
-    else if (msgBoxFadeInElapsedTime > 0.0)
-    {
-        msgBoxFadeInElapsedTime -= fDeltaT;
-        SetMessageBoxBGOpacity(int(msgBoxFadeInElapsedTime / msgBoxFadeInTime * float(maxOpacity)));
-    }
-}
-public final function int GetMessageBoxBGOpacity()
-{
-    return oMsgBox.oPanel.GetVariableInt("windowMC.bgMC._alpha");
-}
-public final function SetMessageBoxBGOpacity(int opacity)
-{
-    oMsgBox.oPanel.SetVariableInt("windowMC.bgMC._alpha", opacity);
 }
 // public function ItemSelectedEx(int selectedIndex)
 // {
@@ -790,7 +719,7 @@ public final function SetMessageBoxBGOpacity(int opacity)
 // // }
 public function ActionButtonPressedEx(int selectedIndex)
 {
-	TestStreamPawn("romance");
+	
     // local AppearanceItemData selectedItem;
     // local AppearanceSubmenu submenu;
     // local AppearanceSubmenu currentSubmenu;
@@ -826,7 +755,6 @@ public function ActionButtonPressedEx(int selectedIndex)
 }
 public function AuxButtonPressedEx(int selectedIndex)
 {
-	TestStreamPawn("combat");
     // local AppearanceItemData selectedItem;
     // local AppearanceSubmenu currentSubmenu;
     
@@ -847,7 +775,6 @@ public function AuxButtonPressedEx(int selectedIndex)
 }
 public function Aux2ButtonPressedEx(int selectedIndex)
 {
-	TestStreamPawn("casual");
     // local AppearanceSubmenu currentSubmenu;
     
     // if (CameraDebug)
@@ -992,30 +919,14 @@ public function OnPanelRemoved()
 defaultproperties
 {
 	MovieTag = 'AMM'
-    // HandlerLibraryTemplate = {
-    //                           HandlerClass = "AMM.Handler.ModHandler_AMM", 
-    //                           PanelResource = "GUI_MOD_AMM.ModMenu", 
-    //                           PanelClass = "Engine.BioSFPanel", 
-    //                           Tag = 'AMM', 
-    //                           CurvePixelError = 1.0, 
-    //                           ZOrder = 357, 
-    //                           UseEdgeAA = TRUE, 
-    //                           bAutoStart = TRUE, 
-    //                           bAutoVisible = TRUE, 
-    //                           Platform = EConsoleType.CONSOLE_Any, 
-    //                           StrokeStyle = SFMovieStrokeStyle.SF_MSS_Normal
-    //                          }
-    // RootSubmenuPath = "AMM_Submenus.AppearanceSubmenu_CharacterSelect"
+    RootSubmenuPath = "AMM_Submenus.AppearanceSubmenu_CharacterSelect"
+	// "Back"
     srBack = $174627
+	// "Close"
     srClose = $161206
+	// "Apply"
     srDefaultActionText = $177145
+	// "Open"
     srOpenSubmenu = $177824
-    srConfirmationConfirm = $168235
-    srConfirmationText = $210210212
-    srConfirmationStay = $173053
-    msgBoxFadeInTime = 0.25
-    maxOpacity = 120
-    // CameraDebug = FALSE
-	// holding onto this so that it definitely stays in memory. It is suspect otherwise, and it causes weird problems
 	movieInfo = GFXMovieInfo'Gui.ModMenu'
 }

@@ -1,19 +1,9 @@
 Class AMM_Pawn_Handler extends AMM_Handler_Helper;
 
-// should I separately keep track of pawns and files? Seems like coupling those is actually making it messy.
-// I need a list of pawns so I can quickly retrive a pawn I have already otherwise fetched
-// I need to know which of those pawns need to be destroyed (because they were spawned in specifically)
-// I need to know what state to put those back into
-
-// so, list of pawns with a bool for destroy plus tag and appearance type for quick lookup. The RealWorldPawnRecord
-
-// separately, I need a list of framework filenames and their original state, purely so that I can restore it at the end
-
-// I could hypothetically load multiple files in the background at once. I would like to keep that possibility open. 
-// it would feel more snappy if I could preload. 
-
-
-
+// This class handles keeping track of pawns in the menu.
+// it handles spawning or streaming them in
+// cleaning them up when we are done
+// displaying exactly one pawn at a time
 
 // a way to keep track of the real world pawns we spawn UI world pawns based on
 // some need to be left alone at the end, some need to be destroyed/streamed out
@@ -147,7 +137,7 @@ public function PawnLoadState LoadPawn(string tag, string appearanceType)
 	foreach pawnRecords(currentRecord)
 	{
 		LogInternal("checking if pawn is already loaded"@currentRecord.tag@currentRecord.appearanceType);
-		if (currentRecord.tag == tag && currentRecord.appearanceType == appearanceType)
+		if (currentRecord.tag ~= tag && currentRecord.appearanceType == appearanceType)
 		{
 			LogInternal("already loaded"@currentRecord.tag@currentRecord.appearanceType);
 			return PawnLoadState.Loaded;
@@ -208,7 +198,7 @@ public function bool DisplayPawn(string tag, string appearanceType)
 
 	foreach pawnRecords(currentRecord)
 	{
-		if (currentRecord.tag == tag && currentRecord.appearanceType == appearanceType)
+		if (currentRecord.tag ~= tag && currentRecord.appearanceType == appearanceType)
 		{
 			newDisplayPawn = currentRecord.pawn;
 			break;
@@ -227,9 +217,12 @@ public function bool DisplayPawn(string tag, string appearanceType)
 			oBWI.m_UIWorld.DestroyPawn(_currentDisplayedPawn);
 		}
 		_currentDisplayedPawn = newDisplayPawn;
-		oBWI.m_UIWorld.TriggerEvent('SetupInventory', _outerMenu.oWorldInfo);
-		oBWI.m_UIWorld.spawnPawn(_currentDisplayedPawn, 'InventorySpawnPoint', 'InventoryPawn');
-		return true;
+		if (_currentDisplayedPawn != None)
+		{
+			oBWI.m_UIWorld.TriggerEvent('SetupInventory', _outerMenu.oWorldInfo);
+			oBWI.m_UIWorld.spawnPawn(_currentDisplayedPawn, 'InventorySpawnPoint', 'InventoryPawn');
+			return true;
+		}
 	}
 	return false;
 }
