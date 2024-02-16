@@ -37,15 +37,54 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 $"srTitle={SquadMemberNameStringref}",
                 // "Choose an outfit type"
                 "srSubtitle=210210213",
-                // casual outfits
+                // casual appearance
                 $"+menuItems=(srCenterText=210210214, SubMenuClassName=\"AMM_Submenus.{SquadMemberName}.AppearanceSubmenu_{SquadMemberName}_Casual\")",
-                // combat outfits
+                // combat appearance
                 $"+menuItems=(srCenterText=210210215, SubMenuClassName=\"AMM_Submenus.{SquadMemberName}.AppearanceSubmenu_{SquadMemberName}_Combat\")",
                 ]);
             if (Romanceable)
             {
                 // romance appearance
                 lines.Add($"+menuItems=(srCenterText=210210216, SubMenuClassName=\"AMM_Submenus.{SquadMemberName}.AppearanceSubmenu_{SquadMemberName}_Romance\")");
+            }
+
+            // add submenu for casual appearance
+            lines.AddRange([
+                $"[BioUI.ini AMM_Submenus.{SquadMemberName}.AppearanceSubmenu_{SquadMemberName}_Casual]",
+                $"pawnOverride={PawnTag}",
+                "appearanceType=casual",
+                "menuAppearanceType=casual",
+                $"srTitle={SquadMemberNameStringref}",
+                // "Casual appearance"
+                "srSubtitle=210210214",
+                // TODO inline to some actual outfits
+                ]);
+
+            // add submenu for combat appearance
+            lines.AddRange([
+                $"[BioUI.ini AMM_Submenus.{SquadMemberName}.AppearanceSubmenu_{SquadMemberName}_Combat]",
+                $"pawnOverride={PawnTag}",
+                "appearanceType=combat",
+                "menuAppearanceType=combat",
+                $"srTitle={SquadMemberNameStringref}",
+                // "Casual appearance"
+                "srSubtitle=210210215",
+                // TODO inline to some actual outfits
+                ]);
+
+            if (Romanceable)
+            {
+                // add submenu for romance appearance
+                lines.AddRange([
+                    $"[BioUI.ini AMM_Submenus.{SquadMemberName}.AppearanceSubmenu_{SquadMemberName}_Romance]",
+                    $"pawnOverride={PawnTag}",
+                    "appearanceType=casual",
+                    "menuAppearanceType=romance",
+                    $"srTitle={SquadMemberNameStringref}",
+                    // "Romance appearance"
+                    "srSubtitle=210210216",
+                    // TODO inline to some actual outfits
+                    ]);
             }
 
             // TODO add entries for submenus to make them do literally anything
