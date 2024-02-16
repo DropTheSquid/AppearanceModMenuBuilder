@@ -34,25 +34,24 @@ public function bool GetPawnParamsByTag(coerce string Tag, out AMM_Pawn_Paramete
     local AMM_Pawn_Parameters currentParams;
     local BioGlobalVariableTable globalVars;
     
-	LogInternal("getting pawn params by tag"@Tag);
     populatePawnParams();
     if (Tag ~= "Player")
     {
 		globalVars = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo()).GetGlobalVariables();
         Tag = globalVars.GetBool(4639) ? "Human_Female" : "Human_Male";
-		LogInternal("coerced player tag to"@tag);
     }
     foreach pawnParamList(currentParams, )
     {
-		LogInternal("checking"@currentParams.Tag);
         if (currentParams.Tag ~= Tag)
         {
-			LogInternal("found"@currentParams.Tag);
             params = currentParams;
             return TRUE;
         }
     }
-	LogInternal("not found"@Tag);
+	if (!(tag ~= "None"))
+	{
+		LogInternal("Warning: GetPawnParamsByTag not found"@Tag);
+	}
     return FALSE;
 }
 private final function populatePawnParams()
@@ -66,23 +65,19 @@ private final function populatePawnParams()
     
     if (!paramsPopulated)
     {
-		LogInternal("populating params"@pawnParamSpecs.Length);
         for (index = 0; index < pawnParamSpecs.Length; index++)
         {
             currentSpec = pawnParamSpecs[index];
             if (currentSpec.parameterPath != "")
             {
-				LogInternal("populating param"@index@currentSpec.parameterPath);
                 paramsClass = Class<AMM_Pawn_Parameters>(DynamicLoadObject(currentSpec.parameterPath, Class'Class'));
                 if (paramsClass != None)
                 {
-					LogInternal("Got class"@paramsClass);
                     paramsInstance = new paramsClass;
                 }
                 else
                 {
                     paramsInstance = AMM_Pawn_Parameters(DynamicLoadObject(currentSpec.parameterPath, Class'AMM_Pawn_Parameters'));
-					LogInternal("Got instance"@paramsInstance);
                 }
                 if (paramsInstance != None)
                 {
@@ -90,7 +85,7 @@ private final function populatePawnParams()
                 }
                 continue;
             }
-            LogInternal("You are trying to dynamically create pawn params. This is not implemented yet", );
+            LogInternal("Warning: You are trying to dynamically create pawn params. This is not implemented yet", );
             paramsInstance = new Class'AMM_Pawn_Parameters';
             // TODO populate the spec lists if things are added in directly.
         }

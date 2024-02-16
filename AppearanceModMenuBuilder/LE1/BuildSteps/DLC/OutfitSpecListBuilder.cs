@@ -17,13 +17,12 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             var startup = context.GetStartupFile();
 
             AddOutfitSpecList("HMF_OutfitSpec", GetHMFOutfits());
-            // TODO create/populate other outfit spec lists for squadmates
             AddOutfitSpecList("HMM_OutfitSpec", GetHMMOutfits());
-            //AddOutfitSpecList("TUR_OutfitSpec");
-            //AddOutfitSpecList("KRO_OutfitSpec");
-            //AddOutfitSpecList("QRN_OutfitSpec");
-
-            // TODO is it worth creating lists for other non squadmate body types? Female Turian, Volus, Salarian, Elcor, Hanar, male Quarian, Drell, others that do not show up in 1 such as Vorcha maybe?
+            AddOutfitSpecList("TUR_OutfitSpec", GetTUROutfits());
+            AddOutfitSpecList("KRO_OutfitSpec", GetKROOutfits());
+            AddOutfitSpecList("QRN_OutfitSpec", GetQRNOutfits());
+            // TODO other ones to possibly add:
+            // Female Turian, Volus, Salarian, Elcor, Hanar, male Quarian,Vorcha
 
             var compileClassesTask = new AddClassesToFile(_ => startup, classes);
             compileClassesTask.RunModTask(context);
@@ -125,6 +124,57 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             return [LGTa, LGTb, MEDa, MEDb, MEDc, HVYa, HVYb, NKDa, CTHa, CTHb, CTHc, CTHd, CTHe, CTHf, CTHg, CTHh];
         }
+
+        private VanillaOutfitList[] GetKROOutfits()
+        {
+            const string bodyType = "KRO";
+
+            // add all vanilla armor variants into positive IDs less than 100 (only goes up to 61)
+            var MEDa = new VanillaOutfitList(1, GetVanillaArmorFileName(bodyType, OutfitType.MED), OutfitType.MED, 0, bodyType, 11, 1, "Vanilla MEDa");
+
+            var HVYa = new VanillaOutfitList(12, GetVanillaArmorFileName(bodyType, OutfitType.HVY), OutfitType.HVY, 0, bodyType, 12, 1, "Vanilla HVYa");
+            var HVYb = new VanillaOutfitList(24, GetVanillaArmorFileName(bodyType, OutfitType.HVY), OutfitType.HVY, 1, bodyType, 1, 1, "Vanilla HVYb");
+            var HVYc = new VanillaOutfitList(25, GetVanillaArmorFileName(bodyType, OutfitType.HVY), OutfitType.HVY, 2, bodyType, 3, 1, "Vanilla HVYc");
+
+            // Add CTH vanilla meshes (100-105)
+            var CTHa = new VanillaOutfitList(100, GetVanillaArmorFileName(bodyType, OutfitType.CTH), OutfitType.CTH, 0, bodyType, 5, 1, "Krogan Vanilla Casual Clothes");
+            
+            // TODO add extended vanilla meshes
+            return [MEDa, HVYa, HVYb, HVYc, CTHa];
+        }
+
+        private VanillaOutfitList[] GetTUROutfits()
+        {
+            const string bodyType = "TUR";
+
+            // add all vanilla armor variants into positive IDs less than 100
+            var LGTa = new VanillaOutfitList(1, GetVanillaArmorFileName(bodyType, OutfitType.LGT), OutfitType.LGT, 0, bodyType, 15, 1, "Vanilla LGTa");
+            var LGTb = new VanillaOutfitList(16, GetVanillaArmorFileName(bodyType, OutfitType.LGT), OutfitType.LGT, 1, bodyType, 3, 1, "Vanilla LGTb");
+
+            var MEDa = new VanillaOutfitList(19, GetVanillaArmorFileName(bodyType, OutfitType.MED), OutfitType.MED, 0, bodyType, 16, 1, "Vanilla MEDa variants");
+
+            var HVYa = new VanillaOutfitList(35, GetVanillaArmorFileName(bodyType, OutfitType.HVY), OutfitType.HVY, 0, bodyType, 15, 1, "Vanilla HVYa variants");
+
+            // Add CTH vanilla meshes (100+)
+            var CTHa = new VanillaOutfitList(100, GetVanillaArmorFileName(bodyType, OutfitType.CTH), OutfitType.CTH, 0, bodyType, 5, 1, "Vanilla CTHa; Alliance Formal");
+            var CTHb = new VanillaOutfitList(105, GetVanillaArmorFileName(bodyType, OutfitType.CTH), OutfitType.CTH, 1, bodyType, 4, 1, "Vanilla CTHb; ME1 Alliance Fatigues");
+            var CTHc = new VanillaOutfitList(109, GetVanillaArmorFileName(bodyType, OutfitType.CTH), OutfitType.CTH, 2, bodyType, 5, 1, "Vanilla CTHc; dress 1");
+
+            // TODO add extended vanilla meshes
+            return [LGTa, LGTb, MEDa, HVYa, CTHa, CTHb, CTHc];
+        }
+
+        private VanillaOutfitList[] GetQRNOutfits()
+        {
+            const string bodyType = "QRN";
+
+            // add all vanilla armor variants into positive IDs less than 100
+            var LGTa = new VanillaOutfitList(1, GetVanillaArmorFileName(bodyType, OutfitType.LGT), OutfitType.LGT, 0, bodyType, 6, 2, "Vanilla LGTa");
+
+            // TODO add extended vanilla meshes
+            return [LGTa];
+        }
+
         private string GetVanillaArmorFileName(string bodyType, OutfitType outfitType)
         {
             return $"BIOG_{bodyType}_ARM_{outfitType}_R";

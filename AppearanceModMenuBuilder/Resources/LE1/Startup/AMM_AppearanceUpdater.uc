@@ -12,35 +12,31 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 	local OutfitSpecBase outfitSpec;
 
 	UpdateOuterWorldInfo();
-	LogInternal("appearance update for target"@PathName(target)@Target.Tag@"from source"@source);
+	// LogInternal("appearance update for target"@PathName(target)@Target.Tag@"from source"@source);
 	if (paramHandler.GetPawnParams(target, params))
 	{
-		// LogInternal("found params for pawn"@target@target.Tag@params);
-		LogInternal("appearanceType"@params.GetAppearanceType(target));
 		if (params.GetCurrentAppearanceIds(target, appearanceIds))
 		{
-			LogInternal("appearanceIds"@appearanceIds.bodyAppearanceId@appearanceIds.helmetAppearanceId);
 			outfitList = params.GetOutfitSpecList(target);
 			if (outfitList == None)
 			{
-				LogInternal("Could not get outfit list");
+				LogInternal("Warning: Could not get outfit list");
+				return;
 			}
-			// temp adding 1 for testing
-			if (outfitList != none && outfitList.GetOutfitSpecById(appearanceIds.bodyAppearanceId, outfitSpec))
+			if (outfitList.GetOutfitSpecById(appearanceIds.bodyAppearanceId, outfitSpec))
 			{
-				LogInternal("Got outfit spec"@outfitSpec);
 				outfitSpec.ApplyOutfit(target);
 			}
 		}
 		else
 		{
-			LogInternal("Could not get appearance Ids");
+			LogInternal("Warning: Could not get appearance Ids from params"@params@target);
 		}
 	}
-	else
-	{
-		LogInternal("did not find params for pawn"@target@target.Tag);
-	}
+	// else
+	// {
+	// 	LogInternal("did not find params for pawn"@target@target.Tag);
+	// }
 	// test that this is having an effect which will be overwritten by native appearance update
 	//TestReplaceMesh(target);
 	// target.Mesh.SetScale(0.6);

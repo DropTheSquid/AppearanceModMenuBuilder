@@ -41,14 +41,14 @@ public function bool GetOutfitSpecById(int Id, out OutfitSpecBase OutfitSpec)
 	{
 		if (item.specPath != "")
 		{
-			LogInternal("dynamic loading spec" @ item.specPath, );
+			// LogInternal("dynamic loading spec" @ item.specPath, );
 			outfitSpecClass = Class<OutfitSpecBase>(DynamicLoadObject(item.specPath, Class'Class', TRUE));
 			if (outfitSpecClass == None)
 			{
 				OutfitSpec = OutfitSpecBase(DynamicLoadObject(item.specPath, Class'OutfitSpecBase', TRUE));
 				if (outfitSpec == None)
 				{
-					LogInternal("Could not get outfit spec instance"@item.specPath);
+					LogInternal("Warning: Could not get outfit spec instance"@item.specPath);
 					return false;
 				}
 				return OutfitSpec != None;
@@ -64,12 +64,11 @@ public function bool GetOutfitSpecById(int Id, out OutfitSpecBase OutfitSpec)
 			// }
 			if (outfitSpec == None)
 			{
-				LogInternal("Could not get outfit spec from class"@item.specPath);
+				LogInternal("Warning: Could not get outfit spec from class"@item.specPath);
 				return false;
 			}
 			return OutfitSpec != None;
 		}
-		LogInternal("making simple spec", );
 		simpleSpec = new Class'SimpleOutfitSpec';
 		simpleSpec.meshPath = item.Mesh;
 		simpleSpec.meshMaterialPaths = item.Materials;
@@ -82,12 +81,12 @@ public function bool GetOutfitSpecById(int Id, out OutfitSpecBase OutfitSpec)
 		OutfitSpec = simpleSpec;
 		if (outfitSpec == None)
 		{
-			LogInternal("Could not make simple outfit spec with mesh"@item.Mesh);
+			LogInternal("Warning: Could not make simple outfit spec with mesh"@item.Mesh);
 			return false;
 		}
 		return true;
 	}
-	LogInternal("Could not get outfitSpec by id"@Id);
+	LogInternal("Warning: Could not get outfitSpec by id"@Id);
 	return false;
 }
 
@@ -105,6 +104,6 @@ private function bool GetOutfitSpecItemById(int Id, out OutfitSpecItem item)
             return TRUE;
         }
     }
-	LogInternal("Could not get outfitSpecItem by id"@Id);
+	LogInternal("Warning: Could not get outfitSpecItem by id"@Id);
     return FALSE;
 }

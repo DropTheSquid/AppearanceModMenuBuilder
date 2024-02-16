@@ -72,10 +72,9 @@ public static function bool LoadSkeletalMesh(string skeletalMeshPath, out Skelet
     Mesh = SkeletalMesh(DynamicLoadObject(skeletalMeshPath, Class'SkeletalMesh'));
     if (Mesh == None)
     {
-        LogInternal("WARNING failed to load mesh" @ skeletalMeshPath, );
+        LogInternal("WARNING: failed to load mesh" @ skeletalMeshPath, );
         return FALSE;
     }
-    LogInternal("Loaded mesh" @ Mesh, );
     return TRUE;
 }
 
@@ -93,7 +92,6 @@ public static function bool LoadMaterials(array<string> materialPaths, out array
             LogInternal("WARNING failed to Load material" @ materialString, );
             return FALSE;
         }
-        LogInternal("Loaded material" @ material, );
         Materials.AddItem(material);
     }
     return TRUE;
@@ -147,7 +145,7 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
 
 public static function bool IsFrameworkInstalled()
 {
-	LogInternal("checking for framework"@DynamicLoadObject("DLC_MOD_Framework_GlobalTlk.GlobalTlk_tlk", Class'Object'));
+	// LogInternal("checking for framework"@DynamicLoadObject("DLC_MOD_Framework_GlobalTlk.GlobalTlk_tlk", Class'Object'));
 	return DynamicLoadObject("DLC_MOD_Framework_GlobalTlk.GlobalTlk_tlk", Class'Object') != None;
 }
 public static function bool DoesLevelExist(coerce string levelName)

@@ -78,17 +78,17 @@ var transient array<StreamInRequest> streamingRequests;
 var transient array<RealWorldPawnRecord> pawnRecords;
 var transient BioPawn _currentDisplayedPawn;
 
-private function log(string message)
-{
-	// I can comment this next line out to turn off logging
-	LogInternal(message);
-}
+// private function log(string message)
+// {
+// 	// I can comment this next line out to turn off logging
+// 	LogInternal(message);
+// }
 public function Cleanup()
 {
 	local RealWorldPawnRecord currentRecord;
 	local StreamInRequest currentStreamRequest;
 
-	LogInternal("Doing a cleanup"@pawnRecords.Length@streamingRequests.Length);
+	// LogInternal("Doing a cleanup"@pawnRecords.Length@streamingRequests.Length);
 	if (_currentDisplayedPawn != None)
 	{
 		BioWorldInfo(_outerMenu.oWorldInfo).m_UIWorld.DestroyPawn(_currentDisplayedPawn);
@@ -98,7 +98,7 @@ public function Cleanup()
 	{
 		if (currentRecord.shouldBeDestroyed)
 		{
-			LogInternal("Destroying pawn"@PathName(currentRecord.pawn));
+			// LogInternal("Destroying pawn"@PathName(currentRecord.pawn));
 			currentRecord.pawn.Destroy();
 		}
 	}
@@ -108,16 +108,16 @@ public function Cleanup()
 		switch (currentStreamRequest.originalState)
 		{
 			case FrameworkStreamState.NotPresent:
-				LogInternal("hard streaming out"@currentStreamRequest.frameworkFileName);
+				// LogInternal("hard streaming out"@currentStreamRequest.frameworkFileName);
 				SetLevelStreamingStatus(currentStreamRequest.frameworkFileName, DesiredStreamingState.NotPresent);
 				break;
 			case FrameworkStreamState.Loaded:
 			case FrameworkStreamState.loading:
-				LogInternal("unloading out"@currentStreamRequest.frameworkFileName);
+				// LogInternal("unloading out"@currentStreamRequest.frameworkFileName);
 				SetLevelStreamingStatus(currentStreamRequest.frameworkFileName, DesiredStreamingState.Loaded);
 				break;
 			case FrameworkStreamState.StreamedOut:
-				LogInternal("soft streaming out"@currentStreamRequest.frameworkFileName);
+				// LogInternal("soft streaming out"@currentStreamRequest.frameworkFileName);
 				SetLevelStreamingStatus(currentStreamRequest.frameworkFileName, DesiredStreamingState.Unloaded);
 				break;
 		}
@@ -136,10 +136,10 @@ public function PawnLoadState LoadPawn(string tag, string appearanceType)
 	// first look to see if we already have a suitable pawn
 	foreach pawnRecords(currentRecord)
 	{
-		LogInternal("checking if pawn is already loaded"@currentRecord.tag@currentRecord.appearanceType);
+		// LogInternal("checking if pawn is already loaded"@currentRecord.tag@currentRecord.appearanceType);
 		if (currentRecord.tag ~= tag && currentRecord.appearanceType == appearanceType)
 		{
-			LogInternal("already loaded"@currentRecord.tag@currentRecord.appearanceType);
+			// LogInternal("already loaded"@currentRecord.tag@currentRecord.appearanceType);
 			return PawnLoadState.Loaded;
 		}
 	}
@@ -181,11 +181,11 @@ public function PawnLoadState LoadPawn(string tag, string appearanceType)
 			return PawnLoadState.loading;
 		}
 		
-		LogInternal("found params but couldn't find pawn for tag"@tag);
+		LogInternal("Warning: found params but couldn't find pawn for tag"@tag);
 		return PawnLoadState.failed;
 	}
 	// could not find any params for this tag; that's not great.
-	LogInternal("Could not find params for tag"@tag);
+	LogInternal("Warning: Could not find params for tag"@tag);
 	return PawnLoadState.failed;
 }
 
@@ -233,16 +233,16 @@ private function bool LoadFrameworkFile(string tag, string appearanceType, strin
 	local StreamInRequest request;
 	local int i;
 
-	LogInternal("LoadFrameworkFile"@tag@appearanceType@Filename);
+	// LogInternal("LoadFrameworkFile"@tag@appearanceType@Filename);
 	// first, check if we already have a pending or in progress request for this
 	if (GetAsyncRequest(streamingRequests, fileName, request, i))
 	{
 		// there is already a request in progress. See if it already has the requested tag and appearance type
-		log("There is an in progress/finished request for framework file"@fileName);
+		// log("There is an in progress/finished request for framework file"@fileName);
 		// TODO support more than one?
 		return request.completed;
 	}
-	log("Creating new streamInRequest for"@tag@appearanceType@fileName);
+	// log("Creating new streamInRequest for"@tag@appearanceType@fileName);
 	// TODO check for a queued one and move it into inProgress once that is supported
 	request.frameworkFileName = fileName;
 	request.pawnIds.Length = 1;
@@ -333,7 +333,7 @@ public function update(float fDeltaT)
 					{
 						if (FindStreamedInPawn(currentPawnId.tag, currentRequest.FrameworkFileName, pawn))
 						{
-							LogInternal("Adding a new pawn to the thing"@currentPawnId.tag@currentPawnId.appearanceType@currentRequest.FrameworkFileName);
+							// LogInternal("Adding a new pawn to the thing"@currentPawnId.tag@currentPawnId.appearanceType@currentRequest.FrameworkFileName);
 							newRecord.Tag = currentPawnId.tag;
 							newRecord.appearanceType = currentPawnId.appearanceType;
 							newRecord.Pawn = pawn;
@@ -363,46 +363,51 @@ public function update(float fDeltaT)
 					SetLevelStreamingStatus(currentRequest.frameworkFileName, DesiredStreamingState.Loaded);
 					break;
 				default:
-					LogInternal("unknown streaming state"@currentState);
+					LogInternal("Warning: unknown streaming state"@currentState);
 			}
-		}
-		else if (currentRequest.desiredState == DesiredStreamingState.Loaded)
-		{
-			switch (currentState)
-			{
-				case FrameworkStreamState.visible:
-				case FrameworkStreamState.BecomingVisible:
-					// tell it to become invisible/back to just loaded
-					SetLevelStreamingStatus(currentRequest.frameworkFileName, DesiredStreamingState.Loaded);
-					break;
-				case FrameworkStreamState.loading:
-					// keep waiting
-					break;
-				case FrameworkStreamState.Loaded:
-					// This is now in the desired state!
-					// TODO do I need to do anything?
-					LogInternal("file"@currentRequest.frameworkFileName@"Is loaded, as desired");
-					streamingRequests[i].completed = true;
-					break;
-				case FrameworkStreamState.NotPresent:
-				case FrameworkStreamState.StreamedOut:
-					// tell it to load in the background
-					SetLevelStreamingStatus(currentRequest.frameworkFileName, DesiredStreamingState.Loaded);
-					break;
-				default:
-					LogInternal("unknown streaming state"@currentState);
-			}
-		}
-		else if (currentRequest.desiredState == DesiredStreamingState.Unloaded)
-		{
-			SetLevelStreamingStatus(currentRequest.frameworkFileName, DesiredStreamingState.Unloaded);
-			streamingRequests[i].completed = true;
 		}
 		else
 		{
-			SetLevelStreamingStatus(currentRequest.frameworkFileName, DesiredStreamingState.NotPresent);
+			LogInternal("other desired states are not implemented"@currentRequest.desiredState);
 			streamingRequests[i].completed = true;
 		}
+		// else if (currentRequest.desiredState == DesiredStreamingState.Loaded)
+		// {
+		// 	switch (currentState)
+		// 	{
+		// 		case FrameworkStreamState.visible:
+		// 		case FrameworkStreamState.BecomingVisible:
+		// 			// tell it to become invisible/back to just loaded
+		// 			SetLevelStreamingStatus(currentRequest.frameworkFileName, DesiredStreamingState.Loaded);
+		// 			break;
+		// 		case FrameworkStreamState.loading:
+		// 			// keep waiting
+		// 			break;
+		// 		case FrameworkStreamState.Loaded:
+		// 			// This is now in the desired state!
+		// 			// TODO do I need to do anything?
+		// 			LogInternal("file"@currentRequest.frameworkFileName@"Is loaded, as desired");
+		// 			streamingRequests[i].completed = true;
+		// 			break;
+		// 		case FrameworkStreamState.NotPresent:
+		// 		case FrameworkStreamState.StreamedOut:
+		// 			// tell it to load in the background
+		// 			SetLevelStreamingStatus(currentRequest.frameworkFileName, DesiredStreamingState.Loaded);
+		// 			break;
+		// 		default:
+		// 			LogInternal("unknown streaming state"@currentState);
+		// 	}
+		// }
+		// else if (currentRequest.desiredState == DesiredStreamingState.Unloaded)
+		// {
+		// 	SetLevelStreamingStatus(currentRequest.frameworkFileName, DesiredStreamingState.Unloaded);
+		// 	streamingRequests[i].completed = true;
+		// }
+		// else
+		// {
+		// 	SetLevelStreamingStatus(currentRequest.frameworkFileName, DesiredStreamingState.NotPresent);
+		// 	streamingRequests[i].completed = true;
+		// }
 	}
 }
 
@@ -450,7 +455,7 @@ private final function SetLevelStreamingStatus(coerce Name packageName, DesiredS
 			break;
 		default:
 			// this should never happen???
-			LogInternal("unknown desired streaming state"@desiredState);
+			LogInternal("warning: unknown desired streaming state"@desiredState);
 			break;
 	}
 	// LogInternal("SetLevelStreamingStatus"@packageName@desiredState@bShouldBeLoaded@bShouldBeVisible);

@@ -49,10 +49,6 @@ public static function CustomUIHandlerInterface LaunchMenu(optional string Param
     {
         Handler.launchedInPrologue = TRUE;
     }
-    if (Class'ModHandler_AMM'.static.LoadSubmenu(Param) != None)
-    {
-        Handler.RootSubmenuPath = Param;
-    }
     manager.AddPanel(oNewPanel, FALSE, FALSE);
 
     return Handler;
@@ -96,62 +92,30 @@ public function OnPanelAdded()
     local AMM_Pawn_Parameters params;
     
     GetManager().SetupBackground();
-    LogInternal("Panel added; launch param:" @ launchParam @ "launched in prologue?"@launchedInPrologue);
+    // LogInternal("Panel added; launch param:" @ launchParam @ "launched in prologue?"@launchedInPrologue);
     pawnHandler = new (Self) Class'AMM_Pawn_Handler';
 	pawnHandler.Init(self);
     paramHandler = new Class'Pawn_Parameter_Handler';
     cameraHandler = new Class'AMM_Camera_Handler';
     cameraHandler.Init(self);
-	// test streaming in several framework files upfront
-	// testPrestreaming();
-	// // setup buttons for testing displaying the loaded pawns
-	// SetupTestButtons();
-    if (paramHandler.GetPawnParamsByTag(launchParam, params))
+	// if we launched from the prologue, just start at character selection
+	if (launchedInPrologue)
+	{
+		RootSubmenuPath = default.RootSubmenuPath;
+	}
+	// check next if this is a submenu path
+	else if (LoadSubmenu(launchParam) != None)
+    {
+        RootSubmenuPath = launchParam;
+    }
+	// finally, check if it is a pawn tag and look up the root menu from there
+    else if (paramHandler.GetPawnParamsByTag(launchParam, params))
     {
         RootSubmenuPath = params.menuRootPath;
     }
     SetRootSubmenu(RootSubmenuPath);
     Super.OnPanelAdded();
 }
-// private function testPrestreaming()
-// {
-// 	local PawnLoadState state;
-// 	state = pawnHandler.LoadPawn("Hench_HumanMale", "casual");
-// 	state = pawnHandler.LoadPawn("Hench_HumanMale", "combat");
-// 	state = pawnHandler.LoadPawn("Hench_HumanMale", "romance");
-// }
-
-// private function SetupTestButtons()
-// {
-// 	ASSetAux2ButtonActive(TRUE, FALSE);
-// 	ASSetAux2ButtonText("Kaidan Casual");
-// 	ASSetActionButtonActive(true);
-// 	ASSetActionButtonText("Kaidan Romance");
-// 	ASSetAuxButtonActive(true);
-// 	ASSetAuxButtonText("Kaidan Combat");
-// }
-
-// private function TestStreamPawn(string appearanceType)
-// {
-// 	local PawnLoadState state;
-
-// 	// testing a thing
-// 	testappearanceType = appearanceType;
-// 	state = pawnHandler.LoadPawn("Hench_HumanMale", appearanceType);
-// 	if (state == PawnLoadState.Loaded)
-// 	{
-// 		LogInternal("Kaidan is already loaded");
-// 		pawnhandler.DisplayPawn("Hench_HumanMale", appearanceType);
-// 	}
-// 	else if (state == PawnLoadState.failed)
-// 	{
-// 		LogInternal("How did this fail????");
-// 	}
-// 	else
-// 	{
-// 		LogInternal("Async loading Kaidan");
-// 	}
-// }
 
 public function Close()
 {
@@ -412,7 +376,6 @@ public function string GetString(string s, stringref sr)
 {
     if (sr == $210210218)
     {
-        LogInternal("attempting to dynamically get Shep's name", );
         return Class'SFXEngine'.static.GetEngine().CurrentSaveGame.PlayerRecord.FirstName @ $156667;
     }
     return s != "" ? s : string(sr);

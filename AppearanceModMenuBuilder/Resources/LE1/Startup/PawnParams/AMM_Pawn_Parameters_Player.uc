@@ -36,7 +36,6 @@ public function string GetAppearanceType(BioPawn targetPawn)
 		if (ncHandler.UIState < NewCharacterUIState.NCMS_Class)
 		{
 			// pre class selection
-			// LogInternal("pre selection CC class"@ncHandler.lstCurrentClass[0]);
 			return "CharacterCreator";
 		}
 		// during/post class selection
@@ -67,7 +66,7 @@ public function string GetAppearanceType(BioPawn targetPawn)
 		}
 		else
 		{
-			LogInternal("unknown CC class \""$currentClass$"\"");
+			LogInternal("Warning: unknown CC class \""$currentClass$"\"");
 			return "CharacterCreator";
 		}
 	}
@@ -102,6 +101,7 @@ public function bool GetAppearanceIds(string appearanceType, out PawnAppearanceI
 			return true;
 		// every other circumstance
 		default:
-			return Super(AMM_Pawn_Parameters).GetAppearanceIds(appearanceType, PawnAppearanceIds);
+			break;
 	}
+	return Super(AMM_Pawn_Parameters).GetAppearanceIds(appearanceType, PawnAppearanceIds);
 }

@@ -65,7 +65,7 @@ public function bool GetAppearanceIds(string appearanceType, out PawnAppearanceI
     globalVars = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo()).GetGlobalVariables();
     if (!GetAppearanceIdLookup(appearanceType, lookups))
     {
-        LogInternal("Could not get appearance ids for appearance type" @ appearanceType, );
+        LogInternal("Warning: Could not get appearance ids for appearance type" @ appearanceType, );
         return FALSE;
     }
     PawnAppearanceIds.bodyAppearanceId = GetAppearanceIdValue(lookups.bodyAppearanceLookup, globalVars);
@@ -113,7 +113,6 @@ public function bool GetFrameworkFileForAppearanceType(string appearanceType, ou
 		{
 			if (currentLookups.appearanceType ~= appearanceType)
 			{
-				LogInternal("found lookups for appearance type"@appearanceType@currentLookups.FrameworkFileName);
 				frameworkFileName = currentLookups.FrameworkFileName;
 				return class'AMM_Utilities'.static.DoesLevelExist(frameworkFileName);
 			}
@@ -128,7 +127,6 @@ public function OutfitSpecListBase GetOutfitSpecList(BioPawn targetPawn)
     
     if (__outfitSpecList == None)
     {
-		LogInternal("Getting outfit list for the first time");
         specListClass = Class<OutfitSpecListBase>(DynamicLoadObject(outfitSpecListPath, Class'Class'));
         if (specListClass != None)
         {
@@ -136,7 +134,7 @@ public function OutfitSpecListBase GetOutfitSpecList(BioPawn targetPawn)
         }
 		else
 		{
-			LogInternal("could not load spec list"@outfitSpecListPath);
+			LogInternal("Warning: could not load spec list"@outfitSpecListPath);
 		}
     }
     return __outfitSpecList;
