@@ -98,6 +98,7 @@ var transient array<string> MenuParameters;
 var config string pawnOverride;
 var config string menuAppearanceType;
 // var config eMenuHelmetOverride menuHelmetOverride;
+var config bool preloadPawn;
 
 // Functions
 public function bool OnRefreshMenu(Object outerMenu)
@@ -128,4 +129,5 @@ public function bool OnBackButtonPressed(Object outerMenu)
 //class default properties can be edited in the Properties tab for the class's Default__ object.
 defaultproperties
 {
+	preloadPawn = true
 }

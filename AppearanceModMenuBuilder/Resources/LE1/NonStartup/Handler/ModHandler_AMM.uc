@@ -293,10 +293,6 @@ private function TryDisplayPawn(string tag, string appearanceType)
 }
 public function PopulateFromSubmenu(AppearanceSubmenu currentSubmenu)
 {
-    PopulateFromSubmenuClass(currentSubmenu);
-}
-public function PopulateFromSubmenuClass(AppearanceSubmenu currentSubmenu)
-{
     local AppearanceItemData currentItem;
     local menuState state;
     
@@ -512,13 +508,23 @@ public function AddItemForDisplay(AppearanceItemData item, AppearanceSubmenu cur
     }
     item.disabled = !ShouldItemBeEnabled(item);
     item.submenuInstance = GetSubmenuFromItem(item);
-    if (item.submenuInstance != None && item.inlineSubmenu)
-    {
-        if (!CheckForCycle(currentSubmenu, item.submenuInstance))
-        {
-            PopulateFromSubmenu(item.submenuInstance);
-        }
-    }
+	// preload the pawn for this submenu, if applicable
+	if (item.submenuInstance != None && !item.inlineSubmenu && item.submenuInstance.PreloadPawn)
+	{
+		if (item.submenuInstance.pawnOverride != "" && !(item.submenuInstance.pawnOverride ~= "None"))
+		{
+			pawnHandler.LoadPawn(item.submenuInstance.pawnOverride, item.submenuInstance.menuAppearanceType);
+		}
+	}
+	// add inline items, if applicable
+	if (item.submenuInstance != None && item.inlineSubmenu)
+	{
+		if (!CheckForCycle(currentSubmenu, item.submenuInstance))
+		{
+			PopulateFromSubmenu(item.submenuInstance);
+		}
+	}
+	// otherwise, just add the item into the menu
     else
     {
         currentDisplayItems.AddItem(item);
