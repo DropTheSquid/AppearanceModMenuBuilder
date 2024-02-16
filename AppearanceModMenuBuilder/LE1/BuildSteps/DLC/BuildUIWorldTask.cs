@@ -118,15 +118,24 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 return newSeqAct;
             }
 
+            var InventoryPawnSeqVar = pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_0");
+            var CharRecPawnSeqVar = pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_5");
+            ExportEntry[] CharCreateSeqVars = [
+                pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_8"),
+                pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_31"),
+                pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_33"),
+                pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_30")
+                ];
+
             // add a sequence action to update whenever the character record changes is set up/changes characters
             AddPawnAppearanceUpdateSeqAct(
                 FindRemoteEvent("SetupCharRec", "TheWorld.PersistentLevel.Main_Sequence.SeqEvent_RemoteEvent_16"),
-                pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_5"));
+                CharRecPawnSeqVar);
 
             // same for inventory
             var inventoryUpdateSeqAct = AddPawnAppearanceUpdateSeqAct(
                 FindRemoteEvent("SetupInventory", "TheWorld.PersistentLevel.Main_Sequence.SeqEvent_RemoteEvent_12"),
-                pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_0"));
+                InventoryPawnSeqVar);
 
             // also connect the ForceTexture RemoteEvent to trigger inventory appearance update
             var RE_ForceTexture = FindRemoteEvent("ForceTexture", "TheWorld.PersistentLevel.Main_Sequence.SeqEvent_RemoteEvent_19");
@@ -135,29 +144,45 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // and Character Creation, which has several different pawns for no good reason
             var charCreateSeqAct = AddPawnAppearanceUpdateSeqAct(
                 FindRemoteEvent("SetupCharCreate", "TheWorld.PersistentLevel.Main_Sequence.SeqEvent_RemoteEvent_22"),
-                pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_8"),
-                pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_31"),
-                pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_33"),
-                pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_30"));
+                CharCreateSeqVars);
 
             // new remote event to trigger appearance update for character creation on demand
             var RE_UpdateCC = AddRemoteEvent("re_amm_update_cc", "updates the character create pawn(s)");
             KismetHelper.CreateOutputLink(RE_UpdateCC, "Out", charCreateSeqAct);
 
             // new remote event to trigger the camera position update for inventory setup
-            var cameraInterp = pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqAct_Interp_2") 
+            var cameraInterp = pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqAct_Interp_2")
                 ?? throw new Exception("Could not find camera interp in UI world to hook up to");
             var RE_UpdateCamera = AddRemoteEvent("re_AMM_UpdateCameraPosition", "updates the camera position");
             KismetHelper.CreateOutputLink(RE_UpdateCamera, "Out", cameraInterp, 0);
 
             // new remote events to update the preview pawn's armor override state
-            var RE_ArmorOverrideOn = AddRemoteEvent("re_AMM_ArmorOverrideOn", "updates the preview pawn's armor override to true");
+            var RE_ArmorOverrideOn = AddRemoteEvent("re_AMM_NonCombat", "updates the preview pawn's armor override to true and removes weapons");
             KismetHelper.CreateOutputLink(RE_ArmorOverrideOn, "Out", inventoryUpdateSeqAct, 1);
             KismetHelper.CreateOutputLink(RE_ArmorOverrideOn, "Out", inventoryUpdateSeqAct, 0);
 
-            var RE_ArmorOverrideOff = AddRemoteEvent("re_AMM_ArmorOverrideOff", "updates the preview pawn's armor override to false");
+            var RE_ArmorOverrideOff = AddRemoteEvent("re_AMM_Combat", "updates the preview pawn's armor override to false and adds weapons, if applicable");
             KismetHelper.CreateOutputLink(RE_ArmorOverrideOff, "Out", inventoryUpdateSeqAct, 2);
             KismetHelper.CreateOutputLink(RE_ArmorOverrideOff, "Out", inventoryUpdateSeqAct, 0);
+
+            // also wire the above REs up to seqActs that shows/hides weapons weapons
+            var HideWeaponsAct = SequenceObjectCreator.CreateSequenceObject(pcc, "BioSeqAct_HideAllWeapons");
+            var ShowWeaponsAct = SequenceObjectCreator.CreateSequenceObject(pcc, "BioSeqAct_HideAllWeapons");
+            KismetHelper.AddObjectToSequence(HideWeaponsAct, mainSeq);
+            KismetHelper.AddObjectToSequence(ShowWeaponsAct, mainSeq);
+            var seqVarFalse = SequenceObjectCreator.CreateSequenceObject(pcc, "SeqVar_Bool");
+            var seqVarTrue = SequenceObjectCreator.CreateSequenceObject(pcc, "SeqVar_Bool");
+            KismetHelper.AddObjectToSequence(seqVarFalse, mainSeq);
+            KismetHelper.AddObjectToSequence(seqVarTrue, mainSeq);
+            seqVarFalse.WriteProperty(new IntProperty(0, "bValue"));
+            seqVarTrue.WriteProperty(new IntProperty(1, "bValue"));
+            KismetHelper.CreateVariableLink(HideWeaponsAct, "ShouldHideWeapons", seqVarTrue);
+            KismetHelper.CreateVariableLink(ShowWeaponsAct, "ShouldHideWeapons", seqVarFalse);
+            KismetHelper.CreateVariableLink(ShowWeaponsAct, "Pawns", InventoryPawnSeqVar);
+            KismetHelper.CreateVariableLink(HideWeaponsAct, "Pawns", InventoryPawnSeqVar);
+
+            KismetHelper.CreateOutputLink(RE_ArmorOverrideOff, "Out", ShowWeaponsAct);
+            KismetHelper.CreateOutputLink(RE_ArmorOverrideOn, "Out", HideWeaponsAct);
 
             // new remote event to just update inventory/AMM preview pawn appearance
             var RE_Update = AddRemoteEvent("re_AMM_update_Appearance", "updates the preview pawn's appearance in AMM");

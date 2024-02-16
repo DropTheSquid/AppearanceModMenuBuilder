@@ -234,11 +234,11 @@ public function ForceAppearanceType(eArmorOverrideState state)
     oBWI = BioWorldInfo(_outerMenu.oWorldInfo);
     if (state == eArmorOverrideState.overridden)
     {
-        oBWI.m_UIWorld.TriggerEvent('re_AMM_ArmorOverrideOn', _outerMenu.oWorldInfo);
+        oBWI.m_UIWorld.TriggerEvent('re_AMM_NonCombat', _outerMenu.oWorldInfo);
     }
     else if (state == eArmorOverrideState.equipped)
     {
-        oBWI.m_UIWorld.TriggerEvent('re_AMM_ArmorOverrideOff', _outerMenu.oWorldInfo);
+        oBWI.m_UIWorld.TriggerEvent('re_AMM_Combat', _outerMenu.oWorldInfo);
     }
 }
 
