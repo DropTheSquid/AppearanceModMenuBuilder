@@ -42,19 +42,10 @@ struct AppearanceItemData
     var array<string> aMenuParameters;
     var int applyHelmetId;
     var int applyBreatherId;
-    var eAppearanceType appearanceType;
+    // var eArmorOverrideState armorOverride;
     // var eMenuHelmetOverride menuHelmetOverride;
     // var eMenuHelmetOverride applyHelmetOverride;
     // var eHelmetVisibilityPreference applyHelmetVisibilityPreference;
-    
-    structdefaultproperties
-    {
-        ApplySettingInts = ()
-        displayVars = ()
-        displayRequiredPackageExports = ()
-        aApplicableCharacters = ()
-        aMenuParameters = ()
-    }
 };
 // enum eGender
 // {
@@ -62,11 +53,11 @@ struct AppearanceItemData
 //     Male,
 //     Female,
 // };
-enum eAppearanceType
+enum eArmorOverrideState
 {
     unchanged,
-    casual,
-    combat,
+    overridden,
+    equipped,
 };
 // enum eMenuHelmetOverride
 // {
@@ -93,10 +84,10 @@ var config array<AppearanceItemData> menuItems;
 var transient int selectedIndex;
 var transient int scrollIndex;
 var transient array<string> inlineStack;
-var config eAppearanceType appearanceType;
+var config eArmorOverrideState armorOverride;
 var transient array<string> MenuParameters;
-var config string pawnOverride;
-var config string menuAppearanceType;
+var config string pawnTag;
+var config string pawnAppearanceType;
 // var config eMenuHelmetOverride menuHelmetOverride;
 var config bool preloadPawn;
 

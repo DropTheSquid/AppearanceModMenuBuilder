@@ -31,9 +31,9 @@ namespace AppearanceModMenuBuilder.LE1.Models
             // add the root menu for this pawn
             lines.AddRange([
                 $"[BioUI.ini AMM_Submenus.{SquadMemberName}.AppearanceSubmenu_{SquadMemberName}]",
-                $"pawnOverride={PawnTag}",
-                "appearanceType=casual",
-                "menuAppearanceType=casual",
+                $"pawnTag={PawnTag}",
+                "pawnAppearanceType=casual",
+                "armorOverride=overridden",
                 $"srTitle={SquadMemberNameStringref}",
                 // "Choose an outfit type"
                 "srSubtitle=210210213",
@@ -51,9 +51,9 @@ namespace AppearanceModMenuBuilder.LE1.Models
             // add submenu for casual appearance
             lines.AddRange([
                 $"[BioUI.ini AMM_Submenus.{SquadMemberName}.AppearanceSubmenu_{SquadMemberName}_Casual]",
-                $"pawnOverride={PawnTag}",
-                "appearanceType=casual",
-                "menuAppearanceType=casual",
+                $"pawnTag={PawnTag}",
+                "pawnAppearanceType=casual",
+                "armorOverride=overridden",
                 $"srTitle={SquadMemberNameStringref}",
                 // "Casual appearance"
                 "srSubtitle=210210214",
@@ -63,9 +63,9 @@ namespace AppearanceModMenuBuilder.LE1.Models
             // add submenu for combat appearance
             lines.AddRange([
                 $"[BioUI.ini AMM_Submenus.{SquadMemberName}.AppearanceSubmenu_{SquadMemberName}_Combat]",
-                $"pawnOverride={PawnTag}",
-                "appearanceType=combat",
-                "menuAppearanceType=combat",
+                $"pawnTag={PawnTag}",
+                "pawnAppearanceType=combat",
+                "armorOverride=equipped",
                 $"srTitle={SquadMemberNameStringref}",
                 // "Casual appearance"
                 "srSubtitle=210210215",
@@ -77,9 +77,9 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 // add submenu for romance appearance
                 lines.AddRange([
                     $"[BioUI.ini AMM_Submenus.{SquadMemberName}.AppearanceSubmenu_{SquadMemberName}_Romance]",
-                    $"pawnOverride={PawnTag}",
-                    "appearanceType=casual",
-                    "menuAppearanceType=romance",
+                   $"pawnTag={PawnTag}",
+                    "pawnAppearanceType=romance",
+                    "armorOverride=overridden",
                     $"srTitle={SquadMemberNameStringref}",
                     // "Romance appearance"
                     "srSubtitle=210210216",

@@ -227,6 +227,21 @@ public function bool DisplayPawn(string tag, string appearanceType)
 	return false;
 }
 
+public function ForceAppearanceType(eArmorOverrideState state)
+{
+    local BioWorldInfo oBWI;
+    
+    oBWI = BioWorldInfo(_outerMenu.oWorldInfo);
+    if (state == eArmorOverrideState.overridden)
+    {
+        oBWI.m_UIWorld.TriggerEvent('re_AMM_ArmorOverrideOn', _outerMenu.oWorldInfo);
+    }
+    else if (state == eArmorOverrideState.equipped)
+    {
+        oBWI.m_UIWorld.TriggerEvent('re_AMM_ArmorOverrideOff', _outerMenu.oWorldInfo);
+    }
+}
+
 // returns true if it is already loaded, false if it is happening asynchronously
 private function bool LoadFrameworkFile(string tag, string appearanceType, string fileName)
 {
@@ -466,6 +481,7 @@ private final function SetLevelStreamingStatus(coerce Name packageName, DesiredS
         PC.ClientUpdateLevelStreamingStatus(packageName, bShouldBeLoaded, bShouldBeVisible, false);
     }
 }
+
 private function HardUnload(coerce string fileName)
 {
     local int i;

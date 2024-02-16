@@ -8,16 +8,67 @@ public event function Activated()
     foreach Targets(target)
     {
         targetPawn = BioPawn(target);
-        if (targetPawn != None)
-        {
-            Class'AMM_AppearanceUpdater_Base'.static.UpdatePawnAppearanceStatic(targetPawn, "ModSeqAct_UpdatePawnAppearance");
-        }
+		if (targetPawn != None)
+		{
+			// input 1: turn armor override on
+			if (InputLinks[1].bHasImpulse == TRUE)
+			{
+				targetPawn.m_oBehavior.m_bArmorOverridden = true;
+				targetPawn.m_oBehavior.ForceArmorOverride(true);
+				// BioInterface_Appearance_Pawn(targetPawn.m_oBehavior.m_oAppearanceType).m_headGearVisibilityRunTimeOverride.m_bOverride = FALSE;
+				// targetPawn.SetHeadGearVisiblePreference(FALSE);
+			}
+			// input 2: turn armor override off
+			else if (InputLinks[2].bHasImpulse == TRUE)
+			{
+				targetPawn.m_oBehavior.m_bArmorOverridden = false;
+				targetPawn.m_oBehavior.ForceArmorOverride(false);
+				// BioInterface_Appearance_Pawn(targetPawn.m_oBehavior.m_oAppearanceType).m_headGearVisibilityRunTimeOverride.m_bOverride = FALSE;
+				// targetPawn.SetHeadGearVisiblePreference(FALSE);
+			}
+			// input 0: just update the appearance without modifying anything else
+			if (InputLinks[0].bHasImpulse == TRUE)
+			{
+				
+					Class'AMM_AppearanceUpdater_Base'.static.UpdatePawnAppearanceStatic(targetPawn, "ModSeqAct_UpdatePawnAppearance");
+				
+			}
+		}
+		
     }
 }
 
 //class default properties can be edited in the Properties tab for the class's Default__ object.
 defaultproperties
 {
+	 InputLinks = ({
+                   LinkDesc = "Update", 
+                   LinkAction = 'None', 
+                   LinkedOp = None, 
+                   QueuedActivations = 0, 
+                   ActivateDelay = 0.0, 
+                   bHasImpulse = FALSE, 
+                   bDisabled = FALSE
+                  }, 
+                  {
+                   LinkDesc = "ArmorOverrideOn", 
+                   LinkAction = 'None', 
+                   LinkedOp = None, 
+                   QueuedActivations = 0, 
+                   ActivateDelay = 0.0, 
+                   bHasImpulse = FALSE, 
+                   bDisabled = FALSE
+                  }, 
+                  {
+                   LinkDesc = "ArmorOverrideOff", 
+                   LinkAction = 'None', 
+                   LinkedOp = None, 
+                   QueuedActivations = 0, 
+                   ActivateDelay = 0.0, 
+                   bHasImpulse = FALSE, 
+                   bDisabled = FALSE
+                  }
+                 )
     OutputLinks = ({
                     Links = (), 
                     LinkDesc = "Done", 

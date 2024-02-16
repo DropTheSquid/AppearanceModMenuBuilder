@@ -1,12 +1,15 @@
 Class ModHandler_AMM extends ModMenuBase;
 
+// this defines the state of what pawn we should be displaying, based on the current stack of menus
+// so if we are under a menu for Kaidan, the pawn will be Kaidan, even if the current menu is not specific to him
+// this allows you to structure things to reuse generic menus under specific menus
 struct menuState 
 {
-    var string pawnOverride;
-    var eAppearanceType appearanceType;
+    var string pawnTag;
+    var eArmorOverrideState armorOverrideState;
     var AMM_Pawn_Parameters params;
     var AppearanceIdLookups AppearanceIdLookups;
-    var bool bOverrideAppearanceType;
+    // var bool bOverrideAppearanceType;
     var string appearanceTypeOverride;
     // var eMenuHelmetOverride currentMenuHelmetOverride;
 };
@@ -62,19 +65,19 @@ private final function menuState getMenuState()
     for (i = 0; i < submenuStack.Length; i++)
     {
         currentSubmenu = submenuStack[i];
-        if (currentSubmenu.pawnOverride != "")
+        if (currentSubmenu.pawnTag != "")
         {
-            newState.pawnOverride = currentSubmenu.pawnOverride;
-            paramHandler.GetPawnParamsByTag(string(Name(newState.pawnOverride)), newState.params);
+            newState.pawnTag = currentSubmenu.pawnTag;
+            paramHandler.GetPawnParamsByTag(string(Name(newState.pawnTag)), newState.params);
         }
-        if (currentSubmenu.menuAppearanceType != "")
+        if (currentSubmenu.pawnAppearanceType != "")
         {
-            newState.appearanceTypeOverride = currentSubmenu.menuAppearanceType;
-            newState.params.GetAppearanceIdLookup(currentSubmenu.menuAppearanceType, newState.AppearanceIdLookups);
+            newState.appearanceTypeOverride = currentSubmenu.pawnAppearanceType;
+            newState.params.GetAppearanceIdLookup(currentSubmenu.pawnAppearanceType, newState.AppearanceIdLookups);
         }
-        if (currentSubmenu.appearanceType != eAppearanceType.unchanged)
+        if (currentSubmenu.armorOverride != eArmorOverrideState.unchanged)
         {
-            newState.appearanceType = currentSubmenu.appearanceType;
+            newState.armorOverrideState = currentSubmenu.armorOverride;
         }
         // if (currentSubmenu.menuHelmetOverride != eMenuHelmetOverride.unchanged)
         // {
@@ -137,7 +140,7 @@ public function UpdateAsyncPawnLoadingState(string tag, string appearanceType, P
 	local menuState menuState;
 
 	menuState = getMenuState();
-	if (menuState.PawnOverride == tag && menuState.appearanceTypeOverride == appearanceType)
+	if (menuState.pawnTag == tag && menuState.appearanceTypeOverride == appearanceType)
 	{
 		if (state == PawnLoadState.Loaded)
 		{
@@ -222,17 +225,17 @@ public function RefreshMenu(optional bool firstEnter = FALSE)
                 // TODO use a stringref
 				ASSetAux2ButtonText("Select Character");
             }
-			if (state.pawnOverride ~= "None")
+			if (state.pawnTag ~= "None")
             {
                 pawnHandler.DisplayPawn("None", "");
             }
-            else if (state.pawnOverride != "")
+            else if (state.pawnTag != "")
             {
-                TryDisplayPawn(state.pawnOverride, state.appearanceTypeOverride);
+                TryDisplayPawn(state.pawnTag, state.appearanceTypeOverride);
             }
             // updater.appearanceTypeOverride = state.appearanceTypeOverride;
             // // LogInternal("currentMenu.pawnOverride" @ currentMenu.pawnOverride);
-            // pawnHandler.ForceAppearanceType(state.appearanceType);
+            pawnHandler.ForceAppearanceType(state.armorOverrideState);
         }
         // if (TimeToWaitForPawnToSpawn > 0.0 || firstEnter)
         // {
@@ -511,9 +514,9 @@ public function AddItemForDisplay(AppearanceItemData item, AppearanceSubmenu cur
 	// preload the pawn for this submenu, if applicable
 	if (item.submenuInstance != None && !item.inlineSubmenu && item.submenuInstance.PreloadPawn)
 	{
-		if (item.submenuInstance.pawnOverride != "" && !(item.submenuInstance.pawnOverride ~= "None"))
+		if (item.submenuInstance.pawnTag != "" && !(item.submenuInstance.pawnTag ~= "None"))
 		{
-			pawnHandler.LoadPawn(item.submenuInstance.pawnOverride, item.submenuInstance.menuAppearanceType);
+			pawnHandler.LoadPawn(item.submenuInstance.pawnTag, item.submenuInstance.pawnAppearanceType);
 		}
 	}
 	// add inline items, if applicable

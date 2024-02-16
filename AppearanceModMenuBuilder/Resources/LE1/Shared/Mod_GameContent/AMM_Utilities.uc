@@ -63,7 +63,7 @@ public static function bool IsPawnArmorAppearanceOverridden(BioPawn targetPawn)
     }
     // this is nasty, but basically, the first is the 'default' behavior of this pawn, such as true for most NPCs on the Normandy (except the ones that are inexplicably broken)
     // The second is overridden occasionally to put Shepard in casual clothes on the Normandy, as well as squadmates and Shep in Casual Hubs
-    // If either is set to true, consider it casual
+    // If either is set to true, consider it overridden
     return pawnType.m_bIsArmorOverridden || targetPawn.m_oBehavior.m_bArmorOverridden;
 }
 
@@ -145,9 +145,9 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
 
 public static function bool IsFrameworkInstalled()
 {
-	// LogInternal("checking for framework"@DynamicLoadObject("DLC_MOD_Framework_GlobalTlk.GlobalTlk_tlk", Class'Object'));
 	return DynamicLoadObject("DLC_MOD_Framework_GlobalTlk.GlobalTlk_tlk", Class'Object') != None;
 }
+
 public static function bool DoesLevelExist(coerce string levelName)
 {
 	return DynamicLoadObject(string(levelName)$".TheWorld", class'World') != None;

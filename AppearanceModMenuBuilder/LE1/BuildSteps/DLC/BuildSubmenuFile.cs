@@ -68,6 +68,14 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 DisplayBool = -3551
             });
 
+            // header:
+            submenuConfigLines.AddRange([
+                "[BioUI.ini AMM_Submenus.AppearanceSubmenu_CharacterSelect]",
+                // make sure there is no pawn in this menu. 
+                "pawnTag=None",
+                // Select a Character
+                "srTitle=210210217"
+                ]);
             // go through each and add to the top of the file
             foreach (var member in squadMembers)
             {
@@ -82,7 +90,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 submenuConfigLines.AddRange(member.GenerateSubmenuEntries());
             }
 
-            File.AppendAllLines(Path.Combine(context.CookedPCConsoleFolder, "ConfigDelta-amm_Submenus.m3cd"), submenuConfigLines);
+            File.WriteAllLines(Path.Combine(context.CookedPCConsoleFolder, "ConfigDelta-amm_Submenus.m3cd"), submenuConfigLines);
 
             // add a few classes
             var classTask = new AddClassesToFile(
