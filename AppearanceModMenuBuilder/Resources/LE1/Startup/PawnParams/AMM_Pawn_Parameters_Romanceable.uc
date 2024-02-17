@@ -2,7 +2,7 @@ Class AMM_Pawn_Parameters_Romanceable extends AMM_Pawn_Parameters_Squad
     abstract
     config(Game);
 
-var string romancePawnTag;
+var config string romancePawnTag;
 
 public function bool matchesPawn(BioPawn targetPawn)
 {
