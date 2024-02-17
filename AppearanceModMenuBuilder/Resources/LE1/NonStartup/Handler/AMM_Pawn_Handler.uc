@@ -65,16 +65,16 @@ struct StreamInRequest
 	var DesiredStreamingState desiredState;
 
 	var bool completed;
+};
 
-	struct PawnId
-	{
-		var string tag;
-		var string appearanceType;
-	};
+struct PawnId
+{
+	var string tag;
+	var string appearanceType;
 };
 
 var transient array<StreamInRequest> streamingRequests;
-
+var transient array<PawnId> pawnsToPreload;
 var transient array<RealWorldPawnRecord> pawnRecords;
 var transient BioPawn _currentDisplayedPawn;
 
@@ -125,8 +125,21 @@ public function Cleanup()
 	streamingRequests.Length = 0;
 }
 
+public function PreloadPawn(string tag, string appearanceType)
+{
+	local PawnId pawnToPreload;
+
+	// add it to a queue that will only load one at
+	pawnToPreload.tag = tag;
+	pawnToPreload.appearanceType = appearanceType;
+	pawnsToPreload.AddItem(pawnToPreload);
+}
+
 // load (but do not yet display) a pawn. It will either do it synchronously or asynchronously
-public function PawnLoadState LoadPawn(string tag, string appearanceType)
+// the optional AvoidSlowdowns param is used internally to try to avoid unnecessary freezing
+// spawning a pawn will often lead to a visible freeze for less than a second
+// where getting an existing pawn and starting to stream in the file does not
+public function PawnLoadState LoadPawn(string tag, string appearanceType, optional bool avoidSlowdown = false)
 {
 	local RealWorldPawnRecord currentRecord;
 	local AMM_Pawn_Parameters params;
@@ -160,7 +173,7 @@ public function PawnLoadState LoadPawn(string tag, string appearanceType)
 
 			return PawnLoadState.loaded;
 		}
-		if (params.SpawnPawn(appearanceType, pawn))
+		if (!avoidSlowdown && params.SpawnPawn(appearanceType, pawn))
 		{
 			// add a record that should be destroyed at the end
 			currentRecord.Tag = tag;
@@ -330,6 +343,7 @@ public function update(float fDeltaT)
 	local int i;
 	local BioPawn pawn;
 	local RealWorldPawnRecord newRecord;
+	local bool AreRequestsInProgress;
 
 	foreach streamingRequests(currentRequest, i)
 	{
@@ -337,6 +351,7 @@ public function update(float fDeltaT)
 		{
 			continue;
 		}
+		AreRequestsInProgress = true;
 		currentState = GetFileStreamingState(currentRequest.frameworkFileName, tempLevelStreaming);
 		if (currentRequest.desiredState == DesiredStreamingState.visible)
 		{
@@ -386,43 +401,12 @@ public function update(float fDeltaT)
 			LogInternal("other desired states are not implemented"@currentRequest.desiredState);
 			streamingRequests[i].completed = true;
 		}
-		// else if (currentRequest.desiredState == DesiredStreamingState.Loaded)
-		// {
-		// 	switch (currentState)
-		// 	{
-		// 		case FrameworkStreamState.visible:
-		// 		case FrameworkStreamState.BecomingVisible:
-		// 			// tell it to become invisible/back to just loaded
-		// 			SetLevelStreamingStatus(currentRequest.frameworkFileName, DesiredStreamingState.Loaded);
-		// 			break;
-		// 		case FrameworkStreamState.loading:
-		// 			// keep waiting
-		// 			break;
-		// 		case FrameworkStreamState.Loaded:
-		// 			// This is now in the desired state!
-		// 			// TODO do I need to do anything?
-		// 			LogInternal("file"@currentRequest.frameworkFileName@"Is loaded, as desired");
-		// 			streamingRequests[i].completed = true;
-		// 			break;
-		// 		case FrameworkStreamState.NotPresent:
-		// 		case FrameworkStreamState.StreamedOut:
-		// 			// tell it to load in the background
-		// 			SetLevelStreamingStatus(currentRequest.frameworkFileName, DesiredStreamingState.Loaded);
-		// 			break;
-		// 		default:
-		// 			LogInternal("unknown streaming state"@currentState);
-		// 	}
-		// }
-		// else if (currentRequest.desiredState == DesiredStreamingState.Unloaded)
-		// {
-		// 	SetLevelStreamingStatus(currentRequest.frameworkFileName, DesiredStreamingState.Unloaded);
-		// 	streamingRequests[i].completed = true;
-		// }
-		// else
-		// {
-		// 	SetLevelStreamingStatus(currentRequest.frameworkFileName, DesiredStreamingState.NotPresent);
-		// 	streamingRequests[i].completed = true;
-		// }
+	}
+	// if there are no in progress requests, pull out a queued preload request
+	if (!AreRequestsInProgress && pawnsToPreload.Length > 0)
+	{
+		LoadPawn(pawnsToPreload[0].tag, pawnsToPreload[0].appearanceType, true);
+		pawnsToPreload.Remove(0,1);
 	}
 }
 

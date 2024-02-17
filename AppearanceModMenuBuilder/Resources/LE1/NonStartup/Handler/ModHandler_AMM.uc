@@ -516,7 +516,7 @@ public function AddItemForDisplay(AppearanceItemData item, AppearanceSubmenu cur
 	{
 		if (item.submenuInstance.pawnTag != "" && !(item.submenuInstance.pawnTag ~= "None"))
 		{
-			pawnHandler.LoadPawn(item.submenuInstance.pawnTag, item.submenuInstance.pawnAppearanceType);
+			pawnHandler.PreloadPawn(item.submenuInstance.pawnTag, item.submenuInstance.pawnAppearanceType);
 		}
 	}
 	// add inline items, if applicable
