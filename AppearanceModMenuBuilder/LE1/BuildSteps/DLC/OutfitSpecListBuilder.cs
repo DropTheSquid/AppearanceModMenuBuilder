@@ -14,6 +14,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         private readonly Dictionary<string, List<IOutfitSpec>> specsToPutInConfig = [];
         public void RunModTask(ModBuilderContext context)
         {
+            Console.WriteLine("Building outfit lists");
             var startup = context.GetStartupFile();
 
             AddOutfitSpecList("HMF_OutfitSpec", GetHMFOutfits());

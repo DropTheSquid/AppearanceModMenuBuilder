@@ -9,6 +9,7 @@ namespace AppearanceModMenuBuilder.LE1
     {
         public void RunModTask(ModBuilderContext context)
         {
+            Console.WriteLine("Building Inventory_AMM.pcc");
             // make a new file to house the new Inventory handler and GUI
             var inventoryHandlerPackge = MEPackageHandler.CreateAndOpenPackage(Path.Combine(context.CookedPCConsoleFolder, "Inventory_AMM.pcc"), context.Game);
 

@@ -9,6 +9,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
     {
         public void RunModTask(ModBuilderContext context)
         {
+            Console.WriteLine("Building startup file");
             // make sure the startup file has a proper object referencer
             new InitializeStartup().RunModTask(context);
             // make sure the merge class is added to the startup file so that the game will not insta crash if the basegame changes are reverted

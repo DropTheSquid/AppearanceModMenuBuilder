@@ -12,6 +12,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         const string UIWorldFileName = "BIOG_UIWorld.pcc";
         public void RunModTask(ModBuilderContext context)
         {
+            Console.WriteLine("Building BIOG_UIWorld.pcc");
             // I am getting the vanilla version of BIOG_UIWorld and copying it into my mod, then programatically modifying it
             if (!PackageHelpers.TryGetHighestMountedOfficialFile(UIWorldFileName, context.Game, out var packagePath) || packagePath == null)
             {
