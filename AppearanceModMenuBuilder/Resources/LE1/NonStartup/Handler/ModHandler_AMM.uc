@@ -32,6 +32,7 @@ var transient AMM_DialogBox_Handler dialogHandler;
 var transient bool isAppearanceDirty;
 // var transient eMenuHelmetOverride chosenMenuHelmetVisibilityOverride;
 var GFxMovieInfo movieInfo;
+var transient bool GameWasPaused;
 
 // overrides the same function in CustomUIHandlerInterface; this signature must stay the same
 public static function CustomUIHandlerInterface LaunchMenu(optional string Param)
@@ -94,7 +95,11 @@ public function OnPanelAdded()
 {
     local AMM_Pawn_Parameters params;
     
+	// set up the background so it animates
     GetManager().SetupBackground();
+	// save whether it was paused, unpause it
+	GameWasPaused = oWorldInfo.bPlayersOnly;
+	oWorldInfo.bPlayersOnly = false;
     // LogInternal("Panel added; launch param:" @ launchParam @ "launched in prologue?"@launchedInPrologue);
     pawnHandler = new (Self) Class'AMM_Pawn_Handler';
 	pawnHandler.Init(self);
@@ -131,6 +136,8 @@ public function Close()
     // updater = AMM_AppearanceUpdater(Class'AMM_AppearanceUpdater'.static.GetInstance());
     // updater.appearanceTypeOverride = "";
     // updater.tempHelmetOverride = eMenuHelmetOverride.unchanged;
+	// restore whether it was paused
+	oWorldInfo.bPlayersOnly = GameWasPaused;
     Super.Close();
 }
 
@@ -589,7 +596,7 @@ public function ASLoadedEx()
     ASSetBackButtonActive(TRUE);
     ASSetRightPaneVisibility(FALSE, FALSE);
     // comment("TODO use a stringref");
-    // ASSetAuxButtonText("UNDO");
+    // ASSetAuxButtonText("TEST");
     // ASSetAuxButtonActive(TRUE);
     RefreshMenu(TRUE);
     // if (CameraDebug)
@@ -709,7 +716,6 @@ public function ItemSelectedEx(int selectedIndex)
             }
             ASSetActionButtonText(actionButtonText);
         }
-        ASSetAuxButtonActive(FALSE);
     }
 }
 public function ActionButtonPressedEx(int selectedIndex)
@@ -763,8 +769,10 @@ public function AuxButtonPressedEx(int selectedIndex)
         if (!currentSubmenu.OnAuxButtonPressed(Self, selectedIndex))
         {
             selectedItem = currentDisplayItems[selectedIndex];
+			// EmitRemoteEvent("re_AMM_Copy_Player_Head");
+			// BioWorldInfo(oWorldInfo).m_UIWorld.TriggerEvent('re_AMM_Copy_Player_Head', oWorldInfo);
             // comment("TODO undo probably?");
-            LogInternal("This should eventually be an undo button", );
+            // LogInternal("This should eventually be an undo button", );
         }
     // }
 }
@@ -888,7 +896,11 @@ public function ApplyItem(AppearanceItemData item)
 // }
 public function EmitSettingsRemoteEvent()
 {
-    local BioWorldInfo BWI;
+    EmitRemoteEvent("re_AMM");
+}
+private function EmitRemoteEvent(string EventName)
+{
+	local BioWorldInfo BWI;
     local array<SequenceEvent> remoteEvents;
     local SequenceEvent se;
     local SeqEvent_RemoteEvent re;
@@ -898,7 +910,7 @@ public function EmitSettingsRemoteEvent()
     foreach remoteEvents(se, )
     {
         re = SeqEvent_RemoteEvent(se);
-        if (re != None && re.EventName == Name("re_AMM"))
+        if (re != None && re.EventName == Name(EventName))
         {
             re.CheckActivate(BWI, BWI);
         }
