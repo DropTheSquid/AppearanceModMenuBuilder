@@ -25,7 +25,6 @@ menuRootPath=amm_submenus.Shepard.AppearanceSubmenu_Shepard
 ; defaultBreatherSpec=-11
 +AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1500), helmetAppearanceLookup=(plotIntId=1501), breatherAppearanceLookup=(plotIntId=1502), appearanceFlagsLookup=(plotIntId=1503))
 +AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1504), helmetAppearanceLookup=(plotIntId=1505), breatherAppearanceLookup=(plotIntId=1506), appearanceFlagsLookup=(plotIntId=1507))
-+AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1508), helmetAppearanceLookup=(plotIntId=1509), breatherAppearanceLookup=(plotIntId=1510), appearanceFlagsLookup=(plotIntId=1511), FrameworkFileName="BIONPC_Player_Naked")
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_MShep]
 Tag=Human_Male
@@ -34,6 +33,7 @@ romancePawnTag=Human_Male_Naked
 +alternateTags=Human_Male_Naked
 gender=Male
 outfitSpecListPath=outfitSpecs.HMM_OutfitSpec
++AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1508), helmetAppearanceLookup=(plotIntId=1509), breatherAppearanceLookup=(plotIntId=1510), appearanceFlagsLookup=(plotIntId=1511), FrameworkFileName="BIONPC_Player_Romance_Male")
 ; helmetSpecListPath=AMM_HelmetSpec.HMM_HelmetSpecs
 ; breatherSpecListPath=AMM_BreatherSpec.HMM_BreatherSpecs
 ; testing whether this works. Should not ship with this in
@@ -51,6 +51,7 @@ romancePawnTag=Human_Female_Naked
 +alternateTags=Human_Female_Naked
 gender=Female
 outfitSpecListPath=outfitSpecs.HMF_OutfitSpec
++AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1508), helmetAppearanceLookup=(plotIntId=1509), breatherAppearanceLookup=(plotIntId=1510), appearanceFlagsLookup=(plotIntId=1511), FrameworkFileName="BIONPC_Player_Romance_Female")
 ; helmetSpecListPath=AMM_HelmetSpec.HMF_HelmetSpecs
 ; breatherSpecListPath=AMM_BreatherSpec.HMF_BreatherSpecs
 ; testing whether this works. Should not ship with this in
