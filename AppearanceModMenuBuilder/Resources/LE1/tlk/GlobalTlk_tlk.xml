@@ -51,4 +51,14 @@ You can customize characters' appearances at any time from the Inventory screen 
 		<flags>1</flags>
 		<data>This is a special stringref which, within AMM, will resolve to Shepard's full name. It's a neat touch. Use this in menu names and stuff</data>
 	</string>
+	<string>
+		<id>210210219</id>
+		<flags>1</flags>
+		<data>Armor Locker</data>
+	</string>
+	<string>
+		<id>210210220</id>
+		<flags>1</flags>
+		<data>Customize Gear</data>
+	</string>
 </tlkFile>
