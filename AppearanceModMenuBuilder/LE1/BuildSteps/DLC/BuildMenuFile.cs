@@ -15,6 +15,9 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // Either this needs to live in a file called AMM or it needs to be under a package called that in startup for compatibility with Remove Window Reflections that already launches it
             var ammPackageFile = MEPackageHandler.CreateAndOpenPackage(Path.Combine(context.CookedPCConsoleFolder, "AMM.pcc"), context.Game);
 
+            // put the basegame added class in; the code I compile below depends on it
+            new AddMergeClassesToFile("SFXGame.pcc", "AMM_AppearanceUpdater_Base", _ => ammPackageFile).RunModTask(context);
+
             // make an object referencer (probably not strictly necessary? LE1 can dynamic load without this)
             ammPackageFile.GetOrCreateObjectReferencer();
 
