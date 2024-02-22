@@ -6,11 +6,6 @@ var stringref srCustomizeAppearance;
 // hold onto a reference to this so it always stays in memory; without this, you can run into issues
 var GFxMovieInfo movieInfo;
 
-public function OnPanelAdded()
-{
-    Super.OnPanelAdded();
-	// TODO save the GUi resources so it stays in memory
-}
 
 // Functions
 public function HandleEvent(byte nCommand, const out array<string> Parameters)
@@ -18,14 +13,20 @@ public function HandleEvent(byte nCommand, const out array<string> Parameters)
 	// this is the event InitializeInventory, which is called at various points during the UI's operation
     if (int(nCommand) == 1)
     {
+		// just make sure the text on this button is correct
         ASSetAMMButtonText(string(srCustomizeAppearance));
     }
     Super.HandleEvent(nCommand, Parameters);
 }
+public function bool ShouldShowAmmButtonEx()
+{
+	// TODO this should return true only if pawnOverride is set or a special setting is done in mod settings
+	return oOverrideDisplayCharacter != None;
+}
 public function HandleInputEvent(BioGuiEvents Event, optional float fValue = 1.0)
 {
 	// this handles the xbox back/select button
-    if (Event == BioGuiEvents.BIOGUI_EVENT_BUTTON_BACK && ASIsAMMButtonVisible())
+    if (Event == BioGuiEvents.BIOGUI_EVENT_BUTTON_BACK && ASIsAMMButtonVisible() && ShouldShowAmmButtonEx())
     {
 		AmmPressEx();
     }
@@ -82,6 +83,7 @@ public function OnPanelRemoved()
     local BioPawn squadmate;
     local Actor tempActor;
     
+	// trigger an appearance update on all real world pawns that might have been affected by things in this menu
     foreach BioWorldInfo(oWorldInfo).AllActors(Class'Actor', tempActor, )
     {
         if (BioPawn(tempActor) != None)
