@@ -1,6 +1,3 @@
-; [BioGame.ini Startup_MOD_AMM.AMM_AppearanceUpdater]
-
-
 [BioUI.ini Engine.BioSFManager]
 ; remove vanilla inventory handler, add mod one
 -HandlerLibrary=(Tag=Inventory,				ZOrder=252,	HandlerClass="SFXGame.BioSFHandler_PCInventory",			PanelResource="GUI_SF_Inventory.PCInventory",						UseEdgeAA=true,	StrokeStyle=SF_MSS_Normal,	CurvePixelError=1)

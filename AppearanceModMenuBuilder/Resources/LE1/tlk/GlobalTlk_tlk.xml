@@ -1,26 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <tlkFile Name="GlobalTlk_tlk">
+	<!-- hardcoded base string -->
 	<string>
 		<id>210210210</id>
 		<flags>1</flags>
 		<data>AppearanceModMenu</data>
 	</string>
+	<!-- button in inventory menu -->
 	<string>
 		<id>210210211</id>
 		<flags>1</flags>
 		<data>Customize Appearance</data>
 	</string>
+	<!-- shown when you exit the menu in the proluge. Should update the text to refect new ways of accessing -->
 	<string>
 		<id>210210212</id>
 		<flags>1</flags>
 		<data>Do you want to accept the appearances and start the game?
 You can customize characters' appearances at any time from the Inventory screen or by loading Save 1 to replay the prologue.</data>
 	</string>
+	<!-- subtitle at root of each character's menu -->
 	<string>
 		<id>210210213</id>
 		<flags>1</flags>
 		<data>Select an appearance type</data>
 	</string>
+	<!-- appearance type submenus -->
 	<string>
 		<id>210210214</id>
 		<flags>1</flags>
@@ -36,21 +41,19 @@ You can customize characters' appearances at any time from the Inventory screen 
 		<flags>1</flags>
 		<data>Romance Appearance</data>
 	</string>
-	<string>
-		<id>210210216</id>
-		<flags>1</flags>
-		<data>Romance Appearance</data>
-	</string>
+	<!-- character select menu -->
 	<string>
 		<id>210210217</id>
 		<flags>1</flags>
 		<data>Select a Character</data>
 	</string>
+	<!-- what is says on the tin. If you use this stringref, it will replace it with your Shep's name. -->
 	<string>
 		<id>210210218</id>
 		<flags>1</flags>
 		<data>This is a special stringref which, within AMM, will resolve to Shepard's full name. It's a neat touch. Use this in menu names and stuff</data>
 	</string>
+	<!-- interact prompt for new armor locker terminal -->
 	<string>
 		<id>210210219</id>
 		<flags>1</flags>
@@ -60,5 +63,68 @@ You can customize characters' appearances at any time from the Inventory screen 
 		<id>210210220</id>
 		<flags>1</flags>
 		<data>Customize Gear</data>
+	</string>
+	<!-- string for mod settings menu -->
+	<string>
+		<id>210210221</id>
+		<flags>1</flags>
+		<data>Appearance Modification Menu</data>
+	</string>
+	<string>
+		<id>210210222</id>
+		<flags>1</flags>
+		<data>Settings for Appearance Modification Menu</data>
+	</string>
+	<string>
+		<id>210210223</id>
+		<flags>1</flags>
+		<data>Settings for Appearance Modification Menu. This will enable additional options which are disabled by default</data>
+	</string>
+	<!-- menu accessibility option -->
+	<string>
+		<id>210210224</id>
+		<flags>1</flags>
+		<data>Menu accesibility</data>
+	</string>
+	<string>
+		<id>210210225</id>
+		<flags>1</flags>
+		<data>Default</data>
+	</string>
+	<string>
+		<id>210210226</id>
+		<flags>1</flags>
+		<data>Non Combat Areas</data>
+	</string>
+	<string>
+		<id>210210227</id>
+		<flags>1</flags>
+		<data>Outside of Combat</data>
+	</string>
+	<string>
+		<id>210210228</id>
+		<flags>1</flags>
+		<data>Always</data>
+	</string>
+	<!--  TODO expand these -->
+	<string>
+		<id>210210229</id>
+		<flags>1</flags>
+		<data>Default Menu accessibility Description</data>
+	</string>
+	<string>
+		<id>210210230</id>
+		<flags>1</flags>
+		<data>Non Combat Area Menu accessibility Description</data>
+	</string>
+	<string>
+		<id>210210231</id>
+		<flags>1</flags>
+		<data>Outside of Combat Menu accessibility Description</data>
+	</string>
+	<string>
+		<id>210210232</id>
+		<flags>1</flags>
+		<data>Always Menu accessibility Description</data>
 	</string>
 </tlkFile>

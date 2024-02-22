@@ -1,0 +1,18 @@
+[BioUI.ini ModSettings_Submenus_LE1CP.ModSettingsSubmenu_Root]
++menuItems=(srCenterText=210210221, srDescriptionText=210210223, srDescriptionTitleText=210210221, SubMenuClassName="ModSettings_Submenus_AMM.AMM.ModSettingsSubmenu_AMM", Images=())
+
+[BioUI.ini ModSettings_Submenus_AMM.AMM.ModSettingsSubmenu_AMM]
+srTitle=210210221
+srSubtitle=210210222
+; when can you access the menu?
+; by default, only in the prologue, from squad lockers, or from the terminal in the crew quarters
+; can enable it when not in a combat area
+; or when not actively in combat
+; or always (not recommended)
+; TODO for now only default and always are implemented
+;                     "menu accesibility"    "default"                     description too long             "menu accesibility"      ????     display only if int is default                  cycle int to 3
++menuItems=(srLeftText=210210224, srRightText=210210225, srDescriptionText=210210229, srDescriptionTitleText=210210224, srActionText=1050028, DisplayInt=(Id=1592,Value=0), ApplySettingInts=((Id=1592,Value=3)) Images=())
+; +menuItems=(srLeftText=210210224, srRightText=210210226, srDescriptionText=210210230, srDescriptionTitleText=210210224, srActionText=1050028, DisplayInt=(Id=1592,Value=1), ApplySettingInts=((Id=1592,Value=2)) Images=())
+; +menuItems=(srLeftText=210210224, srRightText=210210227, srDescriptionText=210210231, srDescriptionTitleText=210210224, srActionText=1050028, DisplayInt=(Id=1592,Value=2), ApplySettingInts=((Id=1592,Value=3)) Images=())
++menuItems=(srLeftText=210210224, srRightText=210210228, srDescriptionText=210210232, srDescriptionTitleText=210210224, srActionText=1050028, DisplayInt=(Id=1592,Value=3), ApplySettingInts=((Id=1592,Value=0)) Images=())
+

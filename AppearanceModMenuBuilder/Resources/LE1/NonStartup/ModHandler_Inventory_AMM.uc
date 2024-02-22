@@ -20,8 +20,26 @@ public function HandleEvent(byte nCommand, const out array<string> Parameters)
 }
 public function bool ShouldShowAmmButtonEx()
 {
-	// TODO this should return true only if pawnOverride is set or a special setting is done in mod settings
-	return oOverrideDisplayCharacter != None;
+    local BioGlobalVariableTable globalVars;
+	local int settingValue;
+    
+    globalVars = BioWorldInfo(oWorldInfo).GetGlobalVariables();
+	settingValue = globalVars.GetInt(1592);
+	switch (settingValue)
+	{
+		case 1:
+			// TODO return whether this is a non combat area
+			return true;
+		case 2:
+			// TODO return whether you are not actively in combat
+			return true;
+		case 3:
+			// it is set to be always accessible
+			return true;
+		default:
+			// return true only if there is a character override, as in this was accessed from a squad locker
+			return oOverrideDisplayCharacter != None;
+	}
 }
 public function HandleInputEvent(BioGuiEvents Event, optional float fValue = 1.0)
 {
