@@ -39,6 +39,8 @@ namespace AppearanceModMenuBuilder.LE1.Models
             configs.Add(rootCharacterMenu);
 
             var casualMenu = new ModConfigClass($"{ClassPath}_Casual", "BioUI.ini");
+            casualMenu.SetValue("pawnTag", PawnTag);
+            casualMenu.SetValue("pawnAppearanceType", "casual");
             // TODO make it so menus can easily inherit this from the outer menu
             casualMenu.SetValue("srTitle", SquadMemberNameStringref);
             // "Casual Appearance"
@@ -48,6 +50,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
             configs.Add(casualMenu);
 
             var combatMenu = new ModConfigClass($"{ClassPath}_Combat", "BioUI.ini");
+            combatMenu.SetValue("pawnTag", PawnTag);
             combatMenu.SetValue("pawnAppearanceType", "combat");
             combatMenu.SetValue("armorOverride", "equipped");
             // TODO make it so menus can easily inherit this from the outer menu
@@ -61,6 +64,8 @@ namespace AppearanceModMenuBuilder.LE1.Models
             if (Romanceable)
             {
                 var romanceMenu = new ModConfigClass($"{ClassPath}_Romance", "BioUI.ini");
+                romanceMenu.SetValue("pawnTag", PawnTag);
+                romanceMenu.SetValue("pawnAppearanceType", "romance");
                 // TODO make it so menus can easily inherit this from the outer menu
                 romanceMenu.SetValue("srTitle", SquadMemberNameStringref);
                 // "Romance Appearance"
