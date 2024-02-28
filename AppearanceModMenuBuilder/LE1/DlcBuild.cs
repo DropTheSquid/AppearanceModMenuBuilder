@@ -14,7 +14,7 @@ namespace AppearanceModMenuBuilder.LE1
                 // clean the DLC directory
                 .AddTask(new CleanDlcDirectory())
                 // copy the moddesc
-                .AddTask(new CopyFiles(@"Resources\LE1", context => context.ModOutputPathBase))
+                .AddTask(new CopyFiles(@"Resources\LE1\Root", context => context.ModOutputPathBase))
                 // copy the autoload
                 .AddTask(new CopyFiles(@"Resources\LE1\dlc", context => context.DLCBaseFolder))
                 // copy anything else that goes in the cookedPCConsole, such as config merges
@@ -29,6 +29,8 @@ namespace AppearanceModMenuBuilder.LE1
                 .AddTask(new BuildUIWorldTask())
                 // build submenus
                 .AddTask(new BuildSubmenuFile())
+                // output any config merge files we worked on
+                .AddTask(new OutputConfigMerge())
                 // compile tlks
                 .AddTask(new ImportGame1TlkLocaliazation(MELocalization.INT, @"Resources\LE1\tlk\GlobalTlk_tlk.xml"))
                 .AddTask(new OutputTlk());

@@ -1,4 +1,6 @@
-﻿using LegendaryExplorerCore.Packages;
+﻿using LegendaryExplorerCore.Coalesced;
+using LegendaryExplorerCore.Packages;
+using MassEffectModBuilder.Models;
 using static LegendaryExplorerCore.Unreal.UnrealFlags;
 using static MassEffectModBuilder.LEXHelpers.LooseClassCompile;
 
@@ -13,82 +15,62 @@ namespace AppearanceModMenuBuilder.LE1.Models
         public int? DisplayConditional { get; init; } = null;
         public bool Romanceable { get; init; } = false;
 
-        public string[] GenerateRootMenuEntry()
+        public string ClassPath => $"AMM_Submenus.{SquadMemberName}.AppearanceSubmenu_{SquadMemberName}";
+
+        public CoalesceProperty GetMenuEntryPoint()
         {
             string displayConditionalString = DisplayConditional != null ? $", DisplayConditional={DisplayConditional}" : "";
             string displayBoolString = DisplayBool != null ? $", DisplayBool={DisplayBool}" : "";
-            return
-            [
-                //$"; submenus for {SquadMemberName}",
-                $"+menuItems=(srCenterText={SquadMemberNameStringref}{displayBoolString}{displayConditionalString}, SubMenuClassName=\"AMM_Submenus.{SquadMemberName}.AppearanceSubmenu_{SquadMemberName}\")"
-            ];
+            string value = $"(srCenterText={SquadMemberNameStringref}{displayBoolString}{displayConditionalString}, SubMenuClassName=\"{ClassPath}\")";
+            return new CoalesceProperty("menuItems", new CoalesceValue(value, CoalesceParseAction.AddUnique));
         }
 
-        public IEnumerable<string> GenerateSubmenuEntries()
+        public IEnumerable<ModConfigClass> GenerateConfigs()
         {
-            List<string> lines = [];
+            List<ModConfigClass> configs = [];
+            var rootCharacterMenu = new ModConfigClass(ClassPath, "BioUI.ini");
+            rootCharacterMenu.SetValue("pawnTag", PawnTag);
+            rootCharacterMenu.SetValue("pawnAppearanceType", "casual");
+            rootCharacterMenu.SetValue("armorOverride", "overridden");
+            rootCharacterMenu.SetValue("srTitle", SquadMemberNameStringref);
+            // "Choose an outfit type"
+            rootCharacterMenu.SetValue("srSubtitle", "210210213");
 
-            // add the root menu for this pawn
-            lines.AddRange([
-                $"[BioUI.ini AMM_Submenus.{SquadMemberName}.AppearanceSubmenu_{SquadMemberName}]",
-                $"pawnTag={PawnTag}",
-                "pawnAppearanceType=casual",
-                "armorOverride=overridden",
-                $"srTitle={SquadMemberNameStringref}",
-                // "Choose an outfit type"
-                "srSubtitle=210210213",
-                // casual appearance
-                $"+menuItems=(srCenterText=210210214, SubMenuClassName=\"AMM_Submenus.{SquadMemberName}.AppearanceSubmenu_{SquadMemberName}_Casual\")",
-                // combat appearance
-                $"+menuItems=(srCenterText=210210215, SubMenuClassName=\"AMM_Submenus.{SquadMemberName}.AppearanceSubmenu_{SquadMemberName}_Combat\")",
-                ]);
-            if (Romanceable)
-            {
-                // romance appearance
-                lines.Add($"+menuItems=(srCenterText=210210216, SubMenuClassName=\"AMM_Submenus.{SquadMemberName}.AppearanceSubmenu_{SquadMemberName}_Romance\")");
-            }
+            configs.Add(rootCharacterMenu);
 
-            // add submenu for casual appearance
-            lines.AddRange([
-                $"[BioUI.ini AMM_Submenus.{SquadMemberName}.AppearanceSubmenu_{SquadMemberName}_Casual]",
-                $"pawnTag={PawnTag}",
-                "pawnAppearanceType=casual",
-                "armorOverride=overridden",
-                $"srTitle={SquadMemberNameStringref}",
-                // "Casual appearance"
-                "srSubtitle=210210214",
-                // TODO inline to some actual outfits
-                ]);
+            var casualMenu = new ModConfigClass($"{ClassPath}_Casual", "BioUI.ini");
+            // TODO make it so menus can easily inherit this from the outer menu
+            casualMenu.SetValue("srTitle", SquadMemberNameStringref);
+            // "Casual Appearance"
+            casualMenu.SetValue("srSubtitle", "210210214");
 
-            // add submenu for combat appearance
-            lines.AddRange([
-                $"[BioUI.ini AMM_Submenus.{SquadMemberName}.AppearanceSubmenu_{SquadMemberName}_Combat]",
-                $"pawnTag={PawnTag}",
-                "pawnAppearanceType=combat",
-                "armorOverride=equipped",
-                $"srTitle={SquadMemberNameStringref}",
-                // "Casual appearance"
-                "srSubtitle=210210215",
-                // TODO inline to some actual outfits
-                ]);
+            rootCharacterMenu.AddArrayEntries("menuItems", $"(srCenterText=210210214, SubMenuClassName=\"{ClassPath}_Casual\")");
+            configs.Add(casualMenu);
+
+            var combatMenu = new ModConfigClass($"{ClassPath}_Combat", "BioUI.ini");
+            combatMenu.SetValue("pawnAppearanceType", "combat");
+            combatMenu.SetValue("armorOverride", "equipped");
+            // TODO make it so menus can easily inherit this from the outer menu
+            combatMenu.SetValue("srTitle", SquadMemberNameStringref);
+            // "Combat Appearance"
+            combatMenu.SetValue("srSubtitle", "210210215");
+            rootCharacterMenu.AddArrayEntries("menuItems", $"(srCenterText=210210215, SubMenuClassName=\"{ClassPath}_Combat\")");
+
+            configs.Add(combatMenu);
 
             if (Romanceable)
             {
-                // add submenu for romance appearance
-                lines.AddRange([
-                    $"[BioUI.ini AMM_Submenus.{SquadMemberName}.AppearanceSubmenu_{SquadMemberName}_Romance]",
-                   $"pawnTag={PawnTag}",
-                    "pawnAppearanceType=romance",
-                    "armorOverride=overridden",
-                    $"srTitle={SquadMemberNameStringref}",
-                    // "Romance appearance"
-                    "srSubtitle=210210216",
-                    // TODO inline to some actual outfits
-                    ]);
+                var romanceMenu = new ModConfigClass($"{ClassPath}_Romance", "BioUI.ini");
+                // TODO make it so menus can easily inherit this from the outer menu
+                romanceMenu.SetValue("srTitle", SquadMemberNameStringref);
+                // "Romance Appearance"
+                romanceMenu.SetValue("srSubtitle", "210210216");
+                rootCharacterMenu.AddArrayEntries("menuItems", $"(srCenterText=210210216, SubMenuClassName=\"{ClassPath}_Romance\")");
+
+                configs.Add(romanceMenu);
             }
 
-            // TODO add entries for submenus to make them do literally anything
-            return lines;
+            return configs;
         }
 
         public IEnumerable<ClassToCompile> GenerateClassesToCompile()
@@ -108,7 +90,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
         public void ModifyPackage(IMEPackage package)
         {
             var handlerPackageExport = ExportCreator.CreatePackageExport(package, SquadMemberName);
-            //// remove the forced export flag on this package. We need it to be dynamic loadable, including this package name, so it needs to not be forced export
+            // remove the forced export flag on this package. We need it to be dynamic loadable, including this package name, so it needs to not be forced export
             handlerPackageExport.ExportFlags &= ~EExportFlags.ForcedExport;
         }
 

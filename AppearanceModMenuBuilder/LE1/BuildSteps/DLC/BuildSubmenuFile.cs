@@ -15,7 +15,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         public void RunModTask(ModBuilderContext context)
         {
             Console.WriteLine("Building AMM_Submenus.pcc");
-            List<string> submenuConfigLines = [];
             // make a new file to house the new AMM handler and GUI
             // Either this needs to live in a file called AMM or it needs to be under a package called that in startup for compatibility with Remove Window Reflections that already launches it
             var submenuPackageFile = MEPackageHandler.CreateAndOpenPackage(Path.Combine(context.CookedPCConsoleFolder, "AMM_Submenus.pcc"), context.Game);
@@ -69,31 +68,26 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 DisplayBool = -3551
             });
 
-            // header:
-            submenuConfigLines.AddRange([
-                "[BioUI.ini AMM_Submenus.AppearanceSubmenu_CharacterSelect]",
-                // make sure there is no pawn in this menu. 
-                "pawnTag=None",
-                // Select a Character
-                "srTitle=210210217"
-                ]);
-            // go through each and add to the top of the file
+            var configMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-amm_Submenus.m3cd");
+
+            var characterSelectMenu = configMergeFile.GetOrCreateClass("AMM_Submenus.AppearanceSubmenu_CharacterSelect", "BioUI.ini");
+            characterSelectMenu.SetValue("pawnTag", "None");
+            characterSelectMenu.SetValue("srTitle", 210210217);
+
+            // go through each and add the relevant entries
             foreach (var member in squadMembers)
             {
                 member.ModifyPackage(submenuPackageFile);
                 classes.AddRange(member.GenerateClassesToCompile());
-                submenuConfigLines.AddRange(member.GenerateRootMenuEntry());
-            }
-            // then add to the bottom in chunks
-            foreach (var member in squadMembers)
-            {
-                submenuConfigLines.Add("");
-                submenuConfigLines.AddRange(member.GenerateSubmenuEntries());
+                characterSelectMenu.AddEntry(member.GetMenuEntryPoint());
+                var configs = member.GenerateConfigs();
+                foreach (var config in configs)
+                {
+                    configMergeFile.AddOrMergeClassConfig(config);
+                }
             }
 
-            File.WriteAllLines(Path.Combine(context.CookedPCConsoleFolder, "ConfigDelta-amm_Submenus.m3cd"), submenuConfigLines);
-
-            // add a few classes
+            // add all the classes I have collected
             var classTask = new AddClassesToFile(
                 _ => submenuPackageFile,
                 classes);
