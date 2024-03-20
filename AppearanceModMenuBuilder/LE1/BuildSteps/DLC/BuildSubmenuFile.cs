@@ -70,18 +70,21 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             var configMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-amm_Submenus.m3cd");
 
-            var characterSelectMenu = configMergeFile.GetOrCreateClass("AMM_Submenus.AppearanceSubmenu_CharacterSelect", "BioUI.ini");
-            characterSelectMenu.SetValue("pawnTag", "None");
-            characterSelectMenu.SetValue("srTitle", 210210217);
+            //var characterSelectMenu = configMergeFile.GetOrCreateClass("AMM_Submenus.AppearanceSubmenu_CharacterSelect", "BioUI.ini");
+            var characterSelectMenu = new AppearanceSubmenu("AMM_Submenus.AppearanceSubmenu_CharacterSelect")
+            {
+                PawnTag = "None",
+                SrTitle = 210210217
+            };
+            configMergeFile.AddOrMergeClassConfig(characterSelectMenu);
 
             // go through each and add the relevant entries
             foreach (var member in squadMembers)
             {
                 member.ModifyPackage(submenuPackageFile);
-                classes.AddRange(member.GenerateClassesToCompile());
-                characterSelectMenu.AddEntry(member.GetMenuEntryPoint());
-                var configs = member.GenerateConfigs();
-                foreach (var config in configs)
+                classes.AddRange(member.Classes);
+                characterSelectMenu.AddMenuEntry(member.GetMenuEntryPoint());
+                foreach (var config in member.Submenus)
                 {
                     configMergeFile.AddOrMergeClassConfig(config);
                 }

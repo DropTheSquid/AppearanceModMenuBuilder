@@ -17,79 +17,117 @@ namespace AppearanceModMenuBuilder.LE1.Models
 
         public string ClassPath => $"AMM_Submenus.{SquadMemberName}.AppearanceSubmenu_{SquadMemberName}";
 
-        public CoalesceProperty GetMenuEntryPoint()
+        private bool initCompleted;
+        private readonly List<AppearanceSubmenu> _submenus = [];
+        private readonly List<ClassToCompile> _classes = [];
+
+        public IEnumerable<AppearanceSubmenu> Submenus
         {
-            string displayConditionalString = DisplayConditional != null ? $", DisplayConditional={DisplayConditional}" : "";
-            string displayBoolString = DisplayBool != null ? $", DisplayBool={DisplayBool}" : "";
-            string value = $"(srCenterText={SquadMemberNameStringref}{displayBoolString}{displayConditionalString}, SubMenuClassName=\"{ClassPath}\")";
-            return new CoalesceProperty("menuItems", new CoalesceValue(value, CoalesceParseAction.AddUnique));
+            get
+            {
+                if (!initCompleted)
+                {
+                    Init();
+                }
+                return _submenus;
+            }
         }
 
-        public IEnumerable<ModConfigClass> GenerateConfigs()
+        public IEnumerable<ClassToCompile> Classes
         {
-            List<ModConfigClass> configs = [];
-            var rootCharacterMenu = new ModConfigClass(ClassPath, "BioUI.ini");
-            rootCharacterMenu.SetValue("pawnTag", PawnTag);
-            rootCharacterMenu.SetValue("pawnAppearanceType", "casual");
-            rootCharacterMenu.SetValue("armorOverride", "overridden");
-            rootCharacterMenu.SetValue("srTitle", SquadMemberNameStringref);
-            // "Choose an outfit type"
-            rootCharacterMenu.SetValue("srSubtitle", "210210213");
-
-            configs.Add(rootCharacterMenu);
-
-            var casualMenu = new ModConfigClass($"{ClassPath}_Casual", "BioUI.ini");
-            casualMenu.SetValue("pawnTag", PawnTag);
-            casualMenu.SetValue("pawnAppearanceType", "casual");
-            // TODO make it so menus can easily inherit this from the outer menu
-            casualMenu.SetValue("srTitle", SquadMemberNameStringref);
-            // "Casual Appearance"
-            casualMenu.SetValue("srSubtitle", "210210214");
-
-            rootCharacterMenu.AddArrayEntries("menuItems", $"(srCenterText=210210214, SubMenuClassName=\"{ClassPath}_Casual\")");
-            configs.Add(casualMenu);
-
-            var combatMenu = new ModConfigClass($"{ClassPath}_Combat", "BioUI.ini");
-            combatMenu.SetValue("pawnTag", PawnTag);
-            combatMenu.SetValue("pawnAppearanceType", "combat");
-            combatMenu.SetValue("armorOverride", "equipped");
-            // TODO make it so menus can easily inherit this from the outer menu
-            combatMenu.SetValue("srTitle", SquadMemberNameStringref);
-            // "Combat Appearance"
-            combatMenu.SetValue("srSubtitle", "210210215");
-            rootCharacterMenu.AddArrayEntries("menuItems", $"(srCenterText=210210215, SubMenuClassName=\"{ClassPath}_Combat\")");
-
-            configs.Add(combatMenu);
-
-            if (Romanceable)
+            get
             {
-                var romanceMenu = new ModConfigClass($"{ClassPath}_Romance", "BioUI.ini");
-                romanceMenu.SetValue("pawnTag", PawnTag);
-                romanceMenu.SetValue("pawnAppearanceType", "romance");
+                if (!initCompleted)
+                {
+                    Init();
+                }
+                return _classes;
+            }
+        }
+
+        private void Init()
+        {
+            if (initCompleted) return;
+            const int srCausalAppearance = 210210214;
+            const int srCombatAppearance = 210210215;
+
+            var rootCharacterMenu = new AppearanceSubmenu(ClassPath)
+            {
+                PawnTag = PawnTag,
+                PawnAppearanceType = "casual",
+                ArmorOverride = "overridden",
+                SrTitle = SquadMemberNameStringref,
+                // "Choose an outfit type"
+                SrSubtitle = 210210213
+            };
+            _submenus.Add(rootCharacterMenu);
+            _classes.Add(GetSubmenuClass(SquadMemberName, [SquadMemberName]));
+
+            var casualMenu = new AppearanceSubmenu($"{ClassPath}_Casual")
+            {
+                PawnTag = PawnTag,
+                PawnAppearanceType = "casual",
+                ArmorOverride = "overridden",
                 // TODO make it so menus can easily inherit this from the outer menu
-                romanceMenu.SetValue("srTitle", SquadMemberNameStringref);
-                // "Romance Appearance"
-                romanceMenu.SetValue("srSubtitle", "210210216");
-                rootCharacterMenu.AddArrayEntries("menuItems", $"(srCenterText=210210216, SubMenuClassName=\"{ClassPath}_Romance\")");
+                SrTitle = SquadMemberNameStringref,
+                SrSubtitle = srCausalAppearance
+            };
+            rootCharacterMenu.AddMenuEntry(casualMenu.GetEntryPoint(srCausalAppearance));
+            _submenus.Add(casualMenu);
+            _classes.Add(GetSubmenuClass($"{SquadMemberName}_Casual", [SquadMemberName]));
 
-                configs.Add(romanceMenu);
-            }
+            var combatMenu = new AppearanceSubmenu($"{ClassPath}_Combat")
+            {
+                PawnTag = PawnTag,
+                PawnAppearanceType = "combat",
+                ArmorOverride = "equipped",
+                // TODO make it so menus can easily inherit this from the outer menu
+                SrTitle = SquadMemberNameStringref,
+                SrSubtitle = srCombatAppearance
+            };
+            rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(srCombatAppearance));
+            _submenus.Add(combatMenu);
+            _classes.Add(GetSubmenuClass($"{SquadMemberName}_Combat", [SquadMemberName]));
 
-            return configs;
-        }
-
-        public IEnumerable<ClassToCompile> GenerateClassesToCompile()
-        {
-            List<ClassToCompile> classes = [];
-
-            classes.Add(GetSubmenuClass(SquadMemberName, [SquadMemberName]));
-            classes.Add(GetSubmenuClass($"{SquadMemberName}_Casual", [SquadMemberName]));
-            classes.Add(GetSubmenuClass($"{SquadMemberName}_Combat", [SquadMemberName]));
             if (Romanceable)
             {
-                classes.Add(GetSubmenuClass($"{SquadMemberName}_Romance", [SquadMemberName]));
+                const int srRomanceAppearance = 210210216;
+
+                var romanceMenu = new AppearanceSubmenu($"{ClassPath}_Romance")
+                {
+                    PawnTag = PawnTag,
+                    PawnAppearanceType = "romance",
+                    ArmorOverride = "overridden",
+                    // TODO make it so menus can easily inherit this from the outer menu
+                    SrTitle = SquadMemberNameStringref,
+                    SrSubtitle = srRomanceAppearance
+                };
+                rootCharacterMenu.AddMenuEntry(romanceMenu.GetEntryPoint(srRomanceAppearance));
+                _submenus.Add(romanceMenu);
+                _classes.Add(GetSubmenuClass($"{SquadMemberName}_Romance", [SquadMemberName]));
             }
-            return classes;
+            initCompleted = true;
+        }
+
+        public AppearanceItemData GetMenuEntryPoint()
+        {
+            if (!initCompleted)
+            {
+                Init();
+            }
+            var rootMenu = Submenus.First();
+            var entryPoint = rootMenu.GetEntryPoint(SquadMemberNameStringref);
+            // TODO convert these to strongly typed
+            if (DisplayConditional != null)
+            {
+                entryPoint[nameof(DisplayConditional)] = new IntCoalesceValue(DisplayConditional.Value);
+            }
+            if (DisplayBool != null)
+            {
+                entryPoint[nameof(DisplayBool)] = new IntCoalesceValue(DisplayBool.Value);
+            }
+
+            return entryPoint;
         }
 
         public void ModifyPackage(IMEPackage package)
