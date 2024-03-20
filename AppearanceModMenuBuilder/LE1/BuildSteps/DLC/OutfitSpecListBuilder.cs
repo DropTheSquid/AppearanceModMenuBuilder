@@ -1,6 +1,7 @@
 ﻿using AppearanceModMenuBuilder.LE1.Models;
 using MassEffectModBuilder;
 using MassEffectModBuilder.DLCTasks;
+using MassEffectModBuilder.LEXHelpers;
 using MassEffectModBuilder.Models;
 using static MassEffectModBuilder.LEXHelpers.LooseClassCompile;
 
@@ -55,6 +56,20 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             // now generate the configs
             var config = GetOutfitListConfig(className);
+
+            // Add the special case ones
+            var specialSpecs = new List<OutfitSpecItemBase>
+            {
+                // loads the default/casual look, even if they are in combat
+                new LoadedOutfitSpecItem(-3, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
+                // loads the equipped armor look, even if they are out of combat/in a casual situation 
+                new LoadedOutfitSpecItem(-2, "Mod_GameContent.EquippedArmorOutfitSpec"),
+                // loads the vanilla appearance
+                new LoadedOutfitSpecItem(-1, "Mod_GameContent.VanillaOutfitSpec"),
+                new LoadedOutfitSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")
+            };
+
+            config.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
 
             var LgtFileName = GetVanillaArmorFileName(bodyType, OutfitType.LGT);
             var MedFileName = GetVanillaArmorFileName(bodyType, OutfitType.MED);
@@ -123,6 +138,20 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // now generate the configs
             var config = GetOutfitListConfig(className);
 
+            // Add the special case ones
+            var specialSpecs = new List<OutfitSpecItemBase>
+            {
+                // loads the default/casual look, even if they are in combat
+                new LoadedOutfitSpecItem(-3, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
+                // loads the equipped armor look, even if they are out of combat/in a casual situation 
+                new LoadedOutfitSpecItem(-2, "Mod_GameContent.EquippedArmorOutfitSpec"),
+                // loads the vanilla appearance
+                new LoadedOutfitSpecItem(-1, "Mod_GameContent.VanillaOutfitSpec"),
+                new LoadedOutfitSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")
+            };
+
+            config.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
+
             var LgtFileName = GetVanillaArmorFileName(bodyType, OutfitType.LGT);
             var MedFileName = GetVanillaArmorFileName(bodyType, OutfitType.MED);
             var HvyFileName = GetVanillaArmorFileName(bodyType, OutfitType.HVY);
@@ -181,7 +210,21 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             // now generate the configs
             var config = GetOutfitListConfig(className);
-            
+
+            // Add the special case ones
+            var specialSpecs = new List<OutfitSpecItemBase>
+            {
+                // loads the default/casual look, even if they are in combat
+                new LoadedOutfitSpecItem(-3, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
+                // loads the equipped armor look, even if they are out of combat/in a casual situation 
+                new LoadedOutfitSpecItem(-2, "Mod_GameContent.EquippedArmorOutfitSpec"),
+                // loads the vanilla appearance
+                new LoadedOutfitSpecItem(-1, "Mod_GameContent.VanillaOutfitSpec"),
+                new LoadedOutfitSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")
+            };
+
+            config.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
+
             var MedFileName = GetVanillaArmorFileName(bodyType, OutfitType.MED);
             var HvyFileName = GetVanillaArmorFileName(bodyType, OutfitType.HVY);
             var CthFileName = GetVanillaArmorFileName(bodyType, OutfitType.CTH);
@@ -214,6 +257,20 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             // now generate the configs
             var config = GetOutfitListConfig(className);
+
+            // Add the special case ones
+            var specialSpecs = new List<OutfitSpecItemBase>
+            {
+                // loads the default/casual look, even if they are in combat
+                new LoadedOutfitSpecItem(-3, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
+                // loads the equipped armor look, even if they are out of combat/in a casual situation 
+                new LoadedOutfitSpecItem(-2, "Mod_GameContent.EquippedArmorOutfitSpec"),
+                // loads the vanilla appearance
+                new LoadedOutfitSpecItem(-1, "Mod_GameContent.VanillaOutfitSpec"),
+                new LoadedOutfitSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")
+            };
+
+            config.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
 
             var LgtFileName = GetVanillaArmorFileName(bodyType, OutfitType.LGT);
             var MedFileName = GetVanillaArmorFileName(bodyType, OutfitType.MED);
@@ -254,6 +311,20 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             // now generate the configs
             var config = GetOutfitListConfig(className);
+
+            // Add the special case ones
+            var specialSpecs = new List<OutfitSpecItemBase>
+            {
+                // loads the default/casual look, even if they are in combat
+                new LoadedOutfitSpecItem(-3, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
+                // loads the equipped armor look, even if they are out of combat/in a casual situation 
+                new LoadedOutfitSpecItem(-2, "Mod_GameContent.EquippedArmorOutfitSpec"),
+                // loads the vanilla appearance
+                new LoadedOutfitSpecItem(-1, "Mod_GameContent.VanillaOutfitSpec"),
+                new LoadedOutfitSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")
+            };
+
+            config.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
 
             var LgtFileName = GetVanillaArmorFileName(bodyType, OutfitType.LGT);
 
