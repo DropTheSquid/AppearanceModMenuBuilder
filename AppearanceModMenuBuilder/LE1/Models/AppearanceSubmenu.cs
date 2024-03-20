@@ -39,6 +39,15 @@ namespace AppearanceModMenuBuilder.LE1.Models
             };
         }
 
+        public AppearanceItemData GetInlineEntryPoint()
+        {
+            return new AppearanceItemData()
+            {
+                InlineSubmenu = true,
+                SubMenuClassName = ClassFullPath
+            };
+        }
+
         public string? PawnTag
         {
             set

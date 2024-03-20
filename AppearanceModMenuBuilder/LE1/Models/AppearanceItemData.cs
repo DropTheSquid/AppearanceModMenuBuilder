@@ -68,5 +68,21 @@
                 }
             }
         }
+
+        public bool? InlineSubmenu
+        {
+            get => ((BoolCoalesceValue)this[nameof(InlineSubmenu)])?.Value;
+            set
+            {
+                if (value.HasValue)
+                {
+                    this[nameof(InlineSubmenu)] = new BoolCoalesceValue(value.Value);
+                }
+                else
+                {
+                    Remove(nameof(InlineSubmenu));
+                }
+            }
+        }
     }
 }

@@ -127,4 +127,14 @@ You can customize characters' appearances at any time from the Inventory screen 
 		<flags>1</flags>
 		<data>Always Menu accessibility Description</data>
 	</string>
+	<string>
+		<id>210210233</id>
+		<flags>1</flags>
+		<data>Armor</data>
+	</string>
+	<string>
+		<id>210210234</id>
+		<flags>1</flags>
+		<data>Non Armor</data>
+	</string>
 </tlkFile>

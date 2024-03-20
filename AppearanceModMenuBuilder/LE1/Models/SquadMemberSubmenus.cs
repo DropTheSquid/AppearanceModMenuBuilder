@@ -1,13 +1,14 @@
 ﻿using LegendaryExplorerCore.Packages;
+using static AppearanceModMenuBuilder.LE1.BuildSteps.DLC.BuildSubmenuFile;
 using static LegendaryExplorerCore.Unreal.UnrealFlags;
 using static MassEffectModBuilder.LEXHelpers.LooseClassCompile;
 
 namespace AppearanceModMenuBuilder.LE1.Models
 {
-    public record class SquadMemberSubmenus(string SquadMemberName, int SquadMemberNameStringref, string PawnTag)
+    public record class SquadMemberSubmenus(string SquadMemberName, int SquadMemberNameStringref, string PawnTag, SpeciesOutfitMenus outfitSubmenus)
     {
         private const string SubmenuClassTemplate = "Class {0} extends AppearanceSubmenu config(UI);";
-        private const string AppearanceSubmenuClassPrefix = "AppearanceSubmenu_";
+        public const string AppearanceSubmenuClassPrefix = "AppearanceSubmenu_";
 
         public int? DisplayBool { get; init; } = null;
         public int? DisplayConditional { get; init; } = null;
@@ -70,7 +71,10 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 SrTitle = SquadMemberNameStringref,
                 SrSubtitle = srCausalAppearance
             };
+            // add this menu into the root character menu
             rootCharacterMenu.AddMenuEntry(casualMenu.GetEntryPoint(srCausalAppearance));
+            // add the appropriate submenu into this one
+            casualMenu.AddMenuEntry(outfitSubmenus.Casual.GetInlineEntryPoint());
             _submenus.Add(casualMenu);
             _classes.Add(GetSubmenuClass($"{SquadMemberName}_Casual", [SquadMemberName]));
 
@@ -83,7 +87,10 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 SrTitle = SquadMemberNameStringref,
                 SrSubtitle = srCombatAppearance
             };
+            // add this menu into the root character menu
             rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(srCombatAppearance));
+            // add the appropriate submenu into this one
+            combatMenu.AddMenuEntry(outfitSubmenus.Combat.GetInlineEntryPoint());
             _submenus.Add(combatMenu);
             _classes.Add(GetSubmenuClass($"{SquadMemberName}_Combat", [SquadMemberName]));
 
@@ -100,7 +107,10 @@ namespace AppearanceModMenuBuilder.LE1.Models
                     SrTitle = SquadMemberNameStringref,
                     SrSubtitle = srRomanceAppearance
                 };
+                // add this menu into the root character menu
                 rootCharacterMenu.AddMenuEntry(romanceMenu.GetEntryPoint(srRomanceAppearance));
+                // add the appropriate submenu into this one
+                romanceMenu.AddMenuEntry(outfitSubmenus.Casual.GetInlineEntryPoint());
                 _submenus.Add(romanceMenu);
                 _classes.Add(GetSubmenuClass($"{SquadMemberName}_Romance", [SquadMemberName]));
             }
@@ -130,12 +140,12 @@ namespace AppearanceModMenuBuilder.LE1.Models
 
         public void ModifyPackage(IMEPackage package)
         {
-            var handlerPackageExport = ExportCreator.CreatePackageExport(package, SquadMemberName);
+            var packageExp = ExportCreator.CreatePackageExport(package, SquadMemberName);
             // remove the forced export flag on this package. We need it to be dynamic loadable, including this package name, so it needs to not be forced export
-            handlerPackageExport.ExportFlags &= ~EExportFlags.ForcedExport;
+            packageExp.ExportFlags &= ~EExportFlags.ForcedExport;
         }
 
-        private static ClassToCompile GetSubmenuClass(string className, string[] path)
+        public static ClassToCompile GetSubmenuClass(string className, string[] path)
         {
             var fullClassName = $"{AppearanceSubmenuClassPrefix}{className}";
             return new ClassToCompile(fullClassName, string.Format(SubmenuClassTemplate, fullClassName), path);

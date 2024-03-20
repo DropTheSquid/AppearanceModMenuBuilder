@@ -1,7 +1,6 @@
 ﻿using AppearanceModMenuBuilder.LE1.Models;
 using MassEffectModBuilder;
 using MassEffectModBuilder.DLCTasks;
-using MassEffectModBuilder.LEXHelpers;
 using MassEffectModBuilder.Models;
 using static MassEffectModBuilder.LEXHelpers.LooseClassCompile;
 
