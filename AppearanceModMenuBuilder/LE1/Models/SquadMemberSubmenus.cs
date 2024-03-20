@@ -1,6 +1,4 @@
-﻿using LegendaryExplorerCore.Coalesced;
-using LegendaryExplorerCore.Packages;
-using MassEffectModBuilder.Models;
+﻿using LegendaryExplorerCore.Packages;
 using static LegendaryExplorerCore.Unreal.UnrealFlags;
 using static MassEffectModBuilder.LEXHelpers.LooseClassCompile;
 
