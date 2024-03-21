@@ -4,7 +4,6 @@ namespace AppearanceModMenuBuilder.LE1.Models
 {
     public class AppearanceSubmenu : ModConfigClass
     {
-        // TODO should this be private to allow a "get if already exists" static accessor?
         public AppearanceSubmenu(string classFullPath) : base(classFullPath, "BioUI.ini") {}
 
         public static AppearanceSubmenu GetOrAddSubmenu(string classFullPath, ModConfigMergeFile configFile)
@@ -62,77 +61,32 @@ namespace AppearanceModMenuBuilder.LE1.Models
 
         public string? PawnTag
         {
-            set
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    Remove(nameof(PawnTag));
-                }
-                else
-                {
-                    SetValue(nameof(PawnTag), value);
-                }
-            }
+            get => GetStringValue(nameof(PawnTag));
+            set => SetStringValue(nameof(PawnTag), value);
         }
 
         public string? PawnAppearanceType
         {
-            set
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    Remove(nameof(PawnAppearanceType));
-                }
-                else
-                {
-                    SetValue(nameof(PawnAppearanceType), value);
-                }
-            }
+            get => GetStringValue(nameof(PawnAppearanceType));
+            set => SetStringValue(nameof(PawnAppearanceType), value);
         }
 
         public string? ArmorOverride
         {
-            set
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    Remove(nameof(ArmorOverride));
-                }
-                else
-                {
-                    SetValue(nameof(ArmorOverride), value);
-                }
-            }
+            get => GetStringValue(nameof(ArmorOverride));
+            set => SetStringValue(nameof(ArmorOverride), value);
         }
 
         public int? SrTitle
         {
-            set
-            {
-                if (!value.HasValue)
-                {
-                    Remove(nameof(SrTitle));
-                }
-                else
-                {
-                    SetValue(nameof(SrTitle), value.Value);
-                }
-            }
+            get => GetIntValue(nameof(SrTitle));
+            set => SetIntValue(nameof(SrTitle), value);
         }
 
         public int? SrSubtitle
         {
-            set
-            {
-                if (!value.HasValue)
-                {
-                    Remove(nameof(SrSubtitle));
-                }
-                else
-                {
-                    SetValue(nameof(SrSubtitle), value.Value);
-                }
-            }
+            get => GetIntValue(nameof(SrSubtitle));
+            set => SetIntValue(nameof(SrSubtitle), value);
         }
     }
 }
