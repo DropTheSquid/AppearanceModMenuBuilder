@@ -97,10 +97,27 @@ public static function bool LoadMaterials(array<string> materialPaths, out array
     return TRUE;
 }
 
-public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc, AppearanceMesh AppearanceMesh, optional bool markAsAMM = TRUE)
+public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc, AppearanceMesh AppearanceMesh)
 {
     local int i;
     local MaterialInstanceConstant MIC;
+
+	// LogInternal("running ReplaceMesh on pawn"@targetPawn@targetPawn.tag);
+	// LogInternal("current mesh"@PathName(smc.SkeletalMesh));
+	// LogInternal("Current materials"@smc.GetNumElements()@smc.Materials.Length);
+	// for (i = 0; i < smc.GetNumElements(); i++)
+	// {
+	// 	LogInternal("current material"@i@smc.GetMaterial(i).class@Pathname(smc.GetMaterial(i)));
+	// 	LogInternal("by direct access method"@smc.Materials[i]);
+	// 	LogInternal("base material?"@smc.GetBaseMaterial(i));
+	// 	MIC = MaterialInstanceConstant(smc.GetMaterial(i));
+	// 	if (MIC != None)
+	// 	{
+	// 		LogInternal("MIC parent material"@MIC.Parent.class@Pathname(MIC.Parent));
+	// 	}
+	// }
+	// LogInternal("before:");
+	// ProfileSMC(smc);
     
     // LogInternal("replacing mesh on SMC" @ smc @ PathName(smc.SkeletalMesh) @ "With new mesh" @ PathName(AppearanceMesh.Mesh));
 	if (smc == None)
@@ -108,20 +125,41 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
 		return;
 	}
     smc.SetSkeletalMesh(AppearanceMesh.Mesh);
-	smc.Materials.Length = AppearanceMesh.Materials.Length;
+
+	// LogInternal("intermediate materials"@smc.GetNumElements()@smc.Materials.Length);
+	// for (i = 0; i < smc.GetNumElements(); i++)
+	// {
+	// 	LogInternal("intermediate material"@i@smc.GetMaterial(i).class@Pathname(smc.GetMaterial(i)));
+	// 	LogInternal("by direct access method"@smc.Materials[i]);
+	// 	LogInternal("base material?"@smc.GetBaseMaterial(i));
+	// 	MIC = MaterialInstanceConstant(smc.GetMaterial(i));
+	// 	if (MIC != None)
+	// 	{
+	// 		LogInternal("MIC parent material"@MIC.Parent.class@Pathname(MIC.Parent));
+	// 	}
+	// }
+	// LogInternal("intermediate:");
+	// ProfileSMC(smc);
+
+	// smc.Materials.Length = AppearanceMesh.Materials.Length;
     for (i = 0; i < AppearanceMesh.Materials.Length; i++)
     {
+		// LogInternal("Setting material"@i@AppearanceMesh.Materials[i]);
 		// reuse existing MICs when possible; it makes the game much more stable. I am not sure why
-		// TODO cache any params on these that I am wiping out so I can restore them to their vanilla look
-		// even if they have weird specific params
+
+		// I need to do this entirely based around the methods I think. idk why, but that's the next thing to try
         MIC = MaterialInstanceConstant(smc.Materials[i]);
         if (MIC != None && MIC.outer == targetPawn)
         {
+			// LogInternal("reusing MIC");
 			MIC.ClearParameterValues();
             MIC.SetParent(AppearanceMesh.Materials[i]);
+			// trying to do this even though it should already be there
+			smc.SetMaterial(i, MIC);
         }
 		else
 		{
+			// LogInternal("creating new MIC");
 			// if they do not have a suitable MIC, make one and point it at the right parent.
 			MIC = new (targetPawn) Class'BioMaterialInstanceConstant';
 			MIC.SetParent(AppearanceMesh.Materials[i]);
@@ -141,6 +179,10 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
         //     MIC.SetScalarParameterValue('AppliedByAMM', 1.0);
         // }
     }
+
+	// LogInternal("after:");
+	// ProfileSMC(smc);
+	// LogInternal("running forceUpdateComponents");
 }
 
 public static function bool IsFrameworkInstalled()
@@ -152,3 +194,33 @@ public static function bool DoesLevelExist(coerce string levelName)
 {
 	return DynamicLoadObject(string(levelName)$".TheWorld", class'World') != None;
 }
+
+// private static function ProfileSMC(SkeletalMeshComponent smc)
+// {
+// 	local int i;
+
+// 	LogInternal("profiling SMC"@pathName(smc));
+// 	LogInternal("mesh"@PathName(smc.SkeletalMesh));
+// 	LogInternal("materials"@smc.GetNumElements()@smc.Materials.Length);
+// 	for (i = 0; i < smc.GetNumElements(); i++)
+// 	{
+// 		LogInternal("current material"@i@smc.GetMaterial(i).class@Pathname(smc.GetMaterial(i)));
+// 		LogInternal("by direct access method"@smc.Materials[i]);
+// 		LogInternal("base material?"@smc.GetBaseMaterial(i));
+// 		ProfileMaterialInterface(smc.GetMaterial(i));
+// 	}
+// }
+
+// private static function ProfileMaterialInterface(MaterialInterface mat)
+// {
+// 	local MaterialInstance MI;
+
+// 	LogInternal("profiling material"@mat.class@pathname(mat));
+// 	LogInternal("GetMaterial"@mat.GetMaterial().class@PathName(mat.GetMaterial()));
+// 	MI = MaterialInstance(mat);
+// 	if (MI != None)
+// 	{
+// 		LogInternal("profiling parent");
+// 		ProfileMaterialInterface(MI.parent);
+// 	}
+// }

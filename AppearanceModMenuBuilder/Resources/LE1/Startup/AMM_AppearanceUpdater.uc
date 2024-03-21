@@ -27,6 +27,9 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 			if (outfitList.GetOutfitSpecById(appearanceIds.bodyAppearanceId, outfitSpec))
 			{
 				outfitSpec.ApplyOutfit(target);
+				// This call is very important to prevent all kinds of weirdness
+				// for example bone melting and materials misbehaving, and possibly even crashing
+				target.ForceUpdateComponents(FALSE, FALSE);
 			}
 		}
 		else

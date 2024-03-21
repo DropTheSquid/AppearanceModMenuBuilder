@@ -117,7 +117,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // add entries for the non armor outfits
             AddMenuEntries(humanOutfitMenus.NonArmor, 100, 38, EGender.Female);
             // Add NKD and CTH vanilla meshes (100-140)
-            // NKDa: material 1 is naked human (with tintable skintone), material 2 is avina materials
+            // NKDa: material 1 is naked human (with tintable skintone), material 2 is Avina materials on the naked mesh
             AddVanillaOutfitSpecs(config, 100, NkdFileName, OutfitType.NKD, 0, bodyType, 2, 1);
             // NKDb: dancer outfit with tintable skintone
             AddVanillaOutfitSpecs(config, 102, NkdFileName, OutfitType.NKD, 1, bodyType, 1, 1);
@@ -128,7 +128,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             AddVanillaOutfitSpecs(config, 104, CthFileName, OutfitType.CTH, 0, bodyType, 6, 1);
             // CTHb Alliance Fatigues and related, such as C Sec color variant
             AddVanillaOutfitSpecs(config, 110, CthFileName, OutfitType.CTH, 1, bodyType, 5, 1);
-            // CTHc dress used by many NPCs
+            // CTHc dress used by many NPCs, except variant 6 (id 120) is the Mira VI material
             AddVanillaOutfitSpecs(config, 115, CthFileName, OutfitType.CTH, 2, bodyType, 6, 1);
             // CTHd different dress worn by many NPCs
             AddVanillaOutfitSpecs(config, 121, CthFileName, OutfitType.CTH, 3, bodyType, 3, 1);
@@ -208,7 +208,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             AddVanillaOutfitSpecs(config, 102, CthFileName, OutfitType.CTH, 0, bodyType, 5, 1);
             // CTHb Alliance Fatigues and related outfits
             AddVanillaOutfitSpecs(config, 107, CthFileName, OutfitType.CTH, 1, bodyType, 6, 1);
-            // CTHc-CTHg, various civilian clothes
+            // CTHc-CTHg, various civilian clothes, except 117 is the ExoGeni VI
             AddVanillaOutfitSpecs(config, 113, CthFileName, OutfitType.CTH, 2, bodyType, 5, 1);
             AddVanillaOutfitSpecs(config, 118, CthFileName, OutfitType.CTH, 3, bodyType, 3, 1);
             AddVanillaOutfitSpecs(config, 121, CthFileName, OutfitType.CTH, 4, bodyType, 3, 1);
