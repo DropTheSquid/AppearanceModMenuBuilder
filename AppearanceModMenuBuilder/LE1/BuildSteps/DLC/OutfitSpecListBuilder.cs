@@ -360,7 +360,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             // add all vanilla armor variants into positive IDs less than 100
             // Tali is the only vanilla Quarian, and she only has 6 color/texture variants of the same LGTa mesh
-            AddVanillaOutfitSpecs(config, 1, LgtFileName, OutfitType.LGT, 0, bodyType, 6, 2);
+            AddVanillaOutfitSpecs(config, 1, LgtFileName, OutfitType.LGT, 0, "QRN_FAC", 6, 2);
 
             // add all the outfits for Turians to the menu
             AddMenuEntries(quarianOutfitMenus.Armor, 1, 6);
