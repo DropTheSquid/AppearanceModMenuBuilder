@@ -9,8 +9,8 @@
 
         public string SpecPath
         {
-            get => ((StringCoalesceValue)this[nameof(SpecPath)]).Value;
-            set => this[nameof(SpecPath)] = new StringCoalesceValue(value);
+            get => GetString(nameof(SpecPath))!;
+            set => SetString(nameof(SpecPath), value);
         }
     }
 }

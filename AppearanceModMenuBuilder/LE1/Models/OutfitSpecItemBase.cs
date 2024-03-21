@@ -9,8 +9,8 @@
 
         public int Id
         {
-            get => ((IntCoalesceValue)this[nameof(Id)]).Value;
-            set => this[nameof(Id)] = new IntCoalesceValue(value);
+            get => (int)GetInt(nameof(Id))!;
+            set => SetInt(nameof(Id), value);
         }
     }
 }

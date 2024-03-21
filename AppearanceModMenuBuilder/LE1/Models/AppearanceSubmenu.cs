@@ -7,6 +7,18 @@ namespace AppearanceModMenuBuilder.LE1.Models
         // TODO should this be private to allow a "get if already exists" static accessor?
         public AppearanceSubmenu(string classFullPath) : base(classFullPath, "BioUI.ini") {}
 
+        public static AppearanceSubmenu GetOrAddSubmenu(string classFullPath, ModConfigMergeFile configFile)
+        {
+            var existing = configFile.GetClass(classFullPath);
+            if (existing is not null and AppearanceSubmenu)
+            {
+                return (AppearanceSubmenu)existing;
+            }
+            var newConfig = new AppearanceSubmenu(classFullPath);
+            configFile.AddOrMergeClassConfig(newConfig);
+            return newConfig;
+        }
+
         /*
             var config stringref srTitle;
             var config string sTitle;

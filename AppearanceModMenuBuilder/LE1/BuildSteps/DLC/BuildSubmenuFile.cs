@@ -76,9 +76,25 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             classTask.RunModTask(context);
         }
 
+        public static (SpeciesOutfitMenus human, SpeciesOutfitMenus turian, SpeciesOutfitMenus quarian, SpeciesOutfitMenus krogan) InitCommonMenus(ModConfigMergeFile configMergeFile)
+        {
+            SpeciesOutfitMenus GetOrCreateMenus(string bodyType)
+            {
+                return new SpeciesOutfitMenus
+                {
+                    Casual = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_CasualOutfits", configMergeFile),
+                    Combat = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_CombatOutfits", configMergeFile),
+                    Armor = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.Armor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_ArmorOutfits", configMergeFile),
+                    NonArmor = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits", configMergeFile)
+                };
+            }
+            return (GetOrCreateMenus("Human"), GetOrCreateMenus("Turian"), GetOrCreateMenus("Quarian"), GetOrCreateMenus("Krogan"));
+        }
+
         private void MakeCommonSubmenus(IMEPackage submenuPackageFile, ModConfigMergeFile configMergeFile)
         {
-            void GenerateMenus(string bodyType, ref SpeciesOutfitMenus menus)
+            (HumanOutfitMenus, TurianOutfitMenus, QuarianOutfitMenus, KroganOutfitMenus) = InitCommonMenus(configMergeFile);
+            void SetupMenu(string bodyType, SpeciesOutfitMenus menus)
             {
                 var packageExp = ExportCreator.CreatePackageExport(submenuPackageFile, bodyType);
                 // remove the forced export flag on this package. We need it to be dynamic loadable, including this package name, so it needs to not be forced export
@@ -90,15 +106,43 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_ArmorOutfits", [bodyType, "Armor"]));
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits", [bodyType, "NonArmor"]));
 
-                menus.Casual = new AppearanceSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_CasualOutfits");
-                menus.Combat = new AppearanceSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_CombatOutfits");
-                menus.Armor = new AppearanceSubmenu($"AMM_Submenus.{bodyType}.Armor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_ArmorOutfits");
-                menus.NonArmor = new AppearanceSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits");
+                menus.Casual.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "Default"
+                    SrCenterText = 184218,
+                    ApplyOutfitId = -1,
+                });
+                menus.Casual.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "Casual"
+                    SrCenterText = 771301,
+                    ApplyOutfitId = -2,
+                });
+                menus.Casual.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "Combat"
+                    SrCenterText = 163187,
+                    ApplyOutfitId = -3,
+                });
 
-                configMergeFile.AddOrMergeClassConfig(menus.Casual);
-                configMergeFile.AddOrMergeClassConfig(menus.Combat);
-                configMergeFile.AddOrMergeClassConfig(menus.Armor);
-                configMergeFile.AddOrMergeClassConfig(menus.NonArmor);
+                menus.Combat.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "Default"
+                    SrCenterText = 184218,
+                    ApplyOutfitId = -1,
+                });
+                menus.Combat.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "Casual"
+                    SrCenterText = 771301,
+                    ApplyOutfitId = -2,
+                });
+                menus.Combat.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "Combat"
+                    SrCenterText = 163187,
+                    ApplyOutfitId = -3,
+                });
 
                 // "Armor"
                 menus.Casual.AddMenuEntry(menus.Armor.GetEntryPoint(210210233));
@@ -109,11 +153,13 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 menus.Combat.AddMenuEntry(menus.Armor.GetEntryPoint(210210233));
                 // "Non Armor"
                 menus.Combat.AddMenuEntry(menus.NonArmor.GetEntryPoint(210210234));
+
+                // TODO add titles and subtitles to these?
             }
-            GenerateMenus("Human", ref HumanOutfitMenus);
-            GenerateMenus("Turian", ref TurianOutfitMenus);
-            GenerateMenus("Quarian", ref QuarianOutfitMenus);
-            GenerateMenus("Krogan", ref KroganOutfitMenus);
+            SetupMenu("Human", HumanOutfitMenus);
+            SetupMenu("Turian", TurianOutfitMenus);
+            SetupMenu("Quarian", QuarianOutfitMenus);
+            SetupMenu("Krogan", KroganOutfitMenus);
         }
 
         private List<SquadMemberSubmenus> MakeSquadmateSubmenus()

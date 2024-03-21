@@ -2,12 +2,19 @@
 using MassEffectModBuilder;
 using MassEffectModBuilder.DLCTasks;
 using MassEffectModBuilder.Models;
+using static AppearanceModMenuBuilder.LE1.BuildSteps.DLC.BuildSubmenuFile;
+using static AppearanceModMenuBuilder.LE1.Models.AppearanceItemData;
 using static MassEffectModBuilder.LEXHelpers.LooseClassCompile;
 
 namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 {
     public class OutfitSpecListBuilder : IModBuilderTask
     {
+        private SpeciesOutfitMenus humanOutfitMenus;
+        private SpeciesOutfitMenus turianOutfitMenus;
+        private SpeciesOutfitMenus kroganOutfitMenus;
+        private SpeciesOutfitMenus quarianOutfitMenus;
+
         public enum OutfitType
         {
             NKD,
@@ -27,13 +34,17 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             Console.WriteLine("Building outfit lists");
             var startup = context.GetStartupFile();
 
+            var submenuConfigMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-amm_Submenus.m3cd");
+
+            (humanOutfitMenus, turianOutfitMenus, quarianOutfitMenus, kroganOutfitMenus) = InitCommonMenus(submenuConfigMergeFile);
+
             GenerateHMFSpecs();
             GenerateHMMSpecs();
             GenerateTURSpecs();
             GenerateKROSpecs();
             GenerateQRNSpecs();
             // TODO other ones to possibly add:
-            // Female Turian, Volus, Salarian, Elcor, Hanar, male Quarian, Vorcha
+            // Female Turian, Volus, Salarian, Elcor, Hanar, male Quarian, Vorcha, Drell, Batarian
 
             var compileClassesTask = new AddClassesToFile(_ => startup, classes);
             compileClassesTask.RunModTask(context);
@@ -84,6 +95,11 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // LGTc; This is the Asari Commando armor, normally not ever used by player characters; only used by NPC Asari
             AddVanillaOutfitSpecs(config, 18, LgtFileName, OutfitType.LGT, 2, bodyType, 1, 1);
 
+            // add armor entries for both genders in the female one
+            AddMenuEntries(humanOutfitMenus.Armor, 1, 17);
+            // make this one female only
+            AddMenuEntries(humanOutfitMenus.Armor, 18, 1, EGender.Female);
+
             // MEDa variants; Most Medium armor appearances fall under this
             AddVanillaOutfitSpecs(config, 19, MedFileName, OutfitType.MED, 0, bodyType, 16, 1);
             // MEDb; this is the N7 Onyx armor that Shepard wears
@@ -95,7 +111,11 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             AddVanillaOutfitSpecs(config, 45, HvyFileName, OutfitType.HVY, 0, bodyType, 16, 1);
             // HVYb. This is the N7 Onyx Armor Shepard wears
             AddVanillaOutfitSpecs(config, 61, HvyFileName, OutfitType.HVY, 1, bodyType, 1, 1);
+            // add the rest of the armor entries
+            AddMenuEntries(humanOutfitMenus.Armor, 19, 43);
 
+            // add entries for the non armor outfits
+            AddMenuEntries(humanOutfitMenus.NonArmor, 100, 41, EGender.Female);
             // Add NKD and CTH vanilla meshes (100-140)
             // NKDa: material 1 is naked human (with tintable skintone), material 2 is avina materials
             AddVanillaOutfitSpecs(config, 100, NkdFileName, OutfitType.NKD, 0, bodyType, 2, 1);
@@ -176,7 +196,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // HVYb: Shep's N7 Onyx armor
             AddVanillaOutfitSpecs(config, 61, HvyFileName, OutfitType.HVY, 1, bodyType, 1, 1);
 
-            // Add NKD and CTH vanilla meshes (100-140)
+            // add all the non armor outfits for male humans to the menu
+            AddMenuEntries(humanOutfitMenus.NonArmor, 100, 31, EGender.Male);
+
+            // Add NKD and CTH vanilla meshes (100-130)
             // NKDa: material 1 is tintable naked human, material 2 is a VI material
             AddVanillaOutfitSpecs(config, 100, NkdFileName, OutfitType.NKD, 0, bodyType, 2, 1);
 
@@ -242,6 +265,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // Krogan casuals only get one mesh in vanilla, sad.
             AddVanillaOutfitSpecs(config, 100, CthFileName, OutfitType.CTH, 0, bodyType, 5, 1);
 
+            // add all the outfits for krogans to the menu
+            AddMenuEntries(kroganOutfitMenus.Armor, 1, 27);
+            AddMenuEntries(kroganOutfitMenus.NonArmor, 100, 5);
+
             // TODO add extended vanilla meshes
             configs.Add(config);
         }
@@ -296,6 +323,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // CTHc
             AddVanillaOutfitSpecs(config, 109, CthFileName, OutfitType.CTH, 2, bodyType, 5, 1);
 
+            // add all the outfits for Turians to the menu
+            AddMenuEntries(turianOutfitMenus.Armor, 1, 49);
+            AddMenuEntries(turianOutfitMenus.NonArmor, 100, 14);
+
             // TODO add extended vanilla meshes
             configs.Add(config);
         }
@@ -331,6 +362,9 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // Tali is the only vanilla Quarian, and she only has 6 color/texture variants of the same LGTa mesh
             AddVanillaOutfitSpecs(config, 1, LgtFileName, OutfitType.LGT, 0, bodyType, 6, 2);
 
+            // add all the outfits for Turians to the menu
+            AddMenuEntries(quarianOutfitMenus.Armor, 1, 6);
+
             configs.Add(config);
         }
 
@@ -363,6 +397,21 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             }
 
             configToAddTo.AddArrayEntries("outfitSpecs", specs.Select(x => x.OutputValue()));
+        }
+
+        private void AddMenuEntries(AppearanceSubmenu submenu, int startingId, int count, EGender? gender = null)
+        {
+            for (int i = startingId; i < startingId + count; i++)
+            {
+                submenu.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "Outfit <0>"
+                    SrCenterText = 210210235,
+                    ApplyOutfitId = i,
+                    DisplayVars = [i.ToString()],
+                    Gender = gender
+                });
+            }
         }
 
         private static char CharFromInt(int value)

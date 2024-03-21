@@ -10,14 +10,14 @@
 
         public string Mesh
         {
-            get => ((StringCoalesceValue)this[nameof(Mesh)]).Value;
-            set => this[nameof(Mesh)] = new StringCoalesceValue(value);
+            get => GetString(nameof(Mesh))!;
+            set => SetString(nameof(Mesh), value);
         }
 
         public string[] Materials
         {
-            get => ((StringArrayCoalesceValue)this[nameof(Materials)]).Value;
-            set => this[nameof(Materials)] = new StringArrayCoalesceValue(value);
+            get => GetStringArray(nameof(Materials))!;
+            set => SetStringArray(nameof(Materials), value);
         }
     }
 }

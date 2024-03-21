@@ -39,50 +39,47 @@
             var int applyBreatherId;
          */
 
+        public enum EGender
+        {
+            Either,
+            Male,
+            Female
+        }
+
         public int? SrCenterText
         {
-            get => ((IntCoalesceValue)this[nameof(SrCenterText)])?.Value;
-            set {
-                if (value.HasValue)
-                {
-                    this[nameof(SrCenterText)] = new IntCoalesceValue(value.Value);
-                }
-                else
-                {
-                    Remove(nameof(SrCenterText));
-                }
-            }
+            get => GetInt(nameof(SrCenterText));
+            set => SetInt(nameof(SrCenterText), value);
         }
 
         public string? SubMenuClassName
         {
-            get => ((StringCoalesceValue)this[nameof(SubMenuClassName)])?.Value;
-            set {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    Remove(nameof(SubMenuClassName));
-                }
-                else
-                {
-                    this[nameof(SubMenuClassName)] = new StringCoalesceValue(value);
-                }
-            }
+            get => GetString(nameof(SubMenuClassName));
+            set => SetString(nameof(SubMenuClassName), value);
         }
 
         public bool? InlineSubmenu
         {
-            get => ((BoolCoalesceValue)this[nameof(InlineSubmenu)])?.Value;
-            set
-            {
-                if (value.HasValue)
-                {
-                    this[nameof(InlineSubmenu)] = new BoolCoalesceValue(value.Value);
-                }
-                else
-                {
-                    Remove(nameof(InlineSubmenu));
-                }
-            }
+            get => GetBool(nameof(InlineSubmenu));
+            set => SetBool(nameof(InlineSubmenu), value);
+        }
+
+        public string[]? DisplayVars
+        {
+            get => GetStringArray(nameof(DisplayVars));
+            set => SetStringArray(nameof(DisplayVars), value);
+        }
+
+        public int? ApplyOutfitId
+        {
+            get => GetInt(nameof(ApplyOutfitId));
+            set => SetInt(nameof(ApplyOutfitId), value);
+        }
+
+        public EGender? Gender
+        {
+            get => GetEnum<EGender>(nameof(Gender));
+            set => SetEnum(nameof(Gender), value);
         }
     }
 }
