@@ -23,11 +23,14 @@ public function bool ApplyOutfit(BioPawn target)
 		return false;
 	}
 
-	class'AMM_Utilities'.static.LoadSkeletalMesh(meshPath, AppearanceMesh.Mesh);
-	class'AMM_Utilities'.static.LoadMaterials(meshMaterialPaths, AppearanceMesh.Materials);
-	class'AMM_Utilities'.static.ReplaceMesh(target, target.Mesh, AppearanceMesh);
-
-	return true;
+	if (class'AMM_Utilities'.static.LoadSkeletalMesh(meshPath, AppearanceMesh.Mesh)
+		&& class'AMM_Utilities'.static.LoadMaterials(meshMaterialPaths, AppearanceMesh.Materials))
+	{
+		class'AMM_Utilities'.static.ReplaceMesh(target, target.Mesh, AppearanceMesh);
+		return true;
+	}
+	
+	return false;
 }
 
 protected function bool GetVariant(BioPawn targetPawn, out int armorType, out int meshVariant, out int materialVariant)

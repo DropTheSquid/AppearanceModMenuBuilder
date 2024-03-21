@@ -7,9 +7,12 @@ public function bool ApplyOutfit(BioPawn target)
 {
 	local AppearanceMesh appearanceMesh;
 
-	class'AMM_Utilities'.static.LoadSkeletalMesh(meshPath, AppearanceMesh.Mesh);
-	class'AMM_Utilities'.static.LoadMaterials(meshMaterialPaths, AppearanceMesh.Materials);
-	class'AMM_Utilities'.static.ReplaceMesh(target, target.Mesh, AppearanceMesh);
-
-	return true;
+	if (class'AMM_Utilities'.static.LoadSkeletalMesh(meshPath, AppearanceMesh.Mesh)
+		&& class'AMM_Utilities'.static.LoadMaterials(meshMaterialPaths, AppearanceMesh.Materials))
+	{
+		class'AMM_Utilities'.static.ReplaceMesh(target, target.Mesh, AppearanceMesh);
+		return true;
+	}
+	
+	return false;
 }
