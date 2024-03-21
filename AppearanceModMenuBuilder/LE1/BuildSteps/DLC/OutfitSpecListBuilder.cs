@@ -115,7 +115,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             AddMenuEntries(humanOutfitMenus.Armor, 19, 43);
 
             // add entries for the non armor outfits
-            AddMenuEntries(humanOutfitMenus.NonArmor, 100, 41, EGender.Female);
+            AddMenuEntries(humanOutfitMenus.NonArmor, 100, 38, EGender.Female);
             // Add NKD and CTH vanilla meshes (100-140)
             // NKDa: material 1 is naked human (with tintable skintone), material 2 is avina materials
             AddVanillaOutfitSpecs(config, 100, NkdFileName, OutfitType.NKD, 0, bodyType, 2, 1);
@@ -131,15 +131,15 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // CTHc dress used by many NPCs
             AddVanillaOutfitSpecs(config, 115, CthFileName, OutfitType.CTH, 2, bodyType, 6, 1);
             // CTHd different dress worn by many NPCs
-            AddVanillaOutfitSpecs(config, 121, CthFileName, OutfitType.CTH, 3, bodyType, 6, 1);
+            AddVanillaOutfitSpecs(config, 121, CthFileName, OutfitType.CTH, 3, bodyType, 3, 1);
             // CTHe civilian clothes 1
-            AddVanillaOutfitSpecs(config, 127, CthFileName, OutfitType.CTH, 4, bodyType, 2, 1);
+            AddVanillaOutfitSpecs(config, 124, CthFileName, OutfitType.CTH, 4, bodyType, 2, 1);
             // CTHf civilian clothes 2
-            AddVanillaOutfitSpecs(config, 129, CthFileName, OutfitType.CTH, 5, bodyType, 4, 1);
+            AddVanillaOutfitSpecs(config, 126, CthFileName, OutfitType.CTH, 5, bodyType, 4, 1);
             // CTHg a third dress worn by NPCs
-            AddVanillaOutfitSpecs(config, 133, CthFileName, OutfitType.CTH, 6, bodyType, 1, 1);
+            AddVanillaOutfitSpecs(config, 130, CthFileName, OutfitType.CTH, 6, bodyType, 1, 1);
             // CTHh Scientist/medic uniform worn by many NPCs
-            AddVanillaOutfitSpecs(config, 134, CthFileName, OutfitType.CTH, 7, bodyType, 7, 1);
+            AddVanillaOutfitSpecs(config, 131, CthFileName, OutfitType.CTH, 7, bodyType, 7, 1);
 
             // TODO extended Vanilla specs, add them into menus
 
