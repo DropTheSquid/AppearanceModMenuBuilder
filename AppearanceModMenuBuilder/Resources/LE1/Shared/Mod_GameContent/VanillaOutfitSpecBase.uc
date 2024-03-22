@@ -1,12 +1,11 @@
 class VanillaOutfitSpecBase extends OutfitSpecBase abstract;
 
-public function bool ApplyOutfit(BioPawn target)
+public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds, out pawnAppearance appearance)
 {
-	local AppearanceMesh appearanceMesh;
 	local int armorType;
     local int meshVariant;
     local int materialVariant;
-	local string meshPath;
+	local AppearanceMeshPaths meshPaths;
 	local array<string> meshMaterialPaths;
 
 	// this is for equipping their vanilla outfit
@@ -18,16 +17,15 @@ public function bool ApplyOutfit(BioPawn target)
 	if (!GetOutfitStrings(
 		class'AMM_Utilities'.static.GetPawnType(target),
 		armorType, meshVariant, materialVariant,
-		meshPath, meshMaterialPaths))
+		meshPaths))
 	{
 		return false;
 	}
 
-	if (class'AMM_Utilities'.static.LoadSkeletalMesh(meshPath, AppearanceMesh.Mesh)
-		&& class'AMM_Utilities'.static.LoadMaterials(meshMaterialPaths, AppearanceMesh.Materials))
+	if (class'AMM_Utilities'.static.LoadAppearanceMesh(meshPaths, appearance.bodyMesh))
 	{
-		class'AMM_Utilities'.static.ReplaceMesh(target, target.Mesh, AppearanceMesh);
-		return true;
+		// TODO I need to check to make sure helmet specs is not none here
+		return specLists.helmetSpecs.DelegateToHelmetSpec(target, specLists, appearanceIds, appearance);
 	}
 	
 	return false;
@@ -40,7 +38,7 @@ protected function bool GetVariant(BioPawn targetPawn, out int armorType, out in
     return FALSE;
 }
 
-protected static function bool GetOutfitStrings(BioPawnType pawnType, int armorType, int meshVariant, int materialVariant, out string Mesh, out array<string> Materials)
+protected static function bool GetOutfitStrings(BioPawnType pawnType, int armorType, int meshVariant, int materialVariant, out AppearanceMeshPaths Mesh)
 {
     local ArmorTypes armor;
     local string meshPackageName;
@@ -63,11 +61,11 @@ protected static function bool GetOutfitStrings(BioPawnType pawnType, int armorT
     // For example, LGTa
     meshCode = GetArmorCode(byte(armorType)) $ GetLetter(meshVariant);
     numMaterials = armor.Variations[meshVariant].MaterialsPerVariation;
-    Mesh = meshPackageName $ "." $ meshCode $ "." $ prefix $ "_" $ meshCode $ "_MDL";
+    Mesh.meshPath = meshPackageName $ "." $ meshCode $ "." $ prefix $ "_" $ meshCode $ "_MDL";
     for (i = 0; i < numMaterials; i++)
     {
         tempMaterial = materialPackageName $ "." $ meshCode $ "." $ prefix $ "_" $ meshCode $ "_MAT_" $ materialVariant + 1 $ GetLetter(i);
-        Materials.AddItem(tempMaterial);
+        Mesh.MaterialPaths.AddItem(tempMaterial);
     }
     return TRUE;
 }

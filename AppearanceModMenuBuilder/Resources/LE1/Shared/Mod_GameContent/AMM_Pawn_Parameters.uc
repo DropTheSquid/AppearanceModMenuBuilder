@@ -2,7 +2,7 @@ Class AMM_Pawn_Parameters
     config(Game);
 
 // Types
-struct AppearanceIdLookups 
+struct AppearanceIdLookups
 {
     var string appearanceType;
     var AppearanceIdLookup bodyAppearanceLookup;
@@ -11,17 +11,24 @@ struct AppearanceIdLookups
     var AppearanceIdLookup appearanceFlagsLookup;
     var string FrameworkFileName;
 };
-struct AppearanceIdLookup 
+struct AppearanceIdLookup
 {
     var int plotIntId;
     var int defaultAppearanceId;
 };
+struct SpecLists
+{
+	var OutfitSpecListBase outfitSpecs;
+	var HelmetSpecListBase helmetSpecs;
+	// TODO breatherSpecs
+};
 
 // Variables
-var transient OutfitSpecListBase __outfitSpecList;
+var transient SpecLists __SpecLists;
+var transient bool __specListsInitialized;
 var config string outfitSpecListPath;
 // var transient HelmetSpecListBase __helmetSpecList;
-// var config string helmetSpecListPath;
+var config string helmetSpecListPath;
 // var transient BreatherSpecListBase __breatherSpecList;
 // var config string breatherSpecListPath;
 // var config int defaultBreatherSpec;
@@ -121,57 +128,35 @@ public function bool GetFrameworkFileForAppearanceType(string appearanceType, ou
     return false;
 }
 
-public function OutfitSpecListBase GetOutfitSpecList(BioPawn targetPawn)
+public function SpecLists GetSpecLists(BioPawn target)
 {
-    local Class<OutfitSpecListBase> specListClass;
+	local Class<OutfitSpecListBase> outfitSpecListClass;
+	local Class<HelmetSpecListBase> helmetSpecListClass;
     
-    if (__outfitSpecList == None)
+    if (!__specListsInitialized)
     {
-        specListClass = Class<OutfitSpecListBase>(DynamicLoadObject(outfitSpecListPath, Class'Class'));
-        if (specListClass != None)
+        outfitSpecListClass = Class<OutfitSpecListBase>(DynamicLoadObject(outfitSpecListPath, Class'Class'));
+        if (outfitSpecListClass != None)
         {
-            __outfitSpecList = new specListClass;
+            __SpecLists.outfitSpecs = new outfitSpecListClass;
         }
 		else
 		{
-			LogInternal("Warning: could not load spec list"@outfitSpecListPath);
+			LogInternal("Warning: could not load outfit spec list"@outfitSpecListPath);
 		}
+		helmetSpecListClass = Class<HelmetSpecListBase>(DynamicLoadObject(helmetSpecListPath, Class'Class'));
+        if (helmetSpecListClass != None)
+        {
+            __SpecLists.helmetSpecs = new helmetSpecListClass;
+        }
+		else
+		{
+			LogInternal("Warning: could not load helmet spec list"@helmetSpecListPath);
+		}
+		__specListsInitialized = true;
     }
-    return __outfitSpecList;
+    return __SpecLists;
 }
-
-// public function HelmetSpecListBase GetHelmetSpecList(BioPawn targetPawn)
-// {
-//     local Class<HelmetSpecListBase> specListClass;
-    
-//     if (__helmetSpecList == None)
-//     {
-//         specListClass = Class<HelmetSpecListBase>(DynamicLoadObject(helmetSpecListPath, Class'Class'));
-//         if (specListClass != None)
-//         {
-//             __helmetSpecList = new specListClass;
-//         }
-//     }
-//     return __helmetSpecList;
-// }
-// public function BreatherSpecListBase GetBreatherSpecList(BioPawn targetPawn)
-// {
-//     local Class<BreatherSpecListBase> specListClass;
-    
-//     if (__breatherSpecList == None)
-//     {
-//         specListClass = Class<BreatherSpecListBase>(DynamicLoadObject(breatherSpecListPath, Class'Class'));
-//         if (specListClass != None)
-//         {
-//             __breatherSpecList = new specListClass;
-//         }
-//     }
-//     return __breatherSpecList;
-// }
-// public function string GetRootMenuPath()
-// {
-//     return menuRootPath;
-// }
 
 // find an existing pawn, if possible
 public function bool GetExistingPawn(string appearanceType, out BioPawn existingPawn)

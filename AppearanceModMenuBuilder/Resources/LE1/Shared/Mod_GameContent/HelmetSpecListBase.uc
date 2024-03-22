@@ -1,14 +1,14 @@
-Class HelmetSpecListBase
-    config(Game);
+Class HelmetSpecListBase extends Object
+    config(Game)
+	abstract;
 
-// Types
 struct HelmetSpecItem
 {
 	// always required
     var int Id;
 	// you must provide either this
     var string specPath;
-	// or most of the below
+	// or HelmetMesh plus any of the below for non default
     var AppearanceMeshPaths HelmetMesh;
     var AppearanceMeshPaths VisorMesh;
 	var bool suppressVisor;
@@ -19,10 +19,83 @@ struct HelmetSpecItem
     // var string comment;
 };
 
-// Variables
 var config array<HelmetSpecItem> helmetSpecs;
 
-// Functions
+public function bool DelegateToHelmetSpec(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds, out pawnAppearance appearance)
+{
+	local HelmetSpecBase deletageSpec;
+
+	if (GetHelmetSpecById(appearanceIds.helmetAppearanceId, deletageSpec))
+	{
+		if (deletageSpec.LoadHelmet(target, specLists, appearanceIds, appearance))
+		{
+			return true;
+		}
+		LogInternal("Warning: failed to apply helmet by id"@appearanceIds.bodyAppearanceId);
+	}
+	return false;
+}
+// public function bool DelegateToHelmetSpecById(int id, BioPawn target)
+// {
+// 	local HelmetSpecBase deletageSpec;
+
+// 	if (GetHelmetSpecById(id, deletageSpec))
+// 	{
+// 		return deletageSpec.ApplyHelmet(target);
+// 	}
+// 	return false;
+// }
+
+public function bool GetHelmetSpecById(int Id, out HelmetSpecBase helmetSpec)
+{
+	local HelmetSpecItem item;
+	local Class<HelmetSpecBase> helmetSpecClass;
+    local SimpleHelmetSpec simpleSpec;
+
+	if (GetHelmetSpecItemById(id, item))
+	{
+		if (item.specPath != "")
+		{
+			// LogInternal("dynamic loading spec" @ item.specPath, );
+			helmetSpecClass = Class<HelmetSpecBase>(DynamicLoadObject(item.specPath, Class'Class', TRUE));
+			if (helmetSpecClass == None)
+			{
+				helmetSpec = HelmetSpecBase(DynamicLoadObject(item.specPath, Class'HelmetSpecBase', TRUE));
+				if (helmetSpec == None)
+				{
+					LogInternal("Warning: Could not get helmet spec instance"@item.specPath);
+					return false;
+				}
+				return helmetSpec != None;
+			}
+			helmetSpec = new helmetSpecClass;
+			// LogInternal("helmet spec loaded" @ helmetSpec, );
+			if (helmetSpec == None)
+			{
+				LogInternal("Warning: Could not get helmet spec from class"@item.specPath);
+				return false;
+			}
+			return helmetSpec != None;
+		}
+		simpleSpec = new Class'SimpleHelmetSpec';
+		simpleSpec.helmetMesh = item.helmetMesh;
+		simpleSpec.bSuppressVisor = item.suppressVisor;
+		simpleSpec.bSuppressBreather = item.suppressBreather;
+		simpleSpec.bHideHair = item.hideHair;
+		simpleSpec.bHideHead = item.hideHead;
+		// simpleSpec.breatherTypeOverride = item.BreatherSpec;
+		helmetSpec = simpleSpec;
+		if (helmetSpec == None)
+		{
+			LogInternal("Warning: Could not make simple helmet spec with mesh"@item.HelmetMesh.MeshPath);
+			return false;
+		}
+		return true;
+	}
+	LogInternal("Warning: Could not get helmetSpec by id"@Id);
+	return false;
+}
+
 public function bool GetHelmetSpecItemById(int Id, out HelmetSpecItem item)
 {
     local int index;
@@ -38,9 +111,4 @@ public function bool GetHelmetSpecItemById(int Id, out HelmetSpecItem item)
         }
     }
     return FALSE;
-}
-
-//class default properties can be edited in the Properties tab for the class's Default__ object.
-defaultproperties
-{
 }

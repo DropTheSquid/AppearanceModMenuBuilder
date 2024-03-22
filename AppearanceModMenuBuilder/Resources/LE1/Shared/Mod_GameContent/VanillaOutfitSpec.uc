@@ -1,6 +1,6 @@
 Class VanillaOutfitSpec extends VanillaOutfitSpecBase;
 
-public function bool ApplyOutfit(BioPawn target)
+public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds, out pawnAppearance appearance)
 {
 	local OutfitSpecBase delegateSpec;
 
@@ -12,5 +12,6 @@ public function bool ApplyOutfit(BioPawn target)
     {
         delegateSpec = new Class'EquippedArmorOutfitSpec';
     }
-    return delegateSpec.ApplyOutfit(target);
+    return delegateSpec.LoadOutfit(target, specLists, appearanceIds, appearance);
 }
+

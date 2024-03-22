@@ -1,4 +1,4 @@
-Class OutfitSpecListBase
+Class OutfitSpecListBase extends Object
     config(Game)
 	abstract;
 
@@ -21,6 +21,21 @@ struct OutfitSpecItem
 
 // Variables
 var config array<OutfitSpecItem> outfitSpecs;
+
+public function bool DelegateToOutfitSpecById(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds, out pawnAppearance appearance)
+{
+	local OutfitSpecBase deletageSpec;
+
+	if (GetOutfitSpecById(appearanceIds.bodyAppearanceId, deletageSpec))
+	{
+		if (deletageSpec.LoadOutfit(target, specLists, appearanceIds, appearance))
+		{
+			return true;
+		}
+		LogInternal("Warning: failed to apply outfit by id"@appearanceIds.bodyAppearanceId);
+	}
+	return false;
+}
 
 public function bool GetOutfitSpecById(int Id, out OutfitSpecBase OutfitSpec)
 {

@@ -28,11 +28,6 @@ struct AppearanceMesh
 {
     var SkeletalMesh Mesh;
     var array<MaterialInterface> Materials;
-    
-    structdefaultproperties
-    {
-        Materials = ()
-    }
 };
 struct pawnAppearance
 {
@@ -72,6 +67,16 @@ public static function bool IsPawnArmorAppearanceOverridden(BioPawn targetPawn)
     return pawnType.m_bIsArmorOverridden || targetPawn.m_oBehavior.m_bArmorOverridden;
 }
 
+public static function bool LoadAppearanceMesh(AppearanceMeshPaths meshPaths, out AppearanceMesh AppearanceMesh)
+{
+	if (class'AMM_Utilities'.static.LoadSkeletalMesh(meshPaths.meshPath, AppearanceMesh.Mesh)
+		&& class'AMM_Utilities'.static.LoadMaterials(meshPaths.MaterialPaths, AppearanceMesh.Materials))
+	{
+		return true;
+	}
+	return false;
+}
+
 public static function bool LoadSkeletalMesh(string skeletalMeshPath, out SkeletalMesh Mesh)
 {
     Mesh = SkeletalMesh(DynamicLoadObject(skeletalMeshPath, Class'SkeletalMesh'));
@@ -100,6 +105,18 @@ public static function bool LoadMaterials(array<string> materialPaths, out array
         Materials.AddItem(material);
     }
     return TRUE;
+}
+
+public static function ApplyPawnAppearance(BioPawn target, pawnAppearance appearance)
+{
+	replaceMesh(target, target.Mesh, appearance.bodyMesh);
+	// TODO handle helmet visibility stuff here
+	replaceMesh(target, target.m_oHeadGearMesh, appearance.HelmetMesh);
+	replaceMesh(target, target.m_oVisorMesh, appearance.VisorMesh);
+
+	// This call is very important to prevent all kinds of weirdness
+	// for example bone melting and materials misbehaving, and possibly even crashing
+	target.ForceUpdateComponents(FALSE, FALSE);
 }
 
 public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc, AppearanceMesh AppearanceMesh)

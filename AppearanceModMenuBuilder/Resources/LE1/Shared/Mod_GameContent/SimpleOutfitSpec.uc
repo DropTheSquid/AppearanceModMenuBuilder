@@ -7,15 +7,17 @@ var bool bHideHair;
 var bool bHideHead;
 var int helmetTypeOverride;
 
-public function bool ApplyOutfit(BioPawn target)
+public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds, out pawnAppearance appearance)
 {
-	local AppearanceMesh appearanceMesh;
-
-	if (class'AMM_Utilities'.static.LoadSkeletalMesh(BodyMesh.meshPath, AppearanceMesh.Mesh)
-		&& class'AMM_Utilities'.static.LoadMaterials(BodyMesh.MaterialPaths, AppearanceMesh.Materials))
+	if (class'AMM_Utilities'.static.LoadAppearanceMesh(BodyMesh, appearance.bodyMesh))
 	{
-		class'AMM_Utilities'.static.ReplaceMesh(target, target.Mesh, AppearanceMesh);
-		return true;
+		if ((appearanceIds.helmetAppearanceId == 0 || appearanceIds.helmetAppearanceId == -1)
+			&& helmetTypeOverride != 0)
+		{
+			appearanceIds.helmetAppearanceId = helmetTypeOverride;
+		}
+		// TODO I need to check to make sure helmet specs is not none here
+		return specLists.helmetSpecs.DelegateToHelmetSpec(target, specLists, appearanceIds, appearance);
 	}
 
 	return false;

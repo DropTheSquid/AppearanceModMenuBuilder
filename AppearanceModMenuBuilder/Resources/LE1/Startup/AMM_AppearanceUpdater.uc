@@ -8,8 +8,8 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 {
 	local AMM_Pawn_Parameters params;
 	local PawnAppearanceIds appearanceIds;
-	local OutfitSpecListBase outfitList;
-	local OutfitSpecBase outfitSpec;
+	local SpecLists specLists;
+	local pawnAppearance pawnAppearance;
 
 	UpdateOuterWorldInfo();
 	LogInternal("appearance update for target"@PathName(target)@Target.Tag@"from source"@source);
@@ -18,18 +18,15 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 		params.SpecialHandling(target);
 		if (params.GetCurrentAppearanceIds(target, appearanceIds))
 		{
-			outfitList = params.GetOutfitSpecList(target);
-			if (outfitList == None)
+			specLists = params.GetSpecLists(target);
+			if (specLists.outfitSpecs == None)
 			{
 				LogInternal("Warning: Could not get outfit list");
 				return;
 			}
-			if (outfitList.GetOutfitSpecById(appearanceIds.bodyAppearanceId, outfitSpec))
+			if (specLists.outfitSpecs.DelegateToOutfitSpecById(target, specLists, appearanceIds, pawnAppearance))
 			{
-				outfitSpec.ApplyOutfit(target);
-				// This call is very important to prevent all kinds of weirdness
-				// for example bone melting and materials misbehaving, and possibly even crashing
-				target.ForceUpdateComponents(FALSE, FALSE);
+				class'AMM_Utilities'.static.ApplyPawnAppearance(target, pawnAppearance);
 			}
 		}
 		else
