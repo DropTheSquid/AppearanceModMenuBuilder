@@ -2,7 +2,7 @@ Class HelmetSpecListBase
     config(Game);
 
 // Types
-struct HelmetSpecItem 
+struct HelmetSpecItem
 {
 	// always required
     var int Id;
@@ -11,9 +11,10 @@ struct HelmetSpecItem
 	// or most of the below
     var AppearanceMeshPaths HelmetMesh;
     var AppearanceMeshPaths VisorMesh;
-    // var bool suppressBreather;
-    // var bool hideHair;
-    // var bool hideHead;
+	var bool suppressVisor;
+    var bool suppressBreather;
+    var bool hideHair;
+    var bool hideHead;
     // var int BreatherSpec;
     // var string comment;
 };

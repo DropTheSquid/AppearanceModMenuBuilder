@@ -12,7 +12,8 @@
 	],
 	"settings": {
 		"files.exclude": {
-			"**/*.pcc": true
+			"**/*.pcc": true,
+			"**/*.tfc": true
 		},
 	}
 }

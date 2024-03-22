@@ -1,8 +1,8 @@
 ﻿namespace AppearanceModMenuBuilder.LE1.Models
 {
-    public abstract class OutfitSpecItemBase : StructCoalesceValue
+    public abstract class SpecItemBase : StructCoalesceValue
     {
-        public OutfitSpecItemBase(int id)
+        public SpecItemBase(int id)
         {
             Id = id;
         }

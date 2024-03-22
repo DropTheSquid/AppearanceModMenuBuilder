@@ -1,6 +1,11 @@
 class SimpleOutfitSpec extends OutfitSpecBase;
 
 var AppearanceMeshPaths BodyMesh;
+var bool bSuppressHelmet;
+var bool bSuppressBreather;
+var bool bHideHair;
+var bool bHideHead;
+var int helmetTypeOverride;
 
 public function bool ApplyOutfit(BioPawn target)
 {

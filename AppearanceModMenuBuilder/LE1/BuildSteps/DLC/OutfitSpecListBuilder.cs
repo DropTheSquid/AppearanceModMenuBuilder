@@ -25,6 +25,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         }
 
         private const string OutfitSpecListClassTemplate = "Class {0} extends OutfitSpecListBase config(Game);";
+        private const string HelmetSpecListClassTemplate = "Class {0} extends HelmetSpecListBase config(Game);";
         private const string ConfigMergeName = "outfits";
         private const string containingPackage = "OutfitSpecs";
         private readonly List<ClassToCompile> classes = [];
@@ -38,7 +39,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             (humanOutfitMenus, turianOutfitMenus, quarianOutfitMenus, kroganOutfitMenus) = InitCommonMenus(submenuConfigMergeFile);
 
-            GenerateHMFSpecs();
+            GenerateHMFAndASASpecs();
             GenerateHMMSpecs();
             GenerateTURSpecs();
             GenerateKROSpecs();
@@ -56,44 +57,83 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             }
         }
 
-        private void GenerateHMFSpecs()
+        private void GenerateHMFAndASASpecs()
         {
+            /* 
+             * Human Females (HMF) and Asari (ASA) are weird in that they share some meshes but not others
+             * so for example, all body meshes are shared, with skintone tinting taking care of the blue skin if applicable
+             * helmet meshes are NOT shared, as Asari have a longer back to accomodate the tentacles. 
+             * So separate helmet meshes, but same breather meshes. 
+             * the helmets hide hair if applicable, but not the full head. 
+             * when a helmet is worn without a breather, the helmet and visor are visible
+             * the breather generally does not suppress the visor, unless overridden for a specific faceplate
+             * 
+             * additionally, the armor ids for human female and male nearly match, so I am only going to generate the menu entries once in this method
+            */
+
             const string bodyType = "HMF";
-            const string className = "HMF_OutfitSpec";
+            const string asariBodyType = "ASA";
 
             // add the source code needed
-            AddOutfitListClass(className);
+            AddSpecListClasses(bodyType);
+            AddSpecListClasses(asariBodyType, skipBody: true, skipBreather: true);
 
             // now generate the configs
-            var config = GetOutfitListConfig(className);
+            var bodyConfig = GetOutfitListConfig(bodyType);
+            var helmetConfig = GetHelmetListConfig(bodyType);
+            var asariHelmetConfig = GetHelmetListConfig(asariBodyType);
 
             // Add the special case ones
-            var specialSpecs = new List<OutfitSpecItemBase>
+            var specialSpecs = new List<SpecItemBase>
             {
                 // loads the default/casual look, even if they are in combat
-                new LoadedOutfitSpecItem(-3, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
+                new LoadedSpecItem(-3, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
                 // loads the equipped armor look, even if they are out of combat/in a casual situation 
-                new LoadedOutfitSpecItem(-2, "Mod_GameContent.EquippedArmorOutfitSpec"),
+                new LoadedSpecItem(-2, "Mod_GameContent.EquippedArmorOutfitSpec"),
                 // loads the vanilla appearance
-                new LoadedOutfitSpecItem(-1, "Mod_GameContent.VanillaOutfitSpec"),
-                new LoadedOutfitSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")
+                new LoadedSpecItem(-1, "Mod_GameContent.VanillaOutfitSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")
             };
 
-            config.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
+            bodyConfig.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
+            // TODO add special specs for helmets
 
-            var LgtFileName = GetVanillaArmorFileName(bodyType, OutfitType.LGT);
-            var MedFileName = GetVanillaArmorFileName(bodyType, OutfitType.MED);
-            var HvyFileName = GetVanillaArmorFileName(bodyType, OutfitType.HVY);
-            var NkdFileName = GetVanillaArmorFileName(bodyType, OutfitType.NKD);
-            var CthFileName = GetVanillaArmorFileName(bodyType, OutfitType.CTH);
+            var LgtArmorFileName = GetVanillaArmorFileName(bodyType, OutfitType.LGT);
+            var MedArmorFileName = GetVanillaArmorFileName(bodyType, OutfitType.MED);
+            var HvyArmorFileName = GetVanillaArmorFileName(bodyType, OutfitType.HVY);
+            var NkdClothesFileName = GetVanillaArmorFileName(bodyType, OutfitType.NKD);
+            var CthClothesFileName = GetVanillaArmorFileName(bodyType, OutfitType.CTH);
+            var LgtHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.LGT);
+            var MedHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.MED);
+            var HvyHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.HVY);
+            var LgtAsariHelmetFileName = GetVanillaHelmetFileName(asariBodyType, OutfitType.LGT);
+            var MedAsariHelmetFileName = GetVanillaHelmetFileName(asariBodyType, OutfitType.MED);
+            var HvyAsariHelmetFileName = GetVanillaHelmetFileName(asariBodyType, OutfitType.HVY);
+
+            var visorMesh = new AppearanceMeshPaths("BIOG_HMF_HGR_HVY_R.HVYa.HMF_VSR_HVYa_MDL", ["BIOG_HMF_HGR_HVY_R.HVYa.HMF_VSR_HVYa_MAT_1a"]);
+            var asariVisorMesh = new AppearanceMeshPaths("BIOG_ASA_HGR_HVY_R.HVYa.ASA_VSR_HVYa_MDL", ["BIOG_ASA_HGR_HVY_R.HVYa.ASA_VSR_HVYa_MAT_1a"]);
 
             // add all vanilla armor variants into positive IDs less than 100 (only goes up to 61)
             // LGTa variants; Most Light armor appearances fall under this
-            AddVanillaOutfitSpecs(config, 1,  LgtFileName, OutfitType.LGT, 0, bodyType, 16, 1);
+            AddVanillaOutfitSpecs(bodyConfig, 1,  LgtArmorFileName, OutfitType.LGT, 0, bodyType, 16, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 1, LgtHelmetFileName, OutfitType.LGT, 0, bodyType, 16, 1, visorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(asariHelmetConfig, 1, LgtAsariHelmetFileName, OutfitType.LGT, 0, asariBodyType, 16, 1, asariVisorMesh, hideHair: true);
+
             // LGTb; This is the N7 Onyx Armor that Shepard wears
-            AddVanillaOutfitSpecs(config, 17, LgtFileName, OutfitType.LGT, 1, bodyType, 1, 1);
+            AddVanillaOutfitSpecs(bodyConfig, 17, LgtArmorFileName, OutfitType.LGT, 1, bodyType, 1, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 17, LgtHelmetFileName, OutfitType.LGT, 1, bodyType, 1, 1, visorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(asariHelmetConfig, 17, LgtAsariHelmetFileName, OutfitType.LGT, 1, asariBodyType, 1, 1, asariVisorMesh, hideHair: true);
             // LGTc; This is the Asari Commando armor, normally not ever used by player characters; only used by NPC Asari
-            AddVanillaOutfitSpecs(config, 18, LgtFileName, OutfitType.LGT, 2, bodyType, 1, 1);
+            AddVanillaOutfitSpecs(bodyConfig, 18, LgtArmorFileName, OutfitType.LGT, 2, bodyType, 1, 1, true);
+            // manually add this one because there is not actually a corresponding helmet for HMF, using HMF LGTa model and ASA materials
+            // TODO test that this looks correct
+            helmetConfig.AddArrayEntries(
+                "helmetSpecs",
+                new SimpleHelmetSpecItem(18, "BIOG_HMF_HGR_LGT_R.LGTa.HMF_HGR_LGTa_MDL", ["BIOG_ASA_HGR_LGT_R.LGTc.ASA_HGR_LGTc_MAT_1a"], visorMesh)
+                {
+                    HideHair = true
+                }.OutputValue());
+            AddVanillaHelmetSpecs(asariHelmetConfig, 18, LgtAsariHelmetFileName, OutfitType.LGT, 2, asariBodyType, 1, 1, asariVisorMesh, hideHair: true);
 
             // add armor entries for both genders in the female one
             AddMenuEntries(humanOutfitMenus.Armor, 1, 17);
@@ -101,16 +141,27 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             AddMenuEntries(humanOutfitMenus.Armor, 18, 1, EGender.Female);
 
             // MEDa variants; Most Medium armor appearances fall under this
-            AddVanillaOutfitSpecs(config, 19, MedFileName, OutfitType.MED, 0, bodyType, 16, 1);
+            AddVanillaOutfitSpecs(bodyConfig, 19, MedArmorFileName, OutfitType.MED, 0, bodyType, 16, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 19, MedHelmetFileName, OutfitType.MED, 0, bodyType, 16, 1, visorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(asariHelmetConfig, 19, MedAsariHelmetFileName, OutfitType.MED, 0, asariBodyType, 16, 1, asariVisorMesh, hideHair: true);
+
             // MEDb; this is the N7 Onyx armor that Shepard wears
-            AddVanillaOutfitSpecs(config, 35, MedFileName, OutfitType.MED, 1, bodyType, 1, 1);
+            AddVanillaOutfitSpecs(bodyConfig, 35, MedArmorFileName, OutfitType.MED, 1, bodyType, 1, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 35, MedHelmetFileName, OutfitType.MED, 1, bodyType, 1, 1, visorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(asariHelmetConfig, 35, MedAsariHelmetFileName, OutfitType.MED, 1, asariBodyType, 1, 1, asariVisorMesh, hideHair: true);
             // MEDc Asymmetric tintable armor. Not used by any equipment obtainable in vanilla or by any NPCs, but can be accessed using Black Market Licenses/console commands
-            AddVanillaOutfitSpecs(config, 36, MedFileName, OutfitType.MED, 2, bodyType, 9, 1);
+            AddVanillaOutfitSpecs(bodyConfig, 36, MedArmorFileName, OutfitType.MED, 2, bodyType, 9, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 36, MedHelmetFileName, OutfitType.MED, 2, bodyType, 9, 1, visorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(asariHelmetConfig, 36, MedAsariHelmetFileName, OutfitType.MED, 2, asariBodyType, 9, 1, asariVisorMesh);
 
             // HVYa variants. Most heavy armor falls under this
-            AddVanillaOutfitSpecs(config, 45, HvyFileName, OutfitType.HVY, 0, bodyType, 16, 1);
+            AddVanillaOutfitSpecs(bodyConfig, 45, HvyArmorFileName, OutfitType.HVY, 0, bodyType, 16, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 45, HvyHelmetFileName, OutfitType.HVY, 0, bodyType, 16, 1, visorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(asariHelmetConfig, 45, HvyAsariHelmetFileName, OutfitType.HVY, 0, asariBodyType, 16, 1, asariVisorMesh, hideHair: true);
             // HVYb. This is the N7 Onyx Armor Shepard wears
-            AddVanillaOutfitSpecs(config, 61, HvyFileName, OutfitType.HVY, 1, bodyType, 1, 1);
+            AddVanillaOutfitSpecs(bodyConfig, 61, HvyArmorFileName, OutfitType.HVY, 1, bodyType, 1, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 61, HvyHelmetFileName, OutfitType.HVY, 1, bodyType, 1, 1, visorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(asariHelmetConfig, 61, HvyAsariHelmetFileName, OutfitType.HVY, 1, asariBodyType, 1, 1, asariVisorMesh, hideHair: true);
             // add the rest of the armor entries
             AddMenuEntries(humanOutfitMenus.Armor, 19, 43);
 
@@ -118,55 +169,60 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             AddMenuEntries(humanOutfitMenus.NonArmor, 100, 38, EGender.Female);
             // Add NKD and CTH vanilla meshes (100-140)
             // NKDa: material 1 is naked human (with tintable skintone), material 2 is Avina materials on the naked mesh
-            AddVanillaOutfitSpecs(config, 100, NkdFileName, OutfitType.NKD, 0, bodyType, 2, 1);
+            AddVanillaOutfitSpecs(bodyConfig, 100, NkdClothesFileName, OutfitType.NKD, 0, bodyType, 2, 1);
             // NKDb: dancer outfit with tintable skintone
-            AddVanillaOutfitSpecs(config, 102, NkdFileName, OutfitType.NKD, 1, bodyType, 1, 1);
+            AddVanillaOutfitSpecs(bodyConfig, 102, NkdClothesFileName, OutfitType.NKD, 1, bodyType, 1, 1);
             // NKDc: Liara romance mesh, not sure it is tintable
-            AddVanillaOutfitSpecs(config, 103, NkdFileName, OutfitType.NKD, 2, bodyType, 1, 1);
+            AddVanillaOutfitSpecs(bodyConfig, 103, NkdClothesFileName, OutfitType.NKD, 2, bodyType, 1, 1);
 
             // CTHa Alliance Formal
-            AddVanillaOutfitSpecs(config, 104, CthFileName, OutfitType.CTH, 0, bodyType, 6, 1);
+            AddVanillaOutfitSpecs(bodyConfig, 104, CthClothesFileName, OutfitType.CTH, 0, bodyType, 6, 1);
             // CTHb Alliance Fatigues and related, such as C Sec color variant
-            AddVanillaOutfitSpecs(config, 110, CthFileName, OutfitType.CTH, 1, bodyType, 5, 1);
+            AddVanillaOutfitSpecs(bodyConfig, 110, CthClothesFileName, OutfitType.CTH, 1, bodyType, 5, 1);
             // CTHc dress used by many NPCs, except variant 6 (id 120) is the Mira VI material
-            AddVanillaOutfitSpecs(config, 115, CthFileName, OutfitType.CTH, 2, bodyType, 6, 1);
+            AddVanillaOutfitSpecs(bodyConfig, 115, CthClothesFileName, OutfitType.CTH, 2, bodyType, 6, 1);
             // CTHd different dress worn by many NPCs
-            AddVanillaOutfitSpecs(config, 121, CthFileName, OutfitType.CTH, 3, bodyType, 3, 1);
+            AddVanillaOutfitSpecs(bodyConfig, 121, CthClothesFileName, OutfitType.CTH, 3, bodyType, 3, 1);
             // CTHe civilian clothes 1
-            AddVanillaOutfitSpecs(config, 124, CthFileName, OutfitType.CTH, 4, bodyType, 2, 1);
+            AddVanillaOutfitSpecs(bodyConfig, 124, CthClothesFileName, OutfitType.CTH, 4, bodyType, 2, 1);
             // CTHf civilian clothes 2
-            AddVanillaOutfitSpecs(config, 126, CthFileName, OutfitType.CTH, 5, bodyType, 4, 1);
+            AddVanillaOutfitSpecs(bodyConfig, 126, CthClothesFileName, OutfitType.CTH, 5, bodyType, 4, 1);
             // CTHg a third dress worn by NPCs
-            AddVanillaOutfitSpecs(config, 130, CthFileName, OutfitType.CTH, 6, bodyType, 1, 1);
+            AddVanillaOutfitSpecs(bodyConfig, 130, CthClothesFileName, OutfitType.CTH, 6, bodyType, 1, 1);
             // CTHh Scientist/medic uniform worn by many NPCs
-            AddVanillaOutfitSpecs(config, 131, CthFileName, OutfitType.CTH, 7, bodyType, 7, 1);
+            AddVanillaOutfitSpecs(bodyConfig, 131, CthClothesFileName, OutfitType.CTH, 7, bodyType, 7, 1);
 
             // TODO extended Vanilla specs, add them into menus
 
-            configs.Add(config);
+            configs.Add(bodyConfig);
+            configs.Add(helmetConfig);
+            configs.Add(asariHelmetConfig);
         }
 
         private void GenerateHMMSpecs()
         {
+            /*
+             * Human males are nearly the same rules as human females, but without the Asari complication. 
+             */
             const string bodyType = "HMM";
-            const string className = "HMM_OutfitSpec";
 
             // add the source code needed
-            AddOutfitListClass(className);
+            AddSpecListClasses(bodyType);
 
             // now generate the configs
-            var config = GetOutfitListConfig(className);
+            var config = GetOutfitListConfig(bodyType);
+            var helmetConfig = GetHelmetListConfig(bodyType);
 
             // Add the special case ones
-            var specialSpecs = new List<OutfitSpecItemBase>
+            var specialSpecs = new List<SpecItemBase>
             {
                 // loads the default/casual look, even if they are in combat
-                new LoadedOutfitSpecItem(-3, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
+                new LoadedSpecItem(-3, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
                 // loads the equipped armor look, even if they are out of combat/in a casual situation 
-                new LoadedOutfitSpecItem(-2, "Mod_GameContent.EquippedArmorOutfitSpec"),
+                new LoadedSpecItem(-2, "Mod_GameContent.EquippedArmorOutfitSpec"),
                 // loads the vanilla appearance
-                new LoadedOutfitSpecItem(-1, "Mod_GameContent.VanillaOutfitSpec"),
-                new LoadedOutfitSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")
+                new LoadedSpecItem(-1, "Mod_GameContent.VanillaOutfitSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")
             };
 
             config.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
@@ -176,25 +232,42 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             var HvyFileName = GetVanillaArmorFileName(bodyType, OutfitType.HVY);
             var NkdFileName = GetVanillaArmorFileName(bodyType, OutfitType.NKD);
             var CthFileName = GetVanillaArmorFileName(bodyType, OutfitType.CTH);
+            var LgtHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.LGT);
+            var MedHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.MED);
+            var HvyHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.HVY);
+
+            var visorMesh = new AppearanceMeshPaths("BIOG_HMM_HGR_HVY_R.HVYa.HMM_VSR_HVYa_MDL", ["BIOG_HMM_HGR_HVY_R.HVYa.HMM_VSR_HVYa_MAT_1a"]);
 
             // add all vanilla armor variants into positive IDs less than 100 (only goes up to 61); matches HMF ids
             // LGTa variants
-            AddVanillaOutfitSpecs(config, 1,  LgtFileName, OutfitType.LGT, 0, bodyType, 16, 1);
+            AddVanillaOutfitSpecs(config, 1,  LgtFileName, OutfitType.LGT, 0, bodyType, 16, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 1, LgtHelmetFileName, OutfitType.LGT, 0, bodyType, 16, 1, visorMesh, hideHair: true);
+
             // LGTb: Shepard's Onyx armor with N7 logo
-            AddVanillaOutfitSpecs(config, 17, LgtFileName, OutfitType.LGT, 1, bodyType, 1, 1);
+            AddVanillaOutfitSpecs(config, 17, LgtFileName, OutfitType.LGT, 1, bodyType, 1, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 7, LgtHelmetFileName, OutfitType.LGT, 1, bodyType, 1, 1, visorMesh, hideHair: true);
             // Note that there is no LGTc for HMM, and I am intentionally skipping id 18
 
             // MEDa variants
-            AddVanillaOutfitSpecs(config, 19, MedFileName, OutfitType.MED, 0, bodyType, 16, 1);
+            AddVanillaOutfitSpecs(config, 19, MedFileName, OutfitType.MED, 0, bodyType, 16, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 19, MedHelmetFileName, OutfitType.MED, 0, bodyType, 16, 1, visorMesh, hideHair: true);
+
             // MEDb: Shep's N7 Onyx Armor
-            AddVanillaOutfitSpecs(config, 35, MedFileName, OutfitType.MED, 1, bodyType, 1, 1);
+            AddVanillaOutfitSpecs(config, 35, MedFileName, OutfitType.MED, 1, bodyType, 1, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 35, MedHelmetFileName, OutfitType.MED, 1, bodyType, 1, 1, visorMesh, hideHair: true);
+
             // MEDc: Assymmetric tintable armor. never used by NPCs, only usable by player using console commands or Black Market License
-            AddVanillaOutfitSpecs(config, 36, MedFileName, OutfitType.MED, 2, bodyType, 9, 1);
+            AddVanillaOutfitSpecs(config, 36, MedFileName, OutfitType.MED, 2, bodyType, 9, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 36, MedHelmetFileName, OutfitType.MED, 2, bodyType, 9, 1, visorMesh, hideHair: true);
+
 
             // HVYa variants
-            AddVanillaOutfitSpecs(config, 45, HvyFileName, OutfitType.HVY, 0, bodyType, 16, 1);
+            AddVanillaOutfitSpecs(config, 45, HvyFileName, OutfitType.HVY, 0, bodyType, 16, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 45, HvyHelmetFileName, OutfitType.HVY, 0, bodyType, 16, 1, visorMesh, hideHair: true);
+
             // HVYb: Shep's N7 Onyx armor
-            AddVanillaOutfitSpecs(config, 61, HvyFileName, OutfitType.HVY, 1, bodyType, 1, 1);
+            AddVanillaOutfitSpecs(config, 61, HvyFileName, OutfitType.HVY, 1, bodyType, 1, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 61, HvyHelmetFileName, OutfitType.HVY, 1, bodyType, 1, 1, visorMesh, hideHair: true);
 
             // add all the non armor outfits for male humans to the menu
             AddMenuEntries(humanOutfitMenus.NonArmor, 100, 31, EGender.Male);
@@ -220,29 +293,35 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // TODO add extended vanilla meshes
 
             configs.Add(config);
+            configs.Add(helmetConfig);
         }
 
         private void GenerateKROSpecs()
         {
+            /*
+             * Krogan helmets are a bit different from human/Asari
+             * there is no separate visor mesh or faceplate/breather mesh in vanilla.
+             * All vanilla Krogan helmets hide the head.
+             */
             const string bodyType = "KRO";
-            const string className = "KRO_OutfitSpec";
 
             // add the source code needed
-            AddOutfitListClass(className);
+            AddSpecListClasses(bodyType);
 
             // now generate the configs
-            var config = GetOutfitListConfig(className);
+            var config = GetOutfitListConfig(bodyType);
+            var helmetConfig = GetHelmetListConfig(bodyType);
 
             // Add the special case ones
-            var specialSpecs = new List<OutfitSpecItemBase>
+            var specialSpecs = new List<SpecItemBase>
             {
                 // loads the default/casual look, even if they are in combat
-                new LoadedOutfitSpecItem(-3, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
+                new LoadedSpecItem(-3, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
                 // loads the equipped armor look, even if they are out of combat/in a casual situation 
-                new LoadedOutfitSpecItem(-2, "Mod_GameContent.EquippedArmorOutfitSpec"),
+                new LoadedSpecItem(-2, "Mod_GameContent.EquippedArmorOutfitSpec"),
                 // loads the vanilla appearance
-                new LoadedOutfitSpecItem(-1, "Mod_GameContent.VanillaOutfitSpec"),
-                new LoadedOutfitSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")
+                new LoadedSpecItem(-1, "Mod_GameContent.VanillaOutfitSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")
             };
 
             config.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
@@ -250,16 +329,22 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             var MedFileName = GetVanillaArmorFileName(bodyType, OutfitType.MED);
             var HvyFileName = GetVanillaArmorFileName(bodyType, OutfitType.HVY);
             var CthFileName = GetVanillaArmorFileName(bodyType, OutfitType.CTH);
+            var MedHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.MED);
+            var HvyHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.HVY);
 
             // add all vanilla armor variants into positive IDs less than 100 (only goes up to 61)
             // MEDa variants. There are not light Korgan armor meshes, and no other medium variants
-            AddVanillaOutfitSpecs(config, 1, MedFileName, OutfitType.MED, 0, bodyType, 11, 1);
+            AddVanillaOutfitSpecs(config, 1, MedFileName, OutfitType.MED, 0, bodyType, 11, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 1, MedHelmetFileName, OutfitType.MED, 0, bodyType, 11, 1, suppressBreather: true, hideHead: true);
 
             // Heavy armor variants
-            AddVanillaOutfitSpecs(config, 12, HvyFileName, OutfitType.HVY, 0, bodyType, 12, 1);
-            AddVanillaOutfitSpecs(config, 24, HvyFileName, OutfitType.HVY, 1, bodyType, 1, 1);
+            AddVanillaOutfitSpecs(config, 12, HvyFileName, OutfitType.HVY, 0, bodyType, 12, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 12, MedHelmetFileName, OutfitType.MED, 0, bodyType, 12, 1, suppressBreather: true, hideHead: true);
+            AddVanillaOutfitSpecs(config, 24, HvyFileName, OutfitType.HVY, 1, bodyType, 1, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 24, MedHelmetFileName, OutfitType.MED, 1, bodyType, 1, 1, suppressBreather: true, hideHead: true);
             // this is the fun glowy ones
-            AddVanillaOutfitSpecs(config, 25, HvyFileName, OutfitType.HVY, 2, bodyType, 3, 1);
+            AddVanillaOutfitSpecs(config, 25, HvyFileName, OutfitType.HVY, 2, bodyType, 3, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 25, MedHelmetFileName, OutfitType.MED, 2, bodyType, 3, 1, suppressBreather: true, hideHead: true);
 
             // Add CTH vanilla meshes (100-105)
             // Krogan casuals only get one mesh in vanilla, sad.
@@ -271,29 +356,37 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             // TODO add extended vanilla meshes
             configs.Add(config);
+            configs.Add(helmetConfig);
         }
 
         private void GenerateTURSpecs()
         {
+            /*
+             * Turian helmets are a bit weird also.
+             * There is a visor mesh, but it is only used when the breather is on, unlike human where the visor is always on unless suppressed by the faceplate
+             * as there is a transparent portion, it never hides the head.
+             * it does, however, hide the "hair" which includes Garrus' eyepiece
+             */
             const string bodyType = "TUR";
-            const string className = "TUR_OutfitSpec";
 
             // add the source code needed
-            AddOutfitListClass(className);
+            AddSpecListClasses(bodyType);
 
             // now generate the configs
-            var config = GetOutfitListConfig(className);
+            var config = GetOutfitListConfig(bodyType);
+            var helmetConfig = GetHelmetListConfig(bodyType);
+
 
             // Add the special case ones
-            var specialSpecs = new List<OutfitSpecItemBase>
+            var specialSpecs = new List<SpecItemBase>
             {
                 // loads the default/casual look, even if they are in combat
-                new LoadedOutfitSpecItem(-3, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
+                new LoadedSpecItem(-3, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
                 // loads the equipped armor look, even if they are out of combat/in a casual situation 
-                new LoadedOutfitSpecItem(-2, "Mod_GameContent.EquippedArmorOutfitSpec"),
+                new LoadedSpecItem(-2, "Mod_GameContent.EquippedArmorOutfitSpec"),
                 // loads the vanilla appearance
-                new LoadedOutfitSpecItem(-1, "Mod_GameContent.VanillaOutfitSpec"),
-                new LoadedOutfitSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")
+                new LoadedSpecItem(-1, "Mod_GameContent.VanillaOutfitSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")
             };
 
             config.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
@@ -302,18 +395,28 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             var MedFileName = GetVanillaArmorFileName(bodyType, OutfitType.MED);
             var HvyFileName = GetVanillaArmorFileName(bodyType, OutfitType.HVY);
             var CthFileName = GetVanillaArmorFileName(bodyType, OutfitType.CTH);
+            var LgtHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.LGT);
+            var MedHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.MED);
+            var HvyHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.HVY);
+
+            var visorMesh = new AppearanceMeshPaths("BIOG_TUR_HGR_HVY_R.HVYa.TUR_HGR_VSRa_MDL", ["BIOG_TUR_HGR_HVY_R.HVYa.TUR_VSR_HVYa_MAT_1a"]);
 
             // add all vanilla armor variants into positive IDs less than 100
             // LGTa
-            AddVanillaOutfitSpecs(config, 1,  LgtFileName, OutfitType.LGT, 0, bodyType, 15, 1);
+            AddVanillaOutfitSpecs(config, 1,  LgtFileName, OutfitType.LGT, 0, bodyType, 15, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 1, LgtHelmetFileName, OutfitType.LGT, 0, bodyType, 15, 1, visorMesh, suppressVisor: true, hideHair: true);
+
             // LGTb
-            AddVanillaOutfitSpecs(config, 16, LgtFileName, OutfitType.LGT, 1, bodyType, 3, 1);
+            AddVanillaOutfitSpecs(config, 16, LgtFileName, OutfitType.LGT, 1, bodyType, 3, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 6, LgtHelmetFileName, OutfitType.LGT, 1, bodyType, 3, 1, visorMesh, suppressVisor: true, hideHair: true);
 
             // MEDa
-            AddVanillaOutfitSpecs(config, 19, MedFileName, OutfitType.MED, 0, bodyType, 16, 1);
+            AddVanillaOutfitSpecs(config, 19, MedFileName, OutfitType.MED, 0, bodyType, 16, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 19, MedHelmetFileName, OutfitType.MED, 0, bodyType, 16, 1, visorMesh, suppressVisor: true, hideHair: true);
 
             // HVYa
-            AddVanillaOutfitSpecs(config, 35, HvyFileName, OutfitType.HVY, 0, bodyType, 15, 1);
+            AddVanillaOutfitSpecs(config, 35, HvyFileName, OutfitType.HVY, 0, bodyType, 15, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 35, HvyHelmetFileName, OutfitType.HVY, 0, bodyType, 15, 1, visorMesh, suppressVisor: true, hideHair: true);
 
             // Add CTH vanilla meshes (100+)
             // CTHa
@@ -329,29 +432,36 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             // TODO add extended vanilla meshes
             configs.Add(config);
+            configs.Add(helmetConfig);
         }
 
         private void GenerateQRNSpecs()
         {
+            /*
+             * Quarians (meaning just Tali in LE1) are extra weird. There is no separate head mesh from the body mesh, no helmet meshes, and no breather meshes
+             * it is just the body mesh in all circumstances in vanilla
+             * note that some mods add a "helmet" mesh that includes a metal plate covering part of the suit visor glass
+             * Children of Rannoch is the one I know of.
+             * So I want to build support to extend this if folks want to make things for this. 
+             */
             const string bodyType = "QRN";
-            const string className = "QRN_OutfitSpec";
 
             // add the source code needed
-            AddOutfitListClass(className);
+            AddSpecListClasses(bodyType);
 
             // now generate the configs
-            var config = GetOutfitListConfig(className);
+            var config = GetOutfitListConfig(bodyType);
 
             // Add the special case ones
-            var specialSpecs = new List<OutfitSpecItemBase>
+            var specialSpecs = new List<SpecItemBase>
             {
                 // loads the default/casual look, even if they are in combat
-                new LoadedOutfitSpecItem(-3, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
+                new LoadedSpecItem(-3, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
                 // loads the equipped armor look, even if they are out of combat/in a casual situation 
-                new LoadedOutfitSpecItem(-2, "Mod_GameContent.EquippedArmorOutfitSpec"),
+                new LoadedSpecItem(-2, "Mod_GameContent.EquippedArmorOutfitSpec"),
                 // loads the vanilla appearance
-                new LoadedOutfitSpecItem(-1, "Mod_GameContent.VanillaOutfitSpec"),
-                new LoadedOutfitSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")
+                new LoadedSpecItem(-1, "Mod_GameContent.VanillaOutfitSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")
             };
 
             config.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
@@ -361,6 +471,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // add all vanilla armor variants into positive IDs less than 100
             // Tali is the only vanilla Quarian, and she only has 6 color/texture variants of the same LGTa mesh
             AddVanillaOutfitSpecs(config, 1, LgtFileName, OutfitType.LGT, 0, "QRN_FAC", 6, 2);
+            // TODO add some theoretical helmet support
 
             // add all the outfits for Turians to the menu
             AddMenuEntries(quarianOutfitMenus.Armor, 1, 6);
@@ -369,7 +480,16 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         }
 
 
-        private static void AddVanillaOutfitSpecs(ModConfigClass configToAddTo, int startingId, string packagePrefix, OutfitType type, int meshVariant, string bodyTypePrefix, int modelVariants, int materialsPerVariant)
+        private static void AddVanillaOutfitSpecs(
+            ModConfigClass configToAddTo,
+            int startingId,
+            string packagePrefix,
+            OutfitType type,
+            int meshVariant,
+            string bodyTypePrefix,
+            int modelVariants,
+            int materialsPerVariant,
+            bool matchingHelmetSpec = false)
         {
             SimpleOutfitSpecItem[] specs = new SimpleOutfitSpecItem[modelVariants];
 
@@ -393,13 +513,70 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     materials[j] = $"{sharedPrefix}_Mat_{i + 1}{CharFromInt(j)}";
                 }
 
-                specs[i] = new SimpleOutfitSpecItem(id, mesh, materials);
+                specs[i] = new SimpleOutfitSpecItem(id, mesh, materials)
+                {
+                    // either a spec with the same id or -2 (no helmet) as the default
+                    HelmetSpec = matchingHelmetSpec ? id : -2
+                };
+
             }
 
             configToAddTo.AddArrayEntries("outfitSpecs", specs.Select(x => x.OutputValue()));
         }
 
-        private void AddMenuEntries(AppearanceSubmenu submenu, int startingId, int count, EGender? gender = null)
+        private static void AddVanillaHelmetSpecs(
+            ModConfigClass configToAddTo,
+            int startingId,
+            string packagePrefix,
+            OutfitType type,
+            int meshVariant,
+            string bodyTypePrefix,
+            int modelVariants,
+            int materialsPerVariant,
+            AppearanceMeshPaths? visorMesh = null,
+            bool? hideHair = null,
+            bool? hideHead = null,
+            bool? suppressVisor = null,
+            bool? suppressBreather = null)
+        {
+            SimpleHelmetSpecItem[] specs = new SimpleHelmetSpecItem[modelVariants];
+            if (visorMesh == null)
+            {
+                suppressVisor = true;
+            }
+
+            for (int i = 0; i < modelVariants; i++)
+            {
+                var id = startingId + i;
+                // eg LGTa
+                var meshVariantString = type.ToString() + CharFromInt(meshVariant);
+
+                // eg BIOG_HMM_HGR_HVY_R.HVYa.HMM_HGR_HVYa
+                var sharedPrefix = $"{packagePrefix}.{meshVariantString}.{bodyTypePrefix}_HGR_{meshVariantString}";
+
+                // eg BIOG_HMM_HGR_HVY_R.HVYa.HMM_HGR_HVYa_MDL
+                var mesh = $"{sharedPrefix}_MDL";
+                string[] materials = new string[materialsPerVariant];
+                for (int j = 0; j < materialsPerVariant; j++)
+                {
+                    // eg BIOG_HMM_HGR_HVY_R.HVYa.HMM_HGR_HVYa_MAT_1a
+                    // where 1 is the variant (1 based, not 0 based), and a/b is the material number within the variant
+                    materials[j] = $"{sharedPrefix}_Mat_{i + 1}{CharFromInt(j)}";
+                }
+
+                specs[i] = new SimpleHelmetSpecItem(id, mesh, materials, visorMesh)
+                {
+                    HideHair = hideHair,
+                    HideHead = hideHead,
+                    SuppressVisor = suppressVisor,
+                    SuppressBreather = suppressBreather
+                };
+            }
+
+            configToAddTo.AddArrayEntries("helmetSpecs", specs.Select(x => x.OutputValue()));
+        }
+
+        private static void AddMenuEntries(AppearanceSubmenu submenu, int startingId, int count, EGender? gender = null)
         {
             for (int i = startingId; i < startingId + count; i++)
             {
@@ -423,19 +600,39 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             return (char)(value + 'a');
         }
 
-        private void AddOutfitListClass(string className)
+        private void AddSpecListClasses(string bodyType, bool skipBody = false, bool skipHelmet = false, bool skipBreather = false)
         {
-            classes.Add(new ClassToCompile(className, string.Format(OutfitSpecListClassTemplate, className), [containingPackage]));
+            if (!skipBody)
+            {
+                var OutfitSpecClassName = $"{bodyType}_OutfitSpec";
+                classes.Add(new ClassToCompile(OutfitSpecClassName, string.Format(OutfitSpecListClassTemplate, OutfitSpecClassName), [containingPackage]));
+            }
+            if (!skipHelmet)
+            {
+                var HelmetSpecClassName = $"{bodyType}_HelmetSpec";
+                classes.Add(new ClassToCompile(HelmetSpecClassName, string.Format(HelmetSpecListClassTemplate, HelmetSpecClassName), [containingPackage]));
+            }
+            // TODO breather spec lists
         }
 
-        private static ModConfigClass GetOutfitListConfig(string className)
+        private static ModConfigClass GetOutfitListConfig(string bodyType)
         {
-            return new ModConfigClass($"{containingPackage}.{className}", "BioGame.ini");
+            return new ModConfigClass($"{containingPackage}.{bodyType}_OutfitSpec", "BioGame.ini");
+        }
+
+        private static ModConfigClass GetHelmetListConfig(string bodyType)
+        {
+            return new ModConfigClass($"{containingPackage}.{bodyType}_HelmetSpec", "BioGame.ini");
         }
 
         private static string GetVanillaArmorFileName(string bodyType, OutfitType outfitType)
         {
             return $"BIOG_{bodyType}_ARM_{outfitType}_R";
+        }
+
+        private static string GetVanillaHelmetFileName(string bodyType, OutfitType outfitType)
+        {
+            return $"BIOG_{bodyType}_HGR_{outfitType}_R";
         }
     }
 }

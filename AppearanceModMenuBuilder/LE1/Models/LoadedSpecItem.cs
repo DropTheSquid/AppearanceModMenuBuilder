@@ -1,8 +1,8 @@
 ﻿namespace AppearanceModMenuBuilder.LE1.Models
 {
-    internal class LoadedOutfitSpecItem : OutfitSpecItemBase
+    internal class LoadedSpecItem : SpecItemBase
     {
-        public LoadedOutfitSpecItem(int id, string specPath) : base(id)
+        public LoadedSpecItem(int id, string specPath) : base(id)
         {
             SpecPath = specPath;
         }

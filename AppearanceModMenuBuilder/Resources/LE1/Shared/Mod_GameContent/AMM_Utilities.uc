@@ -24,7 +24,7 @@ struct AppearanceMeshPaths
 	var string MeshPath;
 	var Array<string> MaterialPaths;
 };
-struct AppearanceMesh 
+struct AppearanceMesh
 {
     var SkeletalMesh Mesh;
     var array<MaterialInterface> Materials;
@@ -34,7 +34,7 @@ struct AppearanceMesh
         Materials = ()
     }
 };
-struct pawnAppearance 
+struct pawnAppearance
 {
     var AppearanceMesh bodyMesh;
     var AppearanceMesh HelmetMesh;

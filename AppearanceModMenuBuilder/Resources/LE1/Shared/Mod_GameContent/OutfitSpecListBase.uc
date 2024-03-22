@@ -3,24 +3,20 @@ Class OutfitSpecListBase
 	abstract;
 
 // Types
-struct OutfitSpecItem 
+struct OutfitSpecItem
 {
 	// always mandatory
     var int Id;
 	// below this, you must provide either the specPath
     var string specPath;
-	// or most of the below
+	// or this along with any of the others if non default
 	var AppearanceMeshPaths BodyMesh;
-	// TODO implement these
-    // var bool suppressHelmet;
-    // var bool suppressBreather;
-    // var bool hideHair;
-    // var bool hideHead;
-    // var int HelmetSpec;
+    var bool suppressHelmet;
+    var bool suppressBreather;
+    var bool hideHair;
+    var bool hideHead;
+    var int HelmetSpec;
     // var int BreatherSpec;
-    // var EBioArmorType armorTypeOverride;
-    // var int meshVariantOverride;
-    // var int materialVariantOverride;
 };
 
 // Variables
@@ -50,13 +46,6 @@ public function bool GetOutfitSpecById(int Id, out OutfitSpecBase OutfitSpec)
 			}
 			OutfitSpec = new outfitSpecClass;
 			// LogInternal("outfit spec loaded" @ OutfitSpec, );
-			// if (VanillaOverrideOutfitSpec(OutfitSpec) != None)
-			// {
-			// 	// LogInternal("apllying vanilla overrides" @ item.armorTypeOverride, );
-			// 	VanillaOverrideOutfitSpec(OutfitSpec).armorType = item.armorTypeOverride;
-			// 	VanillaOverrideOutfitSpec(OutfitSpec).meshVariant = item.meshVariantOverride;
-			// 	VanillaOverrideOutfitSpec(OutfitSpec).materialVariant = item.materialVariantOverride;
-			// }
 			if (outfitSpec == None)
 			{
 				LogInternal("Warning: Could not get outfit spec from class"@item.specPath);
@@ -66,11 +55,11 @@ public function bool GetOutfitSpecById(int Id, out OutfitSpecBase OutfitSpec)
 		}
 		simpleSpec = new Class'SimpleOutfitSpec';
 		simpleSpec.bodyMesh = item.bodyMesh;
-		// simpleSpec.bSuppressHelmet = item.suppressHelmet;
-		// simpleSpec.bSuppressBreather = item.suppressBreather;
-		// simpleSpec.bHideHair = item.hideHair;
-		// simpleSpec.bHideHead = item.hideHead;
-		// simpleSpec.helmetTypeOverride = item.HelmetSpec;
+		simpleSpec.bSuppressHelmet = item.suppressHelmet;
+		simpleSpec.bSuppressBreather = item.suppressBreather;
+		simpleSpec.bHideHair = item.hideHair;
+		simpleSpec.bHideHead = item.hideHead;
+		simpleSpec.helmetTypeOverride = item.HelmetSpec;
 		// simpleSpec.breatherTypeOverride = item.BreatherSpec;
 		OutfitSpec = simpleSpec;
 		if (outfitSpec == None)
