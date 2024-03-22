@@ -10,8 +10,8 @@ struct OutfitSpecItem
 	// below this, you must provide either the specPath
     var string specPath;
 	// or most of the below
-    var string Mesh;
-    var array<string> Materials;
+	var AppearanceMeshPaths BodyMesh;
+	// TODO implement these
     // var bool suppressHelmet;
     // var bool suppressBreather;
     // var bool hideHair;
@@ -21,11 +21,6 @@ struct OutfitSpecItem
     // var EBioArmorType armorTypeOverride;
     // var int meshVariantOverride;
     // var int materialVariantOverride;
-    
-    // structdefaultproperties
-    // {
-    //     Materials = ()
-    // }
 };
 
 // Variables
@@ -70,8 +65,7 @@ public function bool GetOutfitSpecById(int Id, out OutfitSpecBase OutfitSpec)
 			return OutfitSpec != None;
 		}
 		simpleSpec = new Class'SimpleOutfitSpec';
-		simpleSpec.meshPath = item.Mesh;
-		simpleSpec.meshMaterialPaths = item.Materials;
+		simpleSpec.bodyMesh = item.bodyMesh;
 		// simpleSpec.bSuppressHelmet = item.suppressHelmet;
 		// simpleSpec.bSuppressBreather = item.suppressBreather;
 		// simpleSpec.bHideHair = item.hideHair;
@@ -81,7 +75,7 @@ public function bool GetOutfitSpecById(int Id, out OutfitSpecBase OutfitSpec)
 		OutfitSpec = simpleSpec;
 		if (outfitSpec == None)
 		{
-			LogInternal("Warning: Could not make simple outfit spec with mesh"@item.Mesh);
+			LogInternal("Warning: Could not make simple outfit spec with mesh"@item.BodyMesh.MeshPath);
 			return false;
 		}
 		return true;

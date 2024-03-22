@@ -19,6 +19,11 @@ enum eGender
     Male,
     Female,
 };
+struct AppearanceMeshPaths
+{
+	var string MeshPath;
+	var Array<string> MaterialPaths;
+};
 struct AppearanceMesh 
 {
     var SkeletalMesh Mesh;

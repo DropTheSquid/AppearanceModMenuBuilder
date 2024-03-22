@@ -4,20 +4,13 @@
     {
         public SimpleOutfitSpecItem(int id, string mesh, string[] materials) : base(id)
         {
-            Mesh = mesh;
-            Materials = materials;
+            BodyMesh = new AppearanceMeshPaths(mesh, materials);
         }
 
-        public string Mesh
+        public AppearanceMeshPaths? BodyMesh
         {
-            get => GetString(nameof(Mesh))!;
-            set => SetString(nameof(Mesh), value);
-        }
-
-        public string[] Materials
-        {
-            get => GetStringArray(nameof(Materials))!;
-            set => SetStringArray(nameof(Materials), value);
+            get => GetStruct<AppearanceMeshPaths>(nameof(BodyMesh));
+            set => SetStruct(nameof(BodyMesh), value);
         }
     }
 }

@@ -142,6 +142,23 @@ namespace AppearanceModMenuBuilder.LE1.Models
             }
         }
 
+        public T? GetStruct<T>(string propertyName) where T : StructCoalesceValue
+        {
+            return (T)this[propertyName];
+        }
+
+        public void SetStruct<T>(string propertyName, T? value) where T : StructCoalesceValue
+        {
+            if (value != null)
+            {
+                this[propertyName] = value;
+            }
+            else
+            {
+                Remove(propertyName);
+            }
+        }
+
         public string OutputValue()
         {
             var items = new List<string>();
