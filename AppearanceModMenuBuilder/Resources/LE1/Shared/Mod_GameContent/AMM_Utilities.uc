@@ -133,6 +133,7 @@ public static function ApplyPawnAppearance(BioPawn target, pawnAppearance appear
     }
 	replaceMesh(target, target.m_oHeadGearMesh, appearance.HelmetMesh);
 	target.m_oHeadGearMesh.SetHidden(appearance.HelmetMesh.Mesh == None);
+	target.m_oHeadGearMesh.CastShadow = appearance.HelmetMesh.Mesh != None;
 
 	if (target.m_oVisorMesh == None)
     {
@@ -142,9 +143,9 @@ public static function ApplyPawnAppearance(BioPawn target, pawnAppearance appear
         target.m_oVisorMesh.SetLightEnvironment(target.Mesh.LightEnvironment);
         target.AttachComponent(target.m_oVisorMesh);
     }
-    // LogInfo("Setting visor mesh to" @ appearance.VisorMesh.Mesh);
     replaceMesh(target, target.m_oVisorMesh, appearance.VisorMesh);
     target.m_oVisorMesh.SetHidden(appearance.VisorMesh.Mesh == None);
+	target.m_oVisorMesh.CastShadow = appearance.VisorMesh.Mesh != None;
 
 	if (target.m_oFacePlateMesh == None)
     {
@@ -154,10 +155,9 @@ public static function ApplyPawnAppearance(BioPawn target, pawnAppearance appear
         target.m_oFacePlateMesh.SetLightEnvironment(target.Mesh.LightEnvironment);
         target.AttachComponent(target.m_oFacePlateMesh);
     }
-    // LogInfo("Setting faceplate mesh to" @ appearance.FaceplateMesh.Mesh);
     replaceMesh(target, target.m_oFacePlateMesh, appearance.BreatherMesh);
     target.m_oFacePlateMesh.SetHidden(appearance.BreatherMesh.Mesh == None);
-
+	target.m_oFacePlateMesh.CastShadow = appearance.BreatherMesh.Mesh != None;
 
 	// This call is very important to prevent all kinds of weirdness
 	// for example bone melting and materials misbehaving, and possibly even crashing
