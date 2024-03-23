@@ -16,11 +16,14 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 	}
 	if (VisorMesh.meshPath != "" && !bSuppressVisor)
 	{
-		if (!class'AMM_Utilities'.static.LoadAppearanceMesh(HelmetMesh, appearance.visorMesh))
+		if (!class'AMM_Utilities'.static.LoadAppearanceMesh(VisorMesh, appearance.visorMesh))
 		{
-			LogInternal("failed to load helmet mesh"@HelmetMesh.MeshPath);
+			LogInternal("failed to load visor mesh"@VisorMesh.MeshPath);
 			return false;
 		}
 	}
+	appearance.hideHair = bHideHair;
+	appearance.hideHead = bHideHead;
+	// TODO load in a breather if it is not suppressed here
 	return true;
 }

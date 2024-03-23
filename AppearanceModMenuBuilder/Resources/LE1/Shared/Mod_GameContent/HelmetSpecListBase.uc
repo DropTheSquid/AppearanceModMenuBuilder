@@ -79,6 +79,7 @@ public function bool GetHelmetSpecById(int Id, out HelmetSpecBase helmetSpec)
 		}
 		simpleSpec = new Class'SimpleHelmetSpec';
 		simpleSpec.helmetMesh = item.helmetMesh;
+		simpleSpec.VisorMesh = item.VisorMesh;
 		simpleSpec.bSuppressVisor = item.suppressVisor;
 		simpleSpec.bSuppressBreather = item.suppressBreather;
 		simpleSpec.bHideHair = item.hideHair;

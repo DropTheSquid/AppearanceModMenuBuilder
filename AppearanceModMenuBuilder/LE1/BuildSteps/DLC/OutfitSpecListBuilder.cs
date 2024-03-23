@@ -94,9 +94,23 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 new LoadedSpecItem(-1, "Mod_GameContent.VanillaOutfitSpec"),
                 new LoadedSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")
             };
-
             bodyConfig.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
-            // TODO add special specs for helmets
+
+            specialSpecs =
+            [
+                // loads the default/casual look, even if they are in combat, ignoring their equipped armor
+                new LoadedSpecItem(-5, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
+                // loads the equipped armor look, even if they are in casual mode
+                new LoadedSpecItem(-4, "Mod_GameContent.EquippedArmorOutfitSpec"),
+                // load the vanilla appearance, even if overridden by the outfit spec
+                new LoadedSpecItem(-3, "Mod_GameContent.VanillaHelmetSpec"),
+                // force there to be no helmet
+                new LoadedSpecItem(-2, "Mod_GameContent.NoHelmetSpec"),
+                // loads the vanilla appearance, unless overridden by the outfit spec
+                new LoadedSpecItem(-1, "Mod_GameContent.VanillaHelmetSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.VanillaHelmetSpec")
+            ];
+            helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs.Select(x => x.OutputValue()));
 
             var LgtArmorFileName = GetVanillaArmorFileName(bodyType, OutfitType.LGT);
             var MedArmorFileName = GetVanillaArmorFileName(bodyType, OutfitType.MED);
@@ -224,8 +238,23 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 new LoadedSpecItem(-1, "Mod_GameContent.VanillaOutfitSpec"),
                 new LoadedSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")
             };
-
             config.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
+
+            specialSpecs =
+            [
+                // loads the default/casual look, even if they are in combat, ignoring their equipped armor
+                new LoadedSpecItem(-5, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
+                // loads the equipped armor look, even if they are in casual mode
+                new LoadedSpecItem(-4, "Mod_GameContent.EquippedArmorOutfitSpec"),
+                // load the vanilla appearance, even if overridden by the outfit spec
+                new LoadedSpecItem(-3, "Mod_GameContent.VanillaHelmetSpec"),
+                // force there to be no helmet
+                new LoadedSpecItem(-2, "Mod_GameContent.NoHelmetSpec"),
+                // loads the vanilla appearance, unless overridden by the outfit spec
+                new LoadedSpecItem(-1, "Mod_GameContent.VanillaHelmetSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.VanillaHelmetSpec")
+            ];
+            helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs.Select(x => x.OutputValue()));
 
             var LgtFileName = GetVanillaArmorFileName(bodyType, OutfitType.LGT);
             var MedFileName = GetVanillaArmorFileName(bodyType, OutfitType.MED);
@@ -326,6 +355,22 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             config.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
 
+            specialSpecs =
+            [
+                // loads the default/casual look, even if they are in combat, ignoring their equipped armor
+                new LoadedSpecItem(-5, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
+                // loads the equipped armor look, even if they are in casual mode
+                new LoadedSpecItem(-4, "Mod_GameContent.EquippedArmorOutfitSpec"),
+                // load the vanilla appearance, even if overridden by the outfit spec
+                new LoadedSpecItem(-3, "Mod_GameContent.VanillaHelmetSpec"),
+                // force there to be no helmet
+                new LoadedSpecItem(-2, "Mod_GameContent.NoHelmetSpec"),
+                // loads the vanilla appearance, unless overridden by the outfit spec
+                new LoadedSpecItem(-1, "Mod_GameContent.VanillaHelmetSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.VanillaHelmetSpec")
+            ];
+            helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs.Select(x => x.OutputValue()));
+
             var MedFileName = GetVanillaArmorFileName(bodyType, OutfitType.MED);
             var HvyFileName = GetVanillaArmorFileName(bodyType, OutfitType.HVY);
             var CthFileName = GetVanillaArmorFileName(bodyType, OutfitType.CTH);
@@ -390,6 +435,22 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             };
 
             config.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
+
+            specialSpecs =
+            [
+                // loads the default/casual look, even if they are in combat, ignoring their equipped armor
+                new LoadedSpecItem(-5, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
+                // loads the equipped armor look, even if they are in casual mode
+                new LoadedSpecItem(-4, "Mod_GameContent.EquippedArmorOutfitSpec"),
+                // load the vanilla appearance, even if overridden by the outfit spec
+                new LoadedSpecItem(-3, "Mod_GameContent.VanillaHelmetSpec"),
+                // force there to be no helmet
+                new LoadedSpecItem(-2, "Mod_GameContent.NoHelmetSpec"),
+                // loads the vanilla appearance, unless overridden by the outfit spec
+                new LoadedSpecItem(-1, "Mod_GameContent.VanillaHelmetSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.VanillaHelmetSpec")
+            ];
+            helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs.Select(x => x.OutputValue()));
 
             var LgtFileName = GetVanillaArmorFileName(bodyType, OutfitType.LGT);
             var MedFileName = GetVanillaArmorFileName(bodyType, OutfitType.MED);

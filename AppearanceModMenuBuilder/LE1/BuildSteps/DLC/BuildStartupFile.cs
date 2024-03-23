@@ -31,7 +31,13 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\EquippedArmorOutfitSpec.uc", ["Mod_GameContent"]),
                     LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\VanillaOutfitByIdSpec.uc", ["Mod_GameContent"]),
                     LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\VanillaOutfitSpec.uc", ["Mod_GameContent"]),
-                    LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\VanillaOutfitSpecBase.uc", ["Mod_GameContent"])
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\VanillaOutfitSpecBase.uc", ["Mod_GameContent"]),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\ArmorOverrideVanillaHelmetSpec.uc", ["Mod_GameContent"]),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\EquippedArmorHelmetSpec.uc", ["Mod_GameContent"]),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\VanillaHelmetByIdSpec.uc", ["Mod_GameContent"]),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\VanillaHelmetSpec.uc", ["Mod_GameContent"]),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\VanillaHelmetSpecBase.uc", ["Mod_GameContent"]),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\NoHelmetSpec.uc", ["Mod_GameContent"])
                     ])
                 .RunModTask(context);
             // add an instance of the handler class at a hardercoded location, add it to the object referencer

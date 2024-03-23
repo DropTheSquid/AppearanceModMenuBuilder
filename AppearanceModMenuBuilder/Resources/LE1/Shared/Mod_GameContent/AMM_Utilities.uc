@@ -34,8 +34,8 @@ struct pawnAppearance
     var AppearanceMesh bodyMesh;
     var AppearanceMesh HelmetMesh;
     var AppearanceMesh VisorMesh;
-    var AppearanceMesh FaceplateMesh;
-    var bool hideHair;
+    var AppearanceMesh BreatherMesh;
+	var bool hideHair;
     var bool hideHead;
 };
 
@@ -67,9 +67,9 @@ public static function bool IsPawnArmorAppearanceOverridden(BioPawn targetPawn)
     return pawnType.m_bIsArmorOverridden || targetPawn.m_oBehavior.m_bArmorOverridden;
 }
 
-public static function bool LoadAppearanceMesh(AppearanceMeshPaths meshPaths, out AppearanceMesh AppearanceMesh)
+public static function bool LoadAppearanceMesh(AppearanceMeshPaths meshPaths, out AppearanceMesh AppearanceMesh, optional bool allowNone = false)
 {
-	if (class'AMM_Utilities'.static.LoadSkeletalMesh(meshPaths.meshPath, AppearanceMesh.Mesh)
+	if (class'AMM_Utilities'.static.LoadSkeletalMesh(meshPaths.meshPath, AppearanceMesh.Mesh, allowNone)
 		&& class'AMM_Utilities'.static.LoadMaterials(meshPaths.MaterialPaths, AppearanceMesh.Materials))
 	{
 		return true;
@@ -77,8 +77,12 @@ public static function bool LoadAppearanceMesh(AppearanceMeshPaths meshPaths, ou
 	return false;
 }
 
-public static function bool LoadSkeletalMesh(string skeletalMeshPath, out SkeletalMesh Mesh)
+public static function bool LoadSkeletalMesh(string skeletalMeshPath, out SkeletalMesh Mesh, optional bool allowNone = false)
 {
+	if (allowNone && (skeletalMeshPath == "" || skeletalMeshPath ~= "None"))
+	{
+		return true;
+	}
     Mesh = SkeletalMesh(DynamicLoadObject(skeletalMeshPath, Class'SkeletalMesh'));
     if (Mesh == None)
     {
@@ -110,9 +114,50 @@ public static function bool LoadMaterials(array<string> materialPaths, out array
 public static function ApplyPawnAppearance(BioPawn target, pawnAppearance appearance)
 {
 	replaceMesh(target, target.Mesh, appearance.bodyMesh);
-	// TODO handle helmet visibility stuff here
+	if (target.m_oHairMesh != None)
+    {
+        target.m_oHairMesh.SetHidden(appearance.hideHair);
+    }
+    if (target.m_oHeadMesh != None)
+    {
+        target.m_oHeadMesh.SetHidden(appearance.hideHead);
+    }
+
+	if (target.m_oHeadGearMesh == None)
+    {
+        target.m_oHeadGearMesh = new (target) Class'SkeletalMeshComponent';
+        target.m_oHeadGearMesh.SetParentAnimComponent(target.Mesh);
+        target.m_oHeadGearMesh.SetShadowParent(target.Mesh);
+        target.m_oHeadGearMesh.SetLightEnvironment(target.Mesh.LightEnvironment);
+        target.AttachComponent(target.m_oHeadGearMesh);
+    }
 	replaceMesh(target, target.m_oHeadGearMesh, appearance.HelmetMesh);
-	replaceMesh(target, target.m_oVisorMesh, appearance.VisorMesh);
+	target.m_oHeadGearMesh.SetHidden(appearance.HelmetMesh.Mesh == None);
+
+	if (target.m_oVisorMesh == None)
+    {
+        target.m_oVisorMesh = new (target) Class'SkeletalMeshComponent';
+        target.m_oVisorMesh.SetParentAnimComponent(target.Mesh);
+        target.m_oVisorMesh.SetShadowParent(target.Mesh);
+        target.m_oVisorMesh.SetLightEnvironment(target.Mesh.LightEnvironment);
+        target.AttachComponent(target.m_oVisorMesh);
+    }
+    // LogInfo("Setting visor mesh to" @ appearance.VisorMesh.Mesh);
+    replaceMesh(target, target.m_oVisorMesh, appearance.VisorMesh);
+    target.m_oVisorMesh.SetHidden(appearance.VisorMesh.Mesh == None);
+
+	if (target.m_oFacePlateMesh == None)
+    {
+        target.m_oFacePlateMesh = new (target) Class'SkeletalMeshComponent';
+        target.m_oFacePlateMesh.SetParentAnimComponent(target.Mesh);
+        target.m_oFacePlateMesh.SetShadowParent(target.Mesh);
+        target.m_oFacePlateMesh.SetLightEnvironment(target.Mesh.LightEnvironment);
+        target.AttachComponent(target.m_oFacePlateMesh);
+    }
+    // LogInfo("Setting faceplate mesh to" @ appearance.FaceplateMesh.Mesh);
+    replaceMesh(target, target.m_oFacePlateMesh, appearance.BreatherMesh);
+    target.m_oFacePlateMesh.SetHidden(appearance.BreatherMesh.Mesh == None);
+
 
 	// This call is very important to prevent all kinds of weirdness
 	// for example bone melting and materials misbehaving, and possibly even crashing
@@ -215,6 +260,86 @@ public static function bool IsFrameworkInstalled()
 public static function bool DoesLevelExist(coerce string levelName)
 {
 	return DynamicLoadObject(string(levelName)$".TheWorld", class'World') != None;
+}
+
+public static function string GetArmorCode(EBioArmorType armorType)
+{
+    switch (armorType)
+    {
+        case EBioArmorType.ARMOR_TYPE_NONE:
+            return "NKD";
+        case EBioArmorType.ARMOR_TYPE_CLOTHING:
+            return "CTH";
+        case EBioArmorType.ARMOR_TYPE_LIGHT:
+            return "LGT";
+        case EBioArmorType.ARMOR_TYPE_MEDIUM:
+            return "MED";
+        case EBioArmorType.ARMOR_TYPE_HEAVY:
+            return "HVY";
+        default:
+    }
+    return "";
+}
+
+public static function string GetLetter(int num)
+{
+    switch (num + 1)
+    {
+        case 1:
+            return "a";
+        case 2:
+            return "b";
+        case 3:
+            return "c";
+        case 4:
+            return "d";
+        case 5:
+            return "e";
+        case 6:
+            return "f";
+        case 7:
+            return "g";
+        case 8:
+            return "h";
+        case 9:
+            return "i";
+        case 10:
+            return "j";
+        case 11:
+            return "k";
+        case 12:
+            return "l";
+        case 13:
+            return "m";
+        case 14:
+            return "n";
+        case 15:
+            return "o";
+        case 16:
+            return "p";
+        case 17:
+            return "q";
+        case 18:
+            return "r";
+        case 19:
+            return "s";
+        case 20:
+            return "t";
+        case 21:
+            return "u";
+        case 22:
+            return "v";
+        case 23:
+            return "w";
+        case 24:
+            return "x";
+        case 25:
+            return "y";
+        case 26:
+            return "z";
+        default:
+    }
+    return "";
 }
 
 // private static function ProfileSMC(SkeletalMeshComponent smc)

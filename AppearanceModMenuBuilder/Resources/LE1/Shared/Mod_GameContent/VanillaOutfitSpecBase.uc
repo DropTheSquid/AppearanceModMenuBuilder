@@ -48,8 +48,10 @@ protected static function bool GetOutfitStrings(BioPawnType pawnType, int armorT
     local int numMaterials;
     local string tempMaterial;
     local int i;
+	local string sharedPrefix;
     
     armor = pawnType.m_oAppearance.Body.armor[armorType];
+	// eg BIOG_TUR_ARM_LGT_R, always matches in vanilla
     meshPackageName = string(armor.m_meshPackageName);
     materialPackageName = string(armor.m_materialPackageName);
     if (meshPackageName == "None" || materialPackageName == "None")
@@ -57,95 +59,21 @@ protected static function bool GetOutfitStrings(BioPawnType pawnType, int armorT
         LogInternal("No mesh or material package for armor type" @ armorType, );
         return FALSE;
     }
+	// eg TUR_ARM
     prefix = pawnType.m_oAppearance.Body.AppearancePrefix;
     // For example, LGTa
-    meshCode = GetArmorCode(byte(armorType)) $ GetLetter(meshVariant);
+    meshCode = class'Amm_Utilities'.static.GetArmorCode(byte(armorType)) $ class'Amm_Utilities'.static.GetLetter(meshVariant);
     numMaterials = armor.Variations[meshVariant].MaterialsPerVariation;
-    Mesh.meshPath = meshPackageName $ "." $ meshCode $ "." $ prefix $ "_" $ meshCode $ "_MDL";
+	// eg LGTa.TUR_ARM_LGTa
+	sharedPrefix = meshCode $ "." $ prefix $ "_" $ meshCode;
+	// eg BIOG_TUR_ARM_LGT_R.LGTa.TUR_ARM_LGTa_MDL
+    Mesh.meshPath = meshPackageName $ "." $ sharedPrefix $ "_MDL";
     for (i = 0; i < numMaterials; i++)
     {
-        tempMaterial = materialPackageName $ "." $ meshCode $ "." $ prefix $ "_" $ meshCode $ "_MAT_" $ materialVariant + 1 $ GetLetter(i);
+		// eg BIOG_TUR_ARM_LGT_R.LGTa.TUR_ARM_LGTa_MAT_1a
+        tempMaterial = materialPackageName $ "." $ sharedPrefix $ "_MAT_" $ materialVariant + 1 $ class'Amm_Utilities'.static.GetLetter(i);
         Mesh.MaterialPaths.AddItem(tempMaterial);
     }
     return TRUE;
 }
 
-protected static function string GetArmorCode(EBioArmorType armorType)
-{
-    switch (armorType)
-    {
-        case EBioArmorType.ARMOR_TYPE_NONE:
-            return "NKD";
-        case EBioArmorType.ARMOR_TYPE_CLOTHING:
-            return "CTH";
-        case EBioArmorType.ARMOR_TYPE_LIGHT:
-            return "LGT";
-        case EBioArmorType.ARMOR_TYPE_MEDIUM:
-            return "MED";
-        case EBioArmorType.ARMOR_TYPE_HEAVY:
-            return "HVY";
-        default:
-    }
-    return "";
-}
-
-protected static function string GetLetter(int num)
-{
-    switch (num + 1)
-    {
-        case 1:
-            return "a";
-        case 2:
-            return "b";
-        case 3:
-            return "c";
-        case 4:
-            return "d";
-        case 5:
-            return "e";
-        case 6:
-            return "f";
-        case 7:
-            return "g";
-        case 8:
-            return "h";
-        case 9:
-            return "i";
-        case 10:
-            return "j";
-        case 11:
-            return "k";
-        case 12:
-            return "l";
-        case 13:
-            return "m";
-        case 14:
-            return "n";
-        case 15:
-            return "o";
-        case 16:
-            return "p";
-        case 17:
-            return "q";
-        case 18:
-            return "r";
-        case 19:
-            return "s";
-        case 20:
-            return "t";
-        case 21:
-            return "u";
-        case 22:
-            return "v";
-        case 23:
-            return "w";
-        case 24:
-            return "x";
-        case 25:
-            return "y";
-        case 26:
-            return "z";
-        default:
-    }
-    return "";
-}
