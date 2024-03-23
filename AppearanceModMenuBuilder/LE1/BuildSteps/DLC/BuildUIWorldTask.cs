@@ -129,9 +129,13 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 ];
 
             // add a sequence action to update whenever the character record changes is set up/changes characters
-            AddPawnAppearanceUpdateSeqAct(
+            var charRecUpdateSequenceAct = AddPawnAppearanceUpdateSeqAct(
                 FindRemoteEvent("SetupCharRec", "TheWorld.PersistentLevel.Main_Sequence.SeqEvent_RemoteEvent_16"),
                 CharRecPawnSeqVar);
+
+            // add a new RemoteEvent to update the character record pawn
+            var RE_UpdateCharRec = AddRemoteEvent("re_AMM_update_CharRec_Appearance", "updates the current character record pawn");
+            KismetHelper.CreateOutputLink(RE_UpdateCharRec, "Out", charRecUpdateSequenceAct);
 
             // same for inventory
             var inventoryUpdateSeqAct = AddPawnAppearanceUpdateSeqAct(

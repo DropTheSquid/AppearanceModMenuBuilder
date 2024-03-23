@@ -2,7 +2,6 @@ public function ToggleHelmet()
 {
     local BioPlayerSquad oSquad;
     local BioPawn oSquadMember;
-    local AppearanceUpdater updater;
     
     oSquad = BioWorldInfo(oWorldInfo).m_playerSquad;
     if (oSquad != None)
@@ -13,8 +12,9 @@ public function ToggleHelmet()
     {
         oSquadMember.SetHeadGearVisiblePreference(!oSquadMember.GetHeadGearVisiblePreference());
         BioWorldInfo(oWorldInfo).m_UIWorld.UpdateHeadGearVisibility(oSquadMember);
-        BioWorldInfo(oWorldInfo).m_UIWorld.TriggerEvent('AMM_UpdateCharRecAppearance', oWorldInfo);
-        updater = Class'AppearanceUpdater'.static.GetInstance();
-        updater.UpdatePawnAppearance(oSquadMember, "BioSFHandler_CharacterRecord.ToggleHelmet");
+		// trigger a new update of the character record pawn
+		BioWorldInfo(oWorldInfo).m_UIWorld.TriggerEvent('re_AMM_update_CharRec_Appearance', oWorldInfo);
+		// and the real world pawn
+		Class'AMM_AppearanceUpdater_Base'.static.UpdatePawnAppearanceStatic(oSquadMember, "BioSFHandler_CharacterRecord.ToggleHelmet");
     }
 }
