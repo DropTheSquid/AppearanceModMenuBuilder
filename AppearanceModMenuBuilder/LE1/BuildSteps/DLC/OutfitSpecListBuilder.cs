@@ -562,7 +562,9 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             AddSpecListClasses(bodyType);
 
             // now generate the configs
-            var config = GetOutfitListConfig(bodyType);
+            var bodyConfig = GetOutfitListConfig(bodyType);
+            var helmetConfig = GetHelmetListConfig(bodyType);
+            var breatherConfig = GetBreatherListConfig(bodyType);
 
             // Add the special case ones
             var specialSpecs = new List<SpecItemBase>
@@ -576,19 +578,42 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 new LoadedSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")
             };
 
-            config.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
+            bodyConfig.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
+
+            specialSpecs =
+            [
+                // loads the default/casual look, even if they are in combat, ignoring their equipped armor
+                new LoadedSpecItem(-5, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
+                // loads the equipped armor look, even if they are in casual mode
+                new LoadedSpecItem(-4, "Mod_GameContent.EquippedArmorOutfitSpec"),
+                // load the vanilla appearance, even if overridden by the outfit spec
+                new LoadedSpecItem(-3, "Mod_GameContent.VanillaHelmetSpec"),
+                // force there to be no helmet
+                new LoadedSpecItem(-2, "Mod_GameContent.NoHelmetSpec"),
+                // loads the vanilla appearance, unless overridden by the outfit spec
+                new LoadedSpecItem(-1, "Mod_GameContent.VanillaHelmetSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.VanillaHelmetSpec")
+            ];
+            helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs.Select(x => x.OutputValue()));
+
+            specialSpecs = [
+                new LoadedSpecItem(0, "Mod_GameContent.VanillaBreatherSpec")
+            ];
+            breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs.Select(x => x.OutputValue()));
 
             var LgtFileName = GetVanillaArmorFileName(bodyType, OutfitType.LGT);
 
             // add all vanilla armor variants into positive IDs less than 100
             // Tali is the only vanilla Quarian, and she only has 6 color/texture variants of the same LGTa mesh
-            AddVanillaOutfitSpecs(config, 1, LgtFileName, OutfitType.LGT, 0, "QRN_FAC", 6, 2);
+            AddVanillaOutfitSpecs(bodyConfig, 1, LgtFileName, OutfitType.LGT, 0, "QRN_FAC", 6, 2);
             // TODO add some theoretical helmet support
 
             // add all the outfits for Turians to the menu
             AddMenuEntries(quarianOutfitMenus.Armor, 1, 6);
 
-            configs.Add(config);
+            configs.Add(bodyConfig);
+            configs.Add(helmetConfig);
+            configs.Add(breatherConfig);
         }
 
 
