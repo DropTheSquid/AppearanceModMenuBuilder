@@ -306,7 +306,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             // LGTb: Shepard's Onyx armor with N7 logo
             AddVanillaOutfitSpecs(bodyConfig, 17, LgtFileName, OutfitType.LGT, 1, bodyType, 1, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 7, LgtHelmetFileName, OutfitType.LGT, 1, bodyType, 1, 1, visorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(helmetConfig, 17, LgtHelmetFileName, OutfitType.LGT, 1, bodyType, 1, 1, visorMesh, hideHair: true);
             // Note that there is no LGTc for HMM, and I am intentionally skipping id 18
 
             // MEDa variants
@@ -423,12 +423,12 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             // Heavy armor variants
             AddVanillaOutfitSpecs(bodyConfig, 12, HvyFileName, OutfitType.HVY, 0, bodyType, 12, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 12, MedHelmetFileName, OutfitType.MED, 0, bodyType, 12, 1, suppressBreather: true, hideHead: true);
+            AddVanillaHelmetSpecs(helmetConfig, 12, HvyHelmetFileName, OutfitType.HVY, 0, bodyType, 12, 1, suppressBreather: true, hideHead: true);
             AddVanillaOutfitSpecs(bodyConfig, 24, HvyFileName, OutfitType.HVY, 1, bodyType, 1, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 24, MedHelmetFileName, OutfitType.MED, 1, bodyType, 1, 1, suppressBreather: true, hideHead: true);
+            AddVanillaHelmetSpecs(helmetConfig, 24, HvyHelmetFileName, OutfitType.HVY, 1, bodyType, 1, 1, suppressBreather: true, hideHead: true);
             // this is the fun glowy ones
             AddVanillaOutfitSpecs(bodyConfig, 25, HvyFileName, OutfitType.HVY, 2, bodyType, 3, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 25, MedHelmetFileName, OutfitType.MED, 2, bodyType, 3, 1, suppressBreather: true, hideHead: true);
+            AddVanillaHelmetSpecs(helmetConfig, 25, HvyHelmetFileName, OutfitType.HVY, 2, bodyType, 3, 1, suppressBreather: true, hideHead: true);
 
             // Add CTH vanilla meshes (100-105)
             // Krogan casuals only get one mesh in vanilla, sad.
@@ -519,7 +519,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             // LGTb
             AddVanillaOutfitSpecs(bodyConfig, 16, LgtFileName, OutfitType.LGT, 1, bodyType, 3, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 6, LgtHelmetFileName, OutfitType.LGT, 1, bodyType, 3, 1, hideHair: true);
+            AddVanillaHelmetSpecs(helmetConfig, 16, LgtHelmetFileName, OutfitType.LGT, 1, bodyType, 3, 1, hideHair: true);
 
             // MEDa
             AddVanillaOutfitSpecs(bodyConfig, 19, MedFileName, OutfitType.MED, 0, bodyType, 16, 1, true);
