@@ -20,17 +20,15 @@ struct SpecLists
 {
 	var OutfitSpecListBase outfitSpecs;
 	var HelmetSpecListBase helmetSpecs;
-	// TODO breatherSpecs
+	var BreatherSpecListBase breatherSpecs;
 };
 
 // Variables
 var transient SpecLists __SpecLists;
 var transient bool __specListsInitialized;
 var config string outfitSpecListPath;
-// var transient HelmetSpecListBase __helmetSpecList;
 var config string helmetSpecListPath;
-// var transient BreatherSpecListBase __breatherSpecList;
-// var config string breatherSpecListPath;
+var config string breatherSpecListPath;
 // var config int defaultBreatherSpec;
 var config string Tag;
 var config array<string> alternateTags;
@@ -132,6 +130,7 @@ public function SpecLists GetSpecLists(BioPawn target)
 {
 	local Class<OutfitSpecListBase> outfitSpecListClass;
 	local Class<HelmetSpecListBase> helmetSpecListClass;
+	local Class<BreatherSpecListBase> breatherSpecListClass;
     
     if (!__specListsInitialized)
     {
@@ -152,6 +151,15 @@ public function SpecLists GetSpecLists(BioPawn target)
 		else
 		{
 			LogInternal("Warning: could not load helmet spec list"@helmetSpecListPath);
+		}
+		breatherSpecListClass = Class<BreatherSpecListBase>(DynamicLoadObject(breatherSpecListPath, Class'Class'));
+        if (breatherSpecListClass != None)
+        {
+            __SpecLists.breatherSpecs = new breatherSpecListClass;
+        }
+		else
+		{
+			LogInternal("Warning: could not load breather spec list"@breatherSpecListPath);
 		}
 		__specListsInitialized = true;
     }

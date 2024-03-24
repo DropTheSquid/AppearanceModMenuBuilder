@@ -9,6 +9,8 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 	local array<string> meshMaterialPaths;
 	local bool suppressVisor;
 	local bool suppressBreather;
+	local bool hideHair;
+	local bool hideHead;
 
 	// TODO take into account vanilla helmet visibility preferences and the settings int on the appearanceIds
 
@@ -26,14 +28,17 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 		meshVariant,
 		materialVariant,
 		helmetMeshPaths,
-		appearance.hideHair,
-		appearance.hideHead,
+		hideHair,
+		hideHead,
 		suppressVisor,
 		suppressBreather
 	))
 	{
 		return false;
 	}
+
+	appearance.hideHair = appearance.hideHair || hideHair;
+	appearance.hideHead = appearance.hideHead || hideHead;
 
 	// load the helmet mesh
 	if (!class'AMM_Utilities'.static.LoadAppearanceMesh(helmetMeshPaths, appearance.HelmetMesh, true))
@@ -44,14 +49,13 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 	// if the visor is not suppressed, get the visor mesh
 	if (!suppressVisor)
 	{
-		GetVisorMesh(class'AMM_Utilities'.static.GetPawnType(target), appearance.VisorMesh);
+		class'AMM_Utilities'.static.GetVanillaVisorMesh(class'AMM_Utilities'.static.GetPawnType(target), appearance.VisorMesh);
 	}
 
 	// if the breather is not suppressed, delegate to the breather spec
 	if (!suppressBreather)
 	{
-		// TODO delegate to a breather spec here
-		return true;
+		return specLists.breatherSpecs.DelegateToBreatherSpec(target, specLists, appearanceIds, appearance);
 	}
 	
 	return true;
@@ -136,29 +140,6 @@ private static function bool GetHelmetMeshPaths(
 	return true;
 }
 
-private function GetVisorMesh(BioPawnType pawnType, out AppearanceMesh visorMesh)
-{
-	local Array<SkeletalMesh> visorMeshSpecs;
-	local Array<MaterialInterface> visorMaterialSpecs;
-
-	visorMeshSpecs = pawnType.m_oAppearance.Body.m_oHeadGearAppearance.m_apVisorMesh;
-	visorMaterialSpecs = pawnType.m_oAppearance.Body.m_oHeadGearAppearance.m_apVisorMaterial;
-
-	if (visorMeshSpecs.Length == 0 || visorMaterialSpecs.Length == 0)
-	{
-		// this will be the case for Wrex, and is fine and expected
-		visorMesh.Mesh = None;
-        visorMesh.Materials.Length = 0;
-		return;
-	}
-
-	// TODO this is an array, I think there can theoretically be more than one visor spec, indexed by a property on the appearance settings
-	// but I have never seen it actually used, so I think I am going to ignore it.
-	visorMesh.Mesh = visorMeshSpecs[0];
-	// similarly, this is an array, but I am not sure if it is for a visor with multiple materials or to index into different visor specs, as above
-	// I am going to pretend it only ever deals with a single spec with one material.
-	visorMesh.Materials[0] = visorMaterialSpecs[0];
-}
 
 // public function bool GetPawnOutfitMeshes(PawnAppearanceIds AppearanceIds, BioPawn targetPawn, AMM_Pawn_Parameters pawnParams, appearanceFlagState helmetOverrideState, out PawnOutfitMeshes PawnOutfitMeshes)
 // {

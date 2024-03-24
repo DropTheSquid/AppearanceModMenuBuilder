@@ -20,5 +20,8 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
 		return specLists.helmetSpecs.DelegateToHelmetSpec(target, specLists, appearanceIds, appearance);
 	}
 
+	appearance.hideHair = bHideHair;
+	appearance.hideHead = bHideHead;
+
 	return false;
 }

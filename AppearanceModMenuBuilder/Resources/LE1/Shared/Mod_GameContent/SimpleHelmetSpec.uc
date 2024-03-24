@@ -22,8 +22,11 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 			return false;
 		}
 	}
-	appearance.hideHair = bHideHair;
-	appearance.hideHead = bHideHead;
-	// TODO load in a breather if it is not suppressed here
+	appearance.hideHair = appearance.hideHair || bHideHair;
+	appearance.hideHead = appearance.hideHead || bHideHead;
+	if (!bSuppressBreather)
+	{
+		return specLists.breatherSpecs.DelegateToBreatherSpec(target, specLists, appearanceIds, appearance);
+	}
 	return true;
 }

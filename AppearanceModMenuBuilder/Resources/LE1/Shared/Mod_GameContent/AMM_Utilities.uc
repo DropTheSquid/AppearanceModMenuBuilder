@@ -116,7 +116,8 @@ public static function ApplyPawnAppearance(BioPawn target, pawnAppearance appear
 	replaceMesh(target, target.Mesh, appearance.bodyMesh);
 	if (target.m_oHairMesh != None)
     {
-        target.m_oHairMesh.SetHidden(appearance.hideHair);
+		// hide head also implies hiding the hair
+        target.m_oHairMesh.SetHidden(appearance.hideHair || appearance.hideHead);
     }
     if (target.m_oHeadMesh != None)
     {
@@ -340,6 +341,30 @@ public static function string GetLetter(int num)
         default:
     }
     return "";
+}
+
+public static function GetVanillaVisorMesh(BioPawnType pawnType, out AppearanceMesh visorMesh)
+{
+	local Array<SkeletalMesh> visorMeshSpecs;
+	local Array<MaterialInterface> visorMaterialSpecs;
+
+	visorMeshSpecs = pawnType.m_oAppearance.Body.m_oHeadGearAppearance.m_apVisorMesh;
+	visorMaterialSpecs = pawnType.m_oAppearance.Body.m_oHeadGearAppearance.m_apVisorMaterial;
+
+	if (visorMeshSpecs.Length == 0 || visorMaterialSpecs.Length == 0)
+	{
+		// this will be the case for Wrex, and is fine and expected
+		visorMesh.Mesh = None;
+        visorMesh.Materials.Length = 0;
+		return;
+	}
+
+	// TODO this is an array, I think there can theoretically be more than one visor spec, indexed by a property on the appearance settings
+	// but I have never seen it actually used, so I think I am going to ignore it.
+	visorMesh.Mesh = visorMeshSpecs[0];
+	// similarly, this is an array, but I am not sure if it is for a visor with multiple materials or to index into different visor specs, as above
+	// I am going to pretend it only ever deals with a single spec with one material.
+	visorMesh.Materials[0] = visorMaterialSpecs[0];
 }
 
 // private static function ProfileSMC(SkeletalMeshComponent smc)

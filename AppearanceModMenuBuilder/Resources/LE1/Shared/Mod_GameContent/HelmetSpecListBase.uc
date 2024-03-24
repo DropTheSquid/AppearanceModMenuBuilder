@@ -31,7 +31,7 @@ public function bool DelegateToHelmetSpec(BioPawn target, SpecLists specLists, o
 		{
 			return true;
 		}
-		LogInternal("Warning: failed to apply helmet by id"@appearanceIds.bodyAppearanceId);
+		LogInternal("Warning: failed to apply helmet by id"@appearanceIds.helmetAppearanceId);
 	}
 	return false;
 }

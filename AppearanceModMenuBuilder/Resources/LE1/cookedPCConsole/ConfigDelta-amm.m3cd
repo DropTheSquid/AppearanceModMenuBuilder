@@ -29,10 +29,10 @@ romancePawnTag=Human_Male_Naked
 gender=Male
 outfitSpecListPath=outfitSpecs.HMM_OutfitSpec
 helmetSpecListPath=OutfitSpecs.HMM_HelmetSpec
+breatherSpecListPath=OutfitSpecs.HMM_BreatherSpec
 +AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1500), helmetAppearanceLookup=(plotIntId=1501), breatherAppearanceLookup=(plotIntId=1502), appearanceFlagsLookup=(plotIntId=1503))
 +AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1504), helmetAppearanceLookup=(plotIntId=1505), breatherAppearanceLookup=(plotIntId=1506), appearanceFlagsLookup=(plotIntId=1507))
 +AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1508), helmetAppearanceLookup=(plotIntId=1509), breatherAppearanceLookup=(plotIntId=1510), appearanceFlagsLookup=(plotIntId=1511), FrameworkFileName="BIONPC_Player_Romance_Male")
-; breatherSpecListPath=AMM_BreatherSpec.HMM_BreatherSpecs
 ; testing whether this works. Should not ship with this in
 ; CharacterCreatorBodyAppearanceId=1
 ; CharacterCreatorBodyAppearanceId_Soldier=2
@@ -49,10 +49,10 @@ romancePawnTag=Human_Female_Naked
 gender=Female
 outfitSpecListPath=outfitSpecs.HMF_OutfitSpec
 helmetSpecListPath=OutfitSpecs.HMF_HelmetSpec
+breatherSpecListPath=OutfitSpecs.HMF_BreatherSpec
 +AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1500), helmetAppearanceLookup=(plotIntId=1501), breatherAppearanceLookup=(plotIntId=1502), appearanceFlagsLookup=(plotIntId=1503))
 +AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1504), helmetAppearanceLookup=(plotIntId=1505), breatherAppearanceLookup=(plotIntId=1506), appearanceFlagsLookup=(plotIntId=1507))
 +AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1508), helmetAppearanceLookup=(plotIntId=1509), breatherAppearanceLookup=(plotIntId=1510), appearanceFlagsLookup=(plotIntId=1511), FrameworkFileName="BIONPC_Player_Romance_Female")
-; breatherSpecListPath=AMM_BreatherSpec.HMF_BreatherSpecs
 ; testing whether this works. Should not ship with this in
 ; CharacterCreatorBodyAppearanceId=1
 ; CharacterCreatorBodyAppearanceId_Soldier=2
@@ -70,7 +70,7 @@ gender=Male
 menuRootPath=amm_submenus.Kaidan.AppearanceSubmenu_Kaidan
 outfitSpecListPath=outfitSpecs.HMM_OutfitSpec
 helmetSpecListPath=OutfitSpecs.HMM_HelmetSpec
-; breatherSpecListPath=AMM_BreatherSpec.HMM_BreatherSpecs
+breatherSpecListPath=OutfitSpecs.HMM_BreatherSpec
 ; defaultBreatherSpec=-14
 +AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1524), helmetAppearanceLookup=(plotIntId=1525), breatherAppearanceLookup=(plotIntId=1526), appearanceFlagsLookup=(plotIntId=1527), FrameworkFileName="BIONPC_Kaidan_Normandy")
 +AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1528), helmetAppearanceLookup=(plotIntId=1529), breatherAppearanceLookup=(plotIntId=1530), appearanceFlagsLookup=(plotIntId=1531))
@@ -83,7 +83,7 @@ gender=Female
 menuRootPath=amm_submenus.Ashley.AppearanceSubmenu_Ashley
 outfitSpecListPath=outfitSpecs.HMF_OutfitSpec
 helmetSpecListPath=OutfitSpecs.HMF_HelmetSpec
-; breatherSpecListPath=AMM_BreatherSpec.HMF_BreatherSpecs
+breatherSpecListPath=OutfitSpecs.HMF_BreatherSpec
 ; defaultBreatherSpec=-13
 +alternateTags=pro10_ash
 +alternateTags=hench_humanFemale_nkd
@@ -99,7 +99,7 @@ gender=Female
 menuRootPath=amm_submenus.Liara.AppearanceSubmenu_Liara
 outfitSpecListPath=outfitSpecs.HMF_OutfitSpec
 helmetSpecListPath=OutfitSpecs.ASA_HelmetSpec
-; breatherSpecListPath=AMM_BreatherSpec.HMF_BreatherSpecs
+breatherSpecListPath=OutfitSpecs.HMF_BreatherSpec
 ; defaultBreatherSpec=-12
 +AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1548), helmetAppearanceLookup=(plotIntId=1549), breatherAppearanceLookup=(plotIntId=1550), appearanceFlagsLookup=(plotIntId=1551), FrameworkFileName="BIONPC_Liara_Normandy")
 +AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1552), helmetAppearanceLookup=(plotIntId=1553), breatherAppearanceLookup=(plotIntId=1554), appearanceFlagsLookup=(plotIntId=1555))
@@ -125,7 +125,7 @@ gender=Male
 menuRootPath=amm_submenus.Garrus.AppearanceSubmenu_Garrus
 outfitSpecListPath=outfitSpecs.TUR_OutfitSpec
 helmetSpecListPath=OutfitSpecs.TUR_HelmetSpec
-; breatherSpecListPath=AMM_BreatherSpec.TUR_BreatherSpecs
+breatherSpecListPath=OutfitSpecs.TUR_BreatherSpec
 ; defaultBreatherSpec=-10
 +AppearanceIdLookupsList=(appearanceType="casual", bodyAppearanceLookup=(plotIntId=1568), helmetAppearanceLookup=(plotIntId=1569), breatherAppearanceLookup=(plotIntId=1570), appearanceFlagsLookup=(plotIntId=1571), FrameworkFileName="BIONPC_Garrus_Normandy")
 +AppearanceIdLookupsList=(appearanceType="combat", bodyAppearanceLookup=(plotIntId=1572), helmetAppearanceLookup=(plotIntId=1573), breatherAppearanceLookup=(plotIntId=1574), appearanceFlagsLookup=(plotIntId=1575))
@@ -136,7 +136,7 @@ gender=Male
 menuRootPath=amm_submenus.Wrex.AppearanceSubmenu_Wrex
 outfitSpecListPath=outfitSpecs.KRO_OutfitSpec
 helmetSpecListPath=OutfitSpecs.KRO_HelmetSpec
-; breatherSpecListPath=AMM_BreatherSpec.KRO_BreatherSpecs
+breatherSpecListPath=OutfitSpecs.KRO_BreatherSpec
 ; defaultBreatherSpec=-2
 +AppearanceIdLookupsList=(appearanceType="casual", bodyAppearanceLookup=(plotIntId=1576), helmetAppearanceLookup=(plotIntId=1577), breatherAppearanceLookup=(plotIntId=1578), appearanceFlagsLookup=(plotIntId=1579), FrameworkFileName="BIONPC_Wrex_Normandy")
 +AppearanceIdLookupsList=(appearanceType="combat", bodyAppearanceLookup=(plotIntId=1580), helmetAppearanceLookup=(plotIntId=1581), breatherAppearanceLookup=(plotIntId=1582), appearanceFlagsLookup=(plotIntId=1583))
@@ -150,6 +150,6 @@ menuRootPath=amm_submenus.Jenkins.AppearanceSubmenu_Jenkins
 +alternateTags=cutscene_jenkins2
 outfitSpecListPath=outfitSpecs.HMM_OutfitSpec
 helmetSpecListPath=OutfitSpecs.HMM_HelmetSpec
-; breatherSpecListPath=AMM_BreatherSpec.HMM_BreatherSpecs
+breatherSpecListPath=OutfitSpecs.HMM_BreatherSpec
 +AppearanceIdLookupsList=(appearanceType="casual", bodyAppearanceLookup=(plotIntId=1584), helmetAppearanceLookup=(plotIntId=1585), breatherAppearanceLookup=(plotIntId=1586), appearanceFlagsLookup=(plotIntId=1587), FrameworkFileName="BIONPC_Jenkins_Normandy")
 +AppearanceIdLookupsList=(appearanceType="combat", bodyAppearanceLookup=(plotIntId=1588), helmetAppearanceLookup=(plotIntId=1589), breatherAppearanceLookup=(plotIntId=1590), appearanceFlagsLookup=(plotIntId=1591))
