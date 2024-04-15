@@ -8,7 +8,8 @@
             CTH,
             LGT,
             MED,
-            HVY
+            HVY,
+            All
         }
 
         public static string GetMeshVariantString(EArmorType type, int meshVariant)

@@ -112,18 +112,18 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     SrCenterText = 184218,
                     ApplyOutfitId = -1,
                 });
-                menus.Casual.AddMenuEntry(new AppearanceItemData()
-                {
-                    // "Casual"
-                    SrCenterText = 771301,
-                    ApplyOutfitId = -2,
-                });
-                menus.Casual.AddMenuEntry(new AppearanceItemData()
-                {
-                    // "Combat"
-                    SrCenterText = 163187,
-                    ApplyOutfitId = -3,
-                });
+                //menus.Casual.AddMenuEntry(new AppearanceItemData()
+                //{
+                //    // "Casual"
+                //    SrCenterText = 771301,
+                //    ApplyOutfitId = -2,
+                //});
+                //menus.Casual.AddMenuEntry(new AppearanceItemData()
+                //{
+                //    // "Combat"
+                //    SrCenterText = 163187,
+                //    ApplyOutfitId = -3,
+                //});
 
                 menus.Combat.AddMenuEntry(new AppearanceItemData()
                 {
@@ -131,18 +131,18 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     SrCenterText = 184218,
                     ApplyOutfitId = -1,
                 });
-                menus.Combat.AddMenuEntry(new AppearanceItemData()
-                {
-                    // "Casual"
-                    SrCenterText = 771301,
-                    ApplyOutfitId = -2,
-                });
-                menus.Combat.AddMenuEntry(new AppearanceItemData()
-                {
-                    // "Combat"
-                    SrCenterText = 163187,
-                    ApplyOutfitId = -3,
-                });
+                //menus.Combat.AddMenuEntry(new AppearanceItemData()
+                //{
+                //    // "Casual"
+                //    SrCenterText = 771301,
+                //    ApplyOutfitId = -2,
+                //});
+                //menus.Combat.AddMenuEntry(new AppearanceItemData()
+                //{
+                //    // "Combat"
+                //    SrCenterText = 163187,
+                //    ApplyOutfitId = -3,
+                //});
 
                 // "Armor"
                 menus.Casual.AddMenuEntry(menus.Armor.GetEntryPoint(210210233));

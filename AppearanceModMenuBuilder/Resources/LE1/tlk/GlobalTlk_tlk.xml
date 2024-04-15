@@ -142,5 +142,9 @@ You can customize characters' appearances at any time from the Inventory screen 
 		<flags>1</flags>
 		<data>Outfit &lt;CUSTOM0&gt;</data>
 	</string>
-	
+	<string>
+		<id>210210236</id>
+		<flags>1</flags>
+		<data>Unused Appearance &lt;CUSTOM0&gt;</data>
+	</string>
 </tlkFile>

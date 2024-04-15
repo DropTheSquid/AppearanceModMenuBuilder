@@ -1,24 +1,31 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
 using static AppearanceModMenuBuilder.LE1.Models.VanillaArmorSet.ArmorVariant;
 using static AppearanceModMenuBuilder.LE1.Models.VanillaMeshUtilities;
 
 namespace AppearanceModMenuBuilder.LE1.Models
 {
+    [DebuggerDisplay("VanillaArmorSet: {Label}")]
     public partial class VanillaArmorSet(string label)
     {
         // regex for parsing the pawn out of the propertyLabel
         // parses GP_HelmetAppr_PlayerFemale or GP_ArmorAppr_PlayerFemaleL
         // to get out PlayerFemale
+        
         [GeneratedRegex("^GP_ArmorAppr_([A-Za-z]+?)([LMH])$")]
         private static partial Regex StaticArmorAppearanceRegex();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Regex ArmorAppearanceRegex = StaticArmorAppearanceRegex();
 
         [GeneratedRegex("^GP_HelmetAppr_([A-Za-z]+?)$")]
         private static partial Regex StaticHelmetAppearanceRegex();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly Regex HelmetAppearanceRegex = StaticHelmetAppearanceRegex();
 
+        [DebuggerDisplay("ArmorVariant: L:{LGT} M:{MED} H:{HVY} A:{AllWeights}")]
         public class ArmorVariant
         {
+            [DebuggerDisplay("WeightVariant: {AmmAppearanceId} {MeshVariant} {MaterialVariant}")]
             public class WeightVariant
             {
                 public int? MeshVariant { get; set; }
@@ -39,18 +46,34 @@ namespace AppearanceModMenuBuilder.LE1.Models
                     case EArmorType.HVY:
                         HVY ??= new WeightVariant();
                         return HVY;
+                    case EArmorType.All:
+                        AllWeights ??= new WeightVariant();
+                        return AllWeights;
                     default:
                         throw new Exception();
 
                 }
             }
 
+            public int NumberOfWeightVariants { get => CountVariant(LGT) + CountVariant(MED) + CountVariant(HVY); }
+
             public WeightVariant? LGT { get; set; }
             public WeightVariant? MED { get; set; }
             public WeightVariant? HVY { get; set; }
 
+            public WeightVariant? AllWeights { get; set; }
+
             public int? HelmetVariant { get; set; }
             //public HashSet<EArmorType> ArmorTypes { get; } = [];
+
+            private static int CountVariant(WeightVariant? variant)
+            {
+                if (variant == null)
+                {
+                    return 0;
+                }
+                return 1;
+            }
         }
 
         public string Label { get; set; } = label;
@@ -59,8 +82,12 @@ namespace AppearanceModMenuBuilder.LE1.Models
 
         public int SrManufacturerName { get; set; }
 
-        public ArmorVariant? PlayerVariant { get; set; }
-        public ArmorVariant? HumanHenchVariant { get; set; }
+        public ArmorVariant? MalePlayerVariant { get; set; }
+        public ArmorVariant? FemalePlayerVariant { get; set; }
+        public ArmorVariant? AnyPlayerVariant { get; set; }
+        public ArmorVariant? HumanMaleHenchVariant { get; set; }
+        public ArmorVariant? HumanFemaleHenchVariant { get; set; }
+        public ArmorVariant? AnyHumanVariant { get; set; }
         public ArmorVariant? TurianVariant { get; set; }
         public ArmorVariant? KroganVariant { get; set; }
         public ArmorVariant? QuarianVariant { get; set; }
@@ -139,15 +166,18 @@ namespace AppearanceModMenuBuilder.LE1.Models
             switch (pawnTag)
             {
                 case "PlayerFemale":
+                    FemalePlayerVariant ??= new ArmorVariant();
+                    return FemalePlayerVariant;
                 case "PlayerMale":
-                    PlayerVariant ??= new ArmorVariant();
-                    return PlayerVariant;
-
+                    MalePlayerVariant ??= new ArmorVariant();
+                    return MalePlayerVariant;
                 case "HenchAsari":
-                case "HenchMale":
                 case "HenchFemale":
-                    HumanHenchVariant ??= new ArmorVariant();
-                    return HumanHenchVariant;
+                    HumanFemaleHenchVariant ??= new ArmorVariant();
+                    return HumanFemaleHenchVariant;
+                case "HenchMale":
+                    HumanMaleHenchVariant ??= new ArmorVariant();
+                    return HumanMaleHenchVariant;
                 case "HenchKrogan":
                     KroganVariant ??= new ArmorVariant();
                     return KroganVariant;

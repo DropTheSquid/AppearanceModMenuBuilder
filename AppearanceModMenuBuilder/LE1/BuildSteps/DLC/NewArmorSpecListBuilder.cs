@@ -4,6 +4,8 @@ using LegendaryExplorerCore.Helpers;
 using LegendaryExplorerCore.Packages;
 using LegendaryExplorerCore.Unreal.Classes;
 using MassEffectModBuilder;
+using static AppearanceModMenuBuilder.LE1.Models.AppearanceItemData;
+using static AppearanceModMenuBuilder.LE1.Models.VanillaArmorSet;
 using static AppearanceModMenuBuilder.LE1.Models.VanillaMeshUtilities;
 
 namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
@@ -15,12 +17,12 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // get all vanilla armor sets (including unobtainable ones) from the 2DAs
             var armorSets = GetVanillaArmorSets();
 
-            // add in a few artificial armors to cover the unused models
-            // TODO I don't know how to do a female only armor in this system. I have not made any distinction so far
-            //armorSets.Add(new VanillaArmorSet("AMM_CommandoArmor")
-            //{
+            // add "fake" armor sets to use the unused appearances
+            AddFakeArmorSets(armorSets);
+            // TODO consolidate together the armors that always look the same?
 
-            //});
+            // remove actual duplicates that arise from the structure of the 2DA we are reading from
+            DeduplicateArmors(armorSets);
 
             // now enumerate all of the vanilla armor appearances for each body type
             var hmfBodyType = "HMF";
@@ -51,49 +53,45 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 .. VanillaBodyAppearance.GetVanillaVariants(1, EArmorType.LGT, GetVanillaArmorFileName(qrnBodyType, EArmorType.MED), "QRN_FAC", (6, 2)),
                 ];
 
-            // now go through the vanilla armor sets and matche them to appearances
+            // now go through the vanilla armor sets and match them to appearances
             foreach (var armor in armorSets)
             {
-                static void matchAppearances(VanillaArmorSet armor, VanillaArmorSet.ArmorVariant? characterVariant, VanillaBodyAppearance[] appearances, bool playerSpecific = false)
+                static void matchAppearances(VanillaArmorSet armor, ArmorVariant? characterVariant, VanillaBodyAppearance[] appearances, bool playerSpecific = false)
                 {
                     if (characterVariant != null)
                     {
-                        EArmorType[] displayArmorTypes;
-                        if (armor.AppearanceOverride != null)
-                        {
-                            // TODO should I just call it once with the override?
-                            // that would work unless it still picks different ones per weight. 
-                            displayArmorTypes = [armor.AppearanceOverride.Value, armor.AppearanceOverride.Value, armor.AppearanceOverride.Value];
-                        }
-                        else
-                        {
-                            displayArmorTypes = [EArmorType.LGT, EArmorType.MED, EArmorType.HVY];
-                        }
                         if (characterVariant.LGT != null)
                         {
-                            AddMenuEntryForMatchingAppearance(appearances, characterVariant, displayArmorTypes[0], armor, playerSpecific);
+                            FindMatchingAppearance(appearances, characterVariant, EArmorType.LGT, armor.AppearanceOverride, armor, playerSpecific);
                         }
                         if (characterVariant.MED != null)
                         {
-                            AddMenuEntryForMatchingAppearance(appearances, characterVariant, displayArmorTypes[1], armor, playerSpecific);
+                            FindMatchingAppearance(appearances, characterVariant, EArmorType.MED, armor.AppearanceOverride, armor, playerSpecific);
                         }
                         if (characterVariant.HVY != null)
                         {
-                            AddMenuEntryForMatchingAppearance(appearances, characterVariant, displayArmorTypes[2], armor, playerSpecific);
+                            FindMatchingAppearance(appearances, characterVariant, EArmorType.HVY, armor.AppearanceOverride, armor, playerSpecific);
+                        }
+                        if (characterVariant.AllWeights != null)
+                        {
+                            FindMatchingAppearance(appearances, characterVariant, EArmorType.All, armor.AppearanceOverride, armor, playerSpecific);
                         }
                     }
                 }
-                matchAppearances(armor, armor.HumanHenchVariant, HMFAppearances);
-                matchAppearances(armor, armor.HumanHenchVariant, HMMAppearances);
-                matchAppearances(armor, armor.PlayerVariant, HMFAppearances, true);
-                matchAppearances(armor, armor.PlayerVariant, HMMAppearances, true);
+                matchAppearances(armor, armor.HumanFemaleHenchVariant, HMFAppearances);
+                matchAppearances(armor, armor.HumanMaleHenchVariant, HMMAppearances);
+                matchAppearances(armor, armor.FemalePlayerVariant, HMFAppearances, true);
+                matchAppearances(armor, armor.MalePlayerVariant, HMMAppearances, true);
+                matchAppearances(armor, armor.AnyHumanVariant, HMFAppearances);
+                matchAppearances(armor, armor.AnyPlayerVariant, HMFAppearances, true);
                 matchAppearances(armor, armor.TurianVariant, TURAppearances);
                 matchAppearances(armor, armor.KroganVariant, KROAppearances);
                 matchAppearances(armor, armor.QuarianVariant, QRNAppearances);
             }
 
+            // the code below detects unused appearances and when more than one set of armor uses the same appearance
             CheckAppearances(HMFAppearances, "hmf");
-            CheckAppearances(HMMAppearances, "hmm");
+            //CheckAppearances(HMMAppearances, "hmm");
             CheckAppearances(TURAppearances, "tur");
             CheckAppearances(KROAppearances, "kro");
             CheckAppearances(QRNAppearances, "qrn");
@@ -122,25 +120,347 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     }
                 }
             }
+
+            // add all unused appearances to the menu
+            AddUnusedAppearances(context, HMFAppearances, HMMAppearances, TURAppearances, KROAppearances, QRNAppearances);
+            // add all armors (including fake ones) by armor set to the menu
+            AddMenuEntriesFromVanillaArmors(context, armorSets);
         }
 
-        private static void AddMenuEntryForMatchingAppearance(
+        private static void DeduplicateArmors(List<VanillaArmorSet> armorSets)
+        {
+            // confusingly, this does not remove cases where two different armor sets have the same appearance. I am leaving those alone for now
+            // it does deal with cases where the human henches have the same appearance as the player, and where all humans use the same mesh/material variant, which is most of them.
+            // also, cases where all weights of the same armor have the same appearance, as with many of the MEDc unobtainable armors
+            foreach (var armor in armorSets)
+            {
+                // if the different human ones are the same, remove the duplicates
+                DeduplicateCharacterVariants(armor);
+
+                // if the different weights all have the same appearance, deduplicate that
+                if (armor.AppearanceOverride != null)
+                {
+                    DeduplicateCharacterWeightVariants(armor.MalePlayerVariant);
+                    DeduplicateCharacterWeightVariants(armor.FemalePlayerVariant);
+                    DeduplicateCharacterWeightVariants(armor.HumanMaleHenchVariant);
+                    DeduplicateCharacterWeightVariants(armor.HumanFemaleHenchVariant);
+                    DeduplicateCharacterWeightVariants(armor.AnyHumanVariant);
+                    DeduplicateCharacterWeightVariants(armor.QuarianVariant);
+                    DeduplicateCharacterWeightVariants(armor.TurianVariant);
+                    DeduplicateCharacterWeightVariants(armor.KroganVariant);
+                }
+                
+            }
+
+            static void DeduplicateCharacterWeightVariants(ArmorVariant? armorVariant)
+            {
+                if (armorVariant != null)
+                {
+                    int numWeightVariants = armorVariant.NumberOfWeightVariants;
+                    if (numWeightVariants <= 0 || numWeightVariants > 3)
+                    {
+                        // this shouldn't happen
+                        throw new InvalidOperationException();
+                    }
+                    else if (numWeightVariants == 1)
+                    {
+                        var weightVar = armorVariant.LGT ?? armorVariant.MED ?? armorVariant.HVY;
+                        armorVariant.AllWeights = weightVar;
+                        armorVariant.LGT = null;
+                        armorVariant.MED = null;
+                        armorVariant.HVY = null;
+                    }
+                    else if (numWeightVariants == 2)
+                    {
+                        ArmorVariant.WeightVariant first;
+                        ArmorVariant.WeightVariant second;
+                        if (armorVariant.LGT == null)
+                        {
+                            first = armorVariant.MED!;
+                            second = armorVariant.HVY!;
+                        }
+                        else if (armorVariant.MED == null)
+                        {
+                            first = armorVariant.LGT!;
+                            second = armorVariant.HVY!;
+                        }
+                        else
+                        {
+                            first = armorVariant.LGT!;
+                            second = armorVariant.MED!;
+                        }
+                        if (AreWeightVariantsIdentical(first, second))
+                        {
+                            armorVariant.AllWeights = first;
+                            armorVariant.LGT = null;
+                            armorVariant.MED = null;
+                            armorVariant.HVY = null;
+                        }
+                    }
+                    else
+                    {
+                        if (AreWeightVariantsIdentical(armorVariant.LGT, armorVariant.MED) && AreWeightVariantsIdentical(armorVariant.MED, armorVariant.HVY))
+                        {
+                            armorVariant.AllWeights = armorVariant.LGT;
+                            armorVariant.LGT = null;
+                            armorVariant.MED = null;
+                            armorVariant.HVY = null;
+                        }
+                    }
+                }
+            }
+
+            static void DeduplicateCharacterVariants(VanillaArmorSet armorSet)
+            {
+                // if mShep and Kaidan have the same appearance, eliminate the unique Shep part
+                if (AreVariantsIdentical(armorSet.MalePlayerVariant, armorSet.HumanMaleHenchVariant))
+                {
+                    armorSet.MalePlayerVariant = null;
+                }
+                // if fShep and Ashley/Liara have the same appearance, eliminate the unique Shep part
+                if (AreVariantsIdentical(armorSet.FemalePlayerVariant, armorSet.HumanFemaleHenchVariant))
+                {
+                    armorSet.FemalePlayerVariant = null;
+                }
+                // if the player has an override and it is the same for both genders, combine them
+                if (armorSet.MalePlayerVariant != null && AreVariantsIdentical(armorSet.MalePlayerVariant, armorSet.FemalePlayerVariant))
+                {
+                    armorSet.AnyPlayerVariant = armorSet.MalePlayerVariant;
+                    armorSet.MalePlayerVariant = null;
+                    armorSet.FemalePlayerVariant = null;
+                }
+                // if the hench/non player versions are identical, combine them
+                // note that we can have Any Human and also AnyPlayer at the same time
+                if (AreVariantsIdentical(armorSet.HumanMaleHenchVariant, armorSet.HumanFemaleHenchVariant))
+                {
+                    armorSet.AnyHumanVariant ??= armorSet.HumanMaleHenchVariant;
+                    armorSet.HumanMaleHenchVariant = null;
+                    armorSet.HumanFemaleHenchVariant = null;
+                }
+            }
+
+            static bool AreVariantsIdentical(ArmorVariant? variant1, ArmorVariant? variant2)
+            {
+                if (variant1 == null ^ variant2 == null)
+                {
+                    return false;
+                }
+                if (variant1 == null && variant2 == null)
+                {
+                    return true;
+                }
+                    // at this point, both are non null
+                if (AreWeightVariantsIdentical(variant1!.LGT, variant2!.LGT)
+                    && AreWeightVariantsIdentical(variant1!.MED, variant2!.MED)
+                    && AreWeightVariantsIdentical(variant1!.HVY, variant2!.HVY)
+                    && AreWeightVariantsIdentical(variant1!.AllWeights, variant2!.AllWeights))
+                {
+                    return true;
+                }
+                return false;
+            }
+
+            static bool AreWeightVariantsIdentical(ArmorVariant.WeightVariant? variant1, ArmorVariant.WeightVariant? variant2)
+            {
+                return variant1?.MeshVariant == variant2?.MeshVariant && variant1?.MaterialVariant == variant2?.MaterialVariant;
+            }
+        }
+
+        private static void AddFakeArmorSets(List<VanillaArmorSet> armorSets)
+        {
+            // adding a fake armor set for the Asari Commando armor (HMF LGTc 0)
+            armorSets.Add(new VanillaArmorSet("AMM_CommandoArmor")
+            {
+                // "Commando"
+                SrArmorName = 93988,
+                // "Armali Council"
+                SrManufacturerName = 125361,
+                AppearanceOverride = EArmorType.LGT,
+                HumanFemaleHenchVariant = new ArmorVariant()
+                {
+                    LGT = new ArmorVariant.WeightVariant()
+                    {
+                        //AmmAppearanceId = 18,
+                        MeshVariant = 2,
+                        MaterialVariant = 0
+                    }
+                }
+            });
+
+            // asssign Turian HVYa 10 to be Thermal Armor Heavy; there is no heavy variant of this armor and it matches pretty well
+            var turianThermalSet = armorSets.First(x => x.SrArmorName == 171735 && x.TurianVariant != null);
+            turianThermalSet.TurianVariant!.HVY = new ArmorVariant.WeightVariant()
+            {
+                //AmmAppearanceId = 44,
+                MeshVariant = 0,
+                MaterialVariant = 10
+            };
+
+            // assign Turian HVYa 8 to be Silverback heavy; there is no heavy variant and it matches well
+            var turianSilverbackSet = armorSets.First(x => x.SrArmorName == 172517 && x.TurianVariant != null);
+            turianSilverbackSet.TurianVariant!.HVY = new ArmorVariant.WeightVariant()
+            {
+                //AmmAppearanceId = 44,
+                MeshVariant = 0,
+                MaterialVariant = 8
+            };
+
+            // adding a fake armor set for human armor 40 (MEDc 4; yellow and gray)
+            armorSets.Add(new VanillaArmorSet("AMM_DevlonThermal")
+            {
+                // "Thermal Armor"
+                SrArmorName = 171735,
+                // "Devlon Industries"
+                SrManufacturerName = 125360,
+                AppearanceOverride = EArmorType.MED,
+                AnyHumanVariant = new ArmorVariant()
+                {
+                    MED = new ArmorVariant.WeightVariant()
+                    {
+                        //AmmAppearanceId = 40,
+                        MeshVariant = 2,
+                        MaterialVariant = 4
+                    }
+                }
+            });
+        }
+
+        private static void AddMenuEntriesFromVanillaArmors(ModBuilderContext context, IEnumerable<VanillaArmorSet> armorSets)
+        {
+            var configMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-amm_Submenus.m3cd");
+
+            var (humanOutfitMenus, turianOutfitMenus, quarianOutfitMenus, kroganOutfitMenus) = BuildSubmenuFile.InitCommonMenus(configMergeFile);
+
+            foreach (var item in armorSets)
+            {
+                AddArmorToMenu(humanOutfitMenus.Armor, item, item.MalePlayerVariant, EGender.Male);
+                AddArmorToMenu(humanOutfitMenus.Armor, item, item.FemalePlayerVariant, EGender.Female);
+                AddArmorToMenu(humanOutfitMenus.Armor, item, item.HumanMaleHenchVariant, EGender.Male);
+                AddArmorToMenu(humanOutfitMenus.Armor, item, item.HumanFemaleHenchVariant, EGender.Female);
+                AddArmorToMenu(humanOutfitMenus.Armor, item, item.AnyHumanVariant);
+                AddArmorToMenu(humanOutfitMenus.Armor, item, item.AnyPlayerVariant);
+                AddArmorToMenu(kroganOutfitMenus.Armor, item, item.KroganVariant);
+                AddArmorToMenu(turianOutfitMenus.Armor, item, item.TurianVariant);
+                AddArmorToMenu(quarianOutfitMenus.Armor, item, item.QuarianVariant);
+            }
+
+            static void AddArmorToMenu(AppearanceSubmenu submenu, VanillaArmorSet armorSet, ArmorVariant? variant, EGender? gender = null)
+            {
+                if (variant == null)
+                {
+                    return;
+                }
+                if (variant.LGT != null)
+                {
+                    submenu.AddMenuEntry(
+                        new AppearanceItemData()
+                        {
+                            Gender = gender,
+                            SrLeftText = armorSet.SrManufacturerName,
+                            SrCenterText = armorSet.SrArmorName,
+                            ApplyOutfitId = variant.LGT.AmmAppearanceId,
+                            SrRightText = GetArmorTypeStringRef(EArmorType.LGT)
+                        }
+                    );
+                }
+                if (variant.MED != null)
+                {
+                    submenu.AddMenuEntry(
+                        new AppearanceItemData()
+                        {
+                            Gender = gender,
+                            SrLeftText = armorSet.SrManufacturerName,
+                            SrCenterText = armorSet.SrArmorName,
+                            ApplyOutfitId = variant.MED.AmmAppearanceId,
+                            SrRightText = GetArmorTypeStringRef(EArmorType.MED)
+                        }
+                    );
+                }
+                if (variant.HVY != null)
+                {
+                    submenu.AddMenuEntry(
+                        new AppearanceItemData()
+                        {
+                            Gender = gender,
+                            SrLeftText = armorSet.SrManufacturerName,
+                            SrCenterText = armorSet.SrArmorName,
+                            ApplyOutfitId = variant.HVY.AmmAppearanceId,
+                            SrRightText = GetArmorTypeStringRef(EArmorType.HVY)
+                        }
+                    );
+                }
+                if (variant.AllWeights != null)
+                {
+                    submenu.AddMenuEntry(
+                        new AppearanceItemData()
+                        {
+                            Gender = gender,
+                            SrLeftText = armorSet.SrManufacturerName,
+                            SrCenterText = armorSet.SrArmorName,
+                            ApplyOutfitId = variant.AllWeights.AmmAppearanceId,
+                        }
+                    );
+                }
+            }
+        }
+
+        private static void AddUnusedAppearances(ModBuilderContext context, IEnumerable<VanillaBodyAppearance> hmf, IEnumerable<VanillaBodyAppearance> hmm, IEnumerable<VanillaBodyAppearance> tur, IEnumerable<VanillaBodyAppearance> kro, IEnumerable<VanillaBodyAppearance> qrn)
+        {
+            var configMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-amm_Submenus.m3cd");
+
+            var (humanOutfitMenus, turianOutfitMenus, quarianOutfitMenus, kroganOutfitMenus) = BuildSubmenuFile.InitCommonMenus(configMergeFile);
+
+            //AddEntries(humanOutfitMenus, hmf, EGender.Female);
+            //AddEntries(humanOutfitMenus, hmm, EGender.Male);
+            AddEntries(turianOutfitMenus, tur, EGender.Male);
+            AddEntries(kroganOutfitMenus, kro, EGender.Male);
+            AddEntries(quarianOutfitMenus, qrn, EGender.Female);
+
+            static void AddEntries(BuildSubmenuFile.SpeciesOutfitMenus menus, IEnumerable<VanillaBodyAppearance> appearances, EGender gender = EGender.Either)
+            {
+                foreach (var appearance in appearances)
+                {
+                    if (appearance.MenuEntries == null || appearance.MenuEntries.Count == 0)
+                    {
+                        menus.Armor.AddMenuEntry(new AppearanceItemData()
+                        {
+                            Gender = gender,
+                            // "Unused Appearance <Blank>"
+                            SrCenterText = 210210236,
+                            ApplyOutfitId = appearance.AmmAppearanceId,
+                            // fills in the blank
+                            DisplayVars = [$"{appearance.ArmorType} {appearance.ModelVariant} {appearance.MaterialVariant}"]
+                        });
+                    }
+                }
+            }
+        }
+
+        private static int GetArmorTypeStringRef(EArmorType type)
+        {
+            return type switch
+            {
+                // TODO there are "<Weight> Armor" and it would be nice if it was just the weight to be concise
+                EArmorType.LGT => 771340,
+                EArmorType.MED => 771342,
+                EArmorType.HVY => 771344,
+                _ => throw new Exception("invalid armor type"),
+            };
+        }
+
+        private static void FindMatchingAppearance(
             VanillaBodyAppearance[] appearances,
-            VanillaArmorSet.ArmorVariant characterVariant,
+            ArmorVariant characterVariant,
             EArmorType armorType,
+            EArmorType? appearanceOverride,
             VanillaArmorSet armor,
             bool playerSpecific = false)
         {
             var weightVariant = characterVariant.GetWeightVariant(armorType);
             var matchingAppearance = appearances.FirstOrDefault(
-                                        x => x.ArmorType == armorType
+                                        x => x.ArmorType == (appearanceOverride ?? armorType)
                                         && x.ModelVariant == weightVariant.MeshVariant
-                                        && x.MaterialVariant == weightVariant.MaterialVariant);
-
-            if (matchingAppearance == null)
-            {
-                throw new Exception("could not find matching appearance");
-            }
+                                        && x.MaterialVariant == weightVariant.MaterialVariant) ?? throw new Exception("could not find matching appearance");
 
             // add info about the vanilla armor to the appearance, which is useful for detecting unused appearances and duplicate appearances
             matchingAppearance.MenuEntries.Add(new VanillaBodyAppearance.MenuEntryDetails()
@@ -148,10 +468,11 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 Label = armor.Label,
                 SrName = armor.SrArmorName,
                 SrManufacturerName = armor.SrManufacturerName,
-                IsPlayerSpecific = playerSpecific
+                IsPlayerSpecific = playerSpecific,
+                ArmorType = armorType
             });
 
-            // also add the amm appearance id to the armor set, so we can enumerate those and have that ID. 
+            // also add the amm appearance id to the armor set, so we can enumerate those and have that ID.
             weightVariant.AmmAppearanceId = matchingAppearance.AmmAppearanceId;
         }
 
@@ -229,8 +550,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             var manufacturersExport = enginePcc.FindExport("BIOG_2DA_Equipment_X.Items_Manufacturer");
 
             var manufacturers2DA = new Bio2DA(manufacturersExport);
-
             var results = new Dictionary<string, int>();
+
 
             for (int i = 0; i < manufacturers2DA.RowCount; i++)
             {
@@ -256,7 +577,5 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         {
             return manufacturer.StartsWith("Manf") && manufacturer.Contains("_Armor_");
         }
-
-        
     }
 }

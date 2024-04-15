@@ -174,10 +174,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 }.OutputValue());
             AddVanillaHelmetSpecs(asariHelmetConfig, 18, LgtAsariHelmetFileName, OutfitType.LGT, 2, asariBodyType, 1, 1, asariVisorMesh, hideHair: true);
 
-            // add armor entries for both genders in the female one
-            AddMenuEntries(humanOutfitMenus.Armor, 1, 17);
-            // make this one female only
-            AddMenuEntries(humanOutfitMenus.Armor, 18, 1, EGender.Female);
+            //// add armor entries for both genders in the female one
+            //AddMenuEntries(humanOutfitMenus.Armor, 1, 17);
+            //// make this one female only
+            //AddMenuEntries(humanOutfitMenus.Armor, 18, 1, EGender.Female);
 
             // MEDa variants; Most Medium armor appearances fall under this
             AddVanillaOutfitSpecs(bodyConfig, 19, MedArmorFileName, OutfitType.MED, 0, bodyType, 16, 1, true);
@@ -202,7 +202,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             AddVanillaHelmetSpecs(helmetConfig, 61, HvyHelmetFileName, OutfitType.HVY, 1, bodyType, 1, 1, visorMesh, hideHair: true);
             AddVanillaHelmetSpecs(asariHelmetConfig, 61, HvyAsariHelmetFileName, OutfitType.HVY, 1, asariBodyType, 1, 1, asariVisorMesh, hideHair: true);
             // add the rest of the armor entries
-            AddMenuEntries(humanOutfitMenus.Armor, 19, 43);
+            //AddMenuEntries(humanOutfitMenus.Armor, 19, 43);
 
             // add entries for the non armor outfits
             AddMenuEntries(humanOutfitMenus.NonArmor, 100, 38, EGender.Female);
@@ -435,7 +435,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             AddVanillaOutfitSpecs(bodyConfig, 100, CthFileName, OutfitType.CTH, 0, bodyType, 5, 1);
 
             // add all the outfits for krogans to the menu
-            AddMenuEntries(kroganOutfitMenus.Armor, 1, 27);
+            //AddMenuEntries(kroganOutfitMenus.Armor, 1, 27);
             AddMenuEntries(kroganOutfitMenus.NonArmor, 100, 5);
 
             // TODO add extended vanilla meshes
@@ -538,7 +538,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             AddVanillaOutfitSpecs(bodyConfig, 109, CthFileName, OutfitType.CTH, 2, bodyType, 5, 1);
 
             // add all the outfits for Turians to the menu
-            AddMenuEntries(turianOutfitMenus.Armor, 1, 49);
+            //AddMenuEntries(turianOutfitMenus.Armor, 1, 49);
             AddMenuEntries(turianOutfitMenus.NonArmor, 100, 14);
 
             // TODO add extended vanilla meshes
@@ -609,7 +609,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // TODO add some theoretical helmet support
 
             // add all the outfits for Turians to the menu
-            AddMenuEntries(quarianOutfitMenus.Armor, 1, 6);
+            //AddMenuEntries(quarianOutfitMenus.Armor, 1, 6);
 
             configs.Add(bodyConfig);
             configs.Add(helmetConfig);

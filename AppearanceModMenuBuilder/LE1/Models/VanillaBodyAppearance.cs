@@ -17,6 +17,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
             public int SrName { get; set; }
             public int SrManufacturerName { get; set; }
             public bool IsPlayerSpecific { get; set; }
+            public EArmorType ArmorType { get; set; }
         }
 
         public List<MenuEntryDetails> MenuEntries { get; set; } = [];
