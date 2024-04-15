@@ -7,7 +7,7 @@ namespace AppearanceModMenuBuilder.LE1
     {
         public static void RunBuild(string mode)
         {
-            ModBuilder LE1ModBuilder = new()
+            ModBuilderWithCustomContext<LE1CustomContext> LE1ModBuilder = new()
             {
                 Game = MEGame.LE1,
                 ModDLCName = "DLC_MOD_AMM",
@@ -34,7 +34,7 @@ namespace AppearanceModMenuBuilder.LE1
                     throw new Exception($"unsupported build mode {mode}");
             }
 
-            LE1ModBuilder.Build();
+            LE1ModBuilder.Build(new LE1CustomContext());
         }
     }
 }

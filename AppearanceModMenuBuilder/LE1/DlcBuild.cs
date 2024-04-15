@@ -8,7 +8,7 @@ namespace AppearanceModMenuBuilder.LE1
 {
     internal static class DlcBuild
     {
-        public static ModBuilder AddDlcTasks(this ModBuilder builder)
+        public static ModBuilderWithCustomContext<LE1CustomContext> AddDlcTasks(this ModBuilderWithCustomContext<LE1CustomContext> builder)
         {
             return builder
                 // clean the DLC directory

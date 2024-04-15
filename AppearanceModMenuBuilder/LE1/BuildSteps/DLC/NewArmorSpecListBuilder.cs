@@ -1,5 +1,6 @@
 ﻿using AppearanceModMenuBuilder.LE1.Models;
 using LegendaryExplorerCore.GameFilesystem;
+using LegendaryExplorerCore.Helpers;
 using LegendaryExplorerCore.Packages;
 using LegendaryExplorerCore.Unreal.Classes;
 using MassEffectModBuilder;
@@ -13,6 +14,13 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         {
             // get all vanilla armor sets (including unobtainable ones) from the 2DAs
             var armorSets = GetVanillaArmorSets();
+
+            // add in a few artificial armors to cover the unused models
+            // TODO I don't know how to do a female only armor in this system. I have not made any distinction so far
+            //armorSets.Add(new VanillaArmorSet("AMM_CommandoArmor")
+            //{
+
+            //});
 
             // now enumerate all of the vanilla armor appearances for each body type
             var hmfBodyType = "HMF";
@@ -84,36 +92,36 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 matchAppearances(armor, armor.QuarianVariant, QRNAppearances);
             }
 
-            //CheckAppearances(HMFAppearances, "hmf");
-            //CheckAppearances(HMMAppearances, "hmm");
-            //CheckAppearances(TURAppearances, "tur");
-            //CheckAppearances(KROAppearances, "kro");
-            //CheckAppearances(QRNAppearances, "qrn");
+            CheckAppearances(HMFAppearances, "hmf");
+            CheckAppearances(HMMAppearances, "hmm");
+            CheckAppearances(TURAppearances, "tur");
+            CheckAppearances(KROAppearances, "kro");
+            CheckAppearances(QRNAppearances, "qrn");
 
-            //static void CheckAppearances(VanillaBodyAppearance[] appearances, string appearanceType)
-            //{
-            //    foreach (var app in appearances)
-            //    {
-            //        if (app.MenuEntries.IsEmpty())
-            //        {
-            //            Console.WriteLine($"warning: appearance {appearanceType} {app.AmmAppearanceId} {app.ArmorType} {app.ModelVariant} {app.MaterialVariant} is unused");
-            //        }
-            //        //checking for armors that use the same appearance as another armor
-            //        if (app.MenuEntries.Count > 1)
-            //        {
-            //            if (app.MenuEntries.Count == 2
-            //                && app.MenuEntries[0].IsPlayerSpecific != app.MenuEntries[1].IsPlayerSpecific)
-            //            {
-            //                continue;
-            //            }
-            //            Console.WriteLine($"warning: more than one armor is using the same appearance for appearance {appearanceType} {app.ArmorType} {app.ModelVariant} {app.MaterialVariant}");
-            //            foreach (var entry in app.MenuEntries)
-            //            {
-            //                Console.WriteLine($"appearance: {entry.Label}");
-            //            }
-            //        }
-            //    }
-            //}
+            static void CheckAppearances(VanillaBodyAppearance[] appearances, string appearanceType)
+            {
+                foreach (var app in appearances)
+                {
+                    if (app.MenuEntries.IsEmpty())
+                    {
+                        Console.WriteLine($"warning: appearance {appearanceType} {app.AmmAppearanceId} {app.ArmorType} {app.ModelVariant} {app.MaterialVariant} is unused");
+                    }
+                    //checking for armors that use the same appearance as another armor
+                    if (app.MenuEntries.Count > 1)
+                    {
+                        if (app.MenuEntries.Count == 2
+                            && app.MenuEntries[0].IsPlayerSpecific != app.MenuEntries[1].IsPlayerSpecific)
+                        {
+                            continue;
+                        }
+                        Console.WriteLine($"warning: more than one armor is using the same appearance for appearance {appearanceType} {app.ArmorType} {app.ModelVariant} {app.MaterialVariant}");
+                        foreach (var entry in app.MenuEntries)
+                        {
+                            Console.WriteLine($"appearance: {entry.Label}");
+                        }
+                    }
+                }
+            }
         }
 
         private static void AddMenuEntryForMatchingAppearance(
@@ -147,7 +155,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             weightVariant.AmmAppearanceId = matchingAppearance.AmmAppearanceId;
         }
 
-        private VanillaArmorSet[] GetVanillaArmorSets()
+        private List<VanillaArmorSet> GetVanillaArmorSets()
         {
             // get an index of all the manufacturers so we can match up the names
             var manufacturers = GetArmorManufacturers();
@@ -206,7 +214,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 armor.SrManufacturerName = manufacturers[armor.Label!];
             }
 
-            return armorSets.Values.ToArray();
+            return [.. armorSets.Values];
         }
 
         private Dictionary<string, int> GetArmorManufacturers()

@@ -6,9 +6,9 @@ using static LegendaryExplorerCore.Unreal.UnrealFlags;
 
 namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 {
-    public class BuildMenuFile : IModBuilderTask
+    public class BuildMenuFile : IModBuilderTaskWithCustomContext<LE1CustomContext>
     {
-        public void RunModTask(ModBuilderContext context)
+        public override void RunModTask(ModBuilderCustomContext<LE1CustomContext> context)
         {
             Console.WriteLine("Building AMM.pcc");
             // make a new file to house the new AMM handler and GUI
