@@ -1,11 +1,12 @@
 ﻿using LegendaryExplorerCore.Packages;
+using MassEffectModBuilder.Models;
 using static AppearanceModMenuBuilder.LE1.BuildSteps.DLC.BuildSubmenuFile;
 using static LegendaryExplorerCore.Unreal.UnrealFlags;
 using static MassEffectModBuilder.LEXHelpers.LooseClassCompile;
 
 namespace AppearanceModMenuBuilder.LE1.Models
 {
-    public record class SquadMemberSubmenus(string SquadMemberName, int SquadMemberNameStringref, string PawnTag, SpeciesOutfitMenus outfitSubmenus)
+    public record class SquadMemberSubmenus(string SquadMemberName, int SquadMemberNameStringref, string PawnTag, SpeciesOutfitMenus OutfitSubmenus)
     {
         private const string SubmenuClassTemplate = "Class {0} extends AppearanceSubmenu config(UI);";
         public const string AppearanceSubmenuClassPrefix = "AppearanceSubmenu_";
@@ -74,7 +75,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
             // add this menu into the root character menu
             rootCharacterMenu.AddMenuEntry(casualMenu.GetEntryPoint(srCausalAppearance));
             // add the appropriate submenu into this one
-            casualMenu.AddMenuEntry(outfitSubmenus.Casual.GetInlineEntryPoint());
+            casualMenu.AddMenuEntry(OutfitSubmenus.Casual.GetInlineEntryPoint());
             _submenus.Add(casualMenu);
             _classes.Add(GetSubmenuClass($"{SquadMemberName}_Casual", [SquadMemberName]));
 
@@ -90,7 +91,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
             // add this menu into the root character menu
             rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(srCombatAppearance));
             // add the appropriate submenu into this one
-            combatMenu.AddMenuEntry(outfitSubmenus.Combat.GetInlineEntryPoint());
+            combatMenu.AddMenuEntry(OutfitSubmenus.Combat.GetInlineEntryPoint());
             _submenus.Add(combatMenu);
             _classes.Add(GetSubmenuClass($"{SquadMemberName}_Combat", [SquadMemberName]));
 
@@ -110,7 +111,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 // add this menu into the root character menu
                 rootCharacterMenu.AddMenuEntry(romanceMenu.GetEntryPoint(srRomanceAppearance));
                 // add the appropriate submenu into this one
-                romanceMenu.AddMenuEntry(outfitSubmenus.Casual.GetInlineEntryPoint());
+                romanceMenu.AddMenuEntry(OutfitSubmenus.Casual.GetInlineEntryPoint());
                 _submenus.Add(romanceMenu);
                 _classes.Add(GetSubmenuClass($"{SquadMemberName}_Romance", [SquadMemberName]));
             }
