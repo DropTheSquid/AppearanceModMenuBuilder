@@ -9,7 +9,7 @@ namespace AppearanceModMenuBuilder.LE1
     public static class MergeBuild
     {
         public const string MergeModName = "AMM";
-        public static ModBuilder AddMergeTasks(this ModBuilder builder)
+        public static ModBuilderWithCustomContext<LE1CustomContext> AddMergeTasks(this ModBuilderWithCustomContext<LE1CustomContext> builder)
         {
             return builder
                 // clear the merge mod directory

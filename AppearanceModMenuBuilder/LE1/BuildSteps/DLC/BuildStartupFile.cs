@@ -5,9 +5,9 @@ using MassEffectModBuilder.LEXHelpers;
 
 namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 {
-    public class BuildStartupFile : IModBuilderTask
+    public class BuildStartupFile : IModBuilderTaskWithCustomContext<LE1CustomContext>
     {
-        public void RunModTask(ModBuilderContext context)
+        public override void RunModTask(ModBuilderCustomContext<LE1CustomContext> context)
         {
             Console.WriteLine("Building startup file");
             // make sure the startup file has a proper object referencer
@@ -22,7 +22,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AMM_Utilities.uc", ["Mod_GameContent"]),
                     LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\OutfitSpecBase.uc", ["Mod_GameContent"]),
                     LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\helmetSpecBase.uc", ["Mod_GameContent"]),
-					LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\breatherSpecBase.uc", ["Mod_GameContent"]),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\breatherSpecBase.uc", ["Mod_GameContent"]),
                     LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\SimpleOutfitSpec.uc", ["Mod_GameContent"]),
                     LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\SimpleHelmetSpec.uc", ["Mod_GameContent"]),
                     LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\SimpleBreatherSpec.uc", ["Mod_GameContent"]),
@@ -46,12 +46,13 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     ])
                 .RunModTask(context);
             // add an instance of the handler class at a hardercoded location, add it to the object referencer
-            var startup = context.GetStartupFile();
+            var startup = context.GetStartupFile()!;
             var newExport = ExportCreator.CreateExport(startup, "AMM_AppearanceUpdater", "AMM_AppearanceUpdater", indexed: true);
             startup.GetOrCreateObjectReferencer().AddToObjectReferencer(newExport);
             startup.Save();
             
             (new OutfitSpecListBuilder()).RunModTask(context);
+            (new NewArmorSpecListBuilder()).RunModTask(context);
         }
     }
 }

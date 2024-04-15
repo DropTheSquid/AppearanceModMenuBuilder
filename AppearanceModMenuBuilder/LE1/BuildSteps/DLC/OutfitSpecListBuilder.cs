@@ -755,7 +755,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 classes.Add(new ClassToCompile(BreatherSpecClassName, string.Format(BreatherSpecListClassTemplate, BreatherSpecClassName), [containingPackage]));
 
             }
-            // TODO breather spec lists
         }
 
         private static ModConfigClass GetOutfitListConfig(string bodyType)
