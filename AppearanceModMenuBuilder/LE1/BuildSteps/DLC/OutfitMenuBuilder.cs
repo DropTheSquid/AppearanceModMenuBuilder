@@ -5,9 +5,10 @@ using LegendaryExplorerCore.Packages;
 using LegendaryExplorerCore.Unreal.Classes;
 using MassEffectModBuilder;
 using static AppearanceModMenuBuilder.LE1.BuildSteps.DLC.BuildSubmenuFile;
-using static AppearanceModMenuBuilder.LE1.Models.AppearanceItemData;
+using static AppearanceModMenuBuilder.LE1.UScriptModels.AppearanceItemData;
 using static AppearanceModMenuBuilder.LE1.Models.VanillaArmorSet;
 using static AppearanceModMenuBuilder.LE1.Models.VanillaMeshUtilities;
+using AppearanceModMenuBuilder.LE1.UScriptModels;
 
 namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 {
@@ -87,7 +88,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 matchAppearances(armor, armor.MalePlayerVariant, HMMAppearances, true);
                 matchAppearances(armor, armor.AnyHumanVariant, HMFAppearances);
                 matchAppearances(armor, armor.AnyPlayerVariant, HMFAppearances, true);
-                matchAppearances(armor, armor.TurianVariant, TURAppearances);
+                matchAppearances(armor, armor.TurianVariant, TURAppearances); 
                 matchAppearances(armor, armor.KroganVariant, KROAppearances);
                 matchAppearances(armor, armor.QuarianVariant, QRNAppearances);
             }

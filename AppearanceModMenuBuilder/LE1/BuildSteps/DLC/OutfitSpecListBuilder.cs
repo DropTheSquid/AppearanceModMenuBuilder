@@ -1,9 +1,13 @@
 ﻿using AppearanceModMenuBuilder.LE1.Models;
+using AppearanceModMenuBuilder.LE1.UScriptModels;
 using MassEffectModBuilder;
 using MassEffectModBuilder.DLCTasks;
 using MassEffectModBuilder.Models;
+using NAudio.SoundFont;
+using System.Numerics;
+using System.Xml.Linq;
 using static AppearanceModMenuBuilder.LE1.BuildSteps.DLC.BuildSubmenuFile;
-using static AppearanceModMenuBuilder.LE1.Models.AppearanceItemData;
+using static AppearanceModMenuBuilder.LE1.UScriptModels.AppearanceItemData;
 using static MassEffectModBuilder.LEXHelpers.LooseClassCompile;
 
 namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
@@ -133,6 +137,22 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs.Select(x => x.OutputValue()));
 
             specialSpecs = [
+                //; -10 and on are breathers not matched to a specific outfit, which is the vanilla player and squadmate behavior
+                // -14 will be Kaidan's faceplate (need to port from LE2 for female height version)
+                // -13 is Ashley's default faceplate
+                new SimpleBreatherSpecItem(-13, "BIOG_HMF_HGR_LGT_R.BRT.HMF_BRT_LGT_MDL", ["BIOG_HMF_HGR_LGT_R.BRT.HMF_HGR_LGTa_BRT_MAT_1a"]),
+                // -12 is Liara's
+                new SimpleBreatherSpecItem(-12, "BIOG_HMF_HGR_MED_R.BRT.HMF_BRT_MEDb_MDL", ["BIOG_HMF_HGR_MED_R.BRT.HMF_BRT_MEDa_MAT_1a"]),
+                // -11 is Shepard's
+                new SimpleBreatherSpecItem(-11, "BIOG_HMF_HGR_HVY_R.BRT.HMF_BRT_HVYb_MDL", ["BIOG_HMF_HGR_HVY_R.BRT.HMF_BRT_HVY_MAT_1a"]),
+                // TODO a special loaded spec for the NPC faceplate in -10
+                //+breatherSpecs = (Id = -15, Mesh = "BIOG_AMM_HMF_HGR.BRT.HVYa.HMF_BRT_HVYa_MDL", Materials = ("BIOG_AMM_HMF_HGR.BRT.HVYa.HMF_BRT_HVYa_MAT_Default"), suppressVisor = true, comment = "NPC faceplate in black/Gray to match any outfit")
+                //; TODO port this one to female height
+                //; +breatherSpecs = (Id = -14, Mesh = "BIOG_AMM_HMM_HGR.BRT.MEDb.HMM_BRTb_MED_MDL", Materials = ("BIOG_AMM_HMM_HGR.BRT.MEDb.HMM_BRT_MEDb_Mat_1a", "BIOG_AMM_HMM_HGR.BRT.MEDb.HMM_BRTb_MED_MAT_2a"), suppressVisor = true, comment = "Kaidan faceplate")
+                //+ breatherSpecs = (Id = -10, specPath = "AMM_BreatherSpec.NPCFaceplateBreatherSpec", comment = "NPC faceplate spec; will look for a helmet with an id matching the armor id and use that if it exists. Otherwise fall back to vanilla faceplate")
+                //; 0 to - 9 are special cases with specific behavior, reserved and not species specific
+                new LoadedSpecItem(-2, "Mod_GameContent.NoBreatherSpec"),
+                new LoadedSpecItem(-1, "Mod_GameContent.VanillaBreatherSpec"),
                 new LoadedSpecItem(0, "Mod_GameContent.VanillaBreatherSpec")
             ];
             breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs.Select(x => x.OutputValue()));
@@ -296,6 +316,21 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs.Select(x => x.OutputValue()));
 
             specialSpecs = [
+                //; -10 and on are breathers not matched to a specific outfit, which is the vanilla player and squadmate behavior
+                // -14 is Kaidan's faceplate
+                new SimpleBreatherSpecItem(-14, "BIOG_HMM_HGR_MED_R.BRTb.HMM_BRTb_MED_MDL", ["BIOG_HMM_HGR_MED_R.BRTb.HMM_BRT_MEDb_Mat_1a", "BIOG_HMM_HGR_MED_R.BRTb.HMM_BRT_MEDb_Mat_2a"]),
+                // -13 looks like Ashley's default faceplate
+                new SimpleBreatherSpecItem(-13, "BIOG_HMM_HGR_LGT_R.BRT.HMM_HGR_LGTa_BRT_MDL", ["BIOG_HMM_HGR_LGT_R.BRT.HMM_HGR_LGTa_BRT_MAT_1a"]),
+                // -12 will be Liara's (need to port to male height I think?)
+                //new SimpleBreatherSpecItem(-12, "BIOG_HMF_HGR_MED_R.BRT.HMF_BRT_MEDb_MDL", ["BIOG_HMF_HGR_MED_R.BRT.HMF_BRT_MEDa_MAT_1a"]),
+                // -11 is Shepard's
+                new SimpleBreatherSpecItem(-11, "BIOG_HMM_HGR_HVY_R.BRT.HMM_BTR_HVYb_MDL", ["BIOG_HMM_HGR_HVY_R.BRT.HMM_BTR_HVYb_MAT_1a"]),
+                // TODO a special loaded spec for the NPC faceplate in -10
+                //+breatherSpecs = (Id = -15, Mesh = "BIOG_AMM_HMF_HGR.BRT.HVYa.HMF_BRT_HVYa_MDL", Materials = ("BIOG_AMM_HMF_HGR.BRT.HVYa.HMF_BRT_HVYa_MAT_Default"), suppressVisor = true, comment = "NPC faceplate in black/Gray to match any outfit")
+                //+ breatherSpecs = (Id = -10, specPath = "AMM_BreatherSpec.NPCFaceplateBreatherSpec", comment = "NPC faceplate spec; will look for a helmet with an id matching the armor id and use that if it exists. Otherwise fall back to vanilla faceplate")
+                //TODO some male breathers
+                new LoadedSpecItem(-2, "Mod_GameContent.NoBreatherSpec"),
+                new LoadedSpecItem(-1, "Mod_GameContent.VanillaBreatherSpec"),
                 new LoadedSpecItem(0, "Mod_GameContent.VanillaBreatherSpec")
             ];
             breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs.Select(x => x.OutputValue()));
@@ -332,7 +367,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // MEDc: Assymmetric tintable armor. never used by NPCs, only usable by player using console commands or Black Market License
             AddVanillaOutfitSpecs(bodyConfig, 36, MedFileName, OutfitType.MED, 2, bodyType, 9, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 36, MedHelmetFileName, OutfitType.MED, 2, bodyType, 9, 1, visorMesh, hideHair: true);
-
 
             // HVYa variants
             AddVanillaOutfitSpecs(bodyConfig, 45, HvyFileName, OutfitType.HVY, 0, bodyType, 16, 1, true);
@@ -418,6 +452,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs.Select(x => x.OutputValue()));
 
             specialSpecs = [
+                new LoadedSpecItem(-2, "Mod_GameContent.NoBreatherSpec"),
+                new LoadedSpecItem(-1, "Mod_GameContent.VanillaBreatherSpec"),
                 new LoadedSpecItem(0, "Mod_GameContent.VanillaBreatherSpec")
             ];
             breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs.Select(x => x.OutputValue()));
@@ -447,7 +483,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             AddVanillaOutfitSpecs(bodyConfig, 100, CthFileName, OutfitType.CTH, 0, bodyType, 5, 1);
 
             // add all the outfits for krogans to the menu
-            //AddMenuEntries(kroganOutfitMenus.Armor, 1, 27);
             AddMenuEntries(kroganOutfitMenus.NonArmor, 100, 5);
 
             // TODO add extended vanilla meshes
@@ -509,6 +544,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs.Select(x => x.OutputValue()));
 
             specialSpecs = [
+                new LoadedSpecItem(-2, "Mod_GameContent.NoBreatherSpec"),
+                new LoadedSpecItem(-1, "Mod_GameContent.VanillaBreatherSpec"),
                 new LoadedSpecItem(0, "Mod_GameContent.VanillaBreatherSpec")
             ];
             breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs.Select(x => x.OutputValue()));
@@ -550,7 +587,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             AddVanillaOutfitSpecs(bodyConfig, 109, CthFileName, OutfitType.CTH, 2, bodyType, 5, 1);
 
             // add all the outfits for Turians to the menu
-            //AddMenuEntries(turianOutfitMenus.Armor, 1, 49);
             AddMenuEntries(turianOutfitMenus.NonArmor, 100, 14);
 
             // TODO add extended vanilla meshes
@@ -609,6 +645,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs.Select(x => x.OutputValue()));
 
             specialSpecs = [
+                new LoadedSpecItem(-2, "Mod_GameContent.NoBreatherSpec"),
+                new LoadedSpecItem(-1, "Mod_GameContent.VanillaBreatherSpec"),
                 new LoadedSpecItem(0, "Mod_GameContent.VanillaBreatherSpec")
             ];
             breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs.Select(x => x.OutputValue()));
@@ -619,9 +657,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // Tali is the only vanilla Quarian, and she only has 6 color/texture variants of the same LGTa mesh
             AddVanillaOutfitSpecs(bodyConfig, 1, LgtFileName, OutfitType.LGT, 0, "QRN_FAC", 6, 2);
             // TODO add some theoretical helmet support
-
-            // add all the outfits for Turians to the menu
-            //AddMenuEntries(quarianOutfitMenus.Armor, 1, 6);
 
             configs.Add(bodyConfig);
             configs.Add(helmetConfig);

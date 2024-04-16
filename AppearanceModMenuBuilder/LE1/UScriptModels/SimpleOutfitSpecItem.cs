@@ -1,4 +1,4 @@
-﻿namespace AppearanceModMenuBuilder.LE1.Models
+﻿namespace AppearanceModMenuBuilder.LE1.UScriptModels
 {
     public class SimpleOutfitSpecItem : SpecItemBase
     {

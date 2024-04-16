@@ -1,4 +1,5 @@
-﻿using MassEffectModBuilder.Models;
+﻿using AppearanceModMenuBuilder.LE1.UScriptModels;
+using MassEffectModBuilder.Models;
 
 namespace AppearanceModMenuBuilder.LE1.Models
 {

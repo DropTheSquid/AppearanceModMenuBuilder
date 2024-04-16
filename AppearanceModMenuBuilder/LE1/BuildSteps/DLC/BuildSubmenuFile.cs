@@ -1,4 +1,5 @@
 ﻿using AppearanceModMenuBuilder.LE1.Models;
+using AppearanceModMenuBuilder.LE1.UScriptModels;
 using LegendaryExplorerCore.Packages;
 using MassEffectModBuilder;
 using MassEffectModBuilder.DLCTasks;

@@ -11,10 +11,8 @@ struct BreatherSpecItem
 	// or BreatherMesh plus any of the below for non default
     var AppearanceMeshPaths BreatherMesh;
 	var AppearanceMeshPaths VisorMeshOverride;
-	// var bool suppressVisor;
     var bool hideHair;
     var bool hideHead;
-    // var int BreatherSpec;
 };
 
 var config array<BreatherSpecItem> breatherSpecs;

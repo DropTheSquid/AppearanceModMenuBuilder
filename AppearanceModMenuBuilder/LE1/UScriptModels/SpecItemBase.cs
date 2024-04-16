@@ -1,6 +1,6 @@
 ﻿using MassEffectModBuilder.Models;
 
-namespace AppearanceModMenuBuilder.LE1.Models
+namespace AppearanceModMenuBuilder.LE1.UScriptModels
 {
     public abstract class SpecItemBase : StructCoalesceValue
     {
