@@ -90,6 +90,18 @@ namespace AppearanceModMenuBuilder.LE1.Models
             set => SetInt(nameof(ApplyOutfitId), value);
         }
 
+        public int? ApplyHelmetId
+        {
+            get => GetInt(nameof(ApplyHelmetId));
+            set => SetInt(nameof(ApplyHelmetId), value);
+        }
+
+        public int? ApplyBreatherId
+        {
+            get => GetInt(nameof(ApplyBreatherId));
+            set => SetInt(nameof(ApplyBreatherId), value);
+        }
+
         public EGender? Gender
         {
             get => GetEnum<EGender>(nameof(Gender));

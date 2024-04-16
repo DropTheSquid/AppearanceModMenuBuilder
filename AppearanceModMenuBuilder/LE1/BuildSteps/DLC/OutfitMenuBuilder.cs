@@ -4,16 +4,18 @@ using LegendaryExplorerCore.Helpers;
 using LegendaryExplorerCore.Packages;
 using LegendaryExplorerCore.Unreal.Classes;
 using MassEffectModBuilder;
+using static AppearanceModMenuBuilder.LE1.BuildSteps.DLC.BuildSubmenuFile;
 using static AppearanceModMenuBuilder.LE1.Models.AppearanceItemData;
 using static AppearanceModMenuBuilder.LE1.Models.VanillaArmorSet;
 using static AppearanceModMenuBuilder.LE1.Models.VanillaMeshUtilities;
 
 namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 {
-    public class NewArmorSpecListBuilder : IModBuilderTask
+    public class OutfitMenuBuilder : IModBuilderTask
     {
         public void RunModTask(ModBuilderContext context)
         {
+            Console.WriteLine("Populating outfit menus");
             // get all vanilla armor sets (including unobtainable ones) from the 2DAs
             var armorSets = GetVanillaArmorSets();
 
@@ -92,7 +94,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             // the code below detects unused appearances and when more than one set of armor uses the same appearance
             CheckAppearances(HMFAppearances, "hmf");
+            // because HMF and HMM are nearly identical, HMM gets kinda ignored and therefore a bunch of things appear unused
             //CheckAppearances(HMMAppearances, "hmm");
+            // I am aware that Turian Guardian L/M duplicates appearance with Onyx (there is a Guardian H but not Onyx)
+            // I'm choosing to leave that in place, as it is not confusing
             CheckAppearances(TURAppearances, "tur");
             CheckAppearances(KROAppearances, "kro");
             CheckAppearances(QRNAppearances, "qrn");
@@ -117,8 +122,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 }
             }
 
-            // add all unused appearances to the menu
-            AddUnusedAppearances(context, HMFAppearances, HMMAppearances, TURAppearances, KROAppearances, QRNAppearances);
             // add all armors (including fake ones) by armor set to the menu
             AddMenuEntriesFromVanillaArmors(context, armorSets);
         }
@@ -417,24 +420,24 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             foreach (var item in armorSets)
             {
-                AddArmorToMenu(humanOutfitMenus.Armor, item, item.MalePlayerVariant, EGender.Male);
-                AddArmorToMenu(humanOutfitMenus.Armor, item, item.FemalePlayerVariant, EGender.Female);
-                AddArmorToMenu(humanOutfitMenus.Armor, item, item.HumanMaleHenchVariant, EGender.Male);
-                AddArmorToMenu(humanOutfitMenus.Armor, item, item.HumanFemaleHenchVariant, EGender.Female);
-                AddArmorToMenu(humanOutfitMenus.Armor, item, item.AnyHumanVariant);
-                AddArmorToMenu(humanOutfitMenus.Armor, item, item.AnyPlayerVariant);
-                AddArmorToMenu(kroganOutfitMenus.Armor, item, item.KroganVariant);
-                AddArmorToMenu(turianOutfitMenus.Armor, item, item.TurianVariant);
-                AddArmorToMenu(quarianOutfitMenus.Armor, item, item.QuarianVariant);
+                AddArmorToMenu(humanOutfitMenus, item, item.MalePlayerVariant, EGender.Male);
+                AddArmorToMenu(humanOutfitMenus, item, item.FemalePlayerVariant, EGender.Female);
+                AddArmorToMenu(humanOutfitMenus, item, item.HumanMaleHenchVariant, EGender.Male);
+                AddArmorToMenu(humanOutfitMenus, item, item.HumanFemaleHenchVariant, EGender.Female);
+                AddArmorToMenu(humanOutfitMenus, item, item.AnyHumanVariant);
+                AddArmorToMenu(humanOutfitMenus, item, item.AnyPlayerVariant);
+                AddArmorToMenu(kroganOutfitMenus, item, item.KroganVariant);
+                AddArmorToMenu(turianOutfitMenus, item, item.TurianVariant);
+                AddArmorToMenu(quarianOutfitMenus, item, item.QuarianVariant);
             }
 
-            void AddArmorToMenu(AppearanceSubmenu submenu, VanillaArmorSet armorSet, ArmorVariant? variant, EGender? gender = null)
+            void AddArmorToMenu(SpeciesOutfitMenus submenu, VanillaArmorSet armorSet, ArmorVariant? variant, EGender? gender = null)
             {
                 if (variant == null)
                 {
                     return;
                 }
-                AppearanceItemData GetMenuEntry(EArmorType armorType, int? ammAppearanceId)
+                AppearanceItemData GetOutfitMenuEntry(EArmorType armorType, int? ammAppearanceId)
                 {
                     if (armorType == EArmorType.All)
                     {
@@ -457,61 +460,64 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                         };
                     }
                 }
+                AppearanceItemData GetHelmetMenuEntry(EArmorType armorType, int? ammAppearanceId)
+                {
+                    if (armorType == EArmorType.All)
+                    {
+                        return new AppearanceItemData()
+                        {
+                            Gender = gender,
+                            SrCenterText = armorSet.SrArmorName,
+                            ApplyHelmetId = ammAppearanceId
+                        };
+                    }
+                    else
+                    {
+                        return new AppearanceItemData()
+                        {
+                            Gender = gender,
+                            // "<ArmorName> - <Weight>"
+                            SrCenterText = 210210236,
+                            ApplyHelmetId = ammAppearanceId,
+                            DisplayVars = [$"${armorSet.SrArmorName}", $"${GetArmorTypeStringRef(armorType)}"]
+                        };
+                    }
+                }
                 if (variant.LGT != null)
                 {
-                    submenu.AddMenuEntry(
-                        GetMenuEntry(EArmorType.LGT, variant.LGT.AmmAppearanceId)
+                    submenu.Armor.AddMenuEntry(
+                        GetOutfitMenuEntry(EArmorType.LGT, variant.LGT.AmmAppearanceId)
+                    );
+                    submenu.Headgear.AddMenuEntry(
+                        GetHelmetMenuEntry(EArmorType.LGT, variant.LGT.AmmAppearanceId)
                     );
                 }
                 if (variant.MED != null)
                 {
-                    submenu.AddMenuEntry(
-                        GetMenuEntry(EArmorType.MED, variant.MED.AmmAppearanceId)
+                    submenu.Armor.AddMenuEntry(
+                        GetOutfitMenuEntry(EArmorType.MED, variant.MED.AmmAppearanceId)
+                    );
+                    submenu.Headgear.AddMenuEntry(
+                        GetHelmetMenuEntry(EArmorType.MED, variant.MED.AmmAppearanceId)
                     );
                 }
                 if (variant.HVY != null)
                 {
-                    submenu.AddMenuEntry(
-                        GetMenuEntry(EArmorType.HVY, variant.HVY.AmmAppearanceId)
+                    submenu.Armor.AddMenuEntry(
+                        GetOutfitMenuEntry(EArmorType.HVY, variant.HVY.AmmAppearanceId)
+                    );
+                    submenu.Headgear.AddMenuEntry(
+                        GetHelmetMenuEntry(EArmorType.HVY, variant.HVY.AmmAppearanceId)
                     );
                 }
                 if (variant.AllWeights != null)
                 {
-                    submenu.AddMenuEntry(
-                        GetMenuEntry(EArmorType.All, variant.AllWeights.AmmAppearanceId)
+                    submenu.Armor.AddMenuEntry(
+                        GetOutfitMenuEntry(EArmorType.All, variant.AllWeights.AmmAppearanceId)
                     );
-                }
-            }
-        }
-
-        private static void AddUnusedAppearances(ModBuilderContext context, IEnumerable<VanillaBodyAppearance> hmf, IEnumerable<VanillaBodyAppearance> hmm, IEnumerable<VanillaBodyAppearance> tur, IEnumerable<VanillaBodyAppearance> kro, IEnumerable<VanillaBodyAppearance> qrn)
-        {
-            var configMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-amm_Submenus.m3cd");
-
-            var (humanOutfitMenus, turianOutfitMenus, quarianOutfitMenus, kroganOutfitMenus) = BuildSubmenuFile.InitCommonMenus(configMergeFile);
-
-            //AddEntries(humanOutfitMenus, hmf, EGender.Female);
-            //AddEntries(humanOutfitMenus, hmm, EGender.Male);
-            AddEntries(turianOutfitMenus, tur, EGender.Male);
-            AddEntries(kroganOutfitMenus, kro, EGender.Male);
-            AddEntries(quarianOutfitMenus, qrn, EGender.Female);
-
-            static void AddEntries(BuildSubmenuFile.SpeciesOutfitMenus menus, IEnumerable<VanillaBodyAppearance> appearances, EGender gender = EGender.Either)
-            {
-                foreach (var appearance in appearances)
-                {
-                    if (appearance.MenuEntries == null || appearance.MenuEntries.Count == 0)
-                    {
-                        menus.Armor.AddMenuEntry(new AppearanceItemData()
-                        {
-                            Gender = gender,
-                            // "<Blank1> <Blank2>"
-                            SrCenterText = 210210236,
-                            ApplyOutfitId = appearance.AmmAppearanceId,
-                            // fills in the blank
-                            DisplayVars = ["unused appearance", $"{appearance.ArmorType} {appearance.ModelVariant} {appearance.MaterialVariant}"]
-                        });
-                    }
+                    submenu.Headgear.AddMenuEntry(
+                        GetHelmetMenuEntry(EArmorType.All, variant.AllWeights.AmmAppearanceId)
+                    );
                 }
             }
         }
@@ -558,11 +564,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             weightVariant.AmmAppearanceId = matchingAppearance.AmmAppearanceId;
         }
 
-        private List<VanillaArmorSet> GetVanillaArmorSets()
+        private static List<VanillaArmorSet> GetVanillaArmorSets()
         {
-            // get an index of all the manufacturers so we can match up the names
-            var manufacturers = GetArmorManufacturers();
-
             if (!MELoadedFiles.TryGetHighestMountedFile(MEGame.LE1, "Engine.pcc", out string packagePath))
             {
                 throw new Exception("Couldn't find Engine.pcc???");
@@ -595,7 +598,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 // column GamePropertyLabel
                 // either redundant with effect label or tells us which pawn it applies to
                 // eg "GP_ArmorAppr_HenchAsariH" means Liara heavy armor
-                // I can ignore the armor weight, as appearance stuff does not vary between weights
                 var propertyLabel = itemEffectsLevel2DA.Cells[i, 15].NameValue.ToString();
                 // tells us how to interpret the propertyLabel and value
                 // whether this is the armor name stringref, the model variant, the material variant, or overridding part of the appearance
@@ -610,52 +612,9 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 armor.Add2DARow(effectLabel, propertyLabel, value);
             }
 
-            // at this point I should have a complete inventory of the armors
-            // add the manufacturer labels
-            foreach (var armor in armorSets.Values)
-            {
-                armor.SrManufacturerName = manufacturers[armor.Label!];
-            }
-
             return [.. armorSets.Values];
         }
-
-        private Dictionary<string, int> GetArmorManufacturers()
-        {
-            if (!MELoadedFiles.TryGetHighestMountedFile(MEGame.LE1, "Engine.pcc", out string packagePath))
-            {
-                throw new Exception("Couldn't find Engine.pcc???");
-            }
-
-            var enginePcc = MEPackageHandler.OpenMEPackage(packagePath);
-
-            var manufacturersExport = enginePcc.FindExport("BIOG_2DA_Equipment_X.Items_Manufacturer");
-
-            var manufacturers2DA = new Bio2DA(manufacturersExport);
-            var results = new Dictionary<string, int>();
-
-
-            for (int i = 0; i < manufacturers2DA.RowCount; i++)
-            {
-                // get the row name, which, since this is a Bio2DANumberedRows, will be an int, aka the manufacturer id
-                //var rowName = int.Parse(manufacturers2DA.RowNames[i]);
-
-                // get the string value from column 0, the manufacturer label
-                var label = manufacturers2DA.Cells[i, 0].NameValue;
-                // filter it to just the armor manufacturers
-                if (!IsArmorManufacturer(label))
-                {
-                    continue;
-                }
-                // get the stringref (int) from column 1 for the name of the manufacturer
-                var name = manufacturers2DA.Cells[i, 1].IntValue;
-
-                results.Add(label, name);
-            }
-            return results;
-        }
-
-        public static bool IsArmorManufacturer(string manufacturer)
+        private static bool IsArmorManufacturer(string manufacturer)
         {
             return manufacturer.StartsWith("Manf") && manufacturer.Contains("_Armor_");
         }

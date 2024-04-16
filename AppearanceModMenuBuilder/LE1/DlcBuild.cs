@@ -19,6 +19,8 @@ namespace AppearanceModMenuBuilder.LE1
                 .AddTask(new CopyFiles(@"Resources\LE1\dlc", context => context.DLCBaseFolder))
                 // copy anything else that goes in the cookedPCConsole, such as config merges
                 .AddTask(new CopyFiles(@"Resources\LE1\cookedPCConsole", context => context.CookedPCConsoleFolder))
+                // build submenus
+                .AddTask(new BuildSubmenuFile())
                 // build the startup file
                 .AddTask(new BuildStartupFile())
                 // build the file with the actual menu in it
@@ -27,8 +29,6 @@ namespace AppearanceModMenuBuilder.LE1
                 .AddTask(new BuildInventoryHandlerTask())
                 // build UI world
                 .AddTask(new BuildUIWorldTask())
-                // build submenus
-                .AddTask(new BuildSubmenuFile())
                 // output any config merge files we worked on
                 .AddTask(new OutputConfigMerge())
                 // compile tlks

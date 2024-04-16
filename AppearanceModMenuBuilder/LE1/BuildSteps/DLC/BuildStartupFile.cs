@@ -51,7 +51,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             startup.GetOrCreateObjectReferencer().AddToObjectReferencer(newExport);
             startup.Save();
             
-            (new NewArmorSpecListBuilder()).RunModTask(context);
+            (new OutfitMenuBuilder()).RunModTask(context);
             (new OutfitSpecListBuilder()).RunModTask(context);
         }
     }

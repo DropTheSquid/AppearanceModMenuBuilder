@@ -454,7 +454,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             configs.Add(bodyConfig);
             configs.Add(helmetConfig);
             configs.Add(breatherConfig);
-
         }
 
         private void GenerateTURSpecs()
