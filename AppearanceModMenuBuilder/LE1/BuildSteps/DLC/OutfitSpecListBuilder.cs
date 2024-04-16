@@ -3,9 +3,6 @@ using AppearanceModMenuBuilder.LE1.UScriptModels;
 using MassEffectModBuilder;
 using MassEffectModBuilder.DLCTasks;
 using MassEffectModBuilder.Models;
-using NAudio.SoundFont;
-using System.Numerics;
-using System.Xml.Linq;
 using static AppearanceModMenuBuilder.LE1.BuildSteps.DLC.BuildSubmenuFile;
 using static AppearanceModMenuBuilder.LE1.UScriptModels.AppearanceItemData;
 using static MassEffectModBuilder.LEXHelpers.LooseClassCompile;
@@ -138,7 +135,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             specialSpecs = [
                 //; -10 and on are breathers not matched to a specific outfit, which is the vanilla player and squadmate behavior
-                // -14 will be Kaidan's faceplate (need to port from LE2 for female height version)
+                // -14 is Kaidan's faceplate (ported a bit from LE2)
+                new SimpleBreatherSpecItem(-14, "AMM_BreathersTest.HMF_Kaidan_Faceplate.HMF_BRTa_SBM_MDL", ["AMM_BreathersTest.HMF_Kaidan_Faceplate.HMM_BRT_MEDb_Mat_1a", "AMM_BreathersTest.HMF_Kaidan_Faceplate.HMM_BRTb_MED_MAT_2a"]),
                 // -13 is Ashley's default faceplate
                 new SimpleBreatherSpecItem(-13, "BIOG_HMF_HGR_LGT_R.BRT.HMF_BRT_LGT_MDL", ["BIOG_HMF_HGR_LGT_R.BRT.HMF_HGR_LGTa_BRT_MAT_1a"]),
                 // -12 is Liara's
@@ -318,7 +316,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             specialSpecs = [
                 //; -10 and on are breathers not matched to a specific outfit, which is the vanilla player and squadmate behavior
                 // -14 is Kaidan's faceplate
-                new SimpleBreatherSpecItem(-14, "BIOG_HMM_HGR_MED_R.BRTb.HMM_BRTb_MED_MDL", ["BIOG_HMM_HGR_MED_R.BRTb.HMM_BRT_MEDb_Mat_1a", "BIOG_HMM_HGR_MED_R.BRTb.HMM_BRT_MEDb_Mat_2a"]),
+                new SimpleBreatherSpecItem(-14, "BIOG_HMM_HGR_MED_R.BRTb.HMM_BRTb_MED_MDL", ["BIOG_HMM_HGR_MED_R.BRTb.HMM_BRT_MEDb_Mat_1a", "BIOG_HMM_HGR_MED_R.BRTb.HMM_BRTb_MED_MAT_2a"]),
                 // -13 looks like Ashley's default faceplate
                 new SimpleBreatherSpecItem(-13, "BIOG_HMM_HGR_LGT_R.BRT.HMM_HGR_LGTa_BRT_MDL", ["BIOG_HMM_HGR_LGT_R.BRT.HMM_HGR_LGTa_BRT_MAT_1a"]),
                 // -12 will be Liara's (need to port to male height I think?)

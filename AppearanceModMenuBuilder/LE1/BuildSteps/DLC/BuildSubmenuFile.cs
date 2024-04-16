@@ -21,6 +21,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             public AppearanceSubmenu Armor;
             public AppearanceSubmenu NonArmor;
             public AppearanceSubmenu Headgear;
+            public AppearanceSubmenu Breather;
         }
 
         public SpeciesOutfitMenus HumanOutfitMenus;
@@ -88,7 +89,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     Combat = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_CombatOutfits", configMergeFile),
                     Armor = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.Armor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_ArmorOutfits", configMergeFile),
                     NonArmor = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits", configMergeFile),
-                    Headgear = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_Headgear", configMergeFile)
+                    Headgear = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_Headgear", configMergeFile),
+                    Breather = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_Breather", configMergeFile)
                 };
             }
             return (GetOrCreateMenus("Human"), GetOrCreateMenus("Turian"), GetOrCreateMenus("Quarian"), GetOrCreateMenus("Krogan"));
@@ -109,6 +111,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_ArmorOutfits", [bodyType, "Armor"]));
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits", [bodyType, "NonArmor"]));
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_Headgear", [bodyType]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_Breather", [bodyType]));
 
                 menus.Casual.AddMenuEntry(menus.Headgear.GetEntryPoint(210210237));
                 menus.Casual.AddMenuEntry(new AppearanceItemData()
@@ -171,6 +174,22 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     // "None"
                     SrCenterText = 174743,
                     ApplyHelmetId = -2
+                });
+
+                menus.Headgear.AddMenuEntry(menus.Breather.GetEntryPoint(210210244));
+
+                menus.Breather.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "Default"
+                    SrCenterText = 184218,
+                    ApplyBreatherId = -1
+                });
+
+                menus.Breather.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "None"
+                    SrCenterText = 174743,
+                    ApplyBreatherId = -2
                 });
 
                 // TODO add titles and subtitles to these?

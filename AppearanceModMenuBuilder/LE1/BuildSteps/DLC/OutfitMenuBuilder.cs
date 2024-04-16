@@ -125,6 +125,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             // add all armors (including fake ones) by armor set to the menu
             AddMenuEntriesFromVanillaArmors(context, armorSets);
+            AddBreatherMenuEntries(context);
         }
 
         private static void DeduplicateArmors(List<VanillaArmorSet> armorSets)
@@ -413,11 +414,49 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             armorSets.RemoveAt(hkPredatorIndex);
         }
 
+        private static void AddBreatherMenuEntries(ModBuilderContext context)
+        {
+            var configMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-amm_Submenus.m3cd");
+
+            var (humanOutfitMenus, turianOutfitMenus, quarianOutfitMenus, kroganOutfitMenus) = InitCommonMenus(configMergeFile);
+
+            // hmm breathers
+            humanOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
+            {
+                // "Shepard"
+                SrCenterText = 125303,
+                ApplyBreatherId = -11
+            });
+            humanOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
+            {
+                // "Ashley"
+                SrCenterText = 168842,
+                ApplyBreatherId = -13
+            });
+            humanOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
+            {
+                // "Liara"
+                SrCenterText = 149285,
+                ApplyBreatherId = -12,
+                // TODO remove the gender restriction once I have ported the mesh for male
+                Gender = EGender.Female
+            });
+            humanOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
+            {
+                // "Kaidan"
+                SrCenterText = 151316,
+                ApplyBreatherId = -14,
+                // TODO remove the gender restriction once I have ported the mesh for female
+                //Gender = EGender.Male
+            });
+            // TODO put some more specs in here
+
+        }
         private static void AddMenuEntriesFromVanillaArmors(ModBuilderContext context, IEnumerable<VanillaArmorSet> armorSets)
         {
             var configMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-amm_Submenus.m3cd");
 
-            var (humanOutfitMenus, turianOutfitMenus, quarianOutfitMenus, kroganOutfitMenus) = BuildSubmenuFile.InitCommonMenus(configMergeFile);
+            var (humanOutfitMenus, turianOutfitMenus, quarianOutfitMenus, kroganOutfitMenus) = InitCommonMenus(configMergeFile);
 
             foreach (var item in armorSets)
             {
@@ -429,10 +468,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 AddArmorToMenu(humanOutfitMenus, item, item.AnyPlayerVariant);
                 AddArmorToMenu(kroganOutfitMenus, item, item.KroganVariant);
                 AddArmorToMenu(turianOutfitMenus, item, item.TurianVariant);
-                AddArmorToMenu(quarianOutfitMenus, item, item.QuarianVariant);
+                AddArmorToMenu(quarianOutfitMenus, item, item.QuarianVariant, skipHelmets: true);
             }
 
-            void AddArmorToMenu(SpeciesOutfitMenus submenu, VanillaArmorSet armorSet, ArmorVariant? variant, EGender? gender = null)
+            void AddArmorToMenu(SpeciesOutfitMenus submenu, VanillaArmorSet armorSet, ArmorVariant? variant, EGender? gender = null, bool skipHelmets = false)
             {
                 if (variant == null)
                 {
@@ -489,36 +528,48 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     submenu.Armor.AddMenuEntry(
                         GetOutfitMenuEntry(EArmorType.LGT, variant.LGT.AmmAppearanceId)
                     );
-                    submenu.Headgear.AddMenuEntry(
-                        GetHelmetMenuEntry(EArmorType.LGT, variant.LGT.AmmAppearanceId)
-                    );
+                    if (!skipHelmets)
+                    {
+                        submenu.Headgear.AddMenuEntry(
+                            GetHelmetMenuEntry(EArmorType.LGT, variant.LGT.AmmAppearanceId)
+                        );
+                    }
                 }
                 if (variant.MED != null)
                 {
                     submenu.Armor.AddMenuEntry(
                         GetOutfitMenuEntry(EArmorType.MED, variant.MED.AmmAppearanceId)
                     );
-                    submenu.Headgear.AddMenuEntry(
-                        GetHelmetMenuEntry(EArmorType.MED, variant.MED.AmmAppearanceId)
-                    );
+                    if (!skipHelmets)
+                    {
+                        submenu.Headgear.AddMenuEntry(
+                            GetHelmetMenuEntry(EArmorType.MED, variant.MED.AmmAppearanceId)
+                        );
+                    }
                 }
                 if (variant.HVY != null)
                 {
                     submenu.Armor.AddMenuEntry(
                         GetOutfitMenuEntry(EArmorType.HVY, variant.HVY.AmmAppearanceId)
                     );
-                    submenu.Headgear.AddMenuEntry(
-                        GetHelmetMenuEntry(EArmorType.HVY, variant.HVY.AmmAppearanceId)
-                    );
+                    if (!skipHelmets)
+                    {
+                        submenu.Headgear.AddMenuEntry(
+                            GetHelmetMenuEntry(EArmorType.HVY, variant.HVY.AmmAppearanceId)
+                        );
+                    }
                 }
                 if (variant.AllWeights != null)
                 {
                     submenu.Armor.AddMenuEntry(
                         GetOutfitMenuEntry(EArmorType.All, variant.AllWeights.AmmAppearanceId)
                     );
-                    submenu.Headgear.AddMenuEntry(
-                        GetHelmetMenuEntry(EArmorType.All, variant.AllWeights.AmmAppearanceId)
-                    );
+                    if (!skipHelmets)
+                    {
+                        submenu.Headgear.AddMenuEntry(
+                            GetHelmetMenuEntry(EArmorType.All, variant.AllWeights.AmmAppearanceId)
+                        );
+                    }
                 }
             }
         }
