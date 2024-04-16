@@ -18,7 +18,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             var armorSets = GetVanillaArmorSets();
 
             // add "fake" armor sets to use the unused appearances
-            AddFakeArmorSets(armorSets);
+            ModifyArmorSets(armorSets);
             // TODO consolidate together the armors that always look the same?
 
             // remove actual duplicates that arise from the structure of the 2DA we are reading from
@@ -108,11 +108,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     //checking for armors that use the same appearance as another armor
                     if (app.MenuEntries.Count > 1)
                     {
-                        if (app.MenuEntries.Count == 2
-                            && app.MenuEntries[0].IsPlayerSpecific != app.MenuEntries[1].IsPlayerSpecific)
-                        {
-                            continue;
-                        }
                         Console.WriteLine($"warning: more than one armor is using the same appearance for appearance {appearanceType} {app.ArmorType} {app.ModelVariant} {app.MaterialVariant}");
                         foreach (var entry in app.MenuEntries)
                         {
@@ -274,9 +269,9 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             }
         }
 
-        private static void AddFakeArmorSets(List<VanillaArmorSet> armorSets)
+        private static void ModifyArmorSets(List<VanillaArmorSet> armorSets)
         {
-            var thermalSet = armorSets.First(x => x.SrArmorName == 171735);
+            var thermalSet = armorSets.First(x => x.Label == "Manf_Devlon_Armor_Thermal");
             // set the name to just "Thermal"
             thermalSet.SrArmorName = 210210242;
             // asssign Turian HVYa 10 to be Thermal Armor Heavy; there is no heavy variant of this armor and it matches pretty well
@@ -298,7 +293,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             };
 
             // assign unused TUR HVYa 8 to Janissary
-            var janissaryArmorSet = armorSets.First(x => x.SrArmorName == 174133);
+            var janissaryArmorSet = armorSets.First(x => x.Label == "Manf_HKShadow_Armor_Janissary");
             janissaryArmorSet.TurianVariant = new ArmorVariant()
             {
                 HVY = new ArmorVariant.WeightVariant()
@@ -310,7 +305,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             };
 
             // assign unused TUR LGTa 14 to Skirmish
-            var skirmishArmorSet = armorSets.First(x => x.SrArmorName == 174127);
+            var skirmishArmorSet = armorSets.First(x => x.Label == "Manf_Batarian_Armor_Skirmish");
             skirmishArmorSet.TurianVariant = new ArmorVariant()
             {
                 LGT = new ArmorVariant.WeightVariant()
@@ -322,7 +317,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             };
 
             // assign unused TUR MEDa 4 to Crisis armor
-            var crisisArmorSet = armorSets.First(x => x.SrArmorName == 174131);
+            var crisisArmorSet = armorSets.First(x => x.Label == "Manf_Jorman_Armor_Crisis");
             crisisArmorSet.TurianVariant = new ArmorVariant()
             {
                 MED = new ArmorVariant.WeightVariant()
@@ -334,7 +329,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             };
 
             // assign unused TUR LGTa 6 to Freedom armor
-            var freedomArmorSet = armorSets.First(x => x.SrArmorName == 174129);
+            var freedomArmorSet = armorSets.First(x => x.Label == "Manf_Cerberus_Armor_Freedom");
             freedomArmorSet.TurianVariant = new ArmorVariant()
             {
                 LGT = new ArmorVariant.WeightVariant()
@@ -346,7 +341,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             };
 
             // assign unused TUR HVYa 4 to Hazard armor
-            var hazardArmorSet = armorSets.First(x => x.SrArmorName == 174132);
+            var hazardArmorSet = armorSets.First(x => x.Label == "Manf_Jorman_Armor_Hazard");
             hazardArmorSet.TurianVariant = new ArmorVariant()
             {
                 HVY = new ArmorVariant.WeightVariant()
@@ -358,7 +353,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             };
 
             // assign unused TUR HVYa 5 to Partisan armor
-            var partisanArmorSet = armorSets.First(x => x.SrArmorName == 174128);
+            var partisanArmorSet = armorSets.First(x => x.Label == "Manf_Batarian_Armor_Partisan");
             partisanArmorSet.TurianVariant = new ArmorVariant()
             {
                 HVY = new ArmorVariant.WeightVariant()
@@ -370,11 +365,11 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             };
 
             // changing from "Spectre Armor" to just "Spectre"
-            var spectreArmor = armorSets.First(x => x.SrArmorName == 174134);
+            var spectreArmor = armorSets.First(x => x.Label == "Manf_HKShadow_Armor_Spectre");
             spectreArmor.SrArmorName = 210210243;
 
             // get the onyx, separate out the player specific parts
-            var onyxIndex = armorSets.FindIndex(x => x.SrArmorName == 143390);
+            var onyxIndex = armorSets.FindIndex(x => x.Label == "Manf_Aldrin_Armor_Onyx");
             var onyxArmor = armorSets[onyxIndex];
             armorSets.Insert(onyxIndex, new VanillaArmorSet("AMM_N7_Onyx")
             {
@@ -405,7 +400,15 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     }
                 }
             });
+
+            // remove extraneous/confusing armor sets. there are a few sets that not only have confusing names (Predator vs Predator H, from different manufacturers) but don't even have unique appearances
+            // I can clean this state of affairs up pretty easily
+            var armaxPredatorHIndex = armorSets.FindIndex(x => x.Label == "Manf_Armax_Armor_Predator");
+            armorSets.RemoveAt(armaxPredatorHIndex);
+            var hkPredatorIndex = armorSets.FindIndex(x => x.Label == "Manf_HK_Armor_Predator");
+            armorSets.RemoveAt(hkPredatorIndex);
         }
+
         private static void AddMenuEntriesFromVanillaArmors(ModBuilderContext context, IEnumerable<VanillaArmorSet> armorSets)
         {
             var configMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-amm_Submenus.m3cd");
@@ -433,19 +436,26 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 }
                 AppearanceItemData GetMenuEntry(EArmorType armorType, int? ammAppearanceId)
                 {
-                    var result = new AppearanceItemData()
+                    if (armorType == EArmorType.All)
                     {
-                        Gender = gender,
-                        SrCenterText = 210210236,
-                        ApplyOutfitId = ammAppearanceId,
-                        DisplayVars = [$"${armorSet.SrManufacturerName}", $"${armorSet.SrArmorName}"]
-                    };
-                    if (armorType != EArmorType.All)
-                    {
-                        result.SrCenterText = 210210237;
-                        result.DisplayVars = [.. result.DisplayVars, $"${GetArmorTypeStringRef(armorType)}"];
+                        return new AppearanceItemData()
+                        {
+                            Gender = gender,
+                            SrCenterText = armorSet.SrArmorName,
+                            ApplyOutfitId = ammAppearanceId
+                        };
                     }
-                    return result;
+                    else
+                    {
+                        return new AppearanceItemData()
+                        {
+                            Gender = gender,
+                            // "<ArmorName> - <Weight>"
+                            SrCenterText = 210210236,
+                            ApplyOutfitId = ammAppearanceId,
+                            DisplayVars = [$"${armorSet.SrArmorName}", $"${GetArmorTypeStringRef(armorType)}"]
+                        };
+                    }
                 }
                 if (variant.LGT != null)
                 {
