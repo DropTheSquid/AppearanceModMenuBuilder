@@ -74,7 +74,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                         }
                         if (characterVariant.AllWeights != null)
                         {
-                            FindMatchingAppearance(appearances, characterVariant, EArmorType.All, armor.AppearanceOverride, armor, playerSpecific);
+                            FindMatchingAppearance(appearances, characterVariant, EArmorType.All, armor.AppearanceOverride ?? characterVariant.AllWeights.AppearanceOverride, armor, playerSpecific);
                         }
                     }
                 }
@@ -138,21 +138,17 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 DeduplicateCharacterVariants(armor);
 
                 // if the different weights all have the same appearance, deduplicate that
-                if (armor.AppearanceOverride != null)
-                {
-                    DeduplicateCharacterWeightVariants(armor.MalePlayerVariant);
-                    DeduplicateCharacterWeightVariants(armor.FemalePlayerVariant);
-                    DeduplicateCharacterWeightVariants(armor.HumanMaleHenchVariant);
-                    DeduplicateCharacterWeightVariants(armor.HumanFemaleHenchVariant);
-                    DeduplicateCharacterWeightVariants(armor.AnyHumanVariant);
-                    DeduplicateCharacterWeightVariants(armor.QuarianVariant);
-                    DeduplicateCharacterWeightVariants(armor.TurianVariant);
-                    DeduplicateCharacterWeightVariants(armor.KroganVariant);
-                }
-
+                DeduplicateCharacterWeightVariants(armor, armor.MalePlayerVariant);
+                DeduplicateCharacterWeightVariants(armor, armor.FemalePlayerVariant);
+                DeduplicateCharacterWeightVariants(armor, armor.HumanMaleHenchVariant);
+                DeduplicateCharacterWeightVariants(armor, armor.HumanFemaleHenchVariant);
+                DeduplicateCharacterWeightVariants(armor, armor.AnyHumanVariant);
+                DeduplicateCharacterWeightVariants(armor, armor.QuarianVariant);
+                DeduplicateCharacterWeightVariants(armor, armor.TurianVariant);
+                DeduplicateCharacterWeightVariants(armor, armor.KroganVariant);
             }
 
-            static void DeduplicateCharacterWeightVariants(ArmorVariant? armorVariant)
+            static void DeduplicateCharacterWeightVariants(VanillaArmorSet armor, ArmorVariant? armorVariant)
             {
                 if (armorVariant != null)
                 {
@@ -165,6 +161,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     else if (numWeightVariants == 1)
                     {
                         var weightVar = armorVariant.LGT ?? armorVariant.MED ?? armorVariant.HVY;
+                        weightVar.AppearanceOverride = armorVariant.LGT != null ? EArmorType.LGT : armorVariant.MED != null ? EArmorType.MED : EArmorType.HVY;
                         armorVariant.AllWeights = weightVar;
                         armorVariant.LGT = null;
                         armorVariant.MED = null;
@@ -172,6 +169,11 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     }
                     else if (numWeightVariants == 2)
                     {
+                        // if the appearance type is not overridden, it is not safe to do this
+                        if (!armor.AppearanceOverride.HasValue)
+                        {
+                            return;
+                        }
                         ArmorVariant.WeightVariant first;
                         ArmorVariant.WeightVariant second;
                         if (armorVariant.LGT == null)
@@ -199,6 +201,11 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     }
                     else
                     {
+                        // if the appearance type is not overridden, it is not safe to do this
+                        if (!armor.AppearanceOverride.HasValue)
+                        {
+                            return;
+                        }
                         if (AreWeightVariantsIdentical(armorVariant.LGT, armorVariant.MED) && AreWeightVariantsIdentical(armorVariant.MED, armorVariant.HVY))
                         {
                             armorVariant.AllWeights = armorVariant.LGT;
@@ -344,8 +351,9 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     }
                 }
             });
-        }
 
+            var phantom = armorSets.First(x => x.SrArmorName == 168910);
+        }
         private static void AddMenuEntriesFromVanillaArmors(ModBuilderContext context, IEnumerable<VanillaArmorSet> armorSets)
         {
             var configMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-amm_Submenus.m3cd");

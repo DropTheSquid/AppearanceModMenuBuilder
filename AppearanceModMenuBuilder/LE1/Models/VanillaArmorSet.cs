@@ -28,6 +28,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
             [DebuggerDisplay("WeightVariant: {AmmAppearanceId} {MeshVariant} {MaterialVariant}")]
             public class WeightVariant
             {
+                public EArmorType? AppearanceOverride { get; set; }
                 public int? MeshVariant { get; set; }
                 public int? MaterialVariant { get; set; }
                 public int? AmmAppearanceId { get; set; }
