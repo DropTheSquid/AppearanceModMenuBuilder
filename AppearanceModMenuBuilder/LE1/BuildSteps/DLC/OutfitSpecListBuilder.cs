@@ -161,11 +161,16 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // LGTb; This is the N7 Onyx Armor that Shepard wears
             AddVanillaOutfitSpecs(bodyConfig, 17, LgtArmorFileName, OutfitType.LGT, 1, bodyType, 1, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 17, LgtHelmetFileName, OutfitType.LGT, 1, bodyType, 1, 1, visorMesh, hideHair: true);
-            AddVanillaHelmetSpecs(asariHelmetConfig, 17, LgtAsariHelmetFileName, OutfitType.LGT, 1, asariBodyType, 1, 1, asariVisorMesh, hideHair: true);
+            // manually add this, as the "correct" materials don't look right, eg the stripe is missing
+            asariHelmetConfig.AddArrayEntries(
+                "helmetSpecs",
+                new SimpleHelmetSpecItem(17, "BIOG_ASA_HGR_LGT_R.LGTb.ASA_HGR_LGTb_MDL", ["BIOG_HMF_HGR_LGT_R.LGTb.HMF_HGR_LGTb_Mat_1a"], asariVisorMesh)
+                {
+                    HideHair = true
+                }.OutputValue());
             // LGTc; This is the Asari Commando armor, normally not ever used by player characters; only used by NPC Asari
             AddVanillaOutfitSpecs(bodyConfig, 18, LgtArmorFileName, OutfitType.LGT, 2, bodyType, 1, 1, true);
             // manually add this one because there is not actually a corresponding helmet for HMF, using HMF LGTa model and ASA materials
-            // TODO test that this looks correct
             helmetConfig.AddArrayEntries(
                 "helmetSpecs",
                 new SimpleHelmetSpecItem(18, "BIOG_HMF_HGR_LGT_R.LGTa.HMF_HGR_LGTa_MDL", ["BIOG_ASA_HGR_LGT_R.LGTc.ASA_HGR_LGTc_MAT_1a"], visorMesh)
@@ -173,11 +178,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     HideHair = true
                 }.OutputValue());
             AddVanillaHelmetSpecs(asariHelmetConfig, 18, LgtAsariHelmetFileName, OutfitType.LGT, 2, asariBodyType, 1, 1, asariVisorMesh, hideHair: true);
-
-            //// add armor entries for both genders in the female one
-            //AddMenuEntries(humanOutfitMenus.Armor, 1, 17);
-            //// make this one female only
-            //AddMenuEntries(humanOutfitMenus.Armor, 18, 1, EGender.Female);
 
             // MEDa variants; Most Medium armor appearances fall under this
             AddVanillaOutfitSpecs(bodyConfig, 19, MedArmorFileName, OutfitType.MED, 0, bodyType, 16, 1, true);
@@ -191,7 +191,15 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // MEDc Asymmetric tintable armor. Not used by any equipment obtainable in vanilla or by any NPCs, but can be accessed using Black Market Licenses/console commands
             AddVanillaOutfitSpecs(bodyConfig, 36, MedArmorFileName, OutfitType.MED, 2, bodyType, 9, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 36, MedHelmetFileName, OutfitType.MED, 2, bodyType, 9, 1, visorMesh, hideHair: true);
-            AddVanillaHelmetSpecs(asariHelmetConfig, 36, MedAsariHelmetFileName, OutfitType.MED, 2, asariBodyType, 9, 1, asariVisorMesh);
+            // note that I have skipped the 9th helmet config due to the issue below
+            AddVanillaHelmetSpecs(asariHelmetConfig, 36, MedAsariHelmetFileName, OutfitType.MED, 2, asariBodyType, 8, 1, asariVisorMesh);
+            // manually add this one because there is not actually an ASA material. Use the HMF material with the ASA helmet
+            asariHelmetConfig.AddArrayEntries(
+                "helmetSpecs",
+                new SimpleHelmetSpecItem(44, "BIOG_ASA_HGR_MED_R.MEDc.ASA_HGR_MEDc_MDL", ["BIOG_HMF_HGR_MED_R.MEDc.HMF_HGR_MEDc_Mat_9a"], asariVisorMesh)
+                {
+                    HideHair = true
+                }.OutputValue());
 
             // HVYa variants. Most heavy armor falls under this
             AddVanillaOutfitSpecs(bodyConfig, 45, HvyArmorFileName, OutfitType.HVY, 0, bodyType, 16, 1, true);
@@ -200,9 +208,13 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // HVYb. This is the N7 Onyx Armor Shepard wears
             AddVanillaOutfitSpecs(bodyConfig, 61, HvyArmorFileName, OutfitType.HVY, 1, bodyType, 1, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 61, HvyHelmetFileName, OutfitType.HVY, 1, bodyType, 1, 1, visorMesh, hideHair: true);
-            AddVanillaHelmetSpecs(asariHelmetConfig, 61, HvyAsariHelmetFileName, OutfitType.HVY, 1, asariBodyType, 1, 1, asariVisorMesh, hideHair: true);
-            // add the rest of the armor entries
-            //AddMenuEntries(humanOutfitMenus.Armor, 19, 43);
+            // There is no HVYb mesh or material for ASA. trying HVYa with the HMF material
+            asariHelmetConfig.AddArrayEntries(
+                "helmetSpecs",
+                new SimpleHelmetSpecItem(61, "BIOG_ASA_HGR_HVY_R.HVYa.ASA_HGR_HVYa_MDL", ["BIOG_HMF_HGR_HVY_R.HVYb.HMF_HGR_HVYb_Mat_1a"], asariVisorMesh)
+                {
+                    HideHair = true
+                }.OutputValue());
 
             // add entries for the non armor outfits
             AddMenuEntries(humanOutfitMenus.NonArmor, 100, 38, EGender.Female);

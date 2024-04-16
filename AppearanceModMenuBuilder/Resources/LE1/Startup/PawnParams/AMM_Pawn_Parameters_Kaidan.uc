@@ -5,12 +5,13 @@ public function SpecialHandling(BioPawn targetPawn)
 {
     local BioPawnType pawnType;
 
-	// this is a non framework specific issue:
+	// this is a non-framework specific issue (EG there is no issue when framework is installed):
 	// if we are in the menu trying to customize Kaidan's casual appearance
 	// we are relying on the spawned in combat pawn
 	// who has the wrong settings on his pawn. He is configured for LGTa 5
 	// while his Normandy appearance is CTHb 1
 	// if the framework is not installed
+	// note that casual hubs also addresses this issue
 	if (!Class'AMM_Utilities'.static.IsFrameworkInstalled())
 	{
 		// and this is a UI world pawn with armor overridden (casual preview)
@@ -26,7 +27,6 @@ public function SpecialHandling(BioPawn targetPawn)
 				pawnType.m_oAppearanceSettings.m_oBodySettings.m_nMaterialConfig = 0;
 				// this will not match his overridden appearance if a mod has changed that only in the Normandy files
 				// I accept this limitation. The Framework addresses this issue.
-				// targetpawn.m_oBehavior.ForceAppearanceUpdate();
 			}
 		}
 	}

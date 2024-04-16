@@ -336,8 +336,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // adding a fake armor set for the Asari Commando armor (HMF LGTc 0)
             armorSets.Add(new VanillaArmorSet("AMM_CommandoArmor")
             {
-                // "Armali Council"
-                SrManufacturerName = 125361,
+                // "Serrice Council"
+                SrManufacturerName = 125358,
                 // "Commando"
                 SrArmorName = 93988,
                 AppearanceOverride = EArmorType.LGT,
