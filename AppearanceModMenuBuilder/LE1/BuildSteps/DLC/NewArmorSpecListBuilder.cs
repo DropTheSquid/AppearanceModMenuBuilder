@@ -149,7 +149,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     DeduplicateCharacterWeightVariants(armor.TurianVariant);
                     DeduplicateCharacterWeightVariants(armor.KroganVariant);
                 }
-                
+
             }
 
             static void DeduplicateCharacterWeightVariants(ArmorVariant? armorVariant)
@@ -249,7 +249,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 {
                     return true;
                 }
-                    // at this point, both are non null
+                // at this point, both are non null
                 if (AreWeightVariantsIdentical(variant1!.LGT, variant2!.LGT)
                     && AreWeightVariantsIdentical(variant1!.MED, variant2!.MED)
                     && AreWeightVariantsIdentical(variant1!.HVY, variant2!.HVY)
@@ -268,27 +268,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
         private static void AddFakeArmorSets(List<VanillaArmorSet> armorSets)
         {
-            // adding a fake armor set for the Asari Commando armor (HMF LGTc 0)
-            armorSets.Add(new VanillaArmorSet("AMM_CommandoArmor")
-            {
-                // "Commando"
-                SrArmorName = 93988,
-                // "Armali Council"
-                SrManufacturerName = 125361,
-                AppearanceOverride = EArmorType.LGT,
-                HumanFemaleHenchVariant = new ArmorVariant()
-                {
-                    LGT = new ArmorVariant.WeightVariant()
-                    {
-                        //AmmAppearanceId = 18,
-                        MeshVariant = 2,
-                        MaterialVariant = 0
-                    }
-                }
-            });
-
             // asssign Turian HVYa 10 to be Thermal Armor Heavy; there is no heavy variant of this armor and it matches pretty well
             var turianThermalSet = armorSets.First(x => x.SrArmorName == 171735 && x.TurianVariant != null);
+            // "Thermal"
+            turianThermalSet.SrArmorName = 210210242;
             turianThermalSet.TurianVariant!.HVY = new ArmorVariant.WeightVariant()
             {
                 //AmmAppearanceId = 44,
@@ -305,11 +288,30 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 MaterialVariant = 8
             };
 
+            // changing from "Spectre Armor" to just "Spectre"
+            var spectreArmor = armorSets.First(x => x.SrArmorName == 174134);
+            spectreArmor.SrArmorName = 210210243;
+
+            // get the onyx, separate out the player specific parts
+
+            var onyxIndex = armorSets.FindIndex(x => x.SrArmorName == 143390);
+            var onyxArmor = armorSets[onyxIndex];
+            armorSets.Insert(onyxIndex, new VanillaArmorSet("AMM_N7_Onyx")
+            {
+                SrManufacturerName = onyxArmor.SrManufacturerName,
+                // "N7 Onyx"
+                SrArmorName = 210210241,
+                MalePlayerVariant = onyxArmor.MalePlayerVariant,
+                FemalePlayerVariant = onyxArmor.FemalePlayerVariant
+            });
+            onyxArmor.MalePlayerVariant = null;
+            onyxArmor.FemalePlayerVariant = null;
+
             // adding a fake armor set for human armor 40 (MEDc 4; yellow and gray)
             armorSets.Add(new VanillaArmorSet("AMM_DevlonThermal")
             {
-                // "Thermal Armor"
-                SrArmorName = 171735,
+                // "Thermal"
+                SrArmorName = 210210242,
                 // "Devlon Industries"
                 SrManufacturerName = 125360,
                 AppearanceOverride = EArmorType.MED,
@@ -320,6 +322,25 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                         //AmmAppearanceId = 40,
                         MeshVariant = 2,
                         MaterialVariant = 4
+                    }
+                }
+            });
+
+            // adding a fake armor set for the Asari Commando armor (HMF LGTc 0)
+            armorSets.Add(new VanillaArmorSet("AMM_CommandoArmor")
+            {
+                // "Armali Council"
+                SrManufacturerName = 125361,
+                // "Commando"
+                SrArmorName = 93988,
+                AppearanceOverride = EArmorType.LGT,
+                HumanFemaleHenchVariant = new ArmorVariant()
+                {
+                    LGT = new ArmorVariant.WeightVariant()
+                    {
+                        //AmmAppearanceId = 18,
+                        MeshVariant = 2,
+                        MaterialVariant = 0
                     }
                 }
             });
@@ -344,61 +365,50 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 AddArmorToMenu(quarianOutfitMenus.Armor, item, item.QuarianVariant);
             }
 
-            static void AddArmorToMenu(AppearanceSubmenu submenu, VanillaArmorSet armorSet, ArmorVariant? variant, EGender? gender = null)
+            void AddArmorToMenu(AppearanceSubmenu submenu, VanillaArmorSet armorSet, ArmorVariant? variant, EGender? gender = null)
             {
                 if (variant == null)
                 {
                     return;
                 }
+                AppearanceItemData GetMenuEntry(EArmorType armorType, int? ammAppearanceId)
+                {
+                    var result = new AppearanceItemData()
+                    {
+                        Gender = gender,
+                        SrCenterText = 210210236,
+                        ApplyOutfitId = ammAppearanceId,
+                        DisplayVars = [$"${armorSet.SrManufacturerName}", $"${armorSet.SrArmorName}"]
+                    };
+                    if (armorType != EArmorType.All)
+                    {
+                        result.SrCenterText = 210210237;
+                        result.DisplayVars = [.. result.DisplayVars, $"${GetArmorTypeStringRef(armorType)}"];
+                    }
+                    return result;
+                }
                 if (variant.LGT != null)
                 {
                     submenu.AddMenuEntry(
-                        new AppearanceItemData()
-                        {
-                            Gender = gender,
-                            SrLeftText = armorSet.SrManufacturerName,
-                            SrCenterText = armorSet.SrArmorName,
-                            ApplyOutfitId = variant.LGT.AmmAppearanceId,
-                            SrRightText = GetArmorTypeStringRef(EArmorType.LGT)
-                        }
+                        GetMenuEntry(EArmorType.LGT, variant.LGT.AmmAppearanceId)
                     );
                 }
                 if (variant.MED != null)
                 {
                     submenu.AddMenuEntry(
-                        new AppearanceItemData()
-                        {
-                            Gender = gender,
-                            SrLeftText = armorSet.SrManufacturerName,
-                            SrCenterText = armorSet.SrArmorName,
-                            ApplyOutfitId = variant.MED.AmmAppearanceId,
-                            SrRightText = GetArmorTypeStringRef(EArmorType.MED)
-                        }
+                        GetMenuEntry(EArmorType.MED, variant.MED.AmmAppearanceId)
                     );
                 }
                 if (variant.HVY != null)
                 {
                     submenu.AddMenuEntry(
-                        new AppearanceItemData()
-                        {
-                            Gender = gender,
-                            SrLeftText = armorSet.SrManufacturerName,
-                            SrCenterText = armorSet.SrArmorName,
-                            ApplyOutfitId = variant.HVY.AmmAppearanceId,
-                            SrRightText = GetArmorTypeStringRef(EArmorType.HVY)
-                        }
+                        GetMenuEntry(EArmorType.HVY, variant.HVY.AmmAppearanceId)
                     );
                 }
                 if (variant.AllWeights != null)
                 {
                     submenu.AddMenuEntry(
-                        new AppearanceItemData()
-                        {
-                            Gender = gender,
-                            SrLeftText = armorSet.SrManufacturerName,
-                            SrCenterText = armorSet.SrArmorName,
-                            ApplyOutfitId = variant.AllWeights.AmmAppearanceId,
-                        }
+                        GetMenuEntry(EArmorType.All, variant.AllWeights.AmmAppearanceId)
                     );
                 }
             }
@@ -425,11 +435,11 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                         menus.Armor.AddMenuEntry(new AppearanceItemData()
                         {
                             Gender = gender,
-                            // "Unused Appearance <Blank>"
+                            // "<Blank1> <Blank2>"
                             SrCenterText = 210210236,
                             ApplyOutfitId = appearance.AmmAppearanceId,
                             // fills in the blank
-                            DisplayVars = [$"{appearance.ArmorType} {appearance.ModelVariant} {appearance.MaterialVariant}"]
+                            DisplayVars = ["unused appearance", $"{appearance.ArmorType} {appearance.ModelVariant} {appearance.MaterialVariant}"]
                         });
                     }
                 }
@@ -440,10 +450,12 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         {
             return type switch
             {
-                // TODO there are "<Weight> Armor" and it would be nice if it was just the weight to be concise
-                EArmorType.LGT => 771340,
-                EArmorType.MED => 771342,
-                EArmorType.HVY => 771344,
+                // "Light"
+                EArmorType.LGT => 210210238,
+                // "Medium"
+                EArmorType.MED => 210210239,
+                // "Heavy"
+                EArmorType.HVY => 210210240,
                 _ => throw new Exception("invalid armor type"),
             };
         }
