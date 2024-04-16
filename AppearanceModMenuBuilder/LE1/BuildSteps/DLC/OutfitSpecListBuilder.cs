@@ -530,16 +530,17 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             AddVanillaHelmetSpecs(helmetConfig, 1, LgtHelmetFileName, OutfitType.LGT, 0, bodyType, 15, 1, hideHair: true);
 
             // LGTb
-            AddVanillaOutfitSpecs(bodyConfig, 16, LgtFileName, OutfitType.LGT, 1, bodyType, 3, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 16, LgtHelmetFileName, OutfitType.LGT, 1, bodyType, 3, 1, hideHair: true);
+            // this is the Phantom armor. technically it has three material variants, but the other two are just blue and yellow LEDs that don't even match the red of the rest of the armor, so I am ignoring them.
+            AddVanillaOutfitSpecs(bodyConfig, 16, LgtFileName, OutfitType.LGT, 1, bodyType, 1, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 16, LgtHelmetFileName, OutfitType.LGT, 1, bodyType, 1, 1, hideHair: true);
 
             // MEDa
-            AddVanillaOutfitSpecs(bodyConfig, 19, MedFileName, OutfitType.MED, 0, bodyType, 16, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 19, MedHelmetFileName, OutfitType.MED, 0, bodyType, 16, 1, hideHead: true, suppressBreather: true);
+            AddVanillaOutfitSpecs(bodyConfig, 17, MedFileName, OutfitType.MED, 0, bodyType, 16, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 17, MedHelmetFileName, OutfitType.MED, 0, bodyType, 16, 1, hideHead: true, suppressBreather: true);
 
             // HVYa
-            AddVanillaOutfitSpecs(bodyConfig, 35, HvyFileName, OutfitType.HVY, 0, bodyType, 15, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 35, HvyHelmetFileName, OutfitType.HVY, 0, bodyType, 15, 1, hideHair: true);
+            AddVanillaOutfitSpecs(bodyConfig, 33, HvyFileName, OutfitType.HVY, 0, bodyType, 15, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 33, HvyHelmetFileName, OutfitType.HVY, 0, bodyType, 15, 1, hideHair: true);
 
             // Add CTH vanilla meshes (100+)
             // CTHa

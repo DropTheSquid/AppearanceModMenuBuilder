@@ -142,17 +142,17 @@ You can customize characters' appearances at any time from the Inventory screen 
 		<flags>1</flags>
 		<data>Outfit &lt;CUSTOM0&gt;</data>
 	</string>
-	<!-- used for "Manufacturer | ArmorName" when there are no different weight versions -->
+	<!-- used for "Manufacturer — ArmorName" when there are no different weight versions -->
 	<string>
 		<id>210210236</id>
 		<flags>1</flags>
-		<data>&lt;CUSTOM0&gt; | &lt;CUSTOM1&gt;</data>
+		<data>&lt;CUSTOM0&gt; — &lt;CUSTOM1&gt;</data>
 	</string>
-	<!-- used for "Manufacturer | ArmorName | Weight" for most armors -->
+	<!-- used for "Manufacturer — ArmorName — Weight" for most armors -->
 	<string>
 		<id>210210237</id>
 		<flags>1</flags>
-		<data>&lt;CUSTOM0&gt; | &lt;CUSTOM1&gt; | &lt;CUSTOM2&gt;</data>
+		<data>&lt;CUSTOM0&gt; — &lt;CUSTOM1&gt; — &lt;CUSTOM2&gt;</data>
 	</string>
 	<!-- used for armor weight in the above stringref -->
 	<string>

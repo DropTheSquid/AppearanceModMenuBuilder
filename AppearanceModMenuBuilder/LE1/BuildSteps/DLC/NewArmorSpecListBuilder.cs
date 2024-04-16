@@ -41,9 +41,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 .. VanillaBodyAppearance.GetVanillaVariants(45, EArmorType.HVY, hmmBodyType, (16, 1), (1, 1))
                 ];
             VanillaBodyAppearance[] TURAppearances = [
-                .. VanillaBodyAppearance.GetVanillaVariants(1, EArmorType.LGT, turBodyType, (15, 1), (3, 1)),
-                .. VanillaBodyAppearance.GetVanillaVariants(19, EArmorType.MED, turBodyType, (16, 1)),
-                .. VanillaBodyAppearance.GetVanillaVariants(35, EArmorType.HVY, turBodyType, (15, 1))
+                // yes, I know there are two more LGTb material variants, but they are lame, they are just LED recolors that don't even match the rest of the armor so I am omitting them.
+                .. VanillaBodyAppearance.GetVanillaVariants(1, EArmorType.LGT, turBodyType, (15, 1), (1, 1)),
+                .. VanillaBodyAppearance.GetVanillaVariants(17, EArmorType.MED, turBodyType, (16, 1)),
+                .. VanillaBodyAppearance.GetVanillaVariants(33, EArmorType.HVY, turBodyType, (15, 1))
                 ];
             VanillaBodyAppearance[] KROAppearances = [
                 .. VanillaBodyAppearance.GetVanillaVariants(1, EArmorType.MED, kroBodyType, (11, 1)),
@@ -74,7 +75,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                         }
                         if (characterVariant.AllWeights != null)
                         {
-                            FindMatchingAppearance(appearances, characterVariant, EArmorType.All, armor.AppearanceOverride ?? characterVariant.AllWeights.AppearanceOverride, armor, playerSpecific);
+                            FindMatchingAppearance(appearances, characterVariant, EArmorType.All, characterVariant.AllWeights.AppearanceOverride ?? armor.AppearanceOverride, armor, playerSpecific);
                         }
                     }
                 }
@@ -275,24 +276,97 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
         private static void AddFakeArmorSets(List<VanillaArmorSet> armorSets)
         {
+            var thermalSet = armorSets.First(x => x.SrArmorName == 171735);
+            // set the name to just "Thermal"
+            thermalSet.SrArmorName = 210210242;
             // asssign Turian HVYa 10 to be Thermal Armor Heavy; there is no heavy variant of this armor and it matches pretty well
-            var turianThermalSet = armorSets.First(x => x.SrArmorName == 171735 && x.TurianVariant != null);
-            // "Thermal"
-            turianThermalSet.SrArmorName = 210210242;
-            turianThermalSet.TurianVariant!.HVY = new ArmorVariant.WeightVariant()
+            thermalSet.TurianVariant!.HVY = new ArmorVariant.WeightVariant()
             {
                 //AmmAppearanceId = 44,
                 MeshVariant = 0,
                 MaterialVariant = 10
             };
-
-            // assign Turian HVYa 8 to be Silverback heavy; there is no heavy variant and it matches well
-            var turianSilverbackSet = armorSets.First(x => x.SrArmorName == 172517 && x.TurianVariant != null);
-            turianSilverbackSet.TurianVariant!.HVY = new ArmorVariant.WeightVariant()
+            // assign human MEDc 4 to Thermal
+            thermalSet.AnyHumanVariant = new ArmorVariant()
             {
-                //AmmAppearanceId = 44,
-                MeshVariant = 0,
-                MaterialVariant = 8
+                MED = new ArmorVariant.WeightVariant()
+                {
+                    //AmmAppearanceId = 40,
+                    MeshVariant = 2,
+                    MaterialVariant = 4
+                }
+            };
+
+            // assign unused TUR HVYa 8 to Janissary
+            var janissaryArmorSet = armorSets.First(x => x.SrArmorName == 174133);
+            janissaryArmorSet.TurianVariant = new ArmorVariant()
+            {
+                HVY = new ArmorVariant.WeightVariant()
+                {
+                    //AmmAppearanceId = 44,
+                    MeshVariant = 0,
+                    MaterialVariant = 8
+                }
+            };
+
+            // assign unused TUR LGTa 14 to Skirmish
+            var skirmishArmorSet = armorSets.First(x => x.SrArmorName == 174127);
+            skirmishArmorSet.TurianVariant = new ArmorVariant()
+            {
+                LGT = new ArmorVariant.WeightVariant()
+                {
+                    //AmmAppearanceId = 14,
+                    MeshVariant = 0,
+                    MaterialVariant = 14
+                }
+            };
+
+            // assign unused TUR MEDa 4 to Crisis armor
+            var crisisArmorSet = armorSets.First(x => x.SrArmorName == 174131);
+            crisisArmorSet.TurianVariant = new ArmorVariant()
+            {
+                MED = new ArmorVariant.WeightVariant()
+                {
+                    // TODO what is the appearance id?
+                    MeshVariant = 0,
+                    MaterialVariant = 4
+                }
+            };
+
+            // assign unused TUR LGTa 6 to Freedom armor
+            var freedomArmorSet = armorSets.First(x => x.SrArmorName == 174129);
+            freedomArmorSet.TurianVariant = new ArmorVariant()
+            {
+                LGT = new ArmorVariant.WeightVariant()
+                {
+                    // TODO what is the appearance id?
+                    MeshVariant = 0,
+                    MaterialVariant = 6
+                }
+            };
+
+            // assign unused TUR HVYa 4 to Hazard armor
+            var hazardArmorSet = armorSets.First(x => x.SrArmorName == 174132);
+            hazardArmorSet.TurianVariant = new ArmorVariant()
+            {
+                HVY = new ArmorVariant.WeightVariant()
+                {
+                    // TODO what is the appearance id?
+                    MeshVariant = 0,
+                    MaterialVariant = 4
+                }
+            };
+
+            // assign unused TUR HVYa 5 to Partisan armor
+            var partisanArmorSet = armorSets.First(x => x.SrArmorName == 174128);
+            partisanArmorSet.TurianVariant = new ArmorVariant()
+            {
+                HVY = new ArmorVariant.WeightVariant()
+                {
+                    // TODO what is the appearance id?
+                    MeshVariant = 0,
+                    MaterialVariant = 5
+                }
             };
 
             // changing from "Spectre Armor" to just "Spectre"
@@ -300,7 +374,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             spectreArmor.SrArmorName = 210210243;
 
             // get the onyx, separate out the player specific parts
-
             var onyxIndex = armorSets.FindIndex(x => x.SrArmorName == 143390);
             var onyxArmor = armorSets[onyxIndex];
             armorSets.Insert(onyxIndex, new VanillaArmorSet("AMM_N7_Onyx")
@@ -313,25 +386,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             });
             onyxArmor.MalePlayerVariant = null;
             onyxArmor.FemalePlayerVariant = null;
-
-            // adding a fake armor set for human armor 40 (MEDc 4; yellow and gray)
-            armorSets.Add(new VanillaArmorSet("AMM_DevlonThermal")
-            {
-                // "Thermal"
-                SrArmorName = 210210242,
-                // "Devlon Industries"
-                SrManufacturerName = 125360,
-                AppearanceOverride = EArmorType.MED,
-                AnyHumanVariant = new ArmorVariant()
-                {
-                    MED = new ArmorVariant.WeightVariant()
-                    {
-                        //AmmAppearanceId = 40,
-                        MeshVariant = 2,
-                        MaterialVariant = 4
-                    }
-                }
-            });
 
             // adding a fake armor set for the Asari Commando armor (HMF LGTc 0)
             armorSets.Add(new VanillaArmorSet("AMM_CommandoArmor")
@@ -351,8 +405,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     }
                 }
             });
-
-            var phantom = armorSets.First(x => x.SrArmorName == 168910);
         }
         private static void AddMenuEntriesFromVanillaArmors(ModBuilderContext context, IEnumerable<VanillaArmorSet> armorSets)
         {
