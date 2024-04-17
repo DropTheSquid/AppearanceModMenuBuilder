@@ -9,7 +9,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
         string AppearancePrefix,
         int ModelVariant,
         int MaterialVariant,
-        int MaterialsPerVariant) : BodyAppearance(AmmAppearanceId)
+        int MaterialsPerVariant)
     {
         public struct MenuEntryDetails
         {
@@ -22,22 +22,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
 
         public List<MenuEntryDetails> MenuEntries { get; set; } = [];
 
-        public override string MeshPath => $"{PackageName}.{MeshVariantString}.{AppearancePrefix}_ARM_{MeshVariantString}_MDL";
-
-        public override string[] MaterialPaths
-        {
-            get
-            {
-                var result = new string[MaterialsPerVariant];
-                for (int i = 0; i < result.Length; i++)
-                {
-                    result[i] = $"{PackageName}.{MeshVariantString}.{AppearancePrefix}_ARM_{MeshVariantString}_MAT{MaterialVariant + 1}{CharFromInt(i)}";
-                }
-                return result;
-            }
-        }
-
-        private string MeshVariantString => GetMeshVariantString(ArmorType, ModelVariant);
+        public int HelmetAppearanceId { get; set; } = -2;
 
         public static IEnumerable<VanillaBodyAppearance> GetVanillaVariants(
             int startingId,

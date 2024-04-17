@@ -9,6 +9,7 @@ using static AppearanceModMenuBuilder.LE1.UScriptModels.AppearanceItemData;
 using static AppearanceModMenuBuilder.LE1.Models.VanillaArmorSet;
 using static AppearanceModMenuBuilder.LE1.Models.VanillaMeshUtilities;
 using AppearanceModMenuBuilder.LE1.UScriptModels;
+using static AppearanceModMenuBuilder.LE1.Models.VanillaArmorSet.ArmorVariant;
 
 namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 {
@@ -153,52 +154,20 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             {
                 if (armorVariant != null)
                 {
-                    int numWeightVariants = armorVariant.NumberOfWeightVariants;
-                    if (numWeightVariants <= 0 || numWeightVariants > 3)
+                    var variants = armorVariant.WeightVariants;
+
+                    if (variants.Length <= 0 || variants.Length > 3)
                     {
                         // this shouldn't happen
                         throw new InvalidOperationException();
                     }
-                    else if (numWeightVariants == 1)
+                    else if (variants.Length == 1)
                     {
-                        var weightVar = armorVariant.LGT ?? armorVariant.MED ?? armorVariant.HVY;
-                        weightVar.AppearanceOverride = armorVariant.LGT != null ? EArmorType.LGT : armorVariant.MED != null ? EArmorType.MED : EArmorType.HVY;
-                        armorVariant.AllWeights = weightVar;
+                        variants[0].AppearanceOverride = armorVariant.LGT != null ? EArmorType.LGT : armorVariant.MED != null ? EArmorType.MED : EArmorType.HVY;
+                        armorVariant.AllWeights = variants[0];
                         armorVariant.LGT = null;
                         armorVariant.MED = null;
                         armorVariant.HVY = null;
-                    }
-                    else if (numWeightVariants == 2)
-                    {
-                        // if the appearance type is not overridden, it is not safe to do this
-                        if (!armor.AppearanceOverride.HasValue)
-                        {
-                            return;
-                        }
-                        ArmorVariant.WeightVariant first;
-                        ArmorVariant.WeightVariant second;
-                        if (armorVariant.LGT == null)
-                        {
-                            first = armorVariant.MED!;
-                            second = armorVariant.HVY!;
-                        }
-                        else if (armorVariant.MED == null)
-                        {
-                            first = armorVariant.LGT!;
-                            second = armorVariant.HVY!;
-                        }
-                        else
-                        {
-                            first = armorVariant.LGT!;
-                            second = armorVariant.MED!;
-                        }
-                        if (AreWeightVariantsIdentical(first, second))
-                        {
-                            armorVariant.AllWeights = first;
-                            armorVariant.LGT = null;
-                            armorVariant.MED = null;
-                            armorVariant.HVY = null;
-                        }
                     }
                     else
                     {
@@ -207,9 +176,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                         {
                             return;
                         }
-                        if (AreWeightVariantsIdentical(armorVariant.LGT, armorVariant.MED) && AreWeightVariantsIdentical(armorVariant.MED, armorVariant.HVY))
+                        if (AreWeightVariantsIdentical(variants[0], variants[1])
+                            && (variants.Length == 2 || AreWeightVariantsIdentical(variants[1], variants[2])))
                         {
-                            armorVariant.AllWeights = armorVariant.LGT;
+                            armorVariant.AllWeights = variants[0];
                             armorVariant.LGT = null;
                             armorVariant.MED = null;
                             armorVariant.HVY = null;
@@ -268,7 +238,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 return false;
             }
 
-            static bool AreWeightVariantsIdentical(ArmorVariant.WeightVariant? variant1, ArmorVariant.WeightVariant? variant2)
+            static bool AreWeightVariantsIdentical(WeightVariant? variant1, WeightVariant? variant2)
             {
                 return variant1?.MeshVariant == variant2?.MeshVariant && variant1?.MaterialVariant == variant2?.MaterialVariant;
             }
@@ -280,7 +250,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // set the name to just "Thermal"
             thermalSet.SrArmorName = 210210242;
             // asssign Turian HVYa 10 to be Thermal Armor Heavy; there is no heavy variant of this armor and it matches pretty well
-            thermalSet.TurianVariant!.HVY = new ArmorVariant.WeightVariant()
+            thermalSet.TurianVariant!.HVY = new WeightVariant()
             {
                 //AmmAppearanceId = 44,
                 MeshVariant = 0,
@@ -289,7 +259,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // assign human MEDc 4 to Thermal
             thermalSet.AnyHumanVariant = new ArmorVariant()
             {
-                MED = new ArmorVariant.WeightVariant()
+                MED = new WeightVariant()
                 {
                     //AmmAppearanceId = 40,
                     MeshVariant = 2,
@@ -301,7 +271,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             var janissaryArmorSet = armorSets.First(x => x.Label == "Manf_HKShadow_Armor_Janissary");
             janissaryArmorSet.TurianVariant = new ArmorVariant()
             {
-                HVY = new ArmorVariant.WeightVariant()
+                HVY = new WeightVariant()
                 {
                     //AmmAppearanceId = 44,
                     MeshVariant = 0,
@@ -313,7 +283,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             var skirmishArmorSet = armorSets.First(x => x.Label == "Manf_Batarian_Armor_Skirmish");
             skirmishArmorSet.TurianVariant = new ArmorVariant()
             {
-                LGT = new ArmorVariant.WeightVariant()
+                LGT = new WeightVariant()
                 {
                     //AmmAppearanceId = 14,
                     MeshVariant = 0,
@@ -325,7 +295,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             var crisisArmorSet = armorSets.First(x => x.Label == "Manf_Jorman_Armor_Crisis");
             crisisArmorSet.TurianVariant = new ArmorVariant()
             {
-                MED = new ArmorVariant.WeightVariant()
+                MED = new WeightVariant()
                 {
                     // TODO what is the appearance id?
                     MeshVariant = 0,
@@ -337,7 +307,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             var freedomArmorSet = armorSets.First(x => x.Label == "Manf_Cerberus_Armor_Freedom");
             freedomArmorSet.TurianVariant = new ArmorVariant()
             {
-                LGT = new ArmorVariant.WeightVariant()
+                LGT = new WeightVariant()
                 {
                     // TODO what is the appearance id?
                     MeshVariant = 0,
@@ -349,7 +319,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             var hazardArmorSet = armorSets.First(x => x.Label == "Manf_Jorman_Armor_Hazard");
             hazardArmorSet.TurianVariant = new ArmorVariant()
             {
-                HVY = new ArmorVariant.WeightVariant()
+                HVY = new WeightVariant()
                 {
                     // TODO what is the appearance id?
                     MeshVariant = 0,
@@ -361,7 +331,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             var partisanArmorSet = armorSets.First(x => x.Label == "Manf_Batarian_Armor_Partisan");
             partisanArmorSet.TurianVariant = new ArmorVariant()
             {
-                HVY = new ArmorVariant.WeightVariant()
+                HVY = new WeightVariant()
                 {
                     // TODO what is the appearance id?
                     MeshVariant = 0,
@@ -397,7 +367,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 AppearanceOverride = EArmorType.LGT,
                 HumanFemaleHenchVariant = new ArmorVariant()
                 {
-                    LGT = new ArmorVariant.WeightVariant()
+                    LGT = new WeightVariant()
                     {
                         //AmmAppearanceId = 18,
                         MeshVariant = 2,

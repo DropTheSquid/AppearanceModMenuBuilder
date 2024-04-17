@@ -9,9 +9,8 @@ namespace AppearanceModMenuBuilder.LE1.Models
     public partial class VanillaArmorSet(string label)
     {
         // regex for parsing the pawn out of the propertyLabel
-        // parses GP_HelmetAppr_PlayerFemale or GP_ArmorAppr_PlayerFemaleL
+        // parses GP_ArmorAppr_PlayerFemaleL
         // to get out PlayerFemale
-        
         [GeneratedRegex("^GP_ArmorAppr_([A-Za-z]+?)([LMH])$")]
         private static partial Regex StaticArmorAppearanceRegex();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -57,6 +56,38 @@ namespace AppearanceModMenuBuilder.LE1.Models
             }
 
             public int NumberOfWeightVariants { get => CountVariant(LGT) + CountVariant(MED) + CountVariant(HVY); }
+            public WeightVariant[] WeightVariants { get
+                {
+                    var numVars = NumberOfWeightVariants;
+                    if (numVars == 0)
+                    {
+                        return [];
+                    }
+                    else if (numVars == 1)
+                    {
+                        return [LGT ?? MED ?? HVY!];
+                    }
+                    else if (numVars == 2)
+                    {
+                        if (LGT == null)
+                        {
+                            return [MED!, HVY!];
+                        }
+                        else if (MED == null)
+                        {
+                            return [LGT!, HVY!];
+                        }
+                        else
+                        {
+                            return [LGT!, MED!];
+                        }
+                    }
+                    else
+                    {
+                        return [LGT!, MED!, HVY!];
+                    }
+                }
+            }
 
             public WeightVariant? LGT { get; set; }
             public WeightVariant? MED { get; set; }
@@ -65,7 +96,6 @@ namespace AppearanceModMenuBuilder.LE1.Models
             public WeightVariant? AllWeights { get; set; }
 
             public int? HelmetVariant { get; set; }
-            //public HashSet<EArmorType> ArmorTypes { get; } = [];
 
             private static int CountVariant(WeightVariant? variant)
             {
@@ -100,7 +130,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
             switch (effectLabel)
             {
                 case "GE_Item_Name":
-                    // technically there can be different names per armor weight but they never do that so I am going to pretend I don't see it
+                    // technically there can be different names per armor weight but they almost never do that so I am going to pretend I don't see it
                     SrArmorName = value;
                     break;
                 case "GE_Armor_ModelVariant_O":

@@ -155,9 +155,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             ];
             breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs.Select(x => x.OutputValue()));
 
-            var LgtArmorFileName = GetVanillaArmorFileName(bodyType, OutfitType.LGT);
-            var MedArmorFileName = GetVanillaArmorFileName(bodyType, OutfitType.MED);
-            var HvyArmorFileName = GetVanillaArmorFileName(bodyType, OutfitType.HVY);
+            const string hmfArmorFileName = "BIOG_HMF_ARM_AMM";
             var NkdClothesFileName = GetVanillaArmorFileName(bodyType, OutfitType.NKD);
             var CthClothesFileName = GetVanillaArmorFileName(bodyType, OutfitType.CTH);
             var LgtHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.LGT);
@@ -172,12 +170,12 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             // add all vanilla armor variants into positive IDs less than 100 (only goes up to 61)
             // LGTa variants; Most Light armor appearances fall under this
-            AddVanillaOutfitSpecs(bodyConfig, 1, LgtArmorFileName, OutfitType.LGT, 0, bodyType, 16, 1, true);
+            AddVanillaOutfitSpecs(bodyConfig, 1, hmfArmorFileName, OutfitType.LGT, 0, bodyType, 16, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 1, LgtHelmetFileName, OutfitType.LGT, 0, bodyType, 16, 1, visorMesh, hideHair: true);
             AddVanillaHelmetSpecs(asariHelmetConfig, 1, LgtAsariHelmetFileName, OutfitType.LGT, 0, asariBodyType, 16, 1, asariVisorMesh, hideHair: true);
 
             // LGTb; This is the N7 Onyx Armor that Shepard wears
-            AddVanillaOutfitSpecs(bodyConfig, 17, LgtArmorFileName, OutfitType.LGT, 1, bodyType, 1, 1, true);
+            AddVanillaOutfitSpecs(bodyConfig, 17, hmfArmorFileName, OutfitType.LGT, 1, bodyType, 1, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 17, LgtHelmetFileName, OutfitType.LGT, 1, bodyType, 1, 1, visorMesh, hideHair: true);
             // manually add this, as the "correct" materials don't look right, eg the stripe is missing
             asariHelmetConfig.AddArrayEntries(
@@ -187,7 +185,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     HideHair = true
                 }.OutputValue());
             // LGTc; This is the Asari Commando armor, normally not ever used by player characters; only used by NPC Asari
-            AddVanillaOutfitSpecs(bodyConfig, 18, LgtArmorFileName, OutfitType.LGT, 2, bodyType, 1, 1, true);
+            AddVanillaOutfitSpecs(bodyConfig, 18, hmfArmorFileName, OutfitType.LGT, 2, bodyType, 1, 1, true);
             // manually add this one because there is not actually a corresponding helmet for HMF, using HMF LGTa model and ASA materials
             helmetConfig.AddArrayEntries(
                 "helmetSpecs",
@@ -198,16 +196,16 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             AddVanillaHelmetSpecs(asariHelmetConfig, 18, LgtAsariHelmetFileName, OutfitType.LGT, 2, asariBodyType, 1, 1, asariVisorMesh, hideHair: true);
 
             // MEDa variants; Most Medium armor appearances fall under this
-            AddVanillaOutfitSpecs(bodyConfig, 19, MedArmorFileName, OutfitType.MED, 0, bodyType, 16, 1, true);
+            AddVanillaOutfitSpecs(bodyConfig, 19, hmfArmorFileName, OutfitType.MED, 0, bodyType, 16, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 19, MedHelmetFileName, OutfitType.MED, 0, bodyType, 16, 1, visorMesh, hideHair: true);
             AddVanillaHelmetSpecs(asariHelmetConfig, 19, MedAsariHelmetFileName, OutfitType.MED, 0, asariBodyType, 16, 1, asariVisorMesh, hideHair: true);
 
             // MEDb; this is the N7 Onyx armor that Shepard wears
-            AddVanillaOutfitSpecs(bodyConfig, 35, MedArmorFileName, OutfitType.MED, 1, bodyType, 1, 1, true);
+            AddVanillaOutfitSpecs(bodyConfig, 35, hmfArmorFileName, OutfitType.MED, 1, bodyType, 1, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 35, MedHelmetFileName, OutfitType.MED, 1, bodyType, 1, 1, visorMesh, hideHair: true);
             AddVanillaHelmetSpecs(asariHelmetConfig, 35, MedAsariHelmetFileName, OutfitType.MED, 1, asariBodyType, 1, 1, asariVisorMesh, hideHair: true);
             // MEDc Asymmetric tintable armor. Not used by any equipment obtainable in vanilla or by any NPCs, but can be accessed using Black Market Licenses/console commands
-            AddVanillaOutfitSpecs(bodyConfig, 36, MedArmorFileName, OutfitType.MED, 2, bodyType, 9, 1, true);
+            AddVanillaOutfitSpecs(bodyConfig, 36, hmfArmorFileName, OutfitType.MED, 2, bodyType, 9, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 36, MedHelmetFileName, OutfitType.MED, 2, bodyType, 9, 1, visorMesh, hideHair: true);
             // note that I have skipped the 9th helmet config due to the issue below
             AddVanillaHelmetSpecs(asariHelmetConfig, 36, MedAsariHelmetFileName, OutfitType.MED, 2, asariBodyType, 8, 1, asariVisorMesh);
@@ -220,11 +218,11 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 }.OutputValue());
 
             // HVYa variants. Most heavy armor falls under this
-            AddVanillaOutfitSpecs(bodyConfig, 45, HvyArmorFileName, OutfitType.HVY, 0, bodyType, 16, 1, true);
+            AddVanillaOutfitSpecs(bodyConfig, 45, hmfArmorFileName, OutfitType.HVY, 0, bodyType, 16, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 45, HvyHelmetFileName, OutfitType.HVY, 0, bodyType, 16, 1, visorMesh, hideHair: true);
             AddVanillaHelmetSpecs(asariHelmetConfig, 45, HvyAsariHelmetFileName, OutfitType.HVY, 0, asariBodyType, 16, 1, asariVisorMesh, hideHair: true);
             // HVYb. This is the N7 Onyx Armor Shepard wears
-            AddVanillaOutfitSpecs(bodyConfig, 61, HvyArmorFileName, OutfitType.HVY, 1, bodyType, 1, 1, true);
+            AddVanillaOutfitSpecs(bodyConfig, 61, hmfArmorFileName, OutfitType.HVY, 1, bodyType, 1, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 61, HvyHelmetFileName, OutfitType.HVY, 1, bodyType, 1, 1, visorMesh, hideHair: true);
             // There is no HVYb mesh or material for ASA. trying HVYa with the HMF material
             asariHelmetConfig.AddArrayEntries(
@@ -333,9 +331,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             ];
             breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs.Select(x => x.OutputValue()));
 
-            var LgtFileName = GetVanillaArmorFileName(bodyType, OutfitType.LGT);
-            var MedFileName = GetVanillaArmorFileName(bodyType, OutfitType.MED);
-            var HvyFileName = GetVanillaArmorFileName(bodyType, OutfitType.HVY);
+            const string hmmArmorFileName = "BIOG_HMM_ARM_AMM";
             var NkdFileName = GetVanillaArmorFileName(bodyType, OutfitType.NKD);
             var CthFileName = GetVanillaArmorFileName(bodyType, OutfitType.CTH);
             var LgtHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.LGT);
@@ -346,32 +342,32 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             // add all vanilla armor variants into positive IDs less than 100 (only goes up to 61); matches HMF ids
             // LGTa variants
-            AddVanillaOutfitSpecs(bodyConfig, 1, LgtFileName, OutfitType.LGT, 0, bodyType, 16, 1, true);
+            AddVanillaOutfitSpecs(bodyConfig, 1, hmmArmorFileName, OutfitType.LGT, 0, bodyType, 16, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 1, LgtHelmetFileName, OutfitType.LGT, 0, bodyType, 16, 1, visorMesh, hideHair: true);
 
             // LGTb: Shepard's Onyx armor with N7 logo
-            AddVanillaOutfitSpecs(bodyConfig, 17, LgtFileName, OutfitType.LGT, 1, bodyType, 1, 1, true);
+            AddVanillaOutfitSpecs(bodyConfig, 17, hmmArmorFileName, OutfitType.LGT, 1, bodyType, 1, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 17, LgtHelmetFileName, OutfitType.LGT, 1, bodyType, 1, 1, visorMesh, hideHair: true);
             // Note that there is no LGTc for HMM, and I am intentionally skipping id 18
 
             // MEDa variants
-            AddVanillaOutfitSpecs(bodyConfig, 19, MedFileName, OutfitType.MED, 0, bodyType, 16, 1, true);
+            AddVanillaOutfitSpecs(bodyConfig, 19, hmmArmorFileName, OutfitType.MED, 0, bodyType, 16, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 19, MedHelmetFileName, OutfitType.MED, 0, bodyType, 16, 1, visorMesh, hideHair: true);
 
             // MEDb: Shep's N7 Onyx Armor
-            AddVanillaOutfitSpecs(bodyConfig, 35, MedFileName, OutfitType.MED, 1, bodyType, 1, 1, true);
+            AddVanillaOutfitSpecs(bodyConfig, 35, hmmArmorFileName, OutfitType.MED, 1, bodyType, 1, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 35, MedHelmetFileName, OutfitType.MED, 1, bodyType, 1, 1, visorMesh, hideHair: true);
 
             // MEDc: Assymmetric tintable armor. never used by NPCs, only usable by player using console commands or Black Market License
-            AddVanillaOutfitSpecs(bodyConfig, 36, MedFileName, OutfitType.MED, 2, bodyType, 9, 1, true);
+            AddVanillaOutfitSpecs(bodyConfig, 36, hmmArmorFileName, OutfitType.MED, 2, bodyType, 9, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 36, MedHelmetFileName, OutfitType.MED, 2, bodyType, 9, 1, visorMesh, hideHair: true);
 
             // HVYa variants
-            AddVanillaOutfitSpecs(bodyConfig, 45, HvyFileName, OutfitType.HVY, 0, bodyType, 16, 1, true);
+            AddVanillaOutfitSpecs(bodyConfig, 45, hmmArmorFileName, OutfitType.HVY, 0, bodyType, 16, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 45, HvyHelmetFileName, OutfitType.HVY, 0, bodyType, 16, 1, visorMesh, hideHair: true);
 
             // HVYb: Shep's N7 Onyx armor
-            AddVanillaOutfitSpecs(bodyConfig, 61, HvyFileName, OutfitType.HVY, 1, bodyType, 1, 1, true);
+            AddVanillaOutfitSpecs(bodyConfig, 61, hmmArmorFileName, OutfitType.HVY, 1, bodyType, 1, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 61, HvyHelmetFileName, OutfitType.HVY, 1, bodyType, 1, 1, visorMesh, hideHair: true);
 
             // add all the non armor outfits for male humans to the menu
@@ -456,24 +452,23 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             ];
             breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs.Select(x => x.OutputValue()));
 
-            var MedFileName = GetVanillaArmorFileName(bodyType, OutfitType.MED);
-            var HvyFileName = GetVanillaArmorFileName(bodyType, OutfitType.HVY);
+            const string kroArmorFileName = "BIOG_KRO_ARM_AMM";
             var CthFileName = GetVanillaArmorFileName(bodyType, OutfitType.CTH);
             var MedHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.MED);
             var HvyHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.HVY);
 
             // add all vanilla armor variants into positive IDs less than 100 (only goes up to 61)
             // MEDa variants. There are not light Korgan armor meshes, and no other medium variants
-            AddVanillaOutfitSpecs(bodyConfig, 1, MedFileName, OutfitType.MED, 0, bodyType, 11, 1, true);
+            AddVanillaOutfitSpecs(bodyConfig, 1, kroArmorFileName, OutfitType.MED, 0, bodyType, 11, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 1, MedHelmetFileName, OutfitType.MED, 0, bodyType, 11, 1, suppressBreather: true, hideHead: true);
 
             // Heavy armor variants
-            AddVanillaOutfitSpecs(bodyConfig, 12, HvyFileName, OutfitType.HVY, 0, bodyType, 12, 1, true);
+            AddVanillaOutfitSpecs(bodyConfig, 12, kroArmorFileName, OutfitType.HVY, 0, bodyType, 12, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 12, HvyHelmetFileName, OutfitType.HVY, 0, bodyType, 12, 1, suppressBreather: true, hideHead: true);
-            AddVanillaOutfitSpecs(bodyConfig, 24, HvyFileName, OutfitType.HVY, 1, bodyType, 1, 1, true);
+            AddVanillaOutfitSpecs(bodyConfig, 24, kroArmorFileName, OutfitType.HVY, 1, bodyType, 1, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 24, HvyHelmetFileName, OutfitType.HVY, 1, bodyType, 1, 1, suppressBreather: true, hideHead: true);
             // this is the fun glowy ones
-            AddVanillaOutfitSpecs(bodyConfig, 25, HvyFileName, OutfitType.HVY, 2, bodyType, 3, 1, true);
+            AddVanillaOutfitSpecs(bodyConfig, 25, kroArmorFileName, OutfitType.HVY, 2, bodyType, 3, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 25, HvyHelmetFileName, OutfitType.HVY, 2, bodyType, 3, 1, suppressBreather: true, hideHead: true);
 
             // Add CTH vanilla meshes (100-105)
@@ -548,9 +543,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             ];
             breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs.Select(x => x.OutputValue()));
 
-            var LgtFileName = GetVanillaArmorFileName(bodyType, OutfitType.LGT);
-            var MedFileName = GetVanillaArmorFileName(bodyType, OutfitType.MED);
-            var HvyFileName = GetVanillaArmorFileName(bodyType, OutfitType.HVY);
+            const string turArmorFileName = "BIOG_TUR_ARM_AMM";
+            //var LgtFileName = GetVanillaArmorFileName(bodyType, OutfitType.LGT);
+            //var MedFileName = GetVanillaArmorFileName(bodyType, OutfitType.MED);
+            //var HvyFileName = GetVanillaArmorFileName(bodyType, OutfitType.HVY);
             var CthFileName = GetVanillaArmorFileName(bodyType, OutfitType.CTH);
             var LgtHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.LGT);
             var MedHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.MED);
@@ -560,20 +556,20 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             // add all vanilla armor variants into positive IDs less than 100
             // LGTa
-            AddVanillaOutfitSpecs(bodyConfig, 1, LgtFileName, OutfitType.LGT, 0, bodyType, 15, 1, true);
+            AddVanillaOutfitSpecs(bodyConfig, 1, turArmorFileName, OutfitType.LGT, 0, bodyType, 15, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 1, LgtHelmetFileName, OutfitType.LGT, 0, bodyType, 15, 1, hideHair: true);
 
             // LGTb
             // this is the Phantom armor. technically it has three material variants, but the other two are just blue and yellow LEDs that don't even match the red of the rest of the armor, so I am ignoring them.
-            AddVanillaOutfitSpecs(bodyConfig, 16, LgtFileName, OutfitType.LGT, 1, bodyType, 1, 1, true);
+            AddVanillaOutfitSpecs(bodyConfig, 16, turArmorFileName, OutfitType.LGT, 1, bodyType, 1, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 16, LgtHelmetFileName, OutfitType.LGT, 1, bodyType, 1, 1, hideHair: true);
 
             // MEDa
-            AddVanillaOutfitSpecs(bodyConfig, 17, MedFileName, OutfitType.MED, 0, bodyType, 16, 1, true);
+            AddVanillaOutfitSpecs(bodyConfig, 17, turArmorFileName, OutfitType.MED, 0, bodyType, 16, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 17, MedHelmetFileName, OutfitType.MED, 0, bodyType, 16, 1, hideHead: true, suppressBreather: true);
 
             // HVYa
-            AddVanillaOutfitSpecs(bodyConfig, 33, HvyFileName, OutfitType.HVY, 0, bodyType, 15, 1, true);
+            AddVanillaOutfitSpecs(bodyConfig, 33, turArmorFileName, OutfitType.HVY, 0, bodyType, 15, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 33, HvyHelmetFileName, OutfitType.HVY, 0, bodyType, 15, 1, hideHair: true);
 
             // Add CTH vanilla meshes (100+)
@@ -649,12 +645,11 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             ];
             breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs.Select(x => x.OutputValue()));
 
-            var LgtFileName = GetVanillaArmorFileName(bodyType, OutfitType.LGT);
+            const string qrnArmorFileName = "BIOG_QRN_ARM_AMM";
 
             // add all vanilla armor variants into positive IDs less than 100
             // Tali is the only vanilla Quarian, and she only has 6 color/texture variants of the same LGTa mesh
-            AddVanillaOutfitSpecs(bodyConfig, 1, LgtFileName, OutfitType.LGT, 0, "QRN_FAC", 6, 2);
-            // TODO add some theoretical helmet support
+            AddVanillaOutfitSpecs(bodyConfig, 1, qrnArmorFileName, OutfitType.LGT, 0, "QRN_FAC", 6, 2);
 
             configs.Add(bodyConfig);
             configs.Add(helmetConfig);
