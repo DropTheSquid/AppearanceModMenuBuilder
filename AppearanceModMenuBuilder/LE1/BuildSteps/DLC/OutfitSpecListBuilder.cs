@@ -293,62 +293,72 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             specialSpecs = [
                 //; -10 and on are breathers not matched to a specific outfit, which is the vanilla player and squadmate behavior
+                // -15 is the NPC faceplate (TODO match colors better; I'm thinking at least a neutral black/gray)
+                new SimpleBreatherSpecItem(-15, "BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MDL", ["BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_1a"])
+                {
+                    SuppressVisor = true
+                },
                 // -14 is Kaidan's faceplate
-                new SimpleBreatherSpecItem(-14, "BIOG_HMM_HGR_MED_R.BRTb.HMM_BRTb_MED_MDL", ["BIOG_HMM_HGR_MED_R.BRTb.HMM_BRT_MEDb_Mat_1a", "BIOG_HMM_HGR_MED_R.BRTb.HMM_BRTb_MED_MAT_2a"]),
-                // -13 looks like Ashley's default faceplate
-                new SimpleBreatherSpecItem(-13, "BIOG_HMM_HGR_LGT_R.BRT.HMM_HGR_LGTa_BRT_MDL", ["BIOG_HMM_HGR_LGT_R.BRT.HMM_HGR_LGTa_BRT_MAT_1a"]),
-                // -12 will be Liara's (need to port to male height I think?)
-                //new SimpleBreatherSpecItem(-12, "BIOG_HMF_HGR_MED_R.BRT.HMF_BRT_MEDb_MDL", ["BIOG_HMF_HGR_MED_R.BRT.HMF_BRT_MEDa_MAT_1a"]),
+                new SimpleBreatherSpecItem(-14, "BIOG_HMM_BRT_AMM.Kaidan.HMM_BRT_Kaidan_MDL", ["BIOG_HMM_BRT_AMM.Kaidan.HMM_BRT_Kaidan_Mat_1a", "BIOG_HMM_BRT_AMM.Kaidan.HMM_BRT_Kaidan_Mat_2a"])
+                {
+                    SuppressVisor = true
+                },
+                // TODO port these to female height
+                // -13 is Ashley's default faceplate
+                //new SimpleBreatherSpecItem(-13, "BIOG_HMM_BRT_AMM.Ashley.HMM_BRT_Ashley_MDL", ["BIOG_HMM_BRT_AMM.Ashley.HMM_BRT_Ashley_MAT_1a"]),
+                //// -12 is Liara's
+                //new SimpleBreatherSpecItem(-12, "BIOG_HMM_BRT_AMM.Liara.HMM_BRT_Liara_MDL", ["BIOG_HMM_BRT_AMM.Liara.HMM_BRT_Liara_MAT_1a"]),
                 // -11 is Shepard's
-                new SimpleBreatherSpecItem(-11, "BIOG_HMM_HGR_HVY_R.BRT.HMM_BTR_HVYb_MDL", ["BIOG_HMM_HGR_HVY_R.BRT.HMM_BTR_HVYb_MAT_1a"]),
+                new SimpleBreatherSpecItem(-11, "BIOG_HMM_BRT_AMM.Shepard.HMM_BRT_Shepard_MDL", ["BIOG_HMM_BRT_AMM.Shepard.HMM_BRT_Shepard_MAT_1a"]),
                 // TODO a special loaded spec for the NPC faceplate in -10
-                //+breatherSpecs = (Id = -15, Mesh = "BIOG_AMM_HMF_HGR.BRT.HVYa.HMF_BRT_HVYa_MDL", Materials = ("BIOG_AMM_HMF_HGR.BRT.HVYa.HMF_BRT_HVYa_MAT_Default"), suppressVisor = true, comment = "NPC faceplate in black/Gray to match any outfit")
                 //+ breatherSpecs = (Id = -10, specPath = "AMM_BreatherSpec.NPCFaceplateBreatherSpec", comment = "NPC faceplate spec; will look for a helmet with an id matching the armor id and use that if it exists. Otherwise fall back to vanilla faceplate")
-                //TODO some male breathers
+                //; 0 to - 9 are special cases with specific behavior, reserved and not species specific
                 new LoadedSpecItem(-2, "Mod_GameContent.NoBreatherSpec"),
                 new LoadedSpecItem(-1, "Mod_GameContent.VanillaBreatherSpec"),
                 new LoadedSpecItem(0, "Mod_GameContent.VanillaBreatherSpec")
             ];
+
             breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs.Select(x => x.OutputValue()));
 
             const string hmmArmorFileName = "BIOG_HMM_ARM_AMM";
+            const string hmmHelmetFileName = "BIOG_HMM_HGR_AMM";
+
             var NkdFileName = GetVanillaArmorFileName(bodyType, OutfitType.NKD);
             var CthFileName = GetVanillaArmorFileName(bodyType, OutfitType.CTH);
-            var LgtHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.LGT);
-            var MedHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.MED);
-            var HvyHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.HVY);
 
-            var visorMesh = new AppearanceMeshPaths("BIOG_HMM_HGR_HVY_R.HVYa.HMM_VSR_HVYa_MDL", ["BIOG_HMM_HGR_HVY_R.HVYa.HMM_VSR_HVYa_MAT_1a"]);
+            // this is the visor from Visor Clipping Fix version 1.1 by Oakstar519, also included in LE1CP
+            // https://www.nexusmods.com/masseffectlegendaryedition/mods/1801
+            var visorMesh = new AppearanceMeshPaths($"{hmmHelmetFileName}.VSR.HMM_VSR_MDL", [$"{hmmHelmetFileName}.VSR.HMM_VSR_MAT_1a"]);
 
             // add all vanilla armor variants into positive IDs less than 100 (only goes up to 61); matches HMF ids
             // LGTa variants
             AddVanillaOutfitSpecs(bodyConfig, 1, hmmArmorFileName, OutfitType.LGT, 0, bodyType, 16, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 1, LgtHelmetFileName, OutfitType.LGT, 0, bodyType, 16, 1, visorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(helmetConfig, 1, hmmHelmetFileName, OutfitType.LGT, 0, bodyType, 16, 1, visorMesh, hideHair: true);
 
             // LGTb: Shepard's Onyx armor with N7 logo
             AddVanillaOutfitSpecs(bodyConfig, 17, hmmArmorFileName, OutfitType.LGT, 1, bodyType, 1, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 17, LgtHelmetFileName, OutfitType.LGT, 1, bodyType, 1, 1, visorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(helmetConfig, 17, hmmHelmetFileName, OutfitType.LGT, 1, bodyType, 1, 1, visorMesh, hideHair: true);
             // Note that there is no LGTc for HMM, and I am intentionally skipping id 18
 
             // MEDa variants
             AddVanillaOutfitSpecs(bodyConfig, 19, hmmArmorFileName, OutfitType.MED, 0, bodyType, 16, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 19, MedHelmetFileName, OutfitType.MED, 0, bodyType, 16, 1, visorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(helmetConfig, 19, hmmHelmetFileName, OutfitType.MED, 0, bodyType, 16, 1, visorMesh, hideHair: true);
 
             // MEDb: Shep's N7 Onyx Armor
             AddVanillaOutfitSpecs(bodyConfig, 35, hmmArmorFileName, OutfitType.MED, 1, bodyType, 1, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 35, MedHelmetFileName, OutfitType.MED, 1, bodyType, 1, 1, visorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(helmetConfig, 35, hmmHelmetFileName, OutfitType.MED, 1, bodyType, 1, 1, visorMesh, hideHair: true);
 
             // MEDc: Assymmetric tintable armor. never used by NPCs, only usable by player using console commands or Black Market License
             AddVanillaOutfitSpecs(bodyConfig, 36, hmmArmorFileName, OutfitType.MED, 2, bodyType, 9, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 36, MedHelmetFileName, OutfitType.MED, 2, bodyType, 9, 1, visorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(helmetConfig, 36, hmmHelmetFileName, OutfitType.MED, 2, bodyType, 9, 1, visorMesh, hideHair: true);
 
             // HVYa variants
             AddVanillaOutfitSpecs(bodyConfig, 45, hmmArmorFileName, OutfitType.HVY, 0, bodyType, 16, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 45, HvyHelmetFileName, OutfitType.HVY, 0, bodyType, 16, 1, visorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(helmetConfig, 45, hmmHelmetFileName, OutfitType.HVY, 0, bodyType, 16, 1, visorMesh, hideHair: true);
 
             // HVYb: Shep's N7 Onyx armor
             AddVanillaOutfitSpecs(bodyConfig, 61, hmmArmorFileName, OutfitType.HVY, 1, bodyType, 1, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 61, HvyHelmetFileName, OutfitType.HVY, 1, bodyType, 1, 1, visorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(helmetConfig, 61, hmmHelmetFileName, OutfitType.HVY, 1, bodyType, 1, 1, visorMesh, hideHair: true);
 
             // add all the non armor outfits for male humans to the menu
             AddMenuEntries(humanOutfitMenus.NonArmor, 100, 31, EGender.Male);

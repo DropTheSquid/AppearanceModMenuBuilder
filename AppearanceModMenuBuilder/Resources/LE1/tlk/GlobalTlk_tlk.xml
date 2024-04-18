@@ -12,7 +12,7 @@
 		<flags>1</flags>
 		<data>Customize Appearance</data>
 	</string>
-	<!-- shown when you exit the menu in the proluge. Should update the text to refect new ways of accessing -->
+	<!-- shown when you exit the menu in the proluge. Should update the text to refl ect new ways of accessing -->
 	<string>
 		<id>210210212</id>
 		<flags>1</flags>
@@ -187,9 +187,16 @@ You can customize characters' appearances at any time from the Inventory screen 
 		<flags>1</flags>
 		<data>Spectre</data>
 	</string>
+	<!-- submenu name -->
 	<string>
 		<id>210210244</id>
 		<flags>1</flags>
 		<data>Breather</data>
+	</string>
+	<!-- name for the breather NPCs use that covers their full face -->
+	<string>
+		<id>210210245</id>
+		<flags>1</flags>
+		<data>NPC</data>
 	</string>
 </tlkFile>

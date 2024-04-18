@@ -401,7 +401,9 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             {
                 // "Ashley"
                 SrCenterText = 168842,
-                ApplyBreatherId = -13
+                ApplyBreatherId = -13,
+                // TODO remove the gender restriction once I have ported the mesh for male
+                Gender = EGender.Female
             });
             humanOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
             {
@@ -419,9 +421,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             });
             humanOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
             {
-                // TODO put a real stringref here
-                // "Test"
-                SrCenterText = 182562,
+                // "NPC"
+                SrCenterText = 210210245,
                 ApplyBreatherId = -15,
             });
             // TODO put some more specs in here
