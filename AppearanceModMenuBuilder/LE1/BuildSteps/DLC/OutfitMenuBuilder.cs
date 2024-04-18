@@ -416,8 +416,13 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 // "Kaidan"
                 SrCenterText = 151316,
                 ApplyBreatherId = -14,
-                // TODO remove the gender restriction once I have ported the mesh for female
-                //Gender = EGender.Male
+            });
+            humanOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
+            {
+                // TODO put a real stringref here
+                // "Test"
+                SrCenterText = 182562,
+                ApplyBreatherId = -15,
             });
             // TODO put some more specs in here
 

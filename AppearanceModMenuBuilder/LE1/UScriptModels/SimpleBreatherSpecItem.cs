@@ -19,6 +19,12 @@
             set => SetStruct(nameof(VisorMeshOverride), value);
         }
 
+        public bool? SuppressVisor
+        {
+            get => GetBool(nameof(SuppressVisor));
+            set => SetBool(nameof(SuppressVisor), value);
+        }
+
         public bool? HideHair
         {
             get => GetBool(nameof(HideHair));

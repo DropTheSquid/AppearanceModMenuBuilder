@@ -132,21 +132,27 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 new LoadedSpecItem(0, "Mod_GameContent.VanillaHelmetSpec")
             ];
             helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs.Select(x => x.OutputValue()));
+            asariHelmetConfig.AddArrayEntries("helmetSpecs", specialSpecs.Select(x => x.OutputValue()));
 
             specialSpecs = [
                 //; -10 and on are breathers not matched to a specific outfit, which is the vanilla player and squadmate behavior
+                // -15 is the NPC faceplate (TODO match colors better; I'm thinking at least a neutral black/gray)
+                new SimpleBreatherSpecItem(-15, "BIOG_HMF_BRT_AMM.NPC.HMF_BRT_NPC_MDL", ["BIOG_HMF_BRT_AMM.NPC.HMF_BRT_NPC_MAT_1a"])
+                {
+                    SuppressVisor = true
+                },
                 // -14 is Kaidan's faceplate (ported a bit from LE2)
-                new SimpleBreatherSpecItem(-14, "AMM_BreathersTest.HMF_Kaidan_Faceplate.HMF_BRTa_SBM_MDL", ["AMM_BreathersTest.HMF_Kaidan_Faceplate.HMM_BRT_MEDb_Mat_1a", "AMM_BreathersTest.HMF_Kaidan_Faceplate.HMM_BRTb_MED_MAT_2a"]),
+                new SimpleBreatherSpecItem(-14, "BIOG_HMF_BRT_AMM.Kaidan.HMF_BRT_Kaidan_MDL", ["BIOG_HMF_BRT_AMM.Kaidan.HMM_BRT_Kaidan_Mat_1a", "BIOG_HMF_BRT_AMM.Kaidan.HMM_BRT_Kaidan_Mat_2a"])
+                {
+                    SuppressVisor = true
+                },
                 // -13 is Ashley's default faceplate
-                new SimpleBreatherSpecItem(-13, "BIOG_HMF_HGR_LGT_R.BRT.HMF_BRT_LGT_MDL", ["BIOG_HMF_HGR_LGT_R.BRT.HMF_HGR_LGTa_BRT_MAT_1a"]),
+                new SimpleBreatherSpecItem(-13, "BIOG_HMF_BRT_AMM.Ashley.HMF_BRT_Ashley_MDL", ["BIOG_HMF_BRT_AMM.Ashley.HMF_BRT_Ashley_MAT_1a"]),
                 // -12 is Liara's
-                new SimpleBreatherSpecItem(-12, "BIOG_HMF_HGR_MED_R.BRT.HMF_BRT_MEDb_MDL", ["BIOG_HMF_HGR_MED_R.BRT.HMF_BRT_MEDa_MAT_1a"]),
+                new SimpleBreatherSpecItem(-12, "BIOG_HMF_BRT_AMM.Liara.HMF_BRT_Liara_MDL", ["BIOG_HMF_BRT_AMM.Liara.HMF_BRT_Liara_MAT_1a"]),
                 // -11 is Shepard's
-                new SimpleBreatherSpecItem(-11, "BIOG_HMF_HGR_HVY_R.BRT.HMF_BRT_HVYb_MDL", ["BIOG_HMF_HGR_HVY_R.BRT.HMF_BRT_HVY_MAT_1a"]),
+                new SimpleBreatherSpecItem(-11, "BIOG_HMF_BRT_AMM.Shepard.HMF_BRT_Shepard_MDL", ["BIOG_HMF_BRT_AMM.Shepard.HMF_BRT_Shepard_MAT_1a"]),
                 // TODO a special loaded spec for the NPC faceplate in -10
-                //+breatherSpecs = (Id = -15, Mesh = "BIOG_AMM_HMF_HGR.BRT.HVYa.HMF_BRT_HVYa_MDL", Materials = ("BIOG_AMM_HMF_HGR.BRT.HVYa.HMF_BRT_HVYa_MAT_Default"), suppressVisor = true, comment = "NPC faceplate in black/Gray to match any outfit")
-                //; TODO port this one to female height
-                //; +breatherSpecs = (Id = -14, Mesh = "BIOG_AMM_HMM_HGR.BRT.MEDb.HMM_BRTb_MED_MDL", Materials = ("BIOG_AMM_HMM_HGR.BRT.MEDb.HMM_BRT_MEDb_Mat_1a", "BIOG_AMM_HMM_HGR.BRT.MEDb.HMM_BRTb_MED_MAT_2a"), suppressVisor = true, comment = "Kaidan faceplate")
                 //+ breatherSpecs = (Id = -10, specPath = "AMM_BreatherSpec.NPCFaceplateBreatherSpec", comment = "NPC faceplate spec; will look for a helmet with an id matching the armor id and use that if it exists. Otherwise fall back to vanilla faceplate")
                 //; 0 to - 9 are special cases with specific behavior, reserved and not species specific
                 new LoadedSpecItem(-2, "Mod_GameContent.NoBreatherSpec"),
@@ -156,81 +162,55 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs.Select(x => x.OutputValue()));
 
             const string hmfArmorFileName = "BIOG_HMF_ARM_AMM";
+            const string hmfHelmetFileName = "BIOG_HMF_HGR_AMM";
+            const string asaHelmetFileName = "BIOG_ASA_HGR_AMM";
             var NkdClothesFileName = GetVanillaArmorFileName(bodyType, OutfitType.NKD);
             var CthClothesFileName = GetVanillaArmorFileName(bodyType, OutfitType.CTH);
-            var LgtHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.LGT);
-            var MedHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.MED);
-            var HvyHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.HVY);
-            var LgtAsariHelmetFileName = GetVanillaHelmetFileName(asariBodyType, OutfitType.LGT);
-            var MedAsariHelmetFileName = GetVanillaHelmetFileName(asariBodyType, OutfitType.MED);
-            var HvyAsariHelmetFileName = GetVanillaHelmetFileName(asariBodyType, OutfitType.HVY);
 
-            var visorMesh = new AppearanceMeshPaths("BIOG_HMF_HGR_HVY_R.HVYa.HMF_VSR_HVYa_MDL", ["BIOG_HMF_HGR_HVY_R.HVYa.HMF_VSR_HVYa_MAT_1a"]);
-            var asariVisorMesh = new AppearanceMeshPaths("BIOG_ASA_HGR_HVY_R.HVYa.ASA_VSR_HVYa_MDL", ["BIOG_ASA_HGR_HVY_R.HVYa.ASA_VSR_HVYa_MAT_1a"]);
+            var visorMesh = new AppearanceMeshPaths($"{hmfHelmetFileName}.VSR.HMF_VSR_MDL", [$"{hmfHelmetFileName}.VSR.HMF_VSR_MAT_1a"]);
+            var asariVisorMesh = new AppearanceMeshPaths($"{asaHelmetFileName}.VSR.ASA_VSR_MDL", [$"{asaHelmetFileName}.VSR.ASA_VSR_MAT_1a"]);
 
             // add all vanilla armor variants into positive IDs less than 100 (only goes up to 61)
             // LGTa variants; Most Light armor appearances fall under this
             AddVanillaOutfitSpecs(bodyConfig, 1, hmfArmorFileName, OutfitType.LGT, 0, bodyType, 16, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 1, LgtHelmetFileName, OutfitType.LGT, 0, bodyType, 16, 1, visorMesh, hideHair: true);
-            AddVanillaHelmetSpecs(asariHelmetConfig, 1, LgtAsariHelmetFileName, OutfitType.LGT, 0, asariBodyType, 16, 1, asariVisorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(helmetConfig, 1, hmfHelmetFileName, OutfitType.LGT, 0, bodyType, 16, 1, visorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(asariHelmetConfig, 1, asaHelmetFileName, OutfitType.LGT, 0, asariBodyType, 16, 1, asariVisorMesh, hideHair: true);
 
             // LGTb; This is the N7 Onyx Armor that Shepard wears
             AddVanillaOutfitSpecs(bodyConfig, 17, hmfArmorFileName, OutfitType.LGT, 1, bodyType, 1, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 17, LgtHelmetFileName, OutfitType.LGT, 1, bodyType, 1, 1, visorMesh, hideHair: true);
-            // manually add this, as the "correct" materials don't look right, eg the stripe is missing
-            asariHelmetConfig.AddArrayEntries(
-                "helmetSpecs",
-                new SimpleHelmetSpecItem(17, "BIOG_ASA_HGR_LGT_R.LGTb.ASA_HGR_LGTb_MDL", ["BIOG_HMF_HGR_LGT_R.LGTb.HMF_HGR_LGTb_Mat_1a"], asariVisorMesh)
-                {
-                    HideHair = true
-                }.OutputValue());
+            AddVanillaHelmetSpecs(helmetConfig, 17, hmfHelmetFileName, OutfitType.LGT, 1, bodyType, 1, 1, visorMesh, hideHair: true);
+            // Note that this one needed to be manually corrected to use a clone of the HMF LGTb material to look correct
+            AddVanillaHelmetSpecs(asariHelmetConfig, 17, asaHelmetFileName, OutfitType.LGT, 1, asariBodyType, 1, 1, asariVisorMesh, hideHair: true);
             // LGTc; This is the Asari Commando armor, normally not ever used by player characters; only used by NPC Asari
             AddVanillaOutfitSpecs(bodyConfig, 18, hmfArmorFileName, OutfitType.LGT, 2, bodyType, 1, 1, true);
-            // manually add this one because there is not actually a corresponding helmet for HMF, using HMF LGTa model and ASA materials
-            helmetConfig.AddArrayEntries(
-                "helmetSpecs",
-                new SimpleHelmetSpecItem(18, "BIOG_HMF_HGR_LGT_R.LGTa.HMF_HGR_LGTa_MDL", ["BIOG_ASA_HGR_LGT_R.LGTc.ASA_HGR_LGTc_MAT_1a"], visorMesh)
-                {
-                    HideHair = true
-                }.OutputValue());
-            AddVanillaHelmetSpecs(asariHelmetConfig, 18, LgtAsariHelmetFileName, OutfitType.LGT, 2, asariBodyType, 1, 1, asariVisorMesh, hideHair: true);
+            // note that this needed to be manually created; mesh is a clone of LGTa, material is a clone of ASA LGTc
+            AddVanillaHelmetSpecs(helmetConfig, 18, hmfHelmetFileName, OutfitType.LGT, 2, bodyType, 1, 1, visorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(asariHelmetConfig, 18, asaHelmetFileName, OutfitType.LGT, 2, asariBodyType, 1, 1, asariVisorMesh, hideHair: true);
 
             // MEDa variants; Most Medium armor appearances fall under this
             AddVanillaOutfitSpecs(bodyConfig, 19, hmfArmorFileName, OutfitType.MED, 0, bodyType, 16, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 19, MedHelmetFileName, OutfitType.MED, 0, bodyType, 16, 1, visorMesh, hideHair: true);
-            AddVanillaHelmetSpecs(asariHelmetConfig, 19, MedAsariHelmetFileName, OutfitType.MED, 0, asariBodyType, 16, 1, asariVisorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(helmetConfig, 19, hmfHelmetFileName, OutfitType.MED, 0, bodyType, 16, 1, visorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(asariHelmetConfig, 19, asaHelmetFileName, OutfitType.MED, 0, asariBodyType, 16, 1, asariVisorMesh, hideHair: true);
 
             // MEDb; this is the N7 Onyx armor that Shepard wears
             AddVanillaOutfitSpecs(bodyConfig, 35, hmfArmorFileName, OutfitType.MED, 1, bodyType, 1, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 35, MedHelmetFileName, OutfitType.MED, 1, bodyType, 1, 1, visorMesh, hideHair: true);
-            AddVanillaHelmetSpecs(asariHelmetConfig, 35, MedAsariHelmetFileName, OutfitType.MED, 1, asariBodyType, 1, 1, asariVisorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(helmetConfig, 35, hmfHelmetFileName, OutfitType.MED, 1, bodyType, 1, 1, visorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(asariHelmetConfig, 35, asaHelmetFileName, OutfitType.MED, 1, asariBodyType, 1, 1, asariVisorMesh, hideHair: true);
             // MEDc Asymmetric tintable armor. Not used by any equipment obtainable in vanilla or by any NPCs, but can be accessed using Black Market Licenses/console commands
             AddVanillaOutfitSpecs(bodyConfig, 36, hmfArmorFileName, OutfitType.MED, 2, bodyType, 9, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 36, MedHelmetFileName, OutfitType.MED, 2, bodyType, 9, 1, visorMesh, hideHair: true);
-            // note that I have skipped the 9th helmet config due to the issue below
-            AddVanillaHelmetSpecs(asariHelmetConfig, 36, MedAsariHelmetFileName, OutfitType.MED, 2, asariBodyType, 8, 1, asariVisorMesh);
-            // manually add this one because there is not actually an ASA material. Use the HMF material with the ASA helmet
-            asariHelmetConfig.AddArrayEntries(
-                "helmetSpecs",
-                new SimpleHelmetSpecItem(44, "BIOG_ASA_HGR_MED_R.MEDc.ASA_HGR_MEDc_MDL", ["BIOG_HMF_HGR_MED_R.MEDc.HMF_HGR_MEDc_Mat_9a"], asariVisorMesh)
-                {
-                    HideHair = true
-                }.OutputValue());
+            AddVanillaHelmetSpecs(helmetConfig, 36, hmfHelmetFileName, OutfitType.MED, 2, bodyType, 9, 1, visorMesh, hideHair: true);
+            // note that I had to clone the HMF MEDc material 9 as it did not exist for ASA
+            AddVanillaHelmetSpecs(asariHelmetConfig, 36, asaHelmetFileName, OutfitType.MED, 2, asariBodyType, 9, 1, asariVisorMesh);
 
             // HVYa variants. Most heavy armor falls under this
             AddVanillaOutfitSpecs(bodyConfig, 45, hmfArmorFileName, OutfitType.HVY, 0, bodyType, 16, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 45, HvyHelmetFileName, OutfitType.HVY, 0, bodyType, 16, 1, visorMesh, hideHair: true);
-            AddVanillaHelmetSpecs(asariHelmetConfig, 45, HvyAsariHelmetFileName, OutfitType.HVY, 0, asariBodyType, 16, 1, asariVisorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(helmetConfig, 45, hmfHelmetFileName, OutfitType.HVY, 0, bodyType, 16, 1, visorMesh, hideHair: true);
+            AddVanillaHelmetSpecs(asariHelmetConfig, 45, asaHelmetFileName, OutfitType.HVY, 0, asariBodyType, 16, 1, asariVisorMesh, hideHair: true);
             // HVYb. This is the N7 Onyx Armor Shepard wears
             AddVanillaOutfitSpecs(bodyConfig, 61, hmfArmorFileName, OutfitType.HVY, 1, bodyType, 1, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 61, HvyHelmetFileName, OutfitType.HVY, 1, bodyType, 1, 1, visorMesh, hideHair: true);
-            // There is no HVYb mesh or material for ASA. trying HVYa with the HMF material
-            asariHelmetConfig.AddArrayEntries(
-                "helmetSpecs",
-                new SimpleHelmetSpecItem(61, "BIOG_ASA_HGR_HVY_R.HVYa.ASA_HGR_HVYa_MDL", ["BIOG_HMF_HGR_HVY_R.HVYb.HMF_HGR_HVYb_Mat_1a"], asariVisorMesh)
-                {
-                    HideHair = true
-                }.OutputValue());
+            AddVanillaHelmetSpecs(helmetConfig, 61, hmfHelmetFileName, OutfitType.HVY, 1, bodyType, 1, 1, visorMesh, hideHair: true);
+            // needed to clone this as there was no ASA HVYb mesh or material. mesh cloned from HVYa, material cloned from HMF HVYb mat
+            AddVanillaHelmetSpecs(asariHelmetConfig, 61, asaHelmetFileName, OutfitType.HVY, 1, asariBodyType, 1, 1, asariVisorMesh, hideHair: true);
 
             // add entries for the non armor outfits
             AddMenuEntries(humanOutfitMenus.NonArmor, 100, 38, EGender.Female);

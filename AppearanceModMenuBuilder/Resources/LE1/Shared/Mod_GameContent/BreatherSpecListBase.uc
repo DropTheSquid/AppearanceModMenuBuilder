@@ -11,6 +11,7 @@ struct BreatherSpecItem
 	// or BreatherMesh plus any of the below for non default
     var AppearanceMeshPaths BreatherMesh;
 	var AppearanceMeshPaths VisorMeshOverride;
+	var bool suppressVisor;
     var bool hideHair;
     var bool hideHead;
 };
@@ -66,7 +67,7 @@ public function bool GetBreatherSpecById(int Id, out BreatherSpecBase breatherSp
 		simpleSpec = new Class'SimpleBreatherSpec';
 		simpleSpec.breatherMesh = item.breatherMesh;
 		simpleSpec.OverrideVisorMesh = item.VisorMeshOverride;
-		// simpleSpec.bSuppressVisor = item.suppressVisor;
+		simpleSpec.bSuppressVisor = item.suppressVisor;
 		simpleSpec.bHideHair = item.hideHair;
 		simpleSpec.bHideHead = item.hideHead;
 		// simpleSpec.breatherTypeOverride = item.BreatherSpec;
