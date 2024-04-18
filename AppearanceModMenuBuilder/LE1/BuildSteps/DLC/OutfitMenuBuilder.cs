@@ -388,9 +388,9 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         {
             var configMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-amm_Submenus.m3cd");
 
-            var (humanOutfitMenus, turianOutfitMenus, quarianOutfitMenus, kroganOutfitMenus) = InitCommonMenus(configMergeFile);
+            var (humanOutfitMenus, turianOutfitMenus, _, _) = InitCommonMenus(configMergeFile);
 
-            // hmm breathers
+            // hmm/hmf breathers
             humanOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
             {
                 // "Shepard"
@@ -425,8 +425,14 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 SrCenterText = 210210245,
                 ApplyBreatherId = -15,
             });
-            // TODO put some more specs in here
 
+            // default Turian LGT and HVY breather
+            turianOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
+            {
+                // "Turian"
+                SrCenterText = 165651,
+                ApplyBreatherId = -10,
+            });
         }
         private static void AddMenuEntriesFromVanillaArmors(ModBuilderContext context, IEnumerable<VanillaArmorSet> armorSets)
         {

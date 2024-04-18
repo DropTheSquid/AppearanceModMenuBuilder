@@ -443,23 +443,23 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs.Select(x => x.OutputValue()));
 
             const string kroArmorFileName = "BIOG_KRO_ARM_AMM";
-            var CthFileName = GetVanillaArmorFileName(bodyType, OutfitType.CTH);
-            var MedHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.MED);
-            var HvyHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.HVY);
+            const string kroHelmetFileName = "BIOG_KRO_HGR_AMM";
 
-            // add all vanilla armor variants into positive IDs less than 100 (only goes up to 61)
+            var CthFileName = GetVanillaArmorFileName(bodyType, OutfitType.CTH);
+
+            // add all vanilla armor variants into positive IDs less than 100
             // MEDa variants. There are not light Korgan armor meshes, and no other medium variants
             AddVanillaOutfitSpecs(bodyConfig, 1, kroArmorFileName, OutfitType.MED, 0, bodyType, 11, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 1, MedHelmetFileName, OutfitType.MED, 0, bodyType, 11, 1, suppressBreather: true, hideHead: true);
+            AddVanillaHelmetSpecs(helmetConfig, 1, kroHelmetFileName, OutfitType.MED, 0, bodyType, 11, 1, suppressBreather: true, hideHead: true);
 
             // Heavy armor variants
             AddVanillaOutfitSpecs(bodyConfig, 12, kroArmorFileName, OutfitType.HVY, 0, bodyType, 12, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 12, HvyHelmetFileName, OutfitType.HVY, 0, bodyType, 12, 1, suppressBreather: true, hideHead: true);
+            AddVanillaHelmetSpecs(helmetConfig, 12, kroHelmetFileName, OutfitType.HVY, 0, bodyType, 12, 1, suppressBreather: true, hideHead: true);
             AddVanillaOutfitSpecs(bodyConfig, 24, kroArmorFileName, OutfitType.HVY, 1, bodyType, 1, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 24, HvyHelmetFileName, OutfitType.HVY, 1, bodyType, 1, 1, suppressBreather: true, hideHead: true);
+            AddVanillaHelmetSpecs(helmetConfig, 24, kroHelmetFileName, OutfitType.HVY, 1, bodyType, 1, 1, suppressBreather: true, hideHead: true);
             // this is the fun glowy ones
             AddVanillaOutfitSpecs(bodyConfig, 25, kroArmorFileName, OutfitType.HVY, 2, bodyType, 3, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 25, HvyHelmetFileName, OutfitType.HVY, 2, bodyType, 3, 1, suppressBreather: true, hideHead: true);
+            AddVanillaHelmetSpecs(helmetConfig, 25, kroHelmetFileName, OutfitType.HVY, 2, bodyType, 3, 1, suppressBreather: true, hideHead: true);
 
             // Add CTH vanilla meshes (100-105)
             // Krogan casuals only get one mesh in vanilla, sad.
@@ -495,7 +495,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             var helmetConfig = GetHelmetListConfig(bodyType);
             var breatherConfig = GetBreatherListConfig(bodyType);
 
-
             // Add the special case ones
             var specialSpecs = new List<SpecItemBase>
             {
@@ -527,6 +526,12 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs.Select(x => x.OutputValue()));
 
             specialSpecs = [
+                // the default breather/visor combo for LGT and HVY (MED suppresses it, as the helmet covers the head)
+                // note that the helmet without the breather never shows the visor, and the breather, if not suppressed, always does. It's confusing
+                new SimpleBreatherSpecItem(-10, "BIOG_TUR_HGR_AMM.BRT.TUR_BRT_MDL", ["BIOG_TUR_HGR_AMM.BRT.TUR_BRT_MAT_1a"])
+                {
+                    VisorMeshOverride = new AppearanceMeshPaths("BIOG_TUR_HGR_AMM.VSR.TUR_VSR_MDL", ["BIOG_TUR_HGR_AMM.VSR.TUR_VSR_MAT_1a"])
+                },
                 new LoadedSpecItem(-2, "Mod_GameContent.NoBreatherSpec"),
                 new LoadedSpecItem(-1, "Mod_GameContent.VanillaBreatherSpec"),
                 new LoadedSpecItem(0, "Mod_GameContent.VanillaBreatherSpec")
@@ -534,33 +539,29 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs.Select(x => x.OutputValue()));
 
             const string turArmorFileName = "BIOG_TUR_ARM_AMM";
-            //var LgtFileName = GetVanillaArmorFileName(bodyType, OutfitType.LGT);
-            //var MedFileName = GetVanillaArmorFileName(bodyType, OutfitType.MED);
-            //var HvyFileName = GetVanillaArmorFileName(bodyType, OutfitType.HVY);
+            const string turHeadgearFileName = "BIOG_TUR_HGR_AMM";
+
             var CthFileName = GetVanillaArmorFileName(bodyType, OutfitType.CTH);
-            var LgtHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.LGT);
-            var MedHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.MED);
-            var HvyHelmetFileName = GetVanillaHelmetFileName(bodyType, OutfitType.HVY);
 
             //var visorMesh = new AppearanceMeshPaths("BIOG_TUR_HGR_HVY_R.HVYa.TUR_HGR_VSRa_MDL", ["BIOG_TUR_HGR_HVY_R.HVYa.TUR_VSR_HVYa_MAT_1a"]);
 
             // add all vanilla armor variants into positive IDs less than 100
             // LGTa
             AddVanillaOutfitSpecs(bodyConfig, 1, turArmorFileName, OutfitType.LGT, 0, bodyType, 15, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 1, LgtHelmetFileName, OutfitType.LGT, 0, bodyType, 15, 1, hideHair: true);
+            AddVanillaHelmetSpecs(helmetConfig, 1, turHeadgearFileName, OutfitType.LGT, 0, bodyType, 15, 1, hideHair: true);
 
             // LGTb
             // this is the Phantom armor. technically it has three material variants, but the other two are just blue and yellow LEDs that don't even match the red of the rest of the armor, so I am ignoring them.
             AddVanillaOutfitSpecs(bodyConfig, 16, turArmorFileName, OutfitType.LGT, 1, bodyType, 1, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 16, LgtHelmetFileName, OutfitType.LGT, 1, bodyType, 1, 1, hideHair: true);
+            AddVanillaHelmetSpecs(helmetConfig, 16, turHeadgearFileName, OutfitType.LGT, 1, bodyType, 1, 1, hideHair: true);
 
             // MEDa
             AddVanillaOutfitSpecs(bodyConfig, 17, turArmorFileName, OutfitType.MED, 0, bodyType, 16, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 17, MedHelmetFileName, OutfitType.MED, 0, bodyType, 16, 1, hideHead: true, suppressBreather: true);
+            AddVanillaHelmetSpecs(helmetConfig, 17, turHeadgearFileName, OutfitType.MED, 0, bodyType, 16, 1, hideHead: true, suppressBreather: true);
 
             // HVYa
             AddVanillaOutfitSpecs(bodyConfig, 33, turArmorFileName, OutfitType.HVY, 0, bodyType, 15, 1, true);
-            AddVanillaHelmetSpecs(helmetConfig, 33, HvyHelmetFileName, OutfitType.HVY, 0, bodyType, 15, 1, hideHair: true);
+            AddVanillaHelmetSpecs(helmetConfig, 33, turHeadgearFileName, OutfitType.HVY, 0, bodyType, 15, 1, hideHair: true);
 
             // Add CTH vanilla meshes (100+)
             // CTHa
