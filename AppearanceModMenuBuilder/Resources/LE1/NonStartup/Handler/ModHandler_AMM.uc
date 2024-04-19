@@ -9,9 +9,8 @@ struct menuState
     var eArmorOverrideState armorOverrideState;
     var AMM_Pawn_Parameters params;
     var AppearanceIdLookups AppearanceIdLookups;
-    // var bool bOverrideAppearanceType;
     var string appearanceTypeOverride;
-    // var eMenuHelmetOverride currentMenuHelmetOverride;
+    var eMenuHelmetOverride currentMenuHelmetOverride;
 };
 
 // Variables
@@ -22,6 +21,7 @@ var stringref srBack;
 var stringref srClose;
 var stringref srDefaultActionText;
 var stringref srOpenSubmenu;
+var stringref srSelectCharacter;
 var transient array<AppearanceItemData> currentDisplayItems;
 var transient array<AppearanceSubmenu> submenuStack;
 var string RootSubmenuPath;
@@ -80,10 +80,10 @@ private final function menuState getMenuState()
         {
             newState.armorOverrideState = currentSubmenu.armorOverride;
         }
-        // if (currentSubmenu.menuHelmetOverride != eMenuHelmetOverride.unchanged)
-        // {
-        //     newState.currentMenuHelmetOverride = currentSubmenu.menuHelmetOverride;
-        // }
+        if (currentSubmenu.menuHelmetOverride != eMenuHelmetOverride.unchanged)
+        {
+            newState.currentMenuHelmetOverride = currentSubmenu.menuHelmetOverride;
+        }
     }
     return newState;
 }
@@ -133,6 +133,8 @@ public function Close()
 	{
 		dialogHandler.Cleanup();
 	}
+	// make sure we run this. it might be redundant in many cases, but it is better to do it twice than not at all when we should
+	UpdateAllActorAppearances();
     // updater = AMM_AppearanceUpdater(Class'AMM_AppearanceUpdater'.static.GetInstance());
     // updater.appearanceTypeOverride = "";
     // updater.tempHelmetOverride = eMenuHelmetOverride.unchanged;
@@ -230,7 +232,7 @@ public function RefreshMenu(optional bool firstEnter = FALSE)
             {
                 ASSetAux2ButtonActive(TRUE, FALSE);
                 // TODO use a stringref
-				ASSetAux2ButtonText("Select Character");
+				ASSetAux2ButtonText(string(srSelectCharacter));
             }
 			if (state.pawnTag ~= "None")
             {
@@ -244,18 +246,6 @@ public function RefreshMenu(optional bool firstEnter = FALSE)
             // // LogInternal("currentMenu.pawnOverride" @ currentMenu.pawnOverride);
             pawnHandler.ForceAppearanceType(state.armorOverrideState);
         }
-        // if (TimeToWaitForPawnToSpawn > 0.0 || firstEnter)
-        // {
-        //     if (state.pawnOverride ~= "None")
-        //     {
-        //         pawnHandler.SetupUIWorldPawn("None", "");
-        //     }
-        //     else if (state.pawnOverride != "")
-        //     {
-        //         Log("Setting up pawn");
-        //         pawnHandler.SetupUIWorldPawn(state.pawnOverride, state.appearanceTypeOverride);
-        //     }
-        // }
         // comment("If the submenu you are in overrides the chosen menu helmet appearance, that takes precedence");
         // if (state.currentMenuHelmetOverride != eMenuHelmetOverride.unchanged)
         // {
@@ -852,48 +842,47 @@ public function ApplyItem(AppearanceItemData item)
             isAppearanceDirty = TRUE;
         }
     }
-    // ApplyHelmetSetting(item, state, globalVars);
+    ApplyHelmetSetting(item, state, globalVars);
 }
-// private final function ApplyHelmetSetting(AppearanceItemData item, menuState state, BioGlobalVariableTable globalVars)
-// {
-//     local int flagsPlotId;
-//     local int currentFlagsValue;
-//     local int updatedFlags;
-    
-//     flagsPlotId = state.AppearanceIdLookups.appearanceFlagsLookup.plotIntId;
-//     if (flagsPlotId != 0 && item.applyHelmetOverride != eMenuHelmetOverride.unchanged)
-//     {
-//         LogInternal("Trying to apply helmet visibility override" @ item.applyHelmetOverride @ flagsPlotId, );
-//         currentFlagsValue = globalVars.GetInt(flagsPlotId);
-//         LogInternal("Current flags" @ currentFlagsValue, );
-//         updatedFlags = Class'AppearanceFlagsManager'.static.ApplyForceHelmetState(currentFlagsValue, byte(int(item.applyHelmetOverride) - 1));
-//         LogInternal("updated flags" @ updatedFlags, );
-//         globalVars.SetInt(flagsPlotId, updatedFlags);
-//         if (currentFlagsValue != updatedFlags)
-//         {
-//             isAppearanceDirty = TRUE;
-//         }
-//     }
-//     if (item.applyHelmetVisibilityPreference != eHelmetVisibilityPreference.unchanged)
-//     {
-//         LogInternal("trying to apply a helmet visibility preference" @ item.applyHelmetVisibilityPreference, );
-//         pawnHandler.ForceHelmetAppearance(item.applyHelmetVisibilityPreference == eHelmetVisibilityPreference.preferOn);
-//         isAppearanceDirty = TRUE;
-//     }
-//     if (item.menuHelmetOverride != eMenuHelmetOverride.unchanged)
-//     {
-//         LogInternal("Setting chosen menu helmet override to" @ item.menuHelmetOverride, );
-//         if (item.menuHelmetOverride == eMenuHelmetOverride.vanilla)
-//         {
-//             chosenMenuHelmetVisibilityOverride = eMenuHelmetOverride.unchanged;
-//         }
-//         else
-//         {
-//             chosenMenuHelmetVisibilityOverride = item.menuHelmetOverride;
-//         }
-//         isAppearanceDirty = TRUE;
-//     }
-// }
+private final function ApplyHelmetSetting(AppearanceItemData item, menuState state, BioGlobalVariableTable globalVars)
+{
+	local AppearanceSettings appearanceSettings;
+    local int flagsPlotId;
+	local int updatedFlags;
+
+    flagsPlotId = state.AppearanceIdLookups.appearanceFlagsLookup.plotIntId;
+    if (flagsPlotId != 0 && item.applyHelmetOverride != eMenuHelmetOverride.unchanged)
+    {
+        // LogInternal("Trying to apply helmet visibility override" @ item.applyHelmetOverride @ flagsPlotId, );
+        appearanceSettings = class'Amm_Utilities'.static.DecodeAppearanceSettings(globalVars.GetInt(flagsPlotId));
+        // LogInternal("Current flags" @ currentFlagsValue, );
+		// TODO this is a bit brittle; it relies on the values being the same, but offset by 1
+		appearanceSettings.forceHelmetState = (item.applyHelmetOverride) - 1;
+        updatedFlags = class'Amm_Utilities'.static.EncodeAppearanceSettings(appearanceSettings);
+        // LogInternal("updated flags" @ updatedFlags, );
+        globalVars.SetInt(flagsPlotId, updatedFlags);
+		isAppearanceDirty = TRUE;
+    }
+    if (item.applyHelmetVisibilityPreference != eHelmetVisibilityPreference.unchanged)
+    {
+        // LogInternal("trying to apply a helmet visibility preference" @ item.applyHelmetVisibilityPreference, );
+        pawnHandler.SetHelmetVisibilityPreference(item.applyHelmetVisibilityPreference == eHelmetVisibilityPreference.preferOn);
+        isAppearanceDirty = TRUE;
+    }
+    // if (item.menuHelmetOverride != eMenuHelmetOverride.unchanged)
+    // {
+    //     LogInternal("Setting chosen menu helmet override to" @ item.menuHelmetOverride, );
+    //     if (item.menuHelmetOverride == eMenuHelmetOverride.vanilla)
+    //     {
+    //         chosenMenuHelmetVisibilityOverride = eMenuHelmetOverride.unchanged;
+    //     }
+    //     else
+    //     {
+    //         chosenMenuHelmetVisibilityOverride = item.menuHelmetOverride;
+    //     }
+    //     isAppearanceDirty = TRUE;
+    // }
+}
 public function EmitSettingsRemoteEvent()
 {
     EmitRemoteEvent("re_AMM");
@@ -935,5 +924,6 @@ defaultproperties
     srDefaultActionText = $177145
 	// "Open"
     srOpenSubmenu = $177824
+	srSelectCharacter = $210210217
 	movieInfo = GFXMovieInfo'Gui.ModMenu'
 }

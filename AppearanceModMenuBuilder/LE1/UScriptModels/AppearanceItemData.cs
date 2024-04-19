@@ -1,4 +1,5 @@
 ﻿using MassEffectModBuilder.Models;
+using static AppearanceModMenuBuilder.LE1.UScriptModels.AppearanceItemData;
 
 namespace AppearanceModMenuBuilder.LE1.UScriptModels
 {
@@ -46,6 +47,20 @@ namespace AppearanceModMenuBuilder.LE1.UScriptModels
             Either,
             Male,
             Female
+        }
+
+        public enum EMenuHelmetOverride
+        {
+            vanilla,
+            forcedOff,
+            forcedOn,
+            forcedFull,
+        }
+
+        public enum EHelmetVisibilityPreference
+        {
+            preferOn,
+            preferOff,
         }
 
         public int? SrCenterText
@@ -106,6 +121,18 @@ namespace AppearanceModMenuBuilder.LE1.UScriptModels
         {
             get => GetEnum<EGender>(nameof(Gender));
             set => SetEnum(nameof(Gender), value);
+        }
+
+        public EMenuHelmetOverride? ApplyHelmetOverride
+        {
+            get => GetEnum<EMenuHelmetOverride>(nameof(ApplyHelmetOverride));
+            set => SetEnum(nameof(ApplyHelmetOverride), value);
+        }
+
+        public EHelmetVisibilityPreference? ApplyHelmetVisibilityPreference
+        {
+            get => GetEnum<EHelmetVisibilityPreference>(nameof(ApplyHelmetVisibilityPreference));
+            set => SetEnum(nameof(ApplyHelmetVisibilityPreference), value);
         }
     }
 }

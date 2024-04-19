@@ -255,6 +255,18 @@ public function ForceAppearanceType(eArmorOverrideState state)
     }
 }
 
+public function SetHelmetVisibilityPreference(bool bVisible)
+{
+	local BioWorldInfo oBWI;
+    
+	if (_currentDisplayedPawn != None)
+	{
+		oBWI = BioWorldInfo(_outerMenu.oWorldInfo);
+		_currentDisplayedPawn.SetHeadGearVisiblePreference(bVisible);
+		oBWI.m_UIWorld.UpdateHeadGearVisibility(_currentDisplayedPawn);
+	}
+}
+
 // returns true if it is already loaded, false if it is happening asynchronously
 private function bool LoadFrameworkFile(string tag, string appearanceType, string fileName)
 {

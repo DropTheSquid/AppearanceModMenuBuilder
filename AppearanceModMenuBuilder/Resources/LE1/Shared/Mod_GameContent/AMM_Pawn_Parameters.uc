@@ -75,6 +75,7 @@ public function bool GetAppearanceIds(string appearanceType, out PawnAppearanceI
     PawnAppearanceIds.bodyAppearanceId = GetAppearanceIdValue(lookups.bodyAppearanceLookup, globalVars);
     PawnAppearanceIds.helmetAppearanceId = GetAppearanceIdValue(lookups.helmetAppearanceLookup, globalVars);
     PawnAppearanceIds.breatherAppearanceId = GetAppearanceIdValue(lookups.breatherAppearanceLookup, globalVars);
+	PawnAppearanceIds.m_appearanceSettings = class'AMM_Utilities'.static.DecodeAppearanceSettings(GetAppearanceIdValue(lookups.appearanceFlagsLookup, globalVars));
 	return true;
 }
 

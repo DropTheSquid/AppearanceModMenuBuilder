@@ -42,37 +42,31 @@ struct AppearanceItemData
     var array<string> aMenuParameters;
     var int applyHelmetId;
     var int applyBreatherId;
-    // var eArmorOverrideState armorOverride;
-    // var eMenuHelmetOverride menuHelmetOverride;
-    // var eMenuHelmetOverride applyHelmetOverride;
-    // var eHelmetVisibilityPreference applyHelmetVisibilityPreference;
+	// applies an override of the helmet visibility in the AMM plot ints for the character
+    var eMenuHelmetOverride applyHelmetOverride;
+	// applies a helmet visibility preference that will affect visibility outside the menu
+    var eHelmetVisibilityPreference applyHelmetVisibilityPreference;
 };
-// enum eGender
-// {
-//     Either,
-//     Male,
-//     Female,
-// };
 enum eArmorOverrideState
 {
     unchanged,
     overridden,
     equipped,
 };
-// enum eMenuHelmetOverride
-// {
-//     unchanged,
-//     vanilla,
-//     forcedOff,
-//     forcedOn,
-//     forcedFull,
-// };
-// enum eHelmetVisibilityPreference
-// {
-//     unchanged,
-//     preferOn,
-//     preferOff,
-// };
+enum eMenuHelmetOverride
+{
+    unchanged,
+    vanilla,
+    forcedOff,
+    forcedOn,
+    forcedFull,
+};
+enum eHelmetVisibilityPreference
+{
+    unchanged,
+    preferOn,
+    preferOff,
+};
 
 // Variables
 var config stringref srTitle;
@@ -88,7 +82,8 @@ var config eArmorOverrideState armorOverride;
 var transient array<string> MenuParameters;
 var config string pawnTag;
 var config string pawnAppearanceType;
-// var config eMenuHelmetOverride menuHelmetOverride;
+// overrides the visibility of the helmet in this menu and submenus, such as for previewing
+var config eMenuHelmetOverride menuHelmetOverride;
 var config bool preloadPawn;
 
 // Functions

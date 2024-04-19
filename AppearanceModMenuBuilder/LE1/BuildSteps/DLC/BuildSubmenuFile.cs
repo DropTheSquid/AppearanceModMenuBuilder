@@ -176,6 +176,50 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     ApplyHelmetId = -2
                 });
 
+                menus.Headgear.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "[1] - [2]"
+                    SrCenterText = 210210236,
+                    ApplyHelmetOverride = AppearanceItemData.EMenuHelmetOverride.vanilla,
+                    DisplayVars = ["helmet override", "vanilla"]
+                });
+                menus.Headgear.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "[1] - [2]"
+                    SrCenterText = 210210236,
+                    ApplyHelmetOverride = AppearanceItemData.EMenuHelmetOverride.forcedOff,
+                    DisplayVars = ["helmet override", "off"]
+                });
+                menus.Headgear.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "[1] - [2]"
+                    SrCenterText = 210210236,
+                    ApplyHelmetOverride = AppearanceItemData.EMenuHelmetOverride.forcedOn,
+                    DisplayVars = ["helmet override", "on"]
+                });
+                menus.Headgear.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "[1] - [2]"
+                    SrCenterText = 210210236,
+                    ApplyHelmetOverride = AppearanceItemData.EMenuHelmetOverride.forcedFull,
+                    DisplayVars = ["helmet override", "full"]
+                });
+                menus.Headgear.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "[1] - [2]"
+                    SrCenterText = 210210236,
+                    ApplyHelmetVisibilityPreference = AppearanceItemData.EHelmetVisibilityPreference.preferOff,
+                    DisplayVars = ["helmet preference", "no helmet"]
+                });
+                menus.Headgear.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "[1] - [2]"
+                    SrCenterText = 210210236,
+                    ApplyHelmetVisibilityPreference = AppearanceItemData.EHelmetVisibilityPreference.preferOn,
+                    DisplayVars = ["helmet preference", "helmet"]
+                });
+
+
                 menus.Headgear.AddMenuEntry(menus.Breather.GetEntryPoint(210210244));
 
                 menus.Breather.AddMenuEntry(new AppearanceItemData()

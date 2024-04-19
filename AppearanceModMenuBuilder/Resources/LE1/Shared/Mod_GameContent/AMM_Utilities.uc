@@ -41,9 +41,16 @@ struct pawnAppearance
 
 enum eForceHelmetState
 {
+	// the helmet visibility will behave as it does in vanilla; you can set the preference in the squad record menu (or in AMM)
+	// if the level/cinematic requires a breather/no helmet, it will apply that. You will never see the full breather unless the level requires it
 	Vanilla,
+	// no helmet, even if the level would normally require it
 	ForceOff,
+	// helmet (but no breather) even if the level requires it
 	ForceOn,
+	// helmet on even if the game asks for no helmet. will add breather if requested by the game for immersion
+	// ForcedOnOrFull,
+	// always full breather
 	ForceFull
 };
 
@@ -394,15 +401,20 @@ public static function AppearanceSettings DecodeAppearanceSettings(int flags)
     {
 		case 0:
 			settings.forceHelmetState = eForceHelmetState.Vanilla;
+			break;
         case 1:
             settings.forceHelmetState = eForceHelmetState.ForceOff;
+			break;
         case 2:
             settings.forceHelmetState = eForceHelmetState.ForceOn;
+			break;
         case 3:
             settings.forceHelmetState = eForceHelmetState.ForceFull;
+			break;
 		default:
 			LogInternal("Invalid helmet flag in appearance settings"@helmetFlags);
 			settings.forceHelmetState = eForceHelmetState.Vanilla;
+			break;
     }
 
 	// TODO decode more flags here later
