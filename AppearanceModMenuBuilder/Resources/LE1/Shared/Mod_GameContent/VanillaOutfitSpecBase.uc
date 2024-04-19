@@ -7,6 +7,7 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
     local int materialVariant;
 	local AppearanceMeshPaths meshPaths;
 	local array<string> meshMaterialPaths;
+	local eHelmetDisplayState helmetDisplayState;
 
 	// this is for equipping their vanilla outfit
 	// we will determine what outfit it should be based on the pawn's settings and then apply it
@@ -22,13 +23,18 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
 		return false;
 	}
 
-	if (class'AMM_Utilities'.static.LoadAppearanceMesh(meshPaths, appearance.bodyMesh))
+	if (!class'AMM_Utilities'.static.LoadAppearanceMesh(meshPaths, appearance.bodyMesh))
 	{
-		// TODO I need to check to make sure helmet specs is not none here
-		return specLists.helmetSpecs.DelegateToHelmetSpec(target, specLists, appearanceIds, appearance);
+		return false;
 	}
 	
-	return false;
+	// get whether we should display the helmet based on a variety of factors
+	helmetDisplayState = class'AMM_Utilities'.static.GetHelmetDisplayState(appearanceIds, target);
+	if (helmetDisplayState != eHelmetDisplayState.off)
+	{
+		return specLists.helmetSpecs.DelegateToHelmetSpec(target, specLists, appearanceIds, appearance);
+	}
+	return true;
 }
 
 protected function bool GetVariant(BioPawn targetPawn, out int armorType, out int meshVariant, out int materialVariant)

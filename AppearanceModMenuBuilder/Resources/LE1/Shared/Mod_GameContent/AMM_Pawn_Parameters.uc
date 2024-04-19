@@ -29,7 +29,6 @@ var transient bool __specListsInitialized;
 var config string outfitSpecListPath;
 var config string helmetSpecListPath;
 var config string breatherSpecListPath;
-// var config int defaultBreatherSpec;
 var config string Tag;
 var config array<string> alternateTags;
 var config eGender gender;

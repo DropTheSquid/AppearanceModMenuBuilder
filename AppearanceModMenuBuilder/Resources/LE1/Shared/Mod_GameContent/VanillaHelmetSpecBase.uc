@@ -11,8 +11,7 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 	local bool suppressBreather;
 	local bool hideHair;
 	local bool hideHead;
-
-	// TODO take into account vanilla helmet visibility preferences and the settings int on the appearanceIds
+	local eHelmetDisplayState helmetDisplayState;
 
 	// this is for equipping their vanilla outfit
 	// we will determine what outfit it should be based on the pawn's settings and then apply it
@@ -50,6 +49,13 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 	if (!suppressVisor)
 	{
 		class'AMM_Utilities'.static.GetVanillaVisorMesh(class'AMM_Utilities'.static.GetPawnType(target), appearance.VisorMesh);
+	}
+
+	// check whether we should display a breather
+	helmetDisplayState = class'AMM_Utilities'.static.GetHelmetDisplayState(appearanceIds, target);
+	if (helmetDisplayState != eHelmetDisplayState.full)
+	{
+		suppressBreather = true;
 	}
 
 	// if the breather is not suppressed, delegate to the breather spec

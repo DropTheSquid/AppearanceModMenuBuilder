@@ -14,14 +14,12 @@ public function bool LoadBreather(BioPawn target, SpecLists specLists, out PawnA
 {
 	if (!class'AMM_Utilities'.static.LoadAppearanceMesh(BreatherMesh, appearance.breatherMesh))
 	{
-		LogInternal("failed to load breather mesh"@BreatherMesh.MeshPath);
 		return false;
 	}
 	if (OverrideVisorMesh.meshPath != "" && !bSuppressVisor)
 	{
 		if (!class'AMM_Utilities'.static.LoadAppearanceMesh(OverrideVisorMesh, appearance.visorMesh))
 		{
-			LogInternal("failed to load visor mesh"@OverrideVisorMesh.MeshPath);
 			return false;
 		}
 	}

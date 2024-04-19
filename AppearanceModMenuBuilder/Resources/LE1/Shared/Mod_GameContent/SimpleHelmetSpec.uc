@@ -9,22 +9,25 @@ var bool bHideHead;
 
 public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds, out pawnAppearance appearance)
 {
+	local eHelmetDisplayState helmetDisplayState;
+
 	if (!class'AMM_Utilities'.static.LoadAppearanceMesh(HelmetMesh, appearance.helmetMesh))
 	{
-		LogInternal("failed to load helmet mesh"@HelmetMesh.MeshPath);
 		return false;
 	}
 	if (VisorMesh.meshPath != "" && !bSuppressVisor)
 	{
 		if (!class'AMM_Utilities'.static.LoadAppearanceMesh(VisorMesh, appearance.visorMesh))
 		{
-			LogInternal("failed to load visor mesh"@VisorMesh.MeshPath);
 			return false;
 		}
 	}
 	appearance.hideHair = appearance.hideHair || bHideHair;
 	appearance.hideHead = appearance.hideHead || bHideHead;
-	if (!bSuppressBreather)
+
+	// if we should display a breather and it is not suppressed for this helmet, delegate to the breather spec
+	helmetDisplayState = class'AMM_Utilities'.static.GetHelmetDisplayState(appearanceIds, target);
+	if (!bSuppressBreather && helmetDisplayState == eHelmetDisplayState.full)
 	{
 		return specLists.breatherSpecs.DelegateToBreatherSpec(target, specLists, appearanceIds, appearance);
 	}
