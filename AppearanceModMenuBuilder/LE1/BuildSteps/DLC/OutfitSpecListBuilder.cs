@@ -14,7 +14,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         private SpeciesOutfitMenus humanOutfitMenus;
         private SpeciesOutfitMenus turianOutfitMenus;
         private SpeciesOutfitMenus kroganOutfitMenus;
-        private SpeciesOutfitMenus quarianOutfitMenus;
 
         public enum OutfitType
         {
@@ -39,7 +38,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             var submenuConfigMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-amm_Submenus.m3cd");
 
-            (humanOutfitMenus, turianOutfitMenus, quarianOutfitMenus, kroganOutfitMenus) = InitCommonMenus(submenuConfigMergeFile);
+            (humanOutfitMenus, turianOutfitMenus, _, kroganOutfitMenus) = InitCommonMenus(submenuConfigMergeFile);
 
             GenerateHMFAndASASpecs();
             GenerateHMMSpecs();
@@ -164,8 +163,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             const string hmfArmorFileName = "BIOG_HMF_ARM_AMM";
             const string hmfHelmetFileName = "BIOG_HMF_HGR_AMM";
             const string asaHelmetFileName = "BIOG_ASA_HGR_AMM";
-            var NkdClothesFileName = GetVanillaArmorFileName(bodyType, OutfitType.NKD);
-            var CthClothesFileName = GetVanillaArmorFileName(bodyType, OutfitType.CTH);
 
             var visorMesh = new AppearanceMeshPaths($"{hmfHelmetFileName}.VSR.HMF_VSR_MDL", [$"{hmfHelmetFileName}.VSR.HMF_VSR_MAT_1a"]);
             var asariVisorMesh = new AppearanceMeshPaths($"{asaHelmetFileName}.VSR.ASA_VSR_MDL", [$"{asaHelmetFileName}.VSR.ASA_VSR_MAT_1a"]);
@@ -213,33 +210,270 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             AddVanillaHelmetSpecs(asariHelmetConfig, 61, asaHelmetFileName, OutfitType.HVY, 1, asariBodyType, 1, 1, asariVisorMesh, hideHair: true);
 
             // add entries for the non armor outfits
-            AddMenuEntries(humanOutfitMenus.NonArmor, 100, 38, EGender.Female);
-            // Add NKD and CTH vanilla meshes (100-140)
-            // NKDa: material 1 is naked human (with tintable skintone), material 2 is Avina materials on the naked mesh
-            AddVanillaOutfitSpecs(bodyConfig, 100, NkdClothesFileName, OutfitType.NKD, 0, bodyType, 2, 1);
-            // NKDb: dancer outfit with tintable skintone
-            AddVanillaOutfitSpecs(bodyConfig, 102, NkdClothesFileName, OutfitType.NKD, 1, bodyType, 1, 1);
-            // NKDc: Liara romance mesh, not sure it is tintable
-            AddVanillaOutfitSpecs(bodyConfig, 103, NkdClothesFileName, OutfitType.NKD, 2, bodyType, 1, 1);
+            // NKDa (naked human/Avina)
+            var nextId = AddCustomOutfitSpecs(bodyConfig, 100, "BIOG_HMF_NKD_AMM.NKDa.HMF_ARM_NKDa_MDL",
+                // human female romance body
+                "BIOG_HMF_NKD_AMM.NKDa.HMF_ARM_NKDa_MAT_1a",
+                // avina material
+                "BIOG_HMF_NKD_AMM.NKDa.HMF_ARM_NKDa_Mat_2a");
+            // NKDb (dancer)
+            nextId = AddCustomOutfitSpecs(bodyConfig, nextId, "BIOG_HMF_NKD_AMM.NKDb.HMF_ARM_NKDb_MDL",
+                "BIOG_HMF_NKD_AMM.NKDb.HMF_ARM_NKDb_MAT_1a");
 
-            // CTHa Alliance Formal
-            AddVanillaOutfitSpecs(bodyConfig, 104, CthClothesFileName, OutfitType.CTH, 0, bodyType, 6, 1);
-            // CTHb Alliance Fatigues and related, such as C Sec color variant
-            AddVanillaOutfitSpecs(bodyConfig, 110, CthClothesFileName, OutfitType.CTH, 1, bodyType, 5, 1);
-            // CTHc dress used by many NPCs, except variant 6 (id 120) is the Mira VI material
-            AddVanillaOutfitSpecs(bodyConfig, 115, CthClothesFileName, OutfitType.CTH, 2, bodyType, 6, 1);
-            // CTHd different dress worn by many NPCs
-            AddVanillaOutfitSpecs(bodyConfig, 121, CthClothesFileName, OutfitType.CTH, 3, bodyType, 3, 1);
-            // CTHe civilian clothes 1
-            AddVanillaOutfitSpecs(bodyConfig, 124, CthClothesFileName, OutfitType.CTH, 4, bodyType, 2, 1);
-            // CTHf civilian clothes 2
-            AddVanillaOutfitSpecs(bodyConfig, 126, CthClothesFileName, OutfitType.CTH, 5, bodyType, 4, 1);
-            // CTHg a third dress worn by NPCs
-            AddVanillaOutfitSpecs(bodyConfig, 130, CthClothesFileName, OutfitType.CTH, 6, bodyType, 1, 1);
-            // CTHh Scientist/medic uniform worn by many NPCs
-            AddVanillaOutfitSpecs(bodyConfig, 131, CthClothesFileName, OutfitType.CTH, 7, bodyType, 7, 1);
+            // NKDc (Liara romance body)
+            nextId = AddCustomOutfitSpecs(bodyConfig, nextId, "BIOG_HMF_NKD_AMM.NKDc.HMF_ARM_NKDc_MDL",
+                "BIOG_HMF_NKD_AMM.NKDc.HMF_ARM_NKDc_MAT_1a");
 
-            // TODO extended Vanilla specs, add them into menus
+            // CTHa vanilla
+            nextId = AddCustomOutfitSpecs(bodyConfig, nextId, "BIOG_HMF_CTHa_AMM.CTHa.HMF_ARM_CTHa_MDL",
+                "BIOG_HMF_CTHa_AMM.CTHa.HMF_ARM_CTHa_MAT_1a",
+                "BIOG_HMF_CTHa_AMM.CTHa.HMF_ARM_CTHa_MAT_2a",
+                "BIOG_HMF_CTHa_AMM.CTHa.HMF_ARM_CTHa_MAT_3a",
+                "BIOG_HMF_CTHa_AMM.CTHa.HMF_ARM_CTHa_MAT_4a",
+                "BIOG_HMF_CTHa_AMM.CTHa.HMF_ARM_CTHa_MAT_5a",
+                "BIOG_HMF_CTHa_AMM.CTHa.HMF_ARM_CTHa_MAT_6a");
+
+            // CTHb
+            nextId = AddCustomOutfitSpecs(bodyConfig, nextId, "BIOG_HMF_CTHb_AMM.CTHb.HMF_ARM_CTHb_MDL",
+                "BIOG_HMF_CTHb_AMM.CTHb.HMF_ARM_CTHb_MAT_1a",
+                "BIOG_HMF_CTHb_AMM.CTHb.HMF_ARM_CTHb_MAT_2a",
+                "BIOG_HMF_CTHb_AMM.CTHb.HMF_ARM_CTHb_MAT_3a",
+                "BIOG_HMF_CTHb_AMM.CTHb.HMF_ARM_CTHb_MAT_4a",
+                "BIOG_HMF_CTHb_AMM.CTHb.HMF_ARM_CTHb_MAT_5a");
+
+            // CTHc
+            nextId = AddCustomOutfitSpecs(bodyConfig, nextId, "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MDL",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_1a",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_2a",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_3a",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_4a",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_5a",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_6a",
+                // extended vanilla
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_1b",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_1c",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_1d",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_1d",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_1e",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_1f",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_1g",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_1h",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_1i",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_1j",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_1k",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_1l",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_1m",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_1n",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_1o",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_1p",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_1q",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_1r",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_1s",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_1t",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_1u",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_tower_1a",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_tower_1b",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_tower_1c",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_tower_1d",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_tower_1e",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_tower_1f",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_tower_1g",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_tower_1h",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_tower_1i",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_LE2_1a",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_LE2_1b",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_LE2_1c",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_LE2_1d",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_LE3_1a",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_LE3_1b",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_LE3_1c",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_LE3_1d",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_LE3_1e",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_LE3_1f",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_LE3_1g",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_LE3_1h",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_LE3_1i",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_LE3_1j",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_LE3_1k",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_LE3_1l",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_LE3_1m",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_LE3_1n",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_LE3_1o",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_LE3_1p",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_LE3_1q",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_dress_1a",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_dress_1b",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_dress_1c",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_dress_1e",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_dress_1f",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_dress_1h",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_dress_1k",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_dress_1l",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_2b",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_2c",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_2d",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_2e",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_2f",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_2g",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_2h",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_2i",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_2j",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_2k",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_2l",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_2m",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_2n",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_3b",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_3c",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_3d",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_4b",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_4c",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_5b",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_5c",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_5d",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_5e",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_5f",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_5g",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_5h",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_5i",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_5j",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_5k",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_5l",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_5m",
+                "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_5n");
+
+            // CTHd
+            nextId = AddCustomOutfitSpecs(bodyConfig, nextId, "BIOG_HMF_CTHd_AMM.CTHd.HMF_ARM_CTHd_MDL",
+                "BIOG_HMF_CTHd_AMM.CTHd.HMF_ARM_CTHd_MAT_1a",
+                "BIOG_HMF_CTHd_AMM.CTHd.HMF_ARM_CTHd_MAT_2a",
+                "BIOG_HMF_CTHd_AMM.CTHd.HMF_ARM_CTHd_MAT_3a",
+                // extended vanilla
+                "BIOG_HMF_CTHd_AMM.CTHd.HMF_ARM_CTHd_MAT_1b",
+                "BIOG_HMF_CTHd_AMM.CTHd.HMF_ARM_CTHd_MAT_2b",
+                "BIOG_HMF_CTHd_AMM.CTHd.HMF_ARM_CTHd_MAT_2c",
+                "BIOG_HMF_CTHd_AMM.CTHd.HMF_ARM_CTHd_MAT_2d",
+                "BIOG_HMF_CTHd_AMM.CTHd.HMF_ARM_CTHd_MAT_3b",
+                "BIOG_HMF_CTHd_AMM.CTHd.HMF_ARM_CTHd_MAT_3c");
+
+            // CTHe
+            nextId = AddCustomOutfitSpecs(bodyConfig, nextId, "BIOG_HMF_CTHe_AMM.CTHe.HMF_ARM_CTHe_MDL",
+                "BIOG_HMF_CTHe_AMM.CTHe.HMF_ARM_CTHe_MAT_1a",
+                "BIOG_HMF_CTHe_AMM.CTHe.HMF_ARM_CTHe_MAT_2a",
+                // extended vanilla
+                "BIOG_HMF_CTHe_AMM.CTHe.HMF_ARM_CTHe_MAT_1b",
+                "BIOG_HMF_CTHe_AMM.CTHe.HMF_ARM_CTHe_MAT_1c",
+                "BIOG_HMF_CTHe_AMM.CTHe.HMF_ARM_CTHe_MAT_1d",
+                "BIOG_HMF_CTHe_AMM.CTHe.HMF_ARM_CTHe_MAT_1e",
+                "BIOG_HMF_CTHe_AMM.CTHe.HMF_ARM_CTHe_MAT_1f",
+                "BIOG_HMF_CTHe_AMM.CTHe.HMF_ARM_CTHe_MAT_1g",
+                "BIOG_HMF_CTHe_AMM.CTHe.HMF_ARM_CTHe_MAT_2b",
+                "BIOG_HMF_CTHe_AMM.CTHe.HMF_ARM_CTHe_MAT_2c",
+                "BIOG_HMF_CTHe_AMM.CTHe.HMF_ARM_CTHe_MAT_2d",
+                "BIOG_HMF_CTHe_AMM.CTHe.HMF_ARM_CTHe_MAT_2e",
+                "BIOG_HMF_CTHe_AMM.CTHe.HMF_ARM_CTHe_MAT_2f",
+                "BIOG_HMF_CTHe_AMM.CTHe.HMF_ARM_CTHe_MAT_2g",
+                "BIOG_HMF_CTHe_AMM.CTHe.HMF_ARM_CTHe_MAT_2h",
+                "BIOG_HMF_CTHe_AMM.CTHe.HMF_ARM_CTHe_MAT_2i",
+                "BIOG_HMF_CTHe_AMM.CTHe.HMF_ARM_CTHe_MAT_2j",
+                "BIOG_HMF_CTHe_AMM.CTHe.HMF_ARM_CTHe_MAT_2k",
+                "BIOG_HMF_CTHe_AMM.CTHe.HMF_ARM_CTHe_MAT_2l",
+                "BIOG_HMF_CTHe_AMM.CTHe.HMF_ARM_CTHe_MAT_2m");
+
+            // CTHf
+            nextId = AddCustomOutfitSpecs(bodyConfig, nextId, "BIOG_HMF_CTHf_AMM.CTHf.HMF_ARM_CTHf_MDL",
+                "BIOG_HMF_CTHf_AMM.CTHf.HMF_ARM_CTHf_MAT_1a",
+                "BIOG_HMF_CTHf_AMM.CTHf.HMF_ARM_CTHf_MAT_2a",
+                "BIOG_HMF_CTHf_AMM.CTHf.HMF_ARM_CTHf_MAT_3a",
+                "BIOG_HMF_CTHf_AMM.CTHf.HMF_ARM_CTHf_MAT_4a");
+
+            // CTHf alt model (smaller chest, shoulders)
+            nextId = AddCustomOutfitSpecs(bodyConfig, nextId, "BIOG_HMF_CTHf_AMM.CTHf.HMF_ARM_CTHf_ALT_MDL",
+                "BIOG_HMF_CTHf_AMM.CTHf.HMF_ARM_CTHf_MAT_1a",
+                "BIOG_HMF_CTHf_AMM.CTHf.HMF_ARM_CTHf_MAT_2a",
+                "BIOG_HMF_CTHf_AMM.CTHf.HMF_ARM_CTHf_MAT_3a",
+                "BIOG_HMF_CTHf_AMM.CTHf.HMF_ARM_CTHf_MAT_4a");
+
+            // CTHg
+            nextId = AddCustomOutfitSpecs(bodyConfig, nextId, "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MDL",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_1a",
+                // extended vanilla
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_2a",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_3a",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_1b",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_1c",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_1d",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_1e",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_1f",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_1g",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_1h",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_1i",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_1j",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_1k",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_1l",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_1m",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_1n",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_1o",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_1p",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_1q",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_1r",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_1s",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_1t",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_1u",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_1v",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_1w",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_AsariSkimpy",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_dress_2a",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_dress_2b",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_dress_2c",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_dress_2d",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_dress_2f",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_dress_2g",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_dress_2h",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_dress_2i",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_dress_2j",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_dress_2k",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_dress_2l",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_3b",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_3c",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_3d",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_3e",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_3f",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_3g",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_3h",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_3i",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_3j",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_3k",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_3l",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_3m",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_3n",
+                "BIOG_HMF_CTHg_AMM.CTHg.HMF_ARM_CTHg_MAT_3o");
+
+            // CTHh
+            nextId = AddCustomOutfitSpecs(bodyConfig, nextId, "BIOG_HMF_CTHh_AMM.CTHh.HMF_ARM_CTHh_MDL",
+                "BIOG_HMF_CTHh_AMM.CTHh.HMF_ARM_CTHh_MAT_1a",
+                "BIOG_HMF_CTHh_AMM.CTHh.HMF_ARM_CTHh_MAT_2a",
+                "BIOG_HMF_CTHh_AMM.CTHh.HMF_ARM_CTHh_MAT_3a",
+                "BIOG_HMF_CTHh_AMM.CTHh.HMF_ARM_CTHh_MAT_4a",
+                "BIOG_HMF_CTHh_AMM.CTHh.HMF_ARM_CTHh_MAT_5a",
+                "BIOG_HMF_CTHh_AMM.CTHh.HMF_ARM_CTHh_MAT_6a",
+                "BIOG_HMF_CTHh_AMM.CTHh.HMF_ARM_CTHh_MAT_7a",
+                // extended vanilla
+                "BIOG_HMF_CTHh_AMM.CTHh.HMF_ARM_CTHh_MAT_1b",
+                "BIOG_HMF_CTHh_AMM.CTHh.HMF_ARM_CTHh_MAT_1c",
+                "BIOG_HMF_CTHh_AMM.CTHh.HMF_ARM_CTHh_MAT_1d",
+                "BIOG_HMF_CTHh_AMM.CTHh.HMF_ARM_CTHh_MAT_2b",
+                "BIOG_HMF_CTHh_AMM.CTHh.HMF_ARM_CTHh_MAT_2c",
+                "BIOG_HMF_CTHh_AMM.CTHh.HMF_ARM_CTHh_MAT_2d",
+                "BIOG_HMF_CTHh_AMM.CTHh.HMF_ARM_CTHh_MAT_2e",
+                "BIOG_HMF_CTHh_AMM.CTHh.HMF_ARM_CTHh_MAT_2f",
+                "BIOG_HMF_CTHh_AMM.CTHh.HMF_ARM_CTHh_MAT_2g",
+                "BIOG_HMF_CTHh_AMM.CTHh.HMF_ARM_CTHh_MAT_2h",
+                "BIOG_HMF_CTHh_AMM.CTHh.HMF_ARM_CTHh_MAT_2i",
+                "BIOG_HMF_CTHh_AMM.CTHh.HMF_ARM_CTHh_MAT_2j",
+                "BIOG_HMF_CTHh_AMM.CTHh.HMF_ARM_CTHh_MAT_2k",
+                "BIOG_HMF_CTHh_AMM.CTHh.HMF_ARM_CTHh_MAT_2l");
+
+            // add all the outfits for HUman Female/Asari to the menu
+            AddMenuEntries(humanOutfitMenus.NonArmor, 100, nextId - 100, EGender.Female);
 
             configs.Add(bodyConfig);
             configs.Add(helmetConfig);
@@ -323,9 +557,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             const string hmmArmorFileName = "BIOG_HMM_ARM_AMM";
             const string hmmHelmetFileName = "BIOG_HMM_HGR_AMM";
 
-            var NkdFileName = GetVanillaArmorFileName(bodyType, OutfitType.NKD);
-            var CthFileName = GetVanillaArmorFileName(bodyType, OutfitType.CTH);
-
             // this is the visor from Visor Clipping Fix version 1.1 by Oakstar519, also included in LE1CP
             // https://www.nexusmods.com/masseffectlegendaryedition/mods/1801
             var visorMesh = new AppearanceMeshPaths($"{hmmHelmetFileName}.VSR.HMM_VSR_MDL", [$"{hmmHelmetFileName}.VSR.HMM_VSR_MAT_1a"]);
@@ -361,27 +592,164 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             AddVanillaHelmetSpecs(helmetConfig, 61, hmmHelmetFileName, OutfitType.HVY, 1, bodyType, 1, 1, visorMesh, hideHair: true);
 
             // add all the non armor outfits for male humans to the menu
-            AddMenuEntries(humanOutfitMenus.NonArmor, 100, 31, EGender.Male);
+            // NKDa (naked human/VI)
+            var nextId = AddCustomOutfitSpecs(bodyConfig, 100, "BIOG_HMM_NKD_AMM.NKDa.HMM_ARM_NKDa_MDL",
+                // naked human
+                "BIOG_HMM_NKD_AMM.NKDa.HMM_ARM_NKDa_MAT_1a",
+                // VI (used by Exogeni VI)
+                "BIOG_HMM_NKD_AMM.NKDa.HMM_ARM_NKDa_MAT_2a");
 
-            // Add NKD and CTH vanilla meshes (100-130)
-            // NKDa: material 1 is tintable naked human, material 2 is a VI material
-            AddVanillaOutfitSpecs(bodyConfig, 100, NkdFileName, OutfitType.NKD, 0, bodyType, 2, 1);
+            // CTHa vanilla
+            nextId = AddCustomOutfitSpecs(bodyConfig, nextId, "BIOG_HMM_CTHa_AMM.CTHa.HMM_ARM_CTHa_MDL",
+                "BIOG_HMM_CTHa_AMM.CTHa.HMM_ARM_CTHa_MAT_1a",
+                "BIOG_HMM_CTHa_AMM.CTHa.HMM_ARM_CTHa_MAT_2a",
+                "BIOG_HMM_CTHa_AMM.CTHa.HMM_ARM_CTHa_MAT_3a",
+                // TODO material 4 is missing from vanilla, and I also think it is missing some color/bar combos. see about restoring those
+                "BIOG_HMM_CTHa_AMM.CTHa.HMM_ARM_CTHa_MAT_5a");
 
-            // CTHa Alliance formal
-            // TODO there is a missing material: it only has 1 2 3 5, no 4
-            AddVanillaOutfitSpecs(bodyConfig, 102, CthFileName, OutfitType.CTH, 0, bodyType, 5, 1);
-            // CTHb Alliance Fatigues and related outfits
-            AddVanillaOutfitSpecs(bodyConfig, 107, CthFileName, OutfitType.CTH, 1, bodyType, 6, 1);
-            // CTHc-CTHg, various civilian clothes, except 117 is the ExoGeni VI
-            AddVanillaOutfitSpecs(bodyConfig, 113, CthFileName, OutfitType.CTH, 2, bodyType, 5, 1);
-            AddVanillaOutfitSpecs(bodyConfig, 118, CthFileName, OutfitType.CTH, 3, bodyType, 3, 1);
-            AddVanillaOutfitSpecs(bodyConfig, 121, CthFileName, OutfitType.CTH, 4, bodyType, 3, 1);
-            AddVanillaOutfitSpecs(bodyConfig, 124, CthFileName, OutfitType.CTH, 5, bodyType, 3, 1);
-            AddVanillaOutfitSpecs(bodyConfig, 127, CthFileName, OutfitType.CTH, 6, bodyType, 2, 1);
-            // CTHh: scientist.medical uniform
-            AddVanillaOutfitSpecs(bodyConfig, 129, CthFileName, OutfitType.CTH, 7, bodyType, 2, 1);
+            // CTHb
+            nextId = AddCustomOutfitSpecs(bodyConfig, nextId, "BIOG_HMM_CTHb_AMM.CTHb.HMM_ARM_CTHb_MDL",
+                "BIOG_HMM_CTHb_AMM.CTHb.HMM_ARM_CTHb_MAT_1a",
+                "BIOG_HMM_CTHb_AMM.CTHb.HMM_ARM_CTHb_MAT_2a",
+                "BIOG_HMM_CTHb_AMM.CTHb.HMM_ARM_CTHb_MAT_3a",
+                "BIOG_HMM_CTHb_AMM.CTHb.HMM_ARM_CTHb_MAT_4a",
+                "BIOG_HMM_CTHb_AMM.CTHb.HMM_ARM_CTHb_MAT_5a",
+                "BIOG_HMM_CTHb_AMM.CTHb.HMM_ARM_CTHb_MAT_6a",
+                // extended vanilla
+                "BIOG_HMM_CTHb_AMM.CTHb.HMM_ARM_CTHb_MAT_2b",
+                "BIOG_HMM_CTHb_AMM.CTHb.HMM_ARM_CTHb_MAT_4b",
+                "BIOG_HMM_CTHb_AMM.CTHb.HMM_ARM_CTHb_MAT_4c",
+                "BIOG_HMM_CTHb_AMM.CTHb.HMM_ARM_CTHb_MAT_4d",
+                "BIOG_HMM_CTHb_AMM.CTHb.HMM_ARM_CTHb_MAT_4e",
+                "BIOG_HMM_CTHb_AMM.CTHb.HMM_ARM_CTHb_MAT_4f",
+                "BIOG_HMM_CTHb_AMM.CTHb.HMM_ARM_CTHb_MAT_4g",
+                "BIOG_HMM_CTHb_AMM.CTHb.HMM_ARM_CTHb_MAT_4h",
+                "BIOG_HMM_CTHb_AMM.CTHb.HMM_ARM_CTHb_MAT_5b");
 
-            // TODO add extended vanilla meshes
+            // CTHc
+            nextId = AddCustomOutfitSpecs(bodyConfig, nextId, "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MDL",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_1a",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_2a",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_3a",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_4a",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_5a",
+                // extended vanilla
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_Suit_01a",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_Suit_01b",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_Suit_01c",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_Suit_01d",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_Suit_01e",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_Suit_01f",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_Suit_01g",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_Suit_01h",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_Suit_01i",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_Suit_01j",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_Suit_01k",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_Suit_01l",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_Suit_01m",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_Suit_01n",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_Suit_Albino",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_1b",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_1c",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_2b",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_2c",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_2d",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_2e",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_3b",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_3c",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_3d",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_3e",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_3f",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_3g",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_3h",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_3i",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_3j",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_3k",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_3l",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_3m",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_3n",
+                "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_4b");
+
+            // CTHd
+            nextId = AddCustomOutfitSpecs(bodyConfig, nextId, "BIOG_HMM_CTHd_AMM.CTHd.HMM_ARM_CTHd_MDL",
+                "BIOG_HMM_CTHd_AMM.CTHd.HMM_ARM_CTHd_MAT_1a",
+                "BIOG_HMM_CTHd_AMM.CTHd.HMM_ARM_CTHd_MAT_2a",
+                "BIOG_HMM_CTHd_AMM.CTHd.HMM_ARM_CTHd_MAT_3a",
+                // extended vanilla
+                "BIOG_HMM_CTHd_AMM.CTHd.HMM_ARM_CTHd_MAT_1b",
+                "BIOG_HMM_CTHd_AMM.CTHd.HMM_ARM_CTHd_MAT_1c",
+                "BIOG_HMM_CTHd_AMM.CTHd.HMM_ARM_CTHd_MAT_1d",
+                "BIOG_HMM_CTHd_AMM.CTHd.HMM_ARM_CTHd_MAT_1e",
+                "BIOG_HMM_CTHd_AMM.CTHd.HMM_ARM_CTHd_MAT_1f",
+                "BIOG_HMM_CTHd_AMM.CTHd.HMM_ARM_CTHd_MAT_2b",
+                "BIOG_HMM_CTHd_AMM.CTHd.HMM_ARM_CTHd_MAT_2c",
+                "BIOG_HMM_CTHd_AMM.CTHd.HMM_ARM_CTHd_MAT_2d",
+                "BIOG_HMM_CTHd_AMM.CTHd.HMM_ARM_CTHd_MAT_2e",
+                "BIOG_HMM_CTHd_AMM.CTHd.HMM_ARM_CTHd_MAT_3b",
+                "BIOG_HMM_CTHd_AMM.CTHd.HMM_ARM_CTHd_MAT_3c");
+
+            // CTHe
+            nextId = AddCustomOutfitSpecs(bodyConfig, nextId, "BIOG_HMM_CTHe_AMM.CTHe.HMM_ARM_CTHe_MDL",
+                "BIOG_HMM_CTHe_AMM.CTHe.HMM_ARM_CTHe_MAT_1a",
+                "BIOG_HMM_CTHe_AMM.CTHe.HMM_ARM_CTHe_MAT_2a",
+                "BIOG_HMM_CTHe_AMM.CTHe.HMM_ARM_CTHe_MAT_3a",
+                // extended vanilla
+                "BIOG_HMM_CTHe_AMM.CTHe.HMM_ARM_CTHe_MAT_1b",
+                "BIOG_HMM_CTHe_AMM.CTHe.HMM_ARM_CTHe_MAT_1c",
+                "BIOG_HMM_CTHe_AMM.CTHe.HMM_ARM_CTHe_MAT_1d",
+                "BIOG_HMM_CTHe_AMM.CTHe.HMM_ARM_CTHe_MAT_1e",
+                "BIOG_HMM_CTHe_AMM.CTHe.HMM_ARM_CTHe_MAT_1f",
+                "BIOG_HMM_CTHe_AMM.CTHe.HMM_ARM_CTHe_MAT_1g",
+                "BIOG_HMM_CTHe_AMM.CTHe.HMM_ARM_CTHe_MAT_1h",
+                "BIOG_HMM_CTHe_AMM.CTHe.HMM_ARM_CTHe_MAT_1i",
+                "BIOG_HMM_CTHe_AMM.CTHe.HMM_ARM_CTHe_MAT_1j",
+                "BIOG_HMM_CTHe_AMM.CTHe.HMM_ARM_CTHe_MAT_2b",
+                "BIOG_HMM_CTHe_AMM.CTHe.HMM_ARM_CTHe_MAT_2c",
+                "BIOG_HMM_CTHe_AMM.CTHe.HMM_ARM_CTHe_MAT_2d",
+                "BIOG_HMM_CTHe_AMM.CTHe.HMM_ARM_CTHe_MAT_2e",
+                "BIOG_HMM_CTHe_AMM.CTHe.HMM_ARM_CTHe_MAT_2f",
+                "BIOG_HMM_CTHe_AMM.CTHe.HMM_ARM_CTHe_MAT_2g",
+                "BIOG_HMM_CTHe_AMM.CTHe.HMM_ARM_CTHe_MAT_2h",
+                "BIOG_HMM_CTHe_AMM.CTHe.HMM_ARM_CTHe_MAT_3b",
+                "BIOG_HMM_CTHe_AMM.CTHe.HMM_ARM_CTHe_MAT_3c");
+
+            // CTHf
+            nextId = AddCustomOutfitSpecs(bodyConfig, nextId, "BIOG_HMM_CTHf_AMM.CTHf.HMM_ARM_CTHf_MDL",
+                "BIOG_HMM_CTHf_AMM.CTHf.HMM_ARM_CTHf_MAT_1a",
+                "BIOG_HMM_CTHf_AMM.CTHf.HMM_ARM_CTHf_MAT_2a",
+                "BIOG_HMM_CTHf_AMM.CTHf.HMM_ARM_CTHf_MAT_3a",
+                "BIOG_HMM_CTHf_AMM.CTHf.HMM_ARM_CTHf_MAT_4a");
+
+            // CTHg
+            nextId = AddCustomOutfitSpecs(bodyConfig, nextId, "BIOG_HMM_CTHg_AMM.CTHg.HMM_ARM_CTHg_MDL",
+                "BIOG_HMM_CTHg_AMM.CTHg.HMM_ARM_CTHg_MAT_1a",
+                "BIOG_HMM_CTHg_AMM.CTHg.HMM_ARM_CTHg_MAT_2a",
+                // extended vanilla
+                "BIOG_HMM_CTHg_AMM.CTHg.HMM_ARM_CTHg_MAT_3a",
+                "BIOG_HMM_CTHg_AMM.CTHg.HMM_ARM_CTHg_MAT_1b",
+                "BIOG_HMM_CTHg_AMM.CTHg.HMM_ARM_CTHg_MAT_1c",
+                "BIOG_HMM_CTHg_AMM.CTHg.HMM_ARM_CTHg_MAT_2b",
+                "BIOG_HMM_CTHg_AMM.CTHg.HMM_ARM_CTHg_MAT_2c");
+
+            // CTHh
+            nextId = AddCustomOutfitSpecs(bodyConfig, nextId, "BIOG_HMM_CTHh_AMM.CTHh.HMM_ARM_CTHh_MDL",
+                "BIOG_HMM_CTHh_AMM.CTHh.HMM_ARM_CTHh_MAT_1a",
+                "BIOG_HMM_CTHh_AMM.CTHh.HMM_ARM_CTHh_MAT_2a",
+                // extended vanilla
+                "BIOG_HMM_CTHh_AMM.CTHh.HMM_ARM_CTHh_MAT_3a",
+                "BIOG_HMM_CTHh_AMM.CTHh.HMM_ARM_CTHh_MAT_4a",
+                "BIOG_HMM_CTHh_AMM.CTHh.HMM_ARM_CTHh_MAT_1b",
+                "BIOG_HMM_CTHh_AMM.CTHh.HMM_ARM_CTHh_MAT_2b",
+                "BIOG_HMM_CTHh_AMM.CTHh.HMM_ARM_CTHh_MAT_2c",
+                "BIOG_HMM_CTHh_AMM.CTHh.HMM_ARM_CTHh_MAT_2d",
+                "BIOG_HMM_CTHh_AMM.CTHh.HMM_ARM_CTHh_MAT_2e",
+                "BIOG_HMM_CTHh_AMM.CTHh.HMM_ARM_CTHh_MAT_2f",
+                "BIOG_HMM_CTHh_AMM.CTHh.HMM_ARM_CTHh_MAT_2g",
+                "BIOG_HMM_CTHh_AMM.CTHh.HMM_ARM_CTHh_MAT_2h",
+                "BIOG_HMM_CTHh_AMM.CTHh.HMM_ARM_CTHh_MAT_2i");
+
+            // add all the outfits for HUman Female/Asari to the menu
+            AddMenuEntries(humanOutfitMenus.NonArmor, 100, nextId - 100, EGender.Male);
 
             configs.Add(bodyConfig);
             configs.Add(helmetConfig);
@@ -445,8 +813,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             const string kroArmorFileName = "BIOG_KRO_ARM_AMM";
             const string kroHelmetFileName = "BIOG_KRO_HGR_AMM";
 
-            var CthFileName = GetVanillaArmorFileName(bodyType, OutfitType.CTH);
-
             // add all vanilla armor variants into positive IDs less than 100
             // MEDa variants. There are not light Korgan armor meshes, and no other medium variants
             AddVanillaOutfitSpecs(bodyConfig, 1, kroArmorFileName, OutfitType.MED, 0, bodyType, 11, 1, true);
@@ -461,14 +827,19 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             AddVanillaOutfitSpecs(bodyConfig, 25, kroArmorFileName, OutfitType.HVY, 2, bodyType, 3, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 25, kroHelmetFileName, OutfitType.HVY, 2, bodyType, 3, 1, suppressBreather: true, hideHead: true);
 
-            // Add CTH vanilla meshes (100-105)
-            // Krogan casuals only get one mesh in vanilla, sad.
-            AddVanillaOutfitSpecs(bodyConfig, 100, CthFileName, OutfitType.CTH, 0, bodyType, 5, 1);
+            var nextId = AddCustomOutfitSpecs(bodyConfig, 100, "BIOG_KRO_CTHa_AMM.CTHa.KRO_ARM_CTHa_MDL",
+                "BIOG_KRO_CTHa_AMM.CTHa.KRO_ARM_CTHa_MAT_1a",
+                "BIOG_KRO_CTHa_AMM.CTHa.KRO_ARM_CTHa_MAT_2a",
+                "BIOG_KRO_CTHa_AMM.CTHa.KRO_ARM_CTHa_MAT_3a",
+                "BIOG_KRO_CTHa_AMM.CTHa.KRO_ARM_CTHa_MAT_4a",
+                "BIOG_KRO_CTHa_AMM.CTHa.KRO_ARM_CTHa_MAT_5a",
+                // extended vanilla
+                "BIOG_KRO_CTHa_AMM.CTHa.KRO_ARM_CTHa_MAT_6a",
+                "BIOG_KRO_CTHa_AMM.CTHa.KRO_ARM_CTHa_MAT_7a");
 
-            // add all the outfits for krogans to the menu
-            AddMenuEntries(kroganOutfitMenus.NonArmor, 100, 5);
+            // add all the outfits for Krogan to the menu
+            AddMenuEntries(kroganOutfitMenus.NonArmor, 100, nextId - 100);
 
-            // TODO add extended vanilla meshes
             configs.Add(bodyConfig);
             configs.Add(helmetConfig);
             configs.Add(breatherConfig);
@@ -541,10 +912,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             const string turArmorFileName = "BIOG_TUR_ARM_AMM";
             const string turHeadgearFileName = "BIOG_TUR_HGR_AMM";
 
-            var CthFileName = GetVanillaArmorFileName(bodyType, OutfitType.CTH);
-
-            //var visorMesh = new AppearanceMeshPaths("BIOG_TUR_HGR_HVY_R.HVYa.TUR_HGR_VSRa_MDL", ["BIOG_TUR_HGR_HVY_R.HVYa.TUR_VSR_HVYa_MAT_1a"]);
-
             // add all vanilla armor variants into positive IDs less than 100
             // LGTa
             AddVanillaOutfitSpecs(bodyConfig, 1, turArmorFileName, OutfitType.LGT, 0, bodyType, 15, 1, true);
@@ -564,17 +931,75 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             AddVanillaHelmetSpecs(helmetConfig, 33, turHeadgearFileName, OutfitType.HVY, 0, bodyType, 15, 1, hideHair: true);
 
             // Add CTH vanilla meshes (100+)
-            // CTHa
-            AddVanillaOutfitSpecs(bodyConfig, 100, CthFileName, OutfitType.CTH, 0, bodyType, 5, 1);
+            // CTHa vanilla and extended vanilla variants (collected from the Trilogy by Diversification Project team)
+            var nextId = AddCustomOutfitSpecs(bodyConfig, 100, "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MDL",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_1a",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_2a",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_3a",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_4a",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_5a",
+                // extended vanilla options
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_1b",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_1c",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_1d",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_1e",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_1f",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_1g",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_2b",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_4b");
+            // CTHa no hood variant
+            nextId = AddCustomOutfitSpecs(bodyConfig, nextId, "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_ALT_MDL",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_1a",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_2a",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_3a",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_4a",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_5a",
+                // extended vanilla options
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_1b",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_1c",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_1d",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_1e",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_1f",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_1g",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_2b",
+                "BIOG_TUR_CTHa_AMM.CTHa.TUR_ARM_CTHa_MAT_4b");
+
             // CTHb
-            AddVanillaOutfitSpecs(bodyConfig, 105, CthFileName, OutfitType.CTH, 1, bodyType, 4, 1);
-            // CTHc
-            AddVanillaOutfitSpecs(bodyConfig, 109, CthFileName, OutfitType.CTH, 2, bodyType, 5, 1);
+            nextId = AddCustomOutfitSpecs(bodyConfig, nextId, "BIOG_TUR_CTHb_AMM.CTHb.TUR_ARM_CTHb_MDL",
+                "BIOG_TUR_CTHb_AMM.CTHb.TUR_ARM_CTHb_MAT_1a",
+                "BIOG_TUR_CTHb_AMM.CTHb.TUR_ARM_CTHb_MAT_2a",
+                "BIOG_TUR_CTHb_AMM.CTHb.TUR_ARM_CTHb_MAT_3a",
+                "BIOG_TUR_CTHb_AMM.CTHb.TUR_ARM_CTHb_MAT_4a",
+                // extended vanilla
+                "BIOG_TUR_CTHb_AMM.CTHb.TUR_ARM_CTHb_MAT_5a");
+
+            nextId = AddCustomOutfitSpecs(bodyConfig, nextId, "BIOG_TUR_CTHc_AMM.CTHc.TUR_ARM_CTHc_MDL",
+                "BIOG_TUR_CTHc_AMM.CTHc.TUR_ARM_CTHc_MAT_1a",
+                "BIOG_TUR_CTHc_AMM.CTHc.TUR_ARM_CTHc_MAT_2a",
+                "BIOG_TUR_CTHc_AMM.CTHc.TUR_ARM_CTHc_MAT_3a",
+                "BIOG_TUR_CTHc_AMM.CTHc.TUR_ARM_CTHc_MAT_4a",
+                "BIOG_TUR_CTHc_AMM.CTHc.TUR_ARM_CTHc_MAT_5a",
+                // extended vanilla
+                "BIOG_TUR_CTHc_AMM.CTHc.TUR_ARM_CTHc_MAT_1b",
+                "BIOG_TUR_CTHc_AMM.CTHc.TUR_ARM_CTHc_MAT_1c",
+                "BIOG_TUR_CTHc_AMM.CTHc.TUR_ARM_CTHc_MAT_1d",
+                "BIOG_TUR_CTHc_AMM.CTHc.TUR_ARM_CTHc_MAT_1e",
+                "BIOG_TUR_CTHc_AMM.CTHc.TUR_ARM_CTHc_MAT_1f",
+                "BIOG_TUR_CTHc_AMM.CTHc.TUR_ARM_CTHc_MAT_1g",
+                "BIOG_TUR_CTHc_AMM.CTHc.TUR_ARM_CTHc_MAT_1h",
+                "BIOG_TUR_CTHc_AMM.CTHc.TUR_ARM_CTHc_MAT_1i",
+                "BIOG_TUR_CTHc_AMM.CTHc.TUR_ARM_CTHc_MAT_1j",
+                "BIOG_TUR_CTHc_AMM.CTHc.TUR_ARM_CTHc_MAT_1k",
+                "BIOG_TUR_CTHc_AMM.CTHc.TUR_ARM_CTHc_MAT_1l",
+                "BIOG_TUR_CTHc_AMM.CTHc.TUR_ARM_CTHc_MAT_1m",
+                "BIOG_TUR_CTHc_AMM.CTHc.TUR_ARM_CTHc_MAT_1n",
+                "BIOG_TUR_CTHc_AMM.CTHc.TUR_ARM_CTHc_MAT_1o",
+                "BIOG_TUR_CTHc_AMM.CTHc.TUR_ARM_CTHc_MAT_2b",
+                "BIOG_TUR_CTHc_AMM.CTHc.TUR_ARM_CTHc_MAT_3b");
 
             // add all the outfits for Turians to the menu
-            AddMenuEntries(turianOutfitMenus.NonArmor, 100, 14);
+            AddMenuEntries(turianOutfitMenus.NonArmor, 100, nextId - 100);
 
-            // TODO add extended vanilla meshes
             configs.Add(bodyConfig);
             configs.Add(helmetConfig);
             configs.Add(breatherConfig);
@@ -690,6 +1115,30 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             }
 
             configToAddTo.AddArrayEntries("outfitSpecs", specs.Select(x => x.OutputValue()));
+        }
+
+        private static int AddCustomOutfitSpecs(
+            ModConfigClass specListConfig,
+            int startingId,
+            string meshPath,
+            params string[] materialPaths
+            )
+        {
+            SimpleOutfitSpecItem[] specs = new SimpleOutfitSpecItem[materialPaths.Length];
+            for (int i = 0; i < materialPaths.Length; i++)
+            {
+                specs[i] = new SimpleOutfitSpecItem(startingId + i, meshPath, [materialPaths[i]])
+                {
+                    HelmetSpec = -2
+                };
+            }
+
+            specListConfig.AddArrayEntries("outfitSpecs", specs.Select(x => x.OutputValue()));
+
+            // TODO add them into the menu as well here?
+
+            // the starting id for the next set
+            return startingId + specs.Length;
         }
 
         private static void AddVanillaHelmetSpecs(
