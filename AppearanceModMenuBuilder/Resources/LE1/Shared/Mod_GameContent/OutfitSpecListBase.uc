@@ -11,12 +11,18 @@ struct OutfitSpecItem
     var string specPath;
 	// or this along with any of the others if non default
 	var AppearanceMeshPaths BodyMesh;
+	// intended for outfits that include the helmet, so it will never show a helmet along with it
     var bool suppressHelmet;
-    var bool suppressBreather;
+    // var bool suppressBreather;
+	// along with the above, the outfit can hide the hair or head
     var bool hideHair;
     var bool hideHead;
+	// the default helmet spec to use. Will be applied if the helmet spec is 0 or -1
+	// usually to give armor a matching helmet
     var int HelmetSpec;
-    // var int BreatherSpec;
+	// you can make your outfit spec delegate to a different one when a helmet is requested
+	// this allows you to use a different mesh and do a hood down/hood up type outfit controlled by the helmet visibility
+	var int HelmetOnBodySpec;
 };
 
 // Variables
@@ -71,10 +77,11 @@ public function bool GetOutfitSpecById(int Id, out OutfitSpecBase OutfitSpec)
 		simpleSpec = new Class'SimpleOutfitSpec';
 		simpleSpec.bodyMesh = item.bodyMesh;
 		simpleSpec.bSuppressHelmet = item.suppressHelmet;
-		simpleSpec.bSuppressBreather = item.suppressBreather;
+		// simpleSpec.bSuppressBreather = item.suppressBreather;
 		simpleSpec.bHideHair = item.hideHair;
 		simpleSpec.bHideHead = item.hideHead;
 		simpleSpec.helmetTypeOverride = item.HelmetSpec;
+		simpleSpec.HelmetOnBodySpec = item.HelmetOnBodySpec;
 		// simpleSpec.breatherTypeOverride = item.BreatherSpec;
 		OutfitSpec = simpleSpec;
 		if (outfitSpec == None)
