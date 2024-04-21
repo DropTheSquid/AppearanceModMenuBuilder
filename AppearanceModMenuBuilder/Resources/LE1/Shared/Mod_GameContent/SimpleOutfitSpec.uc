@@ -2,14 +2,24 @@ class SimpleOutfitSpec extends OutfitSpecBase;
 
 var AppearanceMeshPaths BodyMesh;
 var bool bSuppressHelmet;
-var bool bSuppressBreather;
+// var bool bSuppressBreather;
 var bool bHideHair;
 var bool bHideHead;
 var int helmetTypeOverride;
+var int HelmetOnBodySpec;
 
 public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds, out pawnAppearance appearance)
 {
 	local eHelmetDisplayState helmetDisplayState;
+
+	// get whether we should display the helmet based on a variety of factors
+	helmetDisplayState = class'AMM_Utilities'.static.GetHelmetDisplayState(appearanceIds, target);
+	// if we should show a helmet but this spec redirects to another in that case, delegate to that one
+	if (helmetDisplayState  != eHelmetDisplayState.off && HelmetOnBodySpec != 0)
+	{
+		appearanceIds.bodyAppearanceId = HelmetOnBodySpec;
+		return specLists.outfitSpecs.DelegateToOutfitSpecById(target, specLists, appearanceIds, appearance);
+	}
 
 	if (!class'AMM_Utilities'.static.LoadAppearanceMesh(BodyMesh, appearance.bodyMesh))
 	{
@@ -19,9 +29,7 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
 	appearance.hideHair = bHideHair;
 	appearance.hideHead = bHideHead;
 
-	// get whether we should display the helmet based on a variety of factors
-	helmetDisplayState = class'AMM_Utilities'.static.GetHelmetDisplayState(appearanceIds, target);
-	if (helmetDisplayState == eHelmetDisplayState.off)
+	if (helmetDisplayState == eHelmetDisplayState.off || bSuppressHelmet)
 	{
 		// NoHelmetSpec
 		appearanceIds.helmetAppearanceId = -2;
