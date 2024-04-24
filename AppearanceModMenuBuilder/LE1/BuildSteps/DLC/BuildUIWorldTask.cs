@@ -193,6 +193,27 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             var RE_Update = AddRemoteEvent("re_AMM_update_Appearance", "updates the preview pawn's appearance in AMM");
             KismetHelper.CreateOutputLink(RE_Update, "Out", inventoryUpdateSeqAct, 0);
 
+            // a few new things to force the character record pawn into casual appearance
+            var RE_CharRecCasual = AddRemoteEvent("re_AMM_charRec_Casual", "updates the character record preview pawn's appearance to be casual");
+            var RE_CharRecCombat = AddRemoteEvent("re_AMM_charRec_Combat", "updates the character record preview pawn's appearance to be combat");
+            KismetHelper.AddObjectToSequence(RE_CharRecCasual, mainSeq);
+            KismetHelper.AddObjectToSequence(RE_CharRecCombat, mainSeq);
+            var charRecHideWeaponsAct = SequenceObjectCreator.CreateSequenceObject(pcc, "BioSeqAct_HideAllWeapons");
+            var charRecShowWeaponsAct = SequenceObjectCreator.CreateSequenceObject(pcc, "BioSeqAct_HideAllWeapons");
+            KismetHelper.AddObjectToSequence(charRecHideWeaponsAct, mainSeq);
+            KismetHelper.AddObjectToSequence(charRecShowWeaponsAct, mainSeq);
+            KismetHelper.CreateVariableLink(charRecHideWeaponsAct, "ShouldHideWeapons", seqVarTrue);
+            KismetHelper.CreateVariableLink(charRecShowWeaponsAct, "ShouldHideWeapons", seqVarFalse);
+            KismetHelper.CreateVariableLink(charRecShowWeaponsAct, "Pawns", CharRecPawnSeqVar);
+            KismetHelper.CreateVariableLink(charRecHideWeaponsAct, "Pawns", CharRecPawnSeqVar);
+
+            KismetHelper.CreateOutputLink(RE_CharRecCombat, "Out", charRecShowWeaponsAct);
+            KismetHelper.CreateOutputLink(RE_CharRecCasual, "Out", charRecHideWeaponsAct);
+            KismetHelper.CreateOutputLink(RE_CharRecCasual, "Out", charRecUpdateSequenceAct, 1);
+            KismetHelper.CreateOutputLink(RE_CharRecCombat, "Out", charRecUpdateSequenceAct, 2);
+            KismetHelper.CreateOutputLink(RE_CharRecCasual, "Out", charRecUpdateSequenceAct, 0);
+            KismetHelper.CreateOutputLink(RE_CharRecCombat, "Out", charRecUpdateSequenceAct, 0);
+
             // hide the ugly black rectangle under the pawn's feet
             var pedestalStaticMesh = pcc.FindExport("TheWorld.PersistentLevel.InterpActor_2.StaticMeshComponent_3")
                 ?? throw new Exception("Could not find pedestal static mesh in UI world to hide");

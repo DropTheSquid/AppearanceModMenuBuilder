@@ -49,6 +49,15 @@ public final function bool ChangeToCharacter(BioPawn NextCharacter)
         }
         m_PawnIsSpawned[m_CurrentPawnIndex] = TRUE;
     }
+	// make sure we update the character's appearance to match the appearance type outside the menu
+	if (m_CurrentPawn.m_oBehavior.IsArmorOverridden())
+	{
+		m_WorldInfo.m_UIWorld.TriggerEvent('re_AMM_charRec_Casual', m_WorldInfo);
+	}
+	else
+	{
+		m_WorldInfo.m_UIWorld.TriggerEvent('re_AMM_charRec_Combat', m_WorldInfo);
+	}
     PlayGuiSound('ChangeCharacter');
     return TRUE;
 }
