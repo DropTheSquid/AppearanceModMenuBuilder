@@ -45,3 +45,34 @@ protected final static function bool GetInstance(out AMM_AppearanceUpdater_Base 
 	// I don't even know how this would happen
 	return false;
 }
+
+protected function string ShouldShowHelmetButton(BioPawn Target)
+{
+	// "Toggle Helmet"
+    return string($174544);
+}
+public static function string ShouldShowHelmetButtonStatic(BioPawn Target)
+{
+    local AMM_AppearanceUpdater_Base Instance;
+    
+    if (GetInstance(Instance))
+    {
+        return Instance.ShouldShowHelmetButton(Target);
+    }
+    return "";
+}
+public function HelmetButtonPressed(BioPawn Target)
+{
+    LogInternal("running HelmetButtonPressed vanilla" @ Target @ Target.Tag, );
+    Target.SetHeadGearVisiblePreference(!Target.GetHeadGearVisiblePreference());
+    BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo()).m_UIWorld.UpdateHeadGearVisibility(Target);
+}
+public static function HelmetButtonPressedStatic(BioPawn Target)
+{
+    local AMM_AppearanceUpdater_Base Instance;
+    
+    if (GetInstance(Instance))
+    {
+        Instance.HelmetButtonPressed(Target);
+    }
+}
