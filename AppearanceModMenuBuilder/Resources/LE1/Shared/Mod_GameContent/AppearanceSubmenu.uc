@@ -43,9 +43,7 @@ struct AppearanceItemData
     var int applyHelmetId;
     var int applyBreatherId;
 	// applies an override of the helmet visibility in the AMM plot ints for the character
-    var eMenuHelmetOverride applyHelmetOverride;
-	// applies a helmet visibility preference that will affect visibility outside the menu
-    var eHelmetVisibilityPreference applyHelmetVisibilityPreference;
+    var eMenuHelmetOverride applyHelmetPreference;
 };
 enum eArmorOverrideState
 {
@@ -56,16 +54,9 @@ enum eArmorOverrideState
 enum eMenuHelmetOverride
 {
     unchanged,
-    vanilla,
-    forcedOff,
-    forcedOn,
-    forcedFull,
-};
-enum eHelmetVisibilityPreference
-{
-    unchanged,
-    preferOn,
-    preferOff,
+    Off,
+    On,
+    Full,
 };
 
 // Variables

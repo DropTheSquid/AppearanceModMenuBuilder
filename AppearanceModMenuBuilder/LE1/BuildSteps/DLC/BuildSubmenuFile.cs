@@ -39,8 +39,22 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // make an object referencer (probably not strictly necessary? LE1 can dynamic load without this)
             submenuPackageFile.GetOrCreateObjectReferencer();
 
-            classes.Add(GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AppearanceSubmenu.uc", ["Mod_GameContent"]));
-            classes.Add(GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AMM_Utilities.uc", ["Mod_GameContent"]));
+            classes.AddRange([
+                GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AppearanceSubmenu.uc", ["Mod_GameContent"]),
+                GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AMM_Utilities.uc", ["Mod_GameContent"]),
+                GetClassFromFile(@"Resources\LE1\Startup\AMM_AppearanceUpdater.uc", ["Mod_GameContent"]),
+                GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\Pawn_Parameter_Handler.uc", ["Mod_GameContent"]),
+                GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AMM_Pawn_Parameters.uc", ["Mod_GameContent"]),
+                GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\OutfitSpecBase.uc", ["Mod_GameContent"]),
+                GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\SimpleOutfitSpec.uc", ["Mod_GameContent"]),
+                GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\OutfitSpecListBase.uc", ["Mod_GameContent"]),
+                GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\HelmetSpecListBase.uc", ["Mod_GameContent"]),
+                GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\breatherSpecListBase.uc", ["Mod_GameContent"]),
+                GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\breatherSpecBase.uc", ["Mod_GameContent"]),
+                GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\SimpleBreatherSpec.uc", ["Mod_GameContent"]),
+                GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\SimpleHelmetSpec.uc", ["Mod_GameContent"]),
+                GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\helmetSpecBase.uc", ["Mod_GameContent"]),
+                ]);
 
             var configMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-amm_Submenus.m3cd");
 
@@ -175,50 +189,28 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     SrCenterText = 174743,
                     ApplyHelmetId = -2
                 });
-
+                // TODO this should have visibility rules similar to the button in squad screen based on what helmet will show up, should be a single button to cycle
                 menus.Headgear.AddMenuEntry(new AppearanceItemData()
                 {
                     // "[1] - [2]"
                     SrCenterText = 210210236,
-                    ApplyHelmetOverride = AppearanceItemData.EMenuHelmetOverride.vanilla,
-                    DisplayVars = ["helmet override", "vanilla"]
+                    ApplyHelmetPreference = AppearanceItemData.EMenuHelmetOverride.Off,
+                    DisplayVars = ["helmet preference", "off"]
                 });
                 menus.Headgear.AddMenuEntry(new AppearanceItemData()
                 {
                     // "[1] - [2]"
                     SrCenterText = 210210236,
-                    ApplyHelmetOverride = AppearanceItemData.EMenuHelmetOverride.forcedOff,
-                    DisplayVars = ["helmet override", "off"]
+                    ApplyHelmetPreference = AppearanceItemData.EMenuHelmetOverride.On,
+                    DisplayVars = ["helmet preference", "on"]
                 });
                 menus.Headgear.AddMenuEntry(new AppearanceItemData()
                 {
                     // "[1] - [2]"
                     SrCenterText = 210210236,
-                    ApplyHelmetOverride = AppearanceItemData.EMenuHelmetOverride.forcedOn,
-                    DisplayVars = ["helmet override", "on"]
+                    ApplyHelmetPreference = AppearanceItemData.EMenuHelmetOverride.Full,
+                    DisplayVars = ["helmet preference", "full"]
                 });
-                menus.Headgear.AddMenuEntry(new AppearanceItemData()
-                {
-                    // "[1] - [2]"
-                    SrCenterText = 210210236,
-                    ApplyHelmetOverride = AppearanceItemData.EMenuHelmetOverride.forcedFull,
-                    DisplayVars = ["helmet override", "full"]
-                });
-                menus.Headgear.AddMenuEntry(new AppearanceItemData()
-                {
-                    // "[1] - [2]"
-                    SrCenterText = 210210236,
-                    ApplyHelmetVisibilityPreference = AppearanceItemData.EHelmetVisibilityPreference.preferOff,
-                    DisplayVars = ["helmet preference", "no helmet"]
-                });
-                menus.Headgear.AddMenuEntry(new AppearanceItemData()
-                {
-                    // "[1] - [2]"
-                    SrCenterText = 210210236,
-                    ApplyHelmetVisibilityPreference = AppearanceItemData.EHelmetVisibilityPreference.preferOn,
-                    DisplayVars = ["helmet preference", "helmet"]
-                });
-
 
                 menus.Headgear.AddMenuEntry(menus.Breather.GetEntryPoint(210210244));
 

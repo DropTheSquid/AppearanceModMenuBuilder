@@ -34,6 +34,8 @@ var config array<string> alternateTags;
 var config eGender gender;
 var config string menuRootPath;
 var config array<AppearanceIdLookups> AppearanceIdLookupsList;
+// whether this pawn should ignore the game forcing a helmet. This mostly applies to Tali, since she always has a breather on anyway, and has no vanilla helmet anyway
+var config bool bIgnoreForcedHelmet;
 
 // Functions
 public function bool matchesPawn(BioPawn targetPawn)

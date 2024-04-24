@@ -758,9 +758,7 @@ public function AuxButtonPressedEx(int selectedIndex)
         currentSubmenu = GetCurrentSubmenu();
         if (!currentSubmenu.OnAuxButtonPressed(Self, selectedIndex))
         {
-            selectedItem = currentDisplayItems[selectedIndex];
-			// EmitRemoteEvent("re_AMM_Copy_Player_Head");
-			// BioWorldInfo(oWorldInfo).m_UIWorld.TriggerEvent('re_AMM_Copy_Player_Head', oWorldInfo);
+            // selectedItem = currentDisplayItems[selectedIndex];
             // comment("TODO undo probably?");
             // LogInternal("This should eventually be an undo button", );
         }
@@ -814,12 +812,12 @@ public function ApplyItem(AppearanceItemData item)
         }
     }
     state = getMenuState();
-    LogInternal("trying to apply stuff" @ state.AppearanceIdLookups.bodyAppearanceLookup.plotIntId @ state.AppearanceIdLookups.helmetAppearanceLookup.plotIntId @ state.AppearanceIdLookups.breatherAppearanceLookup.plotIntId, );
+    // LogInternal("trying to apply stuff" @ state.AppearanceIdLookups.bodyAppearanceLookup.plotIntId @ state.AppearanceIdLookups.helmetAppearanceLookup.plotIntId @ state.AppearanceIdLookups.breatherAppearanceLookup.plotIntId, );
     if (state.AppearanceIdLookups.bodyAppearanceLookup.plotIntId != 0)
     {
         if (item.applyOutfitId != 0)
         {
-            LogInternal("applying outfit" @ item.applyOutfitId @ "to plot int" @ state.AppearanceIdLookups.bodyAppearanceLookup.plotIntId, );
+            // LogInternal("applying outfit" @ item.applyOutfitId @ "to plot int" @ state.AppearanceIdLookups.bodyAppearanceLookup.plotIntId, );
             globalVars.SetInt(state.AppearanceIdLookups.bodyAppearanceLookup.plotIntId, item.applyOutfitId);
             isAppearanceDirty = TRUE;
         }
@@ -828,7 +826,7 @@ public function ApplyItem(AppearanceItemData item)
     {
         if (item.applyHelmetId != 0)
         {
-            LogInternal("applying helmet" @ item.applyHelmetId @ "to plot int" @ state.AppearanceIdLookups.helmetAppearanceLookup.plotIntId, );
+            // LogInternal("applying helmet" @ item.applyHelmetId @ "to plot int" @ state.AppearanceIdLookups.helmetAppearanceLookup.plotIntId, );
             globalVars.SetInt(state.AppearanceIdLookups.helmetAppearanceLookup.plotIntId, item.applyHelmetId);
             isAppearanceDirty = TRUE;
         }
@@ -837,7 +835,7 @@ public function ApplyItem(AppearanceItemData item)
     {
         if (item.applyBreatherId != 0)
         {
-            LogInternal("applying breather" @ item.applyBreatherId @ "to plot int" @ state.AppearanceIdLookups.breatherAppearanceLookup.plotIntId, );
+            // LogInternal("applying breather" @ item.applyBreatherId @ "to plot int" @ state.AppearanceIdLookups.breatherAppearanceLookup.plotIntId, );
             globalVars.SetInt(state.AppearanceIdLookups.breatherAppearanceLookup.plotIntId, item.applyBreatherId);
             isAppearanceDirty = TRUE;
         }
@@ -851,24 +849,24 @@ private final function ApplyHelmetSetting(AppearanceItemData item, menuState sta
 	local int updatedFlags;
 
     flagsPlotId = state.AppearanceIdLookups.appearanceFlagsLookup.plotIntId;
-    if (flagsPlotId != 0 && item.applyHelmetOverride != eMenuHelmetOverride.unchanged)
+    if (flagsPlotId != 0 && item.applyHelmetPreference != eMenuHelmetOverride.unchanged)
     {
         // LogInternal("Trying to apply helmet visibility override" @ item.applyHelmetOverride @ flagsPlotId, );
         appearanceSettings = class'Amm_Utilities'.static.DecodeAppearanceSettings(globalVars.GetInt(flagsPlotId));
         // LogInternal("Current flags" @ currentFlagsValue, );
 		// TODO this is a bit brittle; it relies on the values being the same, but offset by 1
-		appearanceSettings.forceHelmetState = (item.applyHelmetOverride) - 1;
+		appearanceSettings.helmetDisplayState = (item.applyHelmetPreference) - 1;
         updatedFlags = class'Amm_Utilities'.static.EncodeAppearanceSettings(appearanceSettings);
         // LogInternal("updated flags" @ updatedFlags, );
         globalVars.SetInt(flagsPlotId, updatedFlags);
 		isAppearanceDirty = TRUE;
     }
-    if (item.applyHelmetVisibilityPreference != eHelmetVisibilityPreference.unchanged)
-    {
-        // LogInternal("trying to apply a helmet visibility preference" @ item.applyHelmetVisibilityPreference, );
-        pawnHandler.SetHelmetVisibilityPreference(item.applyHelmetVisibilityPreference == eHelmetVisibilityPreference.preferOn);
-        isAppearanceDirty = TRUE;
-    }
+    // if (item.applyHelmetVisibilityPreference != eHelmetVisibilityPreference.unchanged)
+    // {
+    //     // LogInternal("trying to apply a helmet visibility preference" @ item.applyHelmetVisibilityPreference, );
+    //     pawnHandler.SetHelmetVisibilityPreference(item.applyHelmetVisibilityPreference == eHelmetVisibilityPreference.preferOn);
+    //     isAppearanceDirty = TRUE;
+    // }
     // if (item.menuHelmetOverride != eMenuHelmetOverride.unchanged)
     // {
     //     LogInternal("Setting chosen menu helmet override to" @ item.menuHelmetOverride, );

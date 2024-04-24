@@ -21,7 +21,6 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 			specLists = params.GetSpecLists(target);
 			if (specLists.outfitSpecs == None)
 			{
-				LogInternal("Warning: Could not get outfit list");
 				return;
 			}
 			if (specLists.outfitSpecs.DelegateToOutfitSpecById(target, specLists, appearanceIds, pawnAppearance))
@@ -61,6 +60,16 @@ public static function bool IsInCharacterCreator(out BioSFHandler_NewCharacter n
 			return ncHandler != None;
 		}
 		return false;
+	}
+	return false;
+}
+public static function bool GetPawnParams(BioPawn Target, out AMM_Pawn_Parameters params)
+{
+	local AMM_AppearanceUpdater_Base instance;
+
+	if (GetInstance(instance) && AMM_AppearanceUpdater(instance) != None)
+	{
+		return AMM_AppearanceUpdater(instance).paramHandler.GetPawnParams(target, params);
 	}
 	return false;
 }

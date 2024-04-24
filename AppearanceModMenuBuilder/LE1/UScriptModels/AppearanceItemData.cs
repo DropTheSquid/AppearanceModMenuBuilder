@@ -51,16 +51,10 @@ namespace AppearanceModMenuBuilder.LE1.UScriptModels
 
         public enum EMenuHelmetOverride
         {
-            vanilla,
-            forcedOff,
-            forcedOn,
-            forcedFull,
-        }
-
-        public enum EHelmetVisibilityPreference
-        {
-            preferOn,
-            preferOff,
+            unchanged,
+            Off,
+            On,
+            Full,
         }
 
         public int? SrCenterText
@@ -123,16 +117,10 @@ namespace AppearanceModMenuBuilder.LE1.UScriptModels
             set => SetEnum(nameof(Gender), value);
         }
 
-        public EMenuHelmetOverride? ApplyHelmetOverride
+        public EMenuHelmetOverride? ApplyHelmetPreference
         {
-            get => GetEnum<EMenuHelmetOverride>(nameof(ApplyHelmetOverride));
-            set => SetEnum(nameof(ApplyHelmetOverride), value);
-        }
-
-        public EHelmetVisibilityPreference? ApplyHelmetVisibilityPreference
-        {
-            get => GetEnum<EHelmetVisibilityPreference>(nameof(ApplyHelmetVisibilityPreference));
-            set => SetEnum(nameof(ApplyHelmetVisibilityPreference), value);
+            get => GetEnum<EMenuHelmetOverride>(nameof(ApplyHelmetPreference));
+            set => SetEnum(nameof(ApplyHelmetPreference), value);
         }
     }
 }

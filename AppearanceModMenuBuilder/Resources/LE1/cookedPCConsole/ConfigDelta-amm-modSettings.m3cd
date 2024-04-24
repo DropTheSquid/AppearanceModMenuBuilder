@@ -16,3 +16,7 @@ srSubtitle=210210222
 ; +menuItems=(srLeftText=210210224, srRightText=210210227, srDescriptionText=210210231, srDescriptionTitleText=210210224, srActionText=1050028, DisplayInt=(Id=1592,Value=2), ApplySettingInts=((Id=1592,Value=3)) Images=())
 +menuItems=(srLeftText=210210224, srRightText=210210228, srDescriptionText=210210232, srDescriptionTitleText=210210224, srActionText=1050028, DisplayInt=(Id=1592,Value=3), ApplySettingInts=((Id=1592,Value=0)) Images=())
 
+;                      "Ignore Forced Helmet" "Disabled"                                                                          "Enable"
++menuItems=(srLeftText=210210246, srRightText=200054, srDescriptionText=210210247, srDescriptionTitleText=210210246, srActionText=200008, DisplayInt=(Id=1593,Value=0), ApplySettingInts=((Id=1593,Value=1)) Images=())
++menuItems=(srLeftText=210210246, srRightText=200053, srDescriptionText=210210247, srDescriptionTitleText=210210246, srActionText=200009, DisplayInt=(Id=1593,Value=1), ApplySettingInts=((Id=1593,Value=0)) Images=())
+

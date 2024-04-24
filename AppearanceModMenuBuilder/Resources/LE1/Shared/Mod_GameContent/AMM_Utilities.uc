@@ -10,7 +10,7 @@ struct PawnAppearanceIds
     // various bools which can be encoded in an int for most characters
     struct AppearanceSettings
     {
-        var eForceHelmetState forceHelmetState;
+        var eHelmetDisplayState helmetDisplayState;
     };
 };
 enum eGender
@@ -37,21 +37,6 @@ struct pawnAppearance
     var AppearanceMesh BreatherMesh;
 	var bool hideHair;
     var bool hideHead;
-};
-
-enum eForceHelmetState
-{
-	// the helmet visibility will behave as it does in vanilla; you can set the preference in the squad record menu (or in AMM)
-	// if the level/cinematic requires a breather/no helmet, it will apply that. You will never see the full breather unless the level requires it
-	Vanilla,
-	// no helmet, even if the level would normally require it
-	ForceOff,
-	// helmet (but no breather) even if the level requires it
-	ForceOn,
-	// helmet on even if the game asks for no helmet. will add breather if requested by the game for immersion
-	// ForcedOnOrFull,
-	// always full breather
-	ForceFull
 };
 
 enum eHelmetDisplayState
@@ -400,20 +385,17 @@ public static function AppearanceSettings DecodeAppearanceSettings(int flags)
     switch (helmetFlags)
     {
 		case 0:
-			settings.forceHelmetState = eForceHelmetState.Vanilla;
+			settings.helmetDisplayState = eHelmetDisplayState.off;
 			break;
         case 1:
-            settings.forceHelmetState = eForceHelmetState.ForceOff;
+            settings.helmetDisplayState = eHelmetDisplayState.on;
 			break;
         case 2:
-            settings.forceHelmetState = eForceHelmetState.ForceOn;
-			break;
-        case 3:
-            settings.forceHelmetState = eForceHelmetState.ForceFull;
+            settings.helmetDisplayState = eHelmetDisplayState.full;
 			break;
 		default:
 			LogInternal("Invalid helmet flag in appearance settings"@helmetFlags);
-			settings.forceHelmetState = eForceHelmetState.Vanilla;
+			settings.helmetDisplayState = eHelmetDisplayState.off;
 			break;
     }
 
@@ -426,19 +408,16 @@ public static function int EncodeAppearanceSettings(AppearanceSettings settings)
 	local int helmetFlags;
 	local string comment;
 
-	switch (settings.forceHelmetState)
+	switch (settings.helmetDisplayState)
 	{
-		case eForceHelmetState.Vanilla:
+		case eHelmetDisplayState.off:
 			helmetFlags = 0;
 			break;
-		case eForceHelmetState.ForceOff:
+		case eHelmetDisplayState.on:
 			helmetFlags = 1;
 			break;
-		case eForceHelmetState.ForceOn:
+		case eHelmetDisplayState.full:
 			helmetFlags = 2;
-			break;
-		case eForceHelmetState.ForceFull:
-			helmetFlags = 3;
 			break;
 	}
 
@@ -449,41 +428,41 @@ public static function int EncodeAppearanceSettings(AppearanceSettings settings)
 public static function eHelmetDisplayState GetHelmetDisplayState(PawnAppearanceIds appearanceIds, BioPawn target)
 {
 	local BioPawnType pawnType;
-	local eForceHelmetState forceHelmetState;
+	local eHelmetDisplayState forceHelmetState;
 
-	// first, check if we have overridden the helmet state in AMM settings
-	forceHelmetState = appearanceIds.m_appearanceSettings.forceHelmetState;
-	// if there is no override there, check if the helmet visibility has been overridden in sequence/code at runtime (as is the case for certain cutscenes, or on planets without a breathable atmosphere)
-	if (forceHelmetState == eForceHelmetState.Vanilla)
+	// if the game has an override to breather and we are not ignoring it, use a full breather
+	if (ShouldUseForcedBreather(target))
 	{
-		forceHelmetState = GetVanillaHelmetOverride(target);
+		return eHelmetDisplayState.full;
 	}
-	// if it is not overridden there, check the preference and the pawn settings; some pawns hardcode the helmet to be invisible
-	if (forceHelmetState == eForceHelmetState.Vanilla)
-	{
-		forceHelmetState = GetHelmetPreference(target);
-	}
-	switch (forceHelmetState)
-	{
-		case eForceHelmetState.ForceOff:
-			return eHelmetDisplayState.Off;
-		case eForceHelmetState.ForceOn:
-			return eHelmetDisplayState.On;
-		case eForceHelmetState.ForceFull:
-			return eHelmetDisplayState.Full;
-		default:
-			LogInternal("invalid force helmet state of"@forceHelmetState);
-			return eHelmetDisplayState.Off;
-	}
+	// else use what the player has requested
+	return appearanceIds.m_appearanceSettings.helmetDisplayState;
 }
 
-private static function eForceHelmetState GetVanillaHelmetOverride(BioPawn target)
+private static function bool ShouldUseForcedBreather(BioPawn target)
 {
 	local BioPawnType pawnType;
 	local BioInterface_Appearance_Pawn appearance;
 	local bool isHeadgearPreferenceOverridden;
 	local bool helmetVisible;
 	local bool faceplateVisible;
+	local BioGlobalVariableTable globalVars;
+	local AMM_Pawn_Parameters params;
+
+	if (class'AMM_AppearanceUpdater'.static.GetPawnParams(target, params) && params.bIgnoreForcedHelmet)
+	{
+		return false;
+	}
+
+	// TODO  if this is inside AMM specifically, ignore, return false?
+	// only relevant if they have the setting on to access it anywhere
+
+	// first check if the mod setting lets us override things
+	globalVars = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo()).GetGlobalVariables();
+	if (globalVars.GetInt(1593) == 1)
+	{
+		return false;
+	}
 
 	pawnType = GetPawnType(target);
 	appearance = BioInterface_Appearance_Pawn(target.m_oBehavior.m_oAppearanceType);
@@ -491,69 +470,10 @@ private static function eForceHelmetState GetVanillaHelmetOverride(BioPawn targe
 	if (!isHeadgearPreferenceOverridden)
 	{
 		// meaning, in this case, respect the preference set by the player in the Squad record menu
-		return eForceHelmetState.Vanilla;
+		return false;
 	}
 	helmetVisible = appearance.m_headGearVisibilityRunTimeOverride.m_a[2].m_bIsVisible;
 	faceplateVisible = appearance.m_headGearVisibilityRunTimeOverride.m_a[1].m_bIsVisible;
-	// 2 is the helmet visibility
-	if (helmetVisible)
-	{
-		return faceplateVisible ? eForceHelmetState.ForceFull : eForceHelmetState.ForceOn;
-	}
-	return eForceHelmetState.ForceOff;
+	// force the breather only if the helmet and faceplate have been forced into visibility
+	return helmetVisible && faceplateVisible;
 }
-
-private static function eForceHelmetState GetHelmetPreference(BioPawn target)
-{
-	local BioPawnType pawnType;
-	local BioInterface_Appearance_Pawn appearance;
-
-	pawnType = GetPawnType(target);
-	appearance = BioInterface_Appearance_Pawn(target.m_oBehavior.m_oAppearanceType);
-	// helmet visibility
-	if (!appearance.m_headGearVisibilityOverride.m_a[2].m_bIsVisible)
-	{
-		// this means that the helmet is set to invisible on the pawn, and we should ignore the preference. This is often the case on casual pawns even if they are in armor, such as Garrus and Wrex on the Normandy
-		return eForceHelmetState.ForceOff;
-	}
-	if (!appearance.m_bHeadGearVisiblePreference)
-	{
-		return eForceHelmetState.ForceOff;
-	}
-	// faceplate visibility; may be true for some NPCs
-	if (appearance.m_headGearVisibilityOverride.m_a[1].m_bIsVisible)
-	{
-		return eForceHelmetState.ForceFull;
-	}
-	return eForceHelmetState.ForceOn;
-}
-
-// private static function ProfileSMC(SkeletalMeshComponent smc)
-// {
-// 	local int i;
-
-// 	LogInternal("profiling SMC"@pathName(smc));
-// 	LogInternal("mesh"@PathName(smc.SkeletalMesh));
-// 	LogInternal("materials"@smc.GetNumElements()@smc.Materials.Length);
-// 	for (i = 0; i < smc.GetNumElements(); i++)
-// 	{
-// 		LogInternal("current material"@i@smc.GetMaterial(i).class@Pathname(smc.GetMaterial(i)));
-// 		LogInternal("by direct access method"@smc.Materials[i]);
-// 		LogInternal("base material?"@smc.GetBaseMaterial(i));
-// 		ProfileMaterialInterface(smc.GetMaterial(i));
-// 	}
-// }
-
-// private static function ProfileMaterialInterface(MaterialInterface mat)
-// {
-// 	local MaterialInstance MI;
-
-// 	LogInternal("profiling material"@mat.class@pathname(mat));
-// 	LogInternal("GetMaterial"@mat.GetMaterial().class@PathName(mat.GetMaterial()));
-// 	MI = MaterialInstance(mat);
-// 	if (MI != None)
-// 	{
-// 		LogInternal("profiling parent");
-// 		ProfileMaterialInterface(MI.parent);
-// 	}
-// }
