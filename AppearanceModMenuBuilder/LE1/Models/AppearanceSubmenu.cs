@@ -42,12 +42,13 @@ namespace AppearanceModMenuBuilder.LE1.Models
             AddArrayEntries("menuItems", item.OutputValue());
         }
 
-        public AppearanceItemData GetEntryPoint(int srCenterText)
+        public AppearanceItemData GetEntryPoint(int srCenterText, bool requiresFramework = false)
         {
             return new AppearanceItemData()
             {
                 SrCenterText = srCenterText,
-                SubMenuClassName = ClassFullPath
+                SubMenuClassName = ClassFullPath,
+                RequiresFramework = requiresFramework ? true : null
             };
         }
 

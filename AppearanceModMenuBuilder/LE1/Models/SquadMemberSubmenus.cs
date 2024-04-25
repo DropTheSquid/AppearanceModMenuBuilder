@@ -110,7 +110,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
                     SrSubtitle = srRomanceAppearance
                 };
                 // add this menu into the root character menu
-                rootCharacterMenu.AddMenuEntry(romanceMenu.GetEntryPoint(srRomanceAppearance));
+                rootCharacterMenu.AddMenuEntry(romanceMenu.GetEntryPoint(srRomanceAppearance, requiresFramework: true));
                 // add the appropriate submenu into this one
                 romanceMenu.AddMenuEntry(OutfitSubmenus.Casual.GetInlineEntryPoint());
                 _submenus.Add(romanceMenu);

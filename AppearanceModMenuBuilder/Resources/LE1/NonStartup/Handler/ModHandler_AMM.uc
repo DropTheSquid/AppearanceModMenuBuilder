@@ -457,6 +457,10 @@ private final function bool ShouldItemBeDisplayedBasedOnPlot(AppearanceItemData 
             return FALSE;
         }
     }
+	if (item.requiresFramework && !class'AMM_Utilities'.static.IsFrameworkInstalled())
+	{
+		return false;
+	}
     return TRUE;
 }
 public final function bool doesPackageExportExist(string packageName)

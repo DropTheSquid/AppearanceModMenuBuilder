@@ -44,6 +44,7 @@ struct AppearanceItemData
     var int applyBreatherId;
 	// applies an override of the helmet visibility in the AMM plot ints for the character
     var eMenuHelmetOverride applyHelmetPreference;
+	var bool requiresFramework;
 };
 enum eArmorOverrideState
 {
@@ -74,6 +75,7 @@ var transient array<string> MenuParameters;
 var config string pawnTag;
 var config string pawnAppearanceType;
 // overrides the visibility of the helmet in this menu and submenus, such as for previewing
+// TODO implement this
 var config eMenuHelmetOverride menuHelmetOverride;
 var config bool preloadPawn;
 
