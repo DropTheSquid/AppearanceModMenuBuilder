@@ -63,6 +63,23 @@ public static function bool IsInCharacterCreator(out BioSFHandler_NewCharacter n
 	}
 	return false;
 }
+public static function bool IsInAMM(out BioSFPanel panel)
+{
+	local AMM_AppearanceUpdater_Base instance;
+	local BioWorldInfo BWI;
+    local string path;
+	local MassEffectGuiManager guiman;
+
+	if (GetInstance(instance))
+	{
+		path = AMM_AppearanceUpdater(instance).outerWorldInfoPath;
+		BWI = BioWorldInfo(FindObject(path, Class'BioWorldInfo'));
+		guiman = MassEffectGuiManager(BWI.GetLocalPlayerController().GetScaleFormManager());
+		panel = guiman.GetPanelByTag('AMM');
+		return panel != None;
+	}
+	return false;
+}
 public static function bool GetPawnParams(BioPawn Target, out AMM_Pawn_Parameters params)
 {
 	local AMM_AppearanceUpdater_Base instance;

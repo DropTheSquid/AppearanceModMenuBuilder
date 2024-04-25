@@ -425,6 +425,18 @@ public static function int EncodeAppearanceSettings(AppearanceSettings settings)
 	return helmetFlags; // | otherFlags once there are others
 }
 
+// private static function bool IsInAMM()
+// {
+// 	local BioWorldInfo BWI;
+// 	local MassEffectGuiManager guiman;
+// 	local BioSFPanel panel;
+
+// 	BWI = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo());
+// 	guiman = MassEffectGuiManager(BWI.GetLocalPlayerController().GetScaleFormManager());
+// 	panel = guiman.GetPanelByTag('AMM');
+// 	return panel != None;
+// }
+
 public static function eHelmetDisplayState GetHelmetDisplayState(PawnAppearanceIds appearanceIds, BioPawn target)
 {
 	local BioPawnType pawnType;
@@ -448,14 +460,18 @@ private static function bool ShouldUseForcedBreather(BioPawn target)
 	local bool faceplateVisible;
 	local BioGlobalVariableTable globalVars;
 	local AMM_Pawn_Parameters params;
+	local BioSFPanel panel;
+
+	// if this is a preview pawn in AMM, return false; we should ignore forced state there
+	if (target.GetPackageName() == 'BIOG_UIWORLD' && class'AMM_AppearanceUpdater'.static.IsInAMM(panel))
+	{
+		return false;
+	}
 
 	if (class'AMM_AppearanceUpdater'.static.GetPawnParams(target, params) && params.bIgnoreForcedHelmet)
 	{
 		return false;
 	}
-
-	// TODO  if this is inside AMM specifically, ignore, return false?
-	// only relevant if they have the setting on to access it anywhere
 
 	// first check if the mod setting lets us override things
 	globalVars = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo()).GetGlobalVariables();

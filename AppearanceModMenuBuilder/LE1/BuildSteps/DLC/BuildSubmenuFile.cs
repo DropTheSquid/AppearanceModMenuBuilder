@@ -183,12 +183,12 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     SrCenterText = 184218,
                     ApplyHelmetId = -1
                 });
-                menus.Headgear.AddMenuEntry(new AppearanceItemData()
-                {
-                    // "None"
-                    SrCenterText = 174743,
-                    ApplyHelmetId = -2
-                });
+                //menus.Headgear.AddMenuEntry(new AppearanceItemData()
+                //{
+                //    // "None"
+                //    SrCenterText = 174743,
+                //    ApplyHelmetId = -2
+                //});
                 // TODO this should have visibility rules similar to the button in squad screen based on what helmet will show up, should be a single button to cycle
                 menus.Headgear.AddMenuEntry(new AppearanceItemData()
                 {
