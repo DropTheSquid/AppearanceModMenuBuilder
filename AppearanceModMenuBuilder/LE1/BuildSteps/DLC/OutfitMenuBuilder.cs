@@ -388,7 +388,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         {
             var configMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-amm_Submenus.m3cd");
 
-            var (humanOutfitMenus, turianOutfitMenus, _, _) = InitCommonMenus(configMergeFile);
+            var (humanOutfitMenus, asariOutfitMenus, turianOutfitMenus, _, _) = InitCommonMenus(configMergeFile);
 
             // hmm/hmf breathers
             humanOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
@@ -426,6 +426,38 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 ApplyBreatherId = -15,
             });
 
+            // asa breathers
+            asariOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
+            {
+                // "Shepard"
+                SrCenterText = 125303,
+                ApplyBreatherId = -11
+            });
+            asariOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
+            {
+                // "Ashley"
+                SrCenterText = 168842,
+                ApplyBreatherId = -13,
+            });
+            asariOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
+            {
+                // "Liara"
+                SrCenterText = 149285,
+                ApplyBreatherId = -12,
+            });
+            asariOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
+            {
+                // "Kaidan"
+                SrCenterText = 151316,
+                ApplyBreatherId = -14,
+            });
+            asariOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
+            {
+                // "NPC"
+                SrCenterText = 210210245,
+                ApplyBreatherId = -15,
+            });
+
             // default Turian LGT and HVY breather
             turianOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
             {
@@ -438,7 +470,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         {
             var configMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-amm_Submenus.m3cd");
 
-            var (humanOutfitMenus, turianOutfitMenus, quarianOutfitMenus, kroganOutfitMenus) = InitCommonMenus(configMergeFile);
+            var (humanOutfitMenus, asariOutfitMenus, turianOutfitMenus, quarianOutfitMenus, kroganOutfitMenus) = InitCommonMenus(configMergeFile);
 
             foreach (var item in armorSets)
             {
@@ -448,6 +480,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 AddArmorToMenu(humanOutfitMenus, item, item.HumanFemaleHenchVariant, EGender.Female);
                 AddArmorToMenu(humanOutfitMenus, item, item.AnyHumanVariant);
                 AddArmorToMenu(humanOutfitMenus, item, item.AnyPlayerVariant);
+                AddArmorToMenu(asariOutfitMenus, item, item.FemalePlayerVariant);
+                AddArmorToMenu(asariOutfitMenus, item, item.HumanFemaleHenchVariant);
+                AddArmorToMenu(asariOutfitMenus, item, item.AnyHumanVariant);
+                AddArmorToMenu(asariOutfitMenus, item, item.AnyPlayerVariant);
                 AddArmorToMenu(kroganOutfitMenus, item, item.KroganVariant);
                 AddArmorToMenu(turianOutfitMenus, item, item.TurianVariant);
                 AddArmorToMenu(quarianOutfitMenus, item, item.QuarianVariant, skipHelmets: true);

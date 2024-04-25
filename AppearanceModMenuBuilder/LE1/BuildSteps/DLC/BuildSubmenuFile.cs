@@ -25,6 +25,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         }
 
         public SpeciesOutfitMenus HumanOutfitMenus;
+        public SpeciesOutfitMenus AsariOutfitMenus;
         public SpeciesOutfitMenus TurianOutfitMenus;
         public SpeciesOutfitMenus KroganOutfitMenus;
         public SpeciesOutfitMenus QuarianOutfitMenus;
@@ -93,7 +94,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             classTask.RunModTask(context);
         }
 
-        public static (SpeciesOutfitMenus human, SpeciesOutfitMenus turian, SpeciesOutfitMenus quarian, SpeciesOutfitMenus krogan) InitCommonMenus(ModConfigMergeFile configMergeFile)
+        public static (SpeciesOutfitMenus human, SpeciesOutfitMenus asari, SpeciesOutfitMenus turian, SpeciesOutfitMenus quarian, SpeciesOutfitMenus krogan) InitCommonMenus(ModConfigMergeFile configMergeFile)
         {
             SpeciesOutfitMenus GetOrCreateMenus(string bodyType)
             {
@@ -107,12 +108,12 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     Breather = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_Breather", configMergeFile)
                 };
             }
-            return (GetOrCreateMenus("Human"), GetOrCreateMenus("Turian"), GetOrCreateMenus("Quarian"), GetOrCreateMenus("Krogan"));
+            return (GetOrCreateMenus("Human"), GetOrCreateMenus("Asari"), GetOrCreateMenus("Turian"), GetOrCreateMenus("Quarian"), GetOrCreateMenus("Krogan"));
         }
 
         private void MakeCommonSubmenus(IMEPackage submenuPackageFile, ModConfigMergeFile configMergeFile)
         {
-            (HumanOutfitMenus, TurianOutfitMenus, QuarianOutfitMenus, KroganOutfitMenus) = InitCommonMenus(configMergeFile);
+            (HumanOutfitMenus, AsariOutfitMenus, TurianOutfitMenus, QuarianOutfitMenus, KroganOutfitMenus) = InitCommonMenus(configMergeFile);
             void SetupMenu(string bodyType, SpeciesOutfitMenus menus)
             {
                 var packageExp = ExportCreator.CreatePackageExport(submenuPackageFile, bodyType);
@@ -231,6 +232,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 // TODO add titles and subtitles to these?
             }
             SetupMenu("Human", HumanOutfitMenus);
+            SetupMenu("Asari", AsariOutfitMenus);
             SetupMenu("Turian", TurianOutfitMenus);
             SetupMenu("Quarian", QuarianOutfitMenus);
             SetupMenu("Krogan", KroganOutfitMenus);
@@ -256,7 +258,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 // TODO add this in once I have actually implemented conditionals
                 //DisplayConditional = 2501
             });
-            squadMembers.Add(new SquadMemberSubmenus("Liara", 172365, "Hench_Asari", HumanOutfitMenus)
+            squadMembers.Add(new SquadMemberSubmenus("Liara", 172365, "Hench_Asari", AsariOutfitMenus)
             {
                 Romanceable = true,
                 // TODO add this in once I have actually implemented conditionals
