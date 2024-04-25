@@ -64,6 +64,8 @@ public function AmmPressEx()
     {
         oBWI.m_UIWorld.DestroyPawn(m_oLastSpawnedPawn);
     }
+	// make sure it doesn't keep firing equip events and putting the AMM model into weapon poses
+	m_fNextEquipTime = 0;
     AMMClass = Class<CustomUIHandlerInterface>(DynamicLoadObject("AMM.Handler.ModHandler_AMM", Class'Class'));
     AMM = AMMClass.static.LaunchMenu(string(m_oLastSpawnedPawn.Tag));
     AMM.SetOnCloseCallback(OnAMMClose);
