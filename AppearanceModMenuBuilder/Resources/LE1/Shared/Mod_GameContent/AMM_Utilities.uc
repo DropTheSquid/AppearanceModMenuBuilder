@@ -74,6 +74,221 @@ public static function bool IsPawnArmorAppearanceOverridden(BioPawn targetPawn)
     return pawnType.m_bIsArmorOverridden || targetPawn.m_oBehavior.m_bArmorOverridden;
 }
 
+public static function BioMorphFace GetMorphHead(BioPawn targetPawn)
+{
+    local BioMorphFace morphFace;
+    local BioPawnType pawnType;
+    
+    morphFace = targetPawn.m_oBehavior.m_oAppearanceType.m_oMorphFace;
+    if (morphFace == None)
+    {
+        pawnType = Class'AMM_Utilities'.static.GetPawnType(targetPawn);
+        if (pawnType != None)
+        {
+            morphFace = pawnType.m_oMorphFace;
+        }
+    }
+    return morphFace;
+}
+
+public static function UpdatePawnMaterialParameters(BioPawn targetPawn)
+{
+    local MaterialInterface Mat;
+    local MaterialInstanceConstant MIC;
+    local VectorParameterValue vectorParam;
+    local ScalarParameterValue scalParam;
+    local TextureParameterValue texParam;
+    local int i;
+    local ColorParameter colorParam;
+    local ScalarParameter scalParam2;
+    local TextureParameter texParam2;
+    local BioMorphFace morphFace;
+    
+    EnsureMICs(targetPawn);
+    morphFace = GetMorphHead(targetPawn);
+    if (morphFace != None)
+    {
+        foreach morphFace.m_oMaterialOverrides.m_aColorOverrides(colorParam, )
+        {
+            vectorParam.ParameterName = colorParam.nName;
+            vectorParam.ParameterValue = colorParam.cValue;
+            ApplyVectorParameterToAllMICs(vectorParam, targetPawn);
+        }
+        foreach morphFace.m_oMaterialOverrides.m_aScalarOverrides(scalParam2, )
+        {
+            scalParam.ParameterName = scalParam2.nName;
+            scalParam.ParameterValue = scalParam2.sValue;
+            ApplyScalarParameterToAllMICs(scalParam, targetPawn);
+        }
+        foreach morphFace.m_oMaterialOverrides.m_aTextureOverrides(texParam2, )
+        {
+            texParam.ParameterName = texParam2.nName;
+            texParam.ParameterValue = texParam2.m_pTexture;
+            ApplyTextureParameterToAllMICs(texParam, targetPawn);
+        }
+    }
+    else
+    {
+        ApplyHeadMaterialsToBody(targetPawn);
+    }
+}
+private static final function EnsureMICs(BioPawn targetPawn)
+{
+    local SkeletalMeshComponent MeshCmpt;
+    local int MaterialIndex;
+    local MaterialInterface CurrentMaterial;
+    local MaterialInstanceConstant MIC;
+    
+    foreach targetPawn.ComponentList(Class'SkeletalMeshComponent', MeshCmpt)
+    {
+        if (MeshCmpt != None)
+        {
+            for (MaterialIndex = 0; MaterialIndex < MeshCmpt.GetNumElements(); MaterialIndex++)
+            {
+                // GetBaseMaterial returns from SMC Materials array or falls back to SM material
+                CurrentMaterial = MeshCmpt.GetBaseMaterial(MaterialIndex);
+                if (CurrentMaterial != None)
+                {
+                    if (CurrentMaterial.Outer == targetPawn)
+                    {
+                        MIC = MaterialInstanceConstant(CurrentMaterial);
+                    }
+                    else
+                    {
+                        MIC = None;
+                    }
+                    if (MIC == None)
+                    {
+                        MIC = new (targetPawn) Class'MaterialInstanceConstant';
+                        if (MIC != None)
+                        {
+                            MIC.SetParent(CurrentMaterial);
+                            MeshCmpt.SetMaterial(MaterialIndex, MIC);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+private static final function ApplyHeadMaterialsToBody(BioPawn targetPawn)
+{
+    local int i;
+    local LinearColor skinTone;
+    local bool skinToneSet;
+    local LinearColor SkinLightScattering;
+    local bool skinLightScatteringSet;
+    local MaterialInstanceConstant MIC;
+    local VectorParameterValue vect;
+    
+    if (targetPawn.m_oHeadMesh == None)
+    {
+        return;
+    }
+    for (i = 0; i < targetPawn.m_oHeadMesh.GetNumElements(); i++)
+    {
+        MIC = MaterialInstanceConstant(targetPawn.m_oHeadMesh.GetBaseMaterial(i));
+        if (MIC != None)
+        {
+            if (!skinToneSet && MIC.GetVectorParameterValue('skinTone', skinTone))
+            {
+                skinToneSet = TRUE;
+            }
+            if (!skinLightScatteringSet && MIC.GetVectorParameterValue('SkinLightScattering', SkinLightScattering))
+            {
+                skinLightScatteringSet = TRUE;
+            }
+        }
+    }
+    if (skinToneSet)
+    {
+        vect.ParameterName = 'skinTone';
+        vect.ParameterValue = skinTone;
+        ApplyVectorParameterToAllMICs(vect, targetPawn);
+    }
+    if (skinLightScatteringSet)
+    {
+        vect.ParameterName = 'SkinLightScattering';
+        vect.ParameterValue = SkinLightScattering;
+        ApplyVectorParameterToAllMICs(vect, targetPawn);
+    }
+}
+private static final function ApplyVectorParameterToAllMICs(VectorParameterValue vect, BioPawn targetPawn)
+{
+    local SkeletalMeshComponent smc;
+    local int i;
+    local MaterialInstanceConstant MIC;
+    
+    foreach targetPawn.ComponentList(Class'SkeletalMeshComponent', smc)
+    {
+        if (smc != targetPawn.Mesh && FALSE)
+        {
+            continue;
+        }
+        if (smc != None)
+        {
+            for (i = 0; i < smc.GetNumElements(); i++)
+            {
+                MIC = MaterialInstanceConstant(smc.GetBaseMaterial(i));
+                if (MIC != None)
+                {
+                    MIC.SetVectorParameterValue(vect.ParameterName, vect.ParameterValue);
+                }
+            }
+        }
+    }
+}
+private static final function ApplyScalarParameterToAllMICs(ScalarParameterValue scal, BioPawn targetPawn)
+{
+    local SkeletalMeshComponent smc;
+    local int i;
+    local MaterialInstanceConstant MIC;
+    
+    foreach targetPawn.ComponentList(Class'SkeletalMeshComponent', smc)
+    {
+        if (smc != targetPawn.Mesh && FALSE)
+        {
+            continue;
+        }
+        if (smc != None)
+        {
+            for (i = 0; i < smc.GetNumElements(); i++)
+            {
+                MIC = MaterialInstanceConstant(smc.GetBaseMaterial(i));
+                if (MIC != None)
+                {
+                    MIC.SetScalarParameterValue(scal.ParameterName, scal.ParameterValue);
+                }
+            }
+        }
+    }
+}
+private static final function ApplyTextureParameterToAllMICs(TextureParameterValue tex, BioPawn targetPawn)
+{
+    local SkeletalMeshComponent smc;
+    local int i;
+    local MaterialInstanceConstant MIC;
+    
+    foreach targetPawn.ComponentList(Class'SkeletalMeshComponent', smc)
+    {
+        if (smc != targetPawn.Mesh && FALSE)
+        {
+            continue;
+        }
+        if (smc != None)
+        {
+            for (i = 0; i < smc.GetNumElements(); i++)
+            {
+                MIC = MaterialInstanceConstant(smc.GetBaseMaterial(i));
+                if (MIC != None)
+                {
+                    MIC.SetTextureParameterValue(tex.ParameterName, tex.ParameterValue);
+                }
+            }
+        }
+    }
+}
+
 public static function bool LoadAppearanceMesh(AppearanceMeshPaths meshPaths, out AppearanceMesh AppearanceMesh, optional bool allowNone = false)
 {
 	if (class'AMM_Utilities'.static.LoadSkeletalMesh(meshPaths.meshPath, AppearanceMesh.Mesh, allowNone)
@@ -166,6 +381,9 @@ public static function ApplyPawnAppearance(BioPawn target, pawnAppearance appear
     replaceMesh(target, target.m_oFacePlateMesh, appearance.BreatherMesh);
     target.m_oFacePlateMesh.SetHidden(appearance.BreatherMesh.Mesh == None);
 	target.m_oFacePlateMesh.CastShadow = appearance.BreatherMesh.Mesh != None;
+
+	// make sure that skintone matches and headmorph material overrides are applied to all materials
+	UpdatePawnMaterialParameters(target);
 
 	// This call is very important to prevent all kinds of weirdness
 	// for example bone melting and materials misbehaving, and possibly even crashing
