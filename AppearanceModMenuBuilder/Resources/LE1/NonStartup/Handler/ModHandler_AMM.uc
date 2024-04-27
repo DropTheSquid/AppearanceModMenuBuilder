@@ -33,6 +33,10 @@ var transient bool isAppearanceDirty;
 // var transient eMenuHelmetOverride chosenMenuHelmetVisibilityOverride;
 var GFxMovieInfo movieInfo;
 var transient bool GameWasPaused;
+var transient bool rTriggerPressed;
+var transient bool lTriggerPressed;
+var transient float rStickX;
+var transient float rStickY;
 
 // overrides the same function in CustomUIHandlerInterface; this signature must stay the same
 public static function CustomUIHandlerInterface LaunchMenu(optional string Param)
@@ -201,7 +205,23 @@ public function PopSubmenu()
 }
 public event function Update(float fDeltaT)
 {
+	local vector cameraMove;
+
 	pawnHandler.Update(fDeltaT);
+
+	// move the camera up/down
+	if (lTriggerPressed && !rTriggerPressed)
+	{
+		cameraMove.z = -10 * fDeltaT;
+	}
+	else if (rTriggerPressed && !lTriggerPressed)
+	{
+		cameraMove.z = 10 * fDeltaT;
+	}
+	// and in the x Y plane (the camera is at such an angle that it's more intuitive to swap these and invert the x)
+	cameraMove.Y = rStickX * -10 * fDeltaT;
+	cameraMove.X = rStickY * 10 * fDeltaT;
+	cameraHandler.moveCamera(cameraMove);
 }
 public function RefreshMenu(optional bool firstEnter = FALSE)
 {
@@ -604,6 +624,40 @@ public function ASLoadedEx()
     // }
     Super.ASLoadedEx();
 }
+public function OnRStickX(float val)
+{
+	rStickX = val;
+}
+public function OnRStickY(float val)
+{
+	rStickY = val;
+}
+public function HandleInputEvent(BioGuiEvents Event, optional float fValue = 1.0)
+{
+    local BioPlayerController oController;
+    local BioPlayerInput bpi;
+    
+    // comment("Called when there is key input. Override if you need to do things in response to keys that are not already handled by other code. Make sure you call the original if you want handling of the right stick");
+    oController = BioWorldInfo(oWorldInfo).GetLocalPlayerController();
+    bpi = BioPlayerInput(oController.PlayerInput);
+    switch (Event)
+    {
+		case BioGuiEvents.BIOGUI_EVENT_BUTTON_LT:
+			lTriggerPressed = true;
+			break;
+		case BioGuiEvents.BIOGUI_EVENT_BUTTON_RT:
+			rTriggerPressed = true;
+			break;
+		case BioGuiEvents.BIOGUI_EVENT_BUTTON_LT_RELEASE:
+			lTriggerPressed = false;
+			break;
+		case BioGuiEvents.BIOGUI_EVENT_BUTTON_RT_RELEASE:
+			rTriggerPressed = false;
+			break;
+        default:
+            Super.HandleInputEvent(Event, fValue);
+    }
+}
 // private final function SetAux2CameraDebug()
 // {
 //     Self.ASSetAux2ButtonActive(TRUE, FALSE);
@@ -928,4 +982,5 @@ defaultproperties
     srOpenSubmenu = $177824
 	srSelectCharacter = $210210217
 	movieInfo = GFXMovieInfo'Gui.ModMenu'
+	RStickDeadZone = 0.1
 }
