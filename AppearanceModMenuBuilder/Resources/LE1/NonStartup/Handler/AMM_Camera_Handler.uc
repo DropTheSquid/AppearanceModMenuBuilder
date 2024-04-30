@@ -23,8 +23,7 @@ var float controllerRotateMultiplier;
 var float mouseRotateMultiplier;
 
 var InterpCurveFloat ZoomToXYInterp;
-// var InterpCurveFloat ZoomToMaxZInterp;
-// var InterpCurveFloat ZoomToMinZInterp;
+var InterpCurveFloat MoveUpDownSensitivityByZoom;
 
 var transient float currentZoom;
 var transient float currentHeight;
@@ -36,6 +35,8 @@ var transient float moveUpDownMouse;
 var transient float moveUpDownController;
 var transient float rotateMouse;
 var transient float rotateController;
+
+var bool debugLogging;
 
 // Functions
 public function Init(ModHandler_AMM outerMenu)
@@ -71,6 +72,7 @@ public function Update(float fDeltaT)
 	local float netZoom;
 	local float netRotate;
 	local float netMoveUpDown;
+	local float upDownSensitivityMultiplier;
 
 	// handle zoom in/out
 	netZoom = (zoomInTriggerPressed - zoomOutTriggerPressed) * controllerZoomMultiplier;
@@ -83,7 +85,14 @@ public function Update(float fDeltaT)
 	netMoveUpDown = (moveUpDownController * controllerMoveUpDownMultiplier) + (moveUpDownMouse * mouseMoveUpDownMultiplier);
 	if (netMoveUpDown != 0)
 	{
-		ChangeHeight(netMoveUpDown * fDeltaT);
+		// if the sensitivity is the same at all zoom levels, then it is way too sensitive while zoomed in, and not sensitive enough while zoomed out
+		// this makes it feel smooth
+		upDownSensitivityMultiplier = InterpolateFloat(MoveUpDownSensitivityByZoom, currentZoom, 0.0, 1.0);
+		if (debugLogging)
+		{
+			LogInternal("UpDownSensitivity zoom"@currentZoom@"sensitivity"@upDownSensitivityMultiplier);
+		}
+		ChangeHeight(netMoveUpDown * fDeltaT * upDownSensitivityMultiplier);
 	}
 	
 	// handle rotation
@@ -133,13 +142,17 @@ private function UpdateCameraPosition()
 	MaxZ = InterpolateFloat(ZoomToXYInterp, currentZoom, ZoomedOutHeight, ZoomedInMaxHeight);
 
 	desiredCameraLocation.Z = Lerp(Minz, MaxZ, CurrentHeight);
-	LogInternal("Setting camera position: inputs zoom"@currentZoom@"height"@CurrentHeight);
-	LogInternal("Setting camera position: output"@desiredCameraLocation.x@desiredCameraLocation.y@desiredCameraLocation.z);
+	if (debugLogging)
+	{
+		LogInternal("Setting camera position: inputs zoom"@currentZoom@"height"@CurrentHeight);
+		LogInternal("Setting camera position: output"@desiredCameraLocation.x@desiredCameraLocation.y@desiredCameraLocation.z);
+	}
+	
 	SetCameraPositionRaw(desiredCameraLocation);
 	CommitCamera();
 }
-// this takes in an interpCurveFloat which is assumed to run from 0,0 to 1,1
-// which is then scaled to output1 - output0, then offset by output 0
+// this takes in an interpCurveFloat which is assumed to run from 0 to 1 inputs and 0 to 1 outputs
+// which is then scaled to output1 - output0, then offset by output0
 // making it as if it was a curve from 0,output0 to 1,output1
 // letting us reuse curves for different limits
 private function float InterpolateFloat(InterpCurveFloat curve, float displacement, float output0, float output1)
@@ -193,8 +206,8 @@ defaultproperties
 	controllerRotateMultiplier = -50000
 	mouseRotateMultiplier = -4000
 	controllerZoomMultiplier = 0.5
-	controllerMoveUpDownMultiplier = -0.5
-	mouseMoveUpDownMultiplier = -0.15
+	controllerMoveUpDownMultiplier = -1.0
+	mouseMoveUpDownMultiplier = -0.12
 	// intended to have 20 steps between 0 (zoomed out) and 1 (zoomed in) so this is 1/20th
 	mouseWheelZoomStep = 0.05
 
@@ -222,6 +235,14 @@ defaultproperties
 		Points = ({InVal = -0.000000000000000222044605, OutVal = 0.0, ArriveTangent = 2.21512413, LeaveTangent = 2.21512413, InterpMode = EInterpCurveMode.CIM_CurveUser}, 
 				{InVal = 0.5, OutVal = 0.802072883, ArriveTangent = 0.598061323, LeaveTangent = 0.598061323, InterpMode = EInterpCurveMode.CIM_CurveUser}, 
 				{InVal = 1.0, OutVal = 1.0, ArriveTangent = 0.0, LeaveTangent = 0.0, InterpMode = EInterpCurveMode.CIM_Linear}
+				)
+		}
+	MoveUpDownSensitivityByZoom = {
+		Points = ({InVal = -0.000000000000000555111512, OutVal = 2.47969842, ArriveTangent = -7.64156532, LeaveTangent = -7.64156532, InterpMode = EInterpCurveMode.CIM_CurveUser}, 
+					{InVal = 0.349999994, OutVal = 0.381911516, ArriveTangent = -2.18307185, LeaveTangent = -2.18307185, InterpMode = EInterpCurveMode.CIM_CurveUser}, 
+					{InVal = 0.5, OutVal = 0.197620898, ArriveTangent = -0.651773274, LeaveTangent = -0.651773274, InterpMode = EInterpCurveMode.CIM_CurveUser}, 
+					{InVal = 0.800000012, OutVal = 0.0702829957, ArriveTangent = -0.295241803, LeaveTangent = -0.295241803, InterpMode = EInterpCurveMode.CIM_CurveAuto}, 
+					{InVal = 1.0, OutVal = 0.0500000007, ArriveTangent = 0.0, LeaveTangent = 0.0, InterpMode = EInterpCurveMode.CIM_CurveAuto}
 				)
 		}
 }
