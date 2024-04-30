@@ -219,6 +219,14 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 ?? throw new Exception("Could not find pedestal static mesh in UI world to hide");
             pedestalStaticMesh.WriteProperty(new BoolProperty(true, "HiddenGame"));
 
+            // add a few things to set the character's rotation
+            var RE_SetRotation = AddRemoteEvent("re_AMM_SetRotation", "updates the preview pawn's rotation");
+            var setLocationAct = SequenceObjectCreator.CreateSequenceObject(pcc, "SeqAct_SetLocation");
+            setLocationAct.WriteProperty(new BoolProperty(false, "bSetLocation"));
+            KismetHelper.CreateVariableLink(setLocationAct, "Target", InventoryPawnSeqVar);
+            KismetHelper.AddObjectToSequence(setLocationAct, mainSeq);
+            KismetHelper.CreateOutputLink(RE_SetRotation, "Out", setLocationAct);
+
             pcc.Save();
         }
     }

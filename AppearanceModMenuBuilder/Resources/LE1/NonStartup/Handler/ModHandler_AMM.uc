@@ -33,10 +33,7 @@ var transient bool isAppearanceDirty;
 // var transient eMenuHelmetOverride chosenMenuHelmetVisibilityOverride;
 var GFxMovieInfo movieInfo;
 var transient bool GameWasPaused;
-var transient bool rTriggerPressed;
-var transient bool lTriggerPressed;
-var transient float rStickX;
-var transient float rStickY;
+var transient bool rightClickHeld;
 
 // overrides the same function in CustomUIHandlerInterface; this signature must stay the same
 public static function CustomUIHandlerInterface LaunchMenu(optional string Param)
@@ -208,20 +205,21 @@ public event function Update(float fDeltaT)
 	local vector cameraMove;
 
 	pawnHandler.Update(fDeltaT);
+	cameraHandler.Update(fDeltaT);
 
 	// move the camera up/down
-	if (lTriggerPressed && !rTriggerPressed)
-	{
-		cameraMove.z = -10 * fDeltaT;
-	}
-	else if (rTriggerPressed && !lTriggerPressed)
-	{
-		cameraMove.z = 10 * fDeltaT;
-	}
-	// and in the x Y plane (the camera is at such an angle that it's more intuitive to swap these and invert the x)
-	cameraMove.Y = rStickX * -10 * fDeltaT;
-	cameraMove.X = rStickY * 10 * fDeltaT;
-	cameraHandler.moveCamera(cameraMove);
+	// if (lTriggerPressed && !rTriggerPressed)
+	// {
+	// 	cameraMove.z = -10 * fDeltaT;
+	// }
+	// else if (rTriggerPressed && !lTriggerPressed)
+	// {
+	// 	cameraMove.z = 10 * fDeltaT;
+	// }
+	// // and in the x Y plane (the camera is at such an angle that it's more intuitive to swap these and invert the x)
+	// cameraMove.Y = rStickX * -10 * fDeltaT;
+	// cameraMove.X = rStickY * 10 * fDeltaT;
+	// cameraHandler.moveCamera(cameraMove);
 }
 public function RefreshMenu(optional bool firstEnter = FALSE)
 {
@@ -251,7 +249,6 @@ public function RefreshMenu(optional bool firstEnter = FALSE)
             else
             {
                 ASSetAux2ButtonActive(TRUE, FALSE);
-                // TODO use a stringref
 				ASSetAux2ButtonText(string(srSelectCharacter));
             }
 			if (state.pawnTag ~= "None")
@@ -609,77 +606,87 @@ public function ASLoadedEx()
     }
     ASSetBackButtonActive(TRUE);
     ASSetRightPaneVisibility(FALSE, FALSE);
-    // comment("TODO use a stringref");
-    // ASSetAuxButtonText("TEST");
-    // ASSetAuxButtonActive(TRUE);
     RefreshMenu(TRUE);
-    // if (CameraDebug)
-    // {
-    //     cameraDebugAxis = 0;
-    //     ASSetActionButtonActive(TRUE);
-    //     ASSetActionButtonText("Decrease");
-    //     ASSetAuxButtonActive(TRUE);
-    //     ASSetAuxButtonText("Increase");
-    //     SetAux2CameraDebug();
-    // }
     Super.ASLoadedEx();
 }
 public function OnRStickX(float val)
 {
-	rStickX = val;
+	cameraHandler.rotateController = val;
 }
 public function OnRStickY(float val)
 {
-	rStickY = val;
+	cameraHandler.moveUpDownController = val;
 }
 public function HandleInputEvent(BioGuiEvents Event, optional float fValue = 1.0)
 {
     local BioPlayerController oController;
     local BioPlayerInput bpi;
     
-    // comment("Called when there is key input. Override if you need to do things in response to keys that are not already handled by other code. Make sure you call the original if you want handling of the right stick");
     oController = BioWorldInfo(oWorldInfo).GetLocalPlayerController();
     bpi = BioPlayerInput(oController.PlayerInput);
     switch (Event)
     {
+		// handle controller zoom with triggers
+		// TODO take another crack at making this analog
 		case BioGuiEvents.BIOGUI_EVENT_BUTTON_LT:
-			lTriggerPressed = true;
+			cameraHandler.zoomOutTriggerPressed = 1.0;
 			break;
 		case BioGuiEvents.BIOGUI_EVENT_BUTTON_RT:
-			rTriggerPressed = true;
+			cameraHandler.zoomInTriggerPressed = 1.0;
 			break;
 		case BioGuiEvents.BIOGUI_EVENT_BUTTON_LT_RELEASE:
-			lTriggerPressed = false;
+			cameraHandler.zoomOutTriggerPressed = 0.0;
 			break;
 		case BioGuiEvents.BIOGUI_EVENT_BUTTON_RT_RELEASE:
-			rTriggerPressed = false;
+			cameraHandler.zoomInTriggerPressed = 0.0;
+			break;
+		// handle mouse based camera up/down
+		case BioGuiEvents.BIOGUI_EVENT_MOUSE_BUTTON_RIGHT:
+			rightClickHeld = true;
+			break;
+		case BioGuiEvents.BIOGUI_EVENT_MOUSE_BUTTON_RIGHT_RELEASE:
+			rightClickHeld = false;
+			cameraHandler.moveUpDownMouse = 0;
+			cameraHandler.rotateMouse = 0;
+			break;
+		case BioGuiEvents.BIOGUI_EVENT_AXIS_MOUSE_Y:
+			if (rightClickHeld)
+			{
+				cameraHandler.moveUpDownMouse = fValue;
+			}
+			else
+			{
+				Super.HandleInputEvent(Event, fValue);
+			}
+			break;
+		case BioGuiEvents.BIOGUI_EVENT_AXIS_MOUSE_X:
+			// TODO any deadzone here? any max value we should enforce?
+			if (rightClickHeld)
+			{
+				cameraHandler.rotateMouse = fValue;
+			}
+			else
+			{
+				Super.HandleInputEvent(Event, fValue);
+			}
 			break;
         default:
             Super.HandleInputEvent(Event, fValue);
     }
 }
-// private final function SetAux2CameraDebug()
-// {
-//     Self.ASSetAux2ButtonActive(TRUE, FALSE);
-//     if (cameraDebugAxis <= 0)
-//     {
-//         cameraDebugAxis = 0;
-//         Self.ASSetAux2ButtonText("X");
-//     }
-//     else if (cameraDebugAxis == 1)
-//     {
-//         Self.ASSetAux2ButtonText("Y");
-//     }
-//     else if (cameraDebugAxis == 2)
-//     {
-//         Self.ASSetAux2ButtonText("Z");
-//     }
-//     else
-//     {
-//         cameraDebugAxis = 0;
-//         SetAux2CameraDebug();
-//     }
-// }
+public function OnScrollWheelEX(eScrollWheelDir direction, bool overList, bool overRightPane)
+{
+    // if the mouse is over the list and right click is not held, scroll the list
+    if (overList && !rightClickHeld)
+    {
+        ASMoveListScrollBar(direction == eScrollWheelDir.down ? 1 : -1);
+    }
+	// otherwise, zoom in/out from the character
+    else
+    {
+        cameraHandler.zoom(direction == eScrollWheelDir.down ? -0.05 : 0.05);
+    }
+}
 public function BackButtonPressedEx()
 {
     local AppearanceSubmenu currentSubmenu;

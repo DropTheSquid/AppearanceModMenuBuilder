@@ -78,11 +78,6 @@ var transient array<PawnId> pawnsToPreload;
 var transient array<RealWorldPawnRecord> pawnRecords;
 var transient BioPawn _currentDisplayedPawn;
 
-// private function log(string message)
-// {
-// 	// I can comment this next line out to turn off logging
-// 	LogInternal(message);
-// }
 public function Cleanup()
 {
 	local RealWorldPawnRecord currentRecord;
@@ -346,7 +341,7 @@ private final function FrameworkStreamState GetFileStreamingState(string fileNam
     return FrameworkStreamState.NotPresent;
 }
 
-public function update(float fDeltaT)
+public function Update(float fDeltaT)
 {
 	local StreamInRequest currentRequest;
 	local FrameworkStreamState currentState;
