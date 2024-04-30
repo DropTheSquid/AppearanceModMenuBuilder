@@ -6,15 +6,25 @@ var transient PlayerStart _playerStart;
 var transient SeqAct_SetLocation _setLocationAct;
 var transient Vector _originalCameraPosition;
 var transient Rotator _originalRotation;
+
 var Vector2D MaxZoomedOutCameraXY;
 var Vector2D MaxZoomedInCameraXY;
-var Vector MaxZoomedOutCameraPosition;
-var Vector MaxZoomedInHighCameraPosition;
-var Vector MaxZoomedInLowCameraPosition;
+var float ZoomedOutHeight;
+var float ZoomedInMinHeight;
+var float ZoomedInMaxHeight;
+// var Vector MaxZoomedOutCameraPosition;
+// var Vector MaxZoomedInHighCameraPosition;
+// var Vector MaxZoomedInLowCameraPosition;
+var float controllerZoomMultiplier;
+var float mouseWheelZoomStep;
+var float controllerMoveUpDownMultiplier;
+var float mouseMoveUpDownMultiplier;
+var float controllerRotateMultiplier;
+var float mouseRotateMultiplier;
 
 var InterpCurveFloat ZoomToXYInterp;
-var InterpCurveFloat ZoomToMaxZInterp;
-var InterpCurveFloat ZoomToMinZInterp;
+// var InterpCurveFloat ZoomToMaxZInterp;
+// var InterpCurveFloat ZoomToMinZInterp;
 
 var transient float currentZoom;
 var transient float currentHeight;
@@ -43,14 +53,11 @@ public function Init(ModHandler_AMM outerMenu)
 
 	// cache the original camera position
     _originalCameraPosition = GetCameraPositionRaw();
-	// set it where we want it
-    SetCameraPositionRaw(MaxZoomedOutCameraPosition);
 	// zoomed all the way out
 	currentZoom = 0;
 	// head height if we zoomed in (approx)
-	// TODO tune this starting position
 	CurrentHeight = 0.95;
-    CommitCamera();
+	UpdateCameraPosition();
 }
 public function Cleanup()
 {
@@ -62,38 +69,28 @@ public function Cleanup()
 public function Update(float fDeltaT)
 {
 	local float netZoom;
+	local float netRotate;
+	local float netMoveUpDown;
 
-	netZoom = zoomInTriggerPressed - zoomOutTriggerPressed;
 	// handle zoom in/out
+	netZoom = (zoomInTriggerPressed - zoomOutTriggerPressed) * controllerZoomMultiplier;
 	if (netZoom != 0)
 	{
-		// TODO tune this factor to get a comfortable speed
-		zoom(netZoom * 0.5 * fDeltaT);
+		zoom(netZoom * fDeltaT);
 	}
+
 	// handle moving the camera up/down
-	if (moveUpDownController != 0)
+	netMoveUpDown = (moveUpDownController * controllerMoveUpDownMultiplier) + (moveUpDownMouse * mouseMoveUpDownMultiplier);
+	if (netMoveUpDown != 0)
 	{
-		// TODO tune this factor to get a comfortable speed
-		ChangeHeight(moveUpDownController * 0.5 * fDeltaT);
-	}
-	if (moveUpDownMouse != 0)
-	{
-		// TODO tune this factor to get a comfortable speed
-		ChangeHeight(moveUpDownMouse * 0.5 * fDeltaT);
-	}
-	if (rotateMouse != 0.0)
-	{
-		currentRotation.Yaw += rotateMouse * 10000 * fDeltaT;
-	}
-	if (rotateController != 0)
-	{
-		currentRotation.Yaw += rotateController * 10000 * fDeltaT;
+		ChangeHeight(netMoveUpDown * fDeltaT);
 	}
 	
-	if (rotateMouse != 0.0 || rotateController != 0)
+	// handle rotation
+	netRotate = (rotateController * controllerRotateMultiplier) + (rotateMouse * mouseRotateMultiplier);
+	if (netRotate != 0)
 	{
-		LogInternal("UpdateRotation mouse"@rotateMouse@rotateMouse * 10000 * fDeltaT);
-		LogInternal("UpdateRotation controller"@rotateMouse@rotateController * 10000 * fDeltaT);
+		currentRotation.Yaw += int(netRotate * fDeltaT);
 		CommitRotation();
 	}
 }
@@ -107,32 +104,36 @@ private function CommitRotation()
 	BWI = BioWorldInfo(_outerMenu.oWorldInfo);
     BWI.m_UIWorld.TriggerEvent('re_AMM_SetRotation', BWI);
 }
-public function Zoom(float step)
+public function MouseWheelZoom(bool zoomIn)
+{
+	Zoom(mouseWheelZoomStep * (zoomIn ? -1 : 1));
+}
+private function Zoom(float step)
 {
 	CurrentZoom = FClamp(CurrentZoom + step, 0, 1);
-	SetCameraPosition(CurrentZoom, CurrentHeight);
+	UpdateCameraPosition();
 }
-public function ChangeHeight(float step)
+private function ChangeHeight(float step)
 {
 	CurrentHeight = FClamp(CurrentHeight + step, 0, 1);
-	SetCameraPosition(CurrentZoom, CurrentHeight);
+	UpdateCameraPosition();
 }
-private function SetCameraPosition(float zoom, float height)
+private function UpdateCameraPosition()
 {
 	local vector desiredCameraLocation;
 	local float MinZ;
 	local float MaxZ;
 
     // Interpolate Camera X and Y according to zoom
-	desiredCameraLocation.X = InterpolateFloat(ZoomToXYInterp, zoom, MaxZoomedOutCameraXY.X,  MaxZoomedInCameraXY.X);
-	desiredCameraLocation.Y = InterpolateFloat(ZoomToXYInterp, zoom, MaxZoomedOutCameraXY.Y,  MaxZoomedInCameraXY.Y);
-	// get the min z interpolated between -9 (max zoomed out camera z) and -88 (max zoom in camera z)
-	MinZ = InterpolateFloat(ZoomToMinZInterp, zoom, -9, -88.5265);
-	// same but from -9 to 87 (human max Z, will need to vary per character eventually)
-	MaxZ = InterpolateFloat(ZoomToMaxZInterp, zoom, -9, 87);
+	desiredCameraLocation.X = InterpolateFloat(ZoomToXYInterp, currentZoom, MaxZoomedOutCameraXY.X,  MaxZoomedInCameraXY.X);
+	desiredCameraLocation.Y = InterpolateFloat(ZoomToXYInterp, currentZoom, MaxZoomedOutCameraXY.Y,  MaxZoomedInCameraXY.Y);
+	// get the min z interpolated between zoomed out camera z and zoomed in camera min z (looking at feet)
+	MinZ = InterpolateFloat(ZoomToXYInterp, currentZoom, ZoomedOutHeight, ZoomedInMinHeight);
+	// same but max z, looking at the top of the head. this will need to vary by character
+	MaxZ = InterpolateFloat(ZoomToXYInterp, currentZoom, ZoomedOutHeight, ZoomedInMaxHeight);
 
-	desiredCameraLocation.Z = Lerp(Minz, MaxZ, height);
-	LogInternal("Setting camera position: inputs zoom"@zoom@"height"@height);
+	desiredCameraLocation.Z = Lerp(Minz, MaxZ, CurrentHeight);
+	LogInternal("Setting camera position: inputs zoom"@currentZoom@"height"@CurrentHeight);
 	LogInternal("Setting camera position: output"@desiredCameraLocation.x@desiredCameraLocation.y@desiredCameraLocation.z);
 	SetCameraPositionRaw(desiredCameraLocation);
 	CommitCamera();
@@ -148,19 +149,6 @@ private function float InterpolateFloat(InterpCurveFloat curve, float displaceme
 	Class'BioInterpolator'.static.InterpolateFloatCurve(rawResult, curve, 0.0, 1.0, displacement);
 	return (rawResult * (output1 - output0)) + output0;
 }
-// public function moveCamera(Vector move)
-// {
-// 	local Vector currentPosition;
-
-// 	if (VSize(move) > 0)
-// 	{
-// 		currentPosition = GetCameraPositionRaw();
-// 		currentPosition += move;
-// 		SetCameraPositionRaw(currentPosition);
-// 		LogInternal("moving camera: new position"@currentPosition.x@currentPosition.y@currentPosition.z);
-// 		CommitCamera();
-// 	}
-// }
 public function SetCameraPositionRaw(Vector position)
 {
     _interp.PosTrack.Points[0].OutVal = position;
@@ -201,9 +189,22 @@ private final function PlayerStart GetPlayerStart()
 //class default properties can be edited in the Properties tab for the class's Default__ object.
 defaultproperties
 {
-	// the position by default for outfits for all characters
-    MaxZoomedOutCameraPosition = {X = -1974.85974, Y = -234.663101, Z = -9.0}
+	// determined through testing to be a pretty comfortable value
+	controllerRotateMultiplier = -50000
+	mouseRotateMultiplier = -4000
+	controllerZoomMultiplier = 0.5
+	controllerMoveUpDownMultiplier = -0.5
+	mouseMoveUpDownMultiplier = -0.15
+	// intended to have 20 steps between 0 (zoomed out) and 1 (zoomed in) so this is 1/20th
+	mouseWheelZoomStep = 0.05
 
+	ZoomedOutHeight = -9
+	ZoomedInMinHeight = -88.5
+	// TODO this will need to vary by character
+	ZoomedInMaxHeight = 87
+
+	// the position by default for outfits for all characters
+	// MaxZoomedOutCameraPosition = {X = -1974.85974, Y = -234.663101, Z = -9.0}
 	MaxZoomedOutCameraXY = {X = -1974.85974, Y = -234.663101}
 	MaxZoomedInCameraXY = {X = -1265.6636, Y = -136.8608}
 	// Untested, but these are the high/low zoomed in positions
@@ -217,24 +218,11 @@ defaultproperties
 	// shared for all characters
 	// MaxZoomedInLowCameraPosition = {X = -1265.6636, Y = -136.8608, Z = -88.5265}
 	// as zoom varies from 1 to 0
-	// TODO tune this interp to get an even zoom speed
 	ZoomToXYInterp = {
-		Points = ({InVal = 0.0, OutVal = 0.0, ArriveTangent = 0.0, LeaveTangent = 0.0, InterpMode = EInterpCurveMode.CIM_Linear}, 
-					{InVal = 1.0, OutVal = 1.0, ArriveTangent = 0.0, LeaveTangent = 0.0, InterpMode = EInterpCurveMode.CIM_Linear}
-					), 
-		InterpMethod = EInterpMethodType.IMT_UseFixedTangentEvalAndNewAutoTangents
-		}
-	ZoomToMaxZInterp = {
-		Points = ({InVal = 0.0, OutVal = 0.0, ArriveTangent = 0.0, LeaveTangent = 0.0, InterpMode = EInterpCurveMode.CIM_Linear}, 
-					{InVal = 1.0, OutVal = 1.0, ArriveTangent = 0.0, LeaveTangent = 0.0, InterpMode = EInterpCurveMode.CIM_Linear}
-					), 
-		InterpMethod = EInterpMethodType.IMT_UseFixedTangentEvalAndNewAutoTangents
-		}
-	ZoomToMinZInterp = {
-		Points = ({InVal = 0.0, OutVal = 0.0, ArriveTangent = 0.0, LeaveTangent = 0.0, InterpMode = EInterpCurveMode.CIM_Linear}, 
-					{InVal = 1.0, OutVal = 1.0, ArriveTangent = 0.0, LeaveTangent = 0.0, InterpMode = EInterpCurveMode.CIM_Linear}
-					), 
-		InterpMethod = EInterpMethodType.IMT_UseFixedTangentEvalAndNewAutoTangents
+		Points = ({InVal = -0.000000000000000222044605, OutVal = 0.0, ArriveTangent = 2.21512413, LeaveTangent = 2.21512413, InterpMode = EInterpCurveMode.CIM_CurveUser}, 
+				{InVal = 0.5, OutVal = 0.802072883, ArriveTangent = 0.598061323, LeaveTangent = 0.598061323, InterpMode = EInterpCurveMode.CIM_CurveUser}, 
+				{InVal = 1.0, OutVal = 1.0, ArriveTangent = 0.0, LeaveTangent = 0.0, InterpMode = EInterpCurveMode.CIM_Linear}
+				)
 		}
 }
 

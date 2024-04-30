@@ -684,7 +684,7 @@ public function OnScrollWheelEX(eScrollWheelDir direction, bool overList, bool o
 	// otherwise, zoom in/out from the character
     else
     {
-        cameraHandler.zoom(direction == eScrollWheelDir.down ? -0.05 : 0.05);
+        cameraHandler.MouseWheelZoom(direction == eScrollWheelDir.down);
     }
 }
 public function BackButtonPressedEx()
