@@ -221,8 +221,8 @@ defaultproperties
 	controllerRotateMultiplier = -50000
 	mouseRotateMultiplier = -66.66666
 	controllerZoomMultiplier = 0.5
-	controllerMoveUpDownMultiplier = -2.0
-	mouseMoveUpDownMultiplier = -0.004
+	controllerMoveUpDownMultiplier = 3.5
+	mouseMoveUpDownMultiplier = -0.0035
 	// intended to have 20 steps between 0 (zoomed out) and 1 (zoomed in) so this is 1/20th
 	mouseWheelZoomStep = 0.05
 
@@ -253,10 +253,10 @@ defaultproperties
 				)
 		}
 	MoveUpDownSensitivityByZoom = {
-		Points = ({InVal = -0.000000000000000555111512, OutVal = 2.47969842, ArriveTangent = -7.64156532, LeaveTangent = -7.64156532, InterpMode = EInterpCurveMode.CIM_CurveUser}, 
-					{InVal = 0.349999994, OutVal = 0.381911516, ArriveTangent = -2.18307185, LeaveTangent = -2.18307185, InterpMode = EInterpCurveMode.CIM_CurveUser}, 
+		Points = ({InVal = 0.0, OutVal = 2.47969842, ArriveTangent = -7.64156532, LeaveTangent = -7.64156532, InterpMode = EInterpCurveMode.CIM_CurveUser}, 
+					{InVal = 0.35, OutVal = 0.381911516, ArriveTangent = -2.18307185, LeaveTangent = -2.18307185, InterpMode = EInterpCurveMode.CIM_CurveUser}, 
 					{InVal = 0.5, OutVal = 0.197620898, ArriveTangent = -0.651773274, LeaveTangent = -0.651773274, InterpMode = EInterpCurveMode.CIM_CurveUser}, 
-					{InVal = 0.800000012, OutVal = 0.0702829957, ArriveTangent = -0.295241803, LeaveTangent = -0.295241803, InterpMode = EInterpCurveMode.CIM_CurveAuto}, 
+					{InVal = 0.8, OutVal = 0.0702829957, ArriveTangent = -0.295241803, LeaveTangent = -0.295241803, InterpMode = EInterpCurveMode.CIM_CurveAuto}, 
 					{InVal = 1.0, OutVal = 0.0500000007, ArriveTangent = 0.0, LeaveTangent = 0.0, InterpMode = EInterpCurveMode.CIM_CurveAuto}
 				)
 		}
