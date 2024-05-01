@@ -20,6 +20,27 @@ namespace AppearanceModMenuBuilder.LE1.UScriptModels
             Full,
         }
 
+        public class PlotIntSetting : StructCoalesceValue
+        {
+            public PlotIntSetting(int id, int value)
+            {
+                Id = id;
+                Value = value;
+            }
+
+            public int Id
+            {
+                get => GetInt(nameof(Id))!.Value;
+                set => SetInt(nameof(Id), value);
+            }
+            public int Value
+            {
+                get => GetInt(nameof(Value))!.Value;
+                set => SetInt(nameof(Value), value);
+            }
+            
+        }
+
         public int? SrCenterText
         {
             get => GetInt(nameof(SrCenterText));
@@ -90,6 +111,12 @@ namespace AppearanceModMenuBuilder.LE1.UScriptModels
         {
             get => GetBool(nameof(RequiresFramework));
             set => SetBool(nameof(RequiresFramework), value);
+        }
+
+        public PlotIntSetting? DisplayInt
+        {
+            get => GetStruct<PlotIntSetting>(nameof(DisplayInt));
+            set => SetStruct(nameof(DisplayInt), value);
         }
     }
 }

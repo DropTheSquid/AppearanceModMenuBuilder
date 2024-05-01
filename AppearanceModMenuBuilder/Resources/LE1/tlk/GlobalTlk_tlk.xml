@@ -215,4 +215,24 @@ You can customize characters' appearances at any time from the Inventory screen 
 		<flags>1</flags>
 		<data>Cycle Helmet</data>
 	</string>
+	<string>
+		<id>210210249</id>
+		<flags>1</flags>
+		<data>Allow Casual Outfits as Combat Outfit</data>
+	</string>
+	<string>
+		<id>210210250</id>
+		<flags>1</flags>
+		<data>Allow Casual Outfits as Combat Outfit Description</data>
+	</string>
+	<string>
+		<id>210210251</id>
+		<flags>1</flags>
+		<data>Allow Combat Outfits as Casual Outfit</data>
+	</string>
+	<string>
+		<id>210210252</id>
+		<flags>1</flags>
+		<data>Allow Combat Outfits as Casual Outfit Description</data>
+	</string>
 </tlkFile>

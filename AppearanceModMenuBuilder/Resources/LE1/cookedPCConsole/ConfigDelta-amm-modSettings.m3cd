@@ -20,3 +20,10 @@ srSubtitle=210210222
 +menuItems=(srLeftText=210210246, srRightText=200054, srDescriptionText=210210247, srDescriptionTitleText=210210246, srActionText=200008, DisplayInt=(Id=1593,Value=0), ApplySettingInts=((Id=1593,Value=1)) Images=())
 +menuItems=(srLeftText=210210246, srRightText=200053, srDescriptionText=210210247, srDescriptionTitleText=210210246, srActionText=200009, DisplayInt=(Id=1593,Value=1), ApplySettingInts=((Id=1593,Value=0)) Images=())
 
+; allow casual outfits in combat situations
++menuItems=(srLeftText=210210249, srRightText=200054, srDescriptionText=210210250, srDescriptionTitleText=210210249, srActionText=200008, DisplayInt=(Id=1594,Value=0), ApplySettingInts=((Id=1594,Value=1)) Images=())
++menuItems=(srLeftText=210210249, srRightText=200053, srDescriptionText=210210250, srDescriptionTitleText=210210249, srActionText=200009, DisplayInt=(Id=1594,Value=1), ApplySettingInts=((Id=1594,Value=0)) Images=())
+
+; allow combat outfits in casual situations
++menuItems=(srLeftText=210210251, srRightText=200054, srDescriptionText=210210252, srDescriptionTitleText=210210251, srActionText=200008, DisplayInt=(Id=1595,Value=0), ApplySettingInts=((Id=1595,Value=1)) Images=())
++menuItems=(srLeftText=210210251, srRightText=200053, srDescriptionText=210210252, srDescriptionTitleText=210210251, srActionText=200009, DisplayInt=(Id=1595,Value=1), ApplySettingInts=((Id=1595,Value=0)) Images=())

@@ -19,46 +19,30 @@ namespace AppearanceModMenuBuilder.LE1.Models
             return newConfig;
         }
 
-        /*
-            var config stringref srTitle;
-            var config string sTitle;
-            var config stringref srSubtitle;
-            var config string sSubtitle;
-            var config stringref defaultActionText;
-            var config array<AppearanceItemData> menuItems;
-            var transient int selectedIndex;
-            var transient int scrollIndex;
-            var transient array<string> inlineStack;
-            var config eArmorOverrideState armorOverride;
-            var transient array<string> MenuParameters;
-            var config string pawnTag;
-            var config string pawnAppearanceType;
-            // var config eMenuHelmetOverride menuHelmetOverride;
-            var config bool preloadPawn;
-         */
-
         public void AddMenuEntry(AppearanceItemData item)
         {
             AddArrayEntries("menuItems", item.OutputValue());
         }
 
-        public AppearanceItemData GetEntryPoint(int srCenterText, bool requiresFramework = false)
+        public AppearanceItemData GetEntryPoint(int srCenterText, bool requiresFramework = false, bool inline = false, (int id, int value)? displayInt = null)
         {
-            return new AppearanceItemData()
+            var result =  new AppearanceItemData()
             {
-                SrCenterText = srCenterText,
+                InlineSubmenu = inline ? true : null,
+                SrCenterText = srCenterText == 0 ? null : srCenterText,
                 SubMenuClassName = ClassFullPath,
                 RequiresFramework = requiresFramework ? true : null
             };
+            if (displayInt.HasValue)
+            {
+                result.DisplayInt = new AppearanceItemData.PlotIntSetting(displayInt.Value.id, displayInt.Value.value);
+            }
+            return result;
         }
 
-        public AppearanceItemData GetInlineEntryPoint()
+        public AppearanceItemData GetInlineEntryPoint(bool requiresFramework = false, (int id, int value)? displayInt = null)
         {
-            return new AppearanceItemData()
-            {
-                InlineSubmenu = true,
-                SubMenuClassName = ClassFullPath
-            };
+            return GetEntryPoint(0, requiresFramework, true, displayInt);
         }
 
         public string? PawnTag

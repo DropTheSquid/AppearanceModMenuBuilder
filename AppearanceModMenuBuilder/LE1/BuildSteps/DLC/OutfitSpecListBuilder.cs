@@ -602,7 +602,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 "BIOG_HMM_CTHa_AMM.CTHa.HMM_ARM_CTHa_MAT_1a",
                 "BIOG_HMM_CTHa_AMM.CTHa.HMM_ARM_CTHa_MAT_2a",
                 "BIOG_HMM_CTHa_AMM.CTHa.HMM_ARM_CTHa_MAT_3a",
-                // TODO material 4 is missing from vanilla, and I also think it is missing some color/bar combos. see about restoring those
+                // material 4 is missing from vanilla
                 "BIOG_HMM_CTHa_AMM.CTHa.HMM_ARM_CTHa_MAT_5a");
 
             // CTHb
@@ -746,7 +746,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 "BIOG_HMM_CTHh_AMM.CTHh.HMM_ARM_CTHh_MAT_2h",
                 "BIOG_HMM_CTHh_AMM.CTHh.HMM_ARM_CTHh_MAT_2i");
 
-            // add all the outfits for HUman Female/Asari to the menu
+            // add all the outfits for Human Male to the menu
             AddMenuEntries(humanOutfitMenus.NonArmor, 100, nextId - 100, EGender.Male);
 
             configs.Add(bodyConfig);

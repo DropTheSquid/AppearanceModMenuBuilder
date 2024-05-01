@@ -19,7 +19,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             public AppearanceSubmenu Casual;
             public AppearanceSubmenu Combat;
             public AppearanceSubmenu Armor;
-            public AppearanceSubmenu NonArmor;
+            public AppearanceSubmenu? NonArmor;
             public AppearanceSubmenu Headgear;
             public AppearanceSubmenu Breather;
         }
@@ -96,19 +96,19 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
         public static (SpeciesOutfitMenus human, SpeciesOutfitMenus asari, SpeciesOutfitMenus turian, SpeciesOutfitMenus quarian, SpeciesOutfitMenus krogan) InitCommonMenus(ModConfigMergeFile configMergeFile)
         {
-            SpeciesOutfitMenus GetOrCreateMenus(string bodyType)
+            SpeciesOutfitMenus GetOrCreateMenus(string bodyType, bool skipNonArmor = false)
             {
                 return new SpeciesOutfitMenus
                 {
                     Casual = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_CasualOutfits", configMergeFile),
                     Combat = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_CombatOutfits", configMergeFile),
                     Armor = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.Armor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_ArmorOutfits", configMergeFile),
-                    NonArmor = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits", configMergeFile),
+                    NonArmor = skipNonArmor ? null : AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits", configMergeFile),
                     Headgear = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_Headgear", configMergeFile),
                     Breather = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_Breather", configMergeFile)
                 };
             }
-            return (GetOrCreateMenus("Human"), GetOrCreateMenus("Asari"), GetOrCreateMenus("Turian"), GetOrCreateMenus("Quarian"), GetOrCreateMenus("Krogan"));
+            return (GetOrCreateMenus("Human"), GetOrCreateMenus("Asari"), GetOrCreateMenus("Turian"), GetOrCreateMenus("Quarian", true), GetOrCreateMenus("Krogan"));
         }
 
         private void MakeCommonSubmenus(IMEPackage submenuPackageFile, ModConfigMergeFile configMergeFile)
@@ -168,15 +168,30 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 //    ApplyOutfitId = -3,
                 //});
 
-                // "Armor"
-                menus.Casual.AddMenuEntry(menus.Armor.GetEntryPoint(210210233));
-                // "Non Armor"
-                menus.Casual.AddMenuEntry(menus.NonArmor.GetEntryPoint(210210234));
+                if (menus.NonArmor != null)
+                {
+                    // the submenus only appear if the "allow armor in casual" setting is on
+                    // "Armor"
+                    menus.Casual.AddMenuEntry(menus.Armor.GetEntryPoint(210210233, displayInt: (1595, 1)));
+                    // "Non Armor"
+                    menus.Casual.AddMenuEntry(menus.NonArmor.GetEntryPoint(210210234, displayInt: (1595, 1)));
+                    // otherwise the casuals menu appears inline
+                    menus.Casual.AddMenuEntry(menus.NonArmor.GetInlineEntryPoint(displayInt: (1595, 0)));
 
-                // "Armor"
-                menus.Combat.AddMenuEntry(menus.Armor.GetEntryPoint(210210233));
-                // "Non Armor"
-                menus.Combat.AddMenuEntry(menus.NonArmor.GetEntryPoint(210210234));
+                    // as above, the submenus only appear if the "allow casual in combat" setting is on
+                    // "Armor"
+                    menus.Combat.AddMenuEntry(menus.Armor.GetEntryPoint(210210233, displayInt: (1594, 1)));
+                    // "Non Armor"
+                    menus.Combat.AddMenuEntry(menus.NonArmor.GetEntryPoint(210210234, displayInt: (1594, 1)));
+                    // otherwise armors appear inline
+                    menus.Combat.AddMenuEntry(menus.Armor.GetInlineEntryPoint(displayInt: (1594, 0)));
+                }
+                else
+                {
+                    menus.Casual.AddMenuEntry(menus.Armor.GetInlineEntryPoint());
+                    menus.Combat.AddMenuEntry(menus.Armor.GetInlineEntryPoint());
+                }
+                
 
                 menus.Headgear.AddMenuEntry(new AppearanceItemData()
                 {
