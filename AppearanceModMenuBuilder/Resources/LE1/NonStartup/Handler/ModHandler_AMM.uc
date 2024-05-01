@@ -154,6 +154,7 @@ public function UpdateAsyncPawnLoadingState(string tag, string appearanceType, P
 	{
 		if (state == PawnLoadState.Loaded)
 		{
+			cameraHandler.ResetCameraForCharacter(tag);
 			pawnHandler.DisplayPawn(tag, appearanceType);
 		}
 		// TODO get rid of the loading spinner here
@@ -206,20 +207,6 @@ public event function Update(float fDeltaT)
 
 	pawnHandler.Update(fDeltaT);
 	cameraHandler.Update(fDeltaT);
-
-	// move the camera up/down
-	// if (lTriggerPressed && !rTriggerPressed)
-	// {
-	// 	cameraMove.z = -10 * fDeltaT;
-	// }
-	// else if (rTriggerPressed && !lTriggerPressed)
-	// {
-	// 	cameraMove.z = 10 * fDeltaT;
-	// }
-	// // and in the x Y plane (the camera is at such an angle that it's more intuitive to swap these and invert the x)
-	// cameraMove.Y = rStickX * -10 * fDeltaT;
-	// cameraMove.X = rStickY * 10 * fDeltaT;
-	// cameraHandler.moveCamera(cameraMove);
 }
 public function RefreshMenu(optional bool firstEnter = FALSE)
 {
@@ -301,6 +288,7 @@ private function TryDisplayPawn(string tag, string appearanceType)
 	// Log("Setting up pawn");
 	if (state == PawnLoadState.Loaded)
 	{
+		cameraHandler.ResetCameraForCharacter(tag);
 		pawnHandler.DisplayPawn(tag, appearanceType);
 	}
 	else if (state == PawnLoadState.Loading)

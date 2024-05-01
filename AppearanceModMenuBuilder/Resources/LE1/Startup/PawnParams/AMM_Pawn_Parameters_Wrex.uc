@@ -31,3 +31,9 @@ public function SpecialHandling(BioPawn targetPawn)
 		}
 	}
 }
+
+defaultproperties
+{
+	// Wrex is too tall for the default camera height
+	PreviewCameraMaxHeight = 105
+}

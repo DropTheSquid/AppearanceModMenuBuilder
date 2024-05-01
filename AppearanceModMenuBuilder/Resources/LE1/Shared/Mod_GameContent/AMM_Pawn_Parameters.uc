@@ -36,6 +36,8 @@ var config string menuRootPath;
 var config array<AppearanceIdLookups> AppearanceIdLookupsList;
 // whether this pawn should ignore the game forcing a helmet. This mostly applies to Tali, since she always has a breather on anyway, and has no vanilla helmet anyway
 var config bool bIgnoreForcedHelmet;
+// set the max height of the camera in the menu, as this varies based on the height of the character
+var config float PreviewCameraMaxHeight;
 
 // Functions
 public function bool matchesPawn(BioPawn targetPawn)
@@ -183,4 +185,6 @@ public function bool SpawnPawn(string appearanceType, out BioPawn spawnedPawn)
 //class default properties can be edited in the Properties tab for the class's Default__ object.
 defaultproperties
 {
+	// good enough for most characters, but too short for Turian or Krogan
+	PreviewCameraMaxHeight = 87
 }

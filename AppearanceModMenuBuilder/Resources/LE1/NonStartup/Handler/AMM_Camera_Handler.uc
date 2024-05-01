@@ -1,34 +1,36 @@
 Class AMM_Camera_Handler extends AMM_Handler_Helper;
 
-// Variables
+// Things we need to modify/restore to change the camera and pawn rotation
 var transient InterpTrackMove _interp;
 var transient PlayerStart _playerStart;
 var transient SeqAct_SetLocation _setLocationAct;
 var transient Vector _originalCameraPosition;
 var transient Rotator _originalRotation;
 
+// hardcoded
 var Vector2D MaxZoomedOutCameraXY;
 var Vector2D MaxZoomedInCameraXY;
 var float ZoomedOutHeight;
 var float ZoomedInMinHeight;
-var float ZoomedInMaxHeight;
-// var Vector MaxZoomedOutCameraPosition;
-// var Vector MaxZoomedInHighCameraPosition;
-// var Vector MaxZoomedInLowCameraPosition;
 var float controllerZoomMultiplier;
 var float mouseWheelZoomStep;
 var float controllerMoveUpDownMultiplier;
 var float mouseMoveUpDownMultiplier;
 var float controllerRotateMultiplier;
 var float mouseRotateMultiplier;
+// varies by character
+var float ZoomedInMaxHeight;
 
+// interps to make everything feel smooth
 var InterpCurveFloat ZoomToXYInterp;
 var InterpCurveFloat MoveUpDownSensitivityByZoom;
 
+// the current state of the variables that determine the view
 var transient float currentZoom;
 var transient float currentHeight;
 var transient Rotator currentRotation;
 
+// indicates whether/to what degree the camera is being moved right now
 var transient float zoomInTriggerPressed;
 var transient float zoomOutTriggerPressed;
 var transient float moveUpDownMouse;
@@ -54,11 +56,7 @@ public function Init(ModHandler_AMM outerMenu)
 
 	// cache the original camera position
     _originalCameraPosition = GetCameraPositionRaw();
-	// zoomed all the way out
-	currentZoom = 0;
-	// head height if we zoomed in (approx)
-	CurrentHeight = 0.95;
-	UpdateCameraPosition();
+	
 }
 public function Cleanup()
 {
@@ -66,6 +64,27 @@ public function Cleanup()
     SetCameraPositionRaw(_originalCameraPosition);
 	_playerStart.Rotation = _originalRotation;
 	CommitCamera();
+}
+public function ResetCameraForCharacter(string tag)
+{
+	local AMM_Pawn_Parameters params;
+
+	if (tag != "None" && _outerMenu.paramHandler.GetPawnParamsByTag(tag, params))
+	{
+		// zoomed all the way out
+		currentZoom = 0;
+		// head height if we zoomed in (approx)
+		CurrentHeight = 0.95;
+		ZoomedInMaxHeight = params.PreviewCameraMaxHeight;
+		UpdateCameraPosition();
+
+		CurrentRotation = _originalRotation;
+		CommitRotation();
+	}
+	else
+	{
+		SetCameraPositionRaw(_originalCameraPosition);
+	}
 }
 public function Update(float fDeltaT)
 {
@@ -88,9 +107,6 @@ public function Update(float fDeltaT)
 	}
 	if (moveUpDownController != 0)
 	{
-		// there is an issue where this seems to be pretty strongly framerate dependant. At lower framerates is is much more sensitive, and it is not sensitive enough at high framerate
-		// if the framerate is low, then the fDeltaT will be high, which will lead to it moving more. I guess that makes sense. 
-
 		// if the sensitivity is the same at all zoom levels, then it is way too sensitive while zoomed in, and not sensitive enough while zoomed out
 		// this makes it feel smooth
 		upDownSensitivityMultiplier = InterpolateFloat(MoveUpDownSensitivityByZoom, currentZoom, 0.0, 1.0);
@@ -177,15 +193,15 @@ private function float InterpolateFloat(InterpCurveFloat curve, float displaceme
 	Class'BioInterpolator'.static.InterpolateFloatCurve(rawResult, curve, 0.0, 1.0, displacement);
 	return (rawResult * (output1 - output0)) + output0;
 }
-public function SetCameraPositionRaw(Vector position)
+private function SetCameraPositionRaw(Vector position)
 {
     _interp.PosTrack.Points[0].OutVal = position;
 }
-public function Vector GetCameraPositionRaw()
+private function Vector GetCameraPositionRaw()
 {
     return _interp.PosTrack.Points[0].OutVal;
 }
-public function CommitCamera()
+private function CommitCamera()
 {
 	local BioWorldInfo BWI;
 
@@ -217,7 +233,7 @@ private final function PlayerStart GetPlayerStart()
 //class default properties can be edited in the Properties tab for the class's Default__ object.
 defaultproperties
 {
-	// determined through testing to be a pretty comfortable value
+	// determined through testing to be pretty comfortable values
 	controllerRotateMultiplier = -50000
 	mouseRotateMultiplier = -66.66666
 	controllerZoomMultiplier = 0.5
@@ -225,33 +241,23 @@ defaultproperties
 	mouseMoveUpDownMultiplier = -0.0035
 	// intended to have 20 steps between 0 (zoomed out) and 1 (zoomed in) so this is 1/20th
 	mouseWheelZoomStep = 0.05
-
 	ZoomedOutHeight = -9
 	ZoomedInMinHeight = -88.5
-	// TODO this will need to vary by character
-	ZoomedInMaxHeight = 87
 
-	// the position by default for outfits for all characters
-	// MaxZoomedOutCameraPosition = {X = -1974.85974, Y = -234.663101, Z = -9.0}
 	MaxZoomedOutCameraXY = {X = -1974.85974, Y = -234.663101}
 	MaxZoomedInCameraXY = {X = -1265.6636, Y = -136.8608}
-	// Untested, but these are the high/low zoomed in positions
-	// -1264.9181 -136.8398 105.8366
-	// -1264.7749 -135.2986 103.9956
-	// Z will vary per character
-	// Wrex: 105
-	// Humans/Asari/Quarians: 87
-	// Garrus: 97
-	// MaxZoomedInHighCameraPosition = {X = -1265.6636, Y = -136.8608, Z = 87.0}
-	// shared for all characters
-	// MaxZoomedInLowCameraPosition = {X = -1265.6636, Y = -136.8608, Z = -88.5265}
-	// as zoom varies from 1 to 0
+	
+	// Maps from zoom (0 = zoomed out fully, 1 = zoomed in fully) to the relative x/y/z position between the zoomed out and zoomed in camera locations
+	// if this relationship is linear, then it is way too sensitive far away from the character and not sensitive enough close to the character
+	// with this, the halfway zoom point is a good view of the head and it feels smooth
 	ZoomToXYInterp = {
 		Points = ({InVal = -0.000000000000000222044605, OutVal = 0.0, ArriveTangent = 2.21512413, LeaveTangent = 2.21512413, InterpMode = EInterpCurveMode.CIM_CurveUser}, 
 				{InVal = 0.5, OutVal = 0.802072883, ArriveTangent = 0.598061323, LeaveTangent = 0.598061323, InterpMode = EInterpCurveMode.CIM_CurveUser}, 
 				{InVal = 1.0, OutVal = 1.0, ArriveTangent = 0.0, LeaveTangent = 0.0, InterpMode = EInterpCurveMode.CIM_Linear}
 				)
 		}
+	// maps from zoom to the relative sensitivity of moving the camera up/down.
+	// without this, it is way too sensitive up close and too insensitive far away. This evens it out
 	MoveUpDownSensitivityByZoom = {
 		Points = ({InVal = 0.0, OutVal = 2.47969842, ArriveTangent = -7.64156532, LeaveTangent = -7.64156532, InterpMode = EInterpCurveMode.CIM_CurveUser}, 
 					{InVal = 0.35, OutVal = 0.381911516, ArriveTangent = -2.18307185, LeaveTangent = -2.18307185, InterpMode = EInterpCurveMode.CIM_CurveUser}, 
@@ -261,11 +267,3 @@ defaultproperties
 				)
 		}
 }
-
-// Tali Face zoom  moving camera: new position -1324.2717 -144.1307 70.6261
-// male human face zoom new position -1324.2717 -144.1307 74.3055
-// female human same
-// garrus -1324.2717 -144.1307 80.4759
-// wrex is totally different moving camera: new position -1403.0068 -148.1730 74.9644
-
-// I am going to make it work for humans/asari first, and then worry about others
