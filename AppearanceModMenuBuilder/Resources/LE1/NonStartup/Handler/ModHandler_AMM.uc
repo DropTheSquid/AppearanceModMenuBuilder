@@ -205,6 +205,7 @@ public event function Update(float fDeltaT)
 {
 	local vector cameraMove;
 
+	SetMouseShown(!oPanel.bUsingGamepad && !rightClickHeld);
 	pawnHandler.Update(fDeltaT);
 	cameraHandler.Update(fDeltaT);
 }

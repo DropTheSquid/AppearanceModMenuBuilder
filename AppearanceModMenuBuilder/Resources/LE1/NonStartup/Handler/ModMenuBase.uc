@@ -51,10 +51,7 @@ public event function HandleButtonRefresh(bool usingGamepad)
 public function Update(float fDeltaT)
 {
     // comment("This runs constantly, every tick I think. If you need to update anything over time, override this and call the original.");
-    if (!Class'WorldInfo'.static.IsConsoleBuild())
-    {
-        SetMouseShown(!oPanel.bUsingGamepad);
-    }
+	SetMouseShown(!oPanel.bUsingGamepad);
 }
 public function OnPanelRemoved()
 {
