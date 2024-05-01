@@ -70,8 +70,6 @@ public function Cleanup()
 public function Update(float fDeltaT)
 {
 	local float netZoom;
-	local float netRotate;
-	local float netMoveUpDown;
 	local float upDownSensitivityMultiplier;
 
 	// handle zoom in/out
@@ -82,9 +80,17 @@ public function Update(float fDeltaT)
 	}
 
 	// handle moving the camera up/down
-	netMoveUpDown = (moveUpDownController * controllerMoveUpDownMultiplier) + (moveUpDownMouse * mouseMoveUpDownMultiplier);
-	if (netMoveUpDown != 0)
+	if (moveUpDownMouse != 0)
 	{
+		upDownSensitivityMultiplier = InterpolateFloat(MoveUpDownSensitivityByZoom, currentZoom, 0.0, 1.0);
+		// I need to exclude fDeltaT from this calculation because it is essentialy already included in how much the mouse moves each frame
+		ChangeHeight(moveUpDownMouse * mouseMoveUpDownMultiplier * upDownSensitivityMultiplier);
+	}
+	if (moveUpDownController != 0)
+	{
+		// there is an issue where this seems to be pretty strongly framerate dependant. At lower framerates is is much more sensitive, and it is not sensitive enough at high framerate
+		// if the framerate is low, then the fDeltaT will be high, which will lead to it moving more. I guess that makes sense. 
+
 		// if the sensitivity is the same at all zoom levels, then it is way too sensitive while zoomed in, and not sensitive enough while zoomed out
 		// this makes it feel smooth
 		upDownSensitivityMultiplier = InterpolateFloat(MoveUpDownSensitivityByZoom, currentZoom, 0.0, 1.0);
@@ -92,14 +98,24 @@ public function Update(float fDeltaT)
 		{
 			LogInternal("UpDownSensitivity zoom"@currentZoom@"sensitivity"@upDownSensitivityMultiplier);
 		}
-		ChangeHeight(netMoveUpDown * fDeltaT * upDownSensitivityMultiplier);
+		ChangeHeight(moveUpDownController * controllerMoveUpDownMultiplier * fDeltaT * upDownSensitivityMultiplier);
+	}
+	if (moveUpDownMouse != 0 || moveUpDownController != 0 || netZoom != 0)
+	{
+		UpdateCameraPosition();
 	}
 	
 	// handle rotation
-	netRotate = (rotateController * controllerRotateMultiplier) + (rotateMouse * mouseRotateMultiplier);
-	if (netRotate != 0)
+	if (rotateController != 0)
 	{
-		currentRotation.Yaw += int(netRotate * fDeltaT);
+		currentRotation.Yaw += int(rotateController * controllerRotateMultiplier * fDeltaT);
+	}
+	if (rotateMouse != 0)
+	{
+		currentRotation.Yaw += int(rotateMouse * mouseRotateMultiplier);
+	}
+	if (rotateController != 0 || rotateMouse != 0)
+	{
 		CommitRotation();
 	}
 }
@@ -116,16 +132,15 @@ private function CommitRotation()
 public function MouseWheelZoom(bool zoomIn)
 {
 	Zoom(mouseWheelZoomStep * (zoomIn ? -1 : 1));
+	UpdateCameraPosition();
 }
 private function Zoom(float step)
 {
 	CurrentZoom = FClamp(CurrentZoom + step, 0, 1);
-	UpdateCameraPosition();
 }
 private function ChangeHeight(float step)
 {
 	CurrentHeight = FClamp(CurrentHeight + step, 0, 1);
-	UpdateCameraPosition();
 }
 private function UpdateCameraPosition()
 {
@@ -204,10 +219,10 @@ defaultproperties
 {
 	// determined through testing to be a pretty comfortable value
 	controllerRotateMultiplier = -50000
-	mouseRotateMultiplier = -4000
+	mouseRotateMultiplier = -66.66666
 	controllerZoomMultiplier = 0.5
-	controllerMoveUpDownMultiplier = -1.0
-	mouseMoveUpDownMultiplier = -0.12
+	controllerMoveUpDownMultiplier = -2.0
+	mouseMoveUpDownMultiplier = -0.004
 	// intended to have 20 steps between 0 (zoomed out) and 1 (zoomed in) so this is 1/20th
 	mouseWheelZoomStep = 0.05
 
