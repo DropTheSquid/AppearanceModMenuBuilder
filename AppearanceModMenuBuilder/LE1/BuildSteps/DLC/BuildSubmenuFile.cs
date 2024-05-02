@@ -22,9 +22,11 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             public AppearanceSubmenu? NonArmor;
             public AppearanceSubmenu Headgear;
             public AppearanceSubmenu Breather;
+            public AppearanceSubmenu[] CasualOutfitMenus;
         }
 
-        public SpeciesOutfitMenus HumanOutfitMenus;
+        public SpeciesOutfitMenus HumanFemaleOutfitMenus;
+        public SpeciesOutfitMenus HumanMaleOutfitMenus;
         public SpeciesOutfitMenus AsariOutfitMenus;
         public SpeciesOutfitMenus TurianOutfitMenus;
         public SpeciesOutfitMenus KroganOutfitMenus;
@@ -94,7 +96,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             classTask.RunModTask(context);
         }
 
-        public static (SpeciesOutfitMenus human, SpeciesOutfitMenus asari, SpeciesOutfitMenus turian, SpeciesOutfitMenus quarian, SpeciesOutfitMenus krogan) InitCommonMenus(ModConfigMergeFile configMergeFile)
+        public static (SpeciesOutfitMenus humanFemale, SpeciesOutfitMenus humanMale, SpeciesOutfitMenus asari, SpeciesOutfitMenus turian, SpeciesOutfitMenus quarian, SpeciesOutfitMenus krogan) InitCommonMenus(ModConfigMergeFile configMergeFile)
         {
             SpeciesOutfitMenus GetOrCreateMenus(string bodyType, bool skipNonArmor = false)
             {
@@ -108,12 +110,58 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     Breather = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_Breather", configMergeFile)
                 };
             }
-            return (GetOrCreateMenus("Human"), GetOrCreateMenus("Asari"), GetOrCreateMenus("Turian"), GetOrCreateMenus("Quarian", true), GetOrCreateMenus("Krogan"));
+            void AddHumanIshMenus(ref SpeciesOutfitMenus menus, string bodyType)
+            {
+                menus.CasualOutfitMenus = [
+                    // misc, such as nude, VI materials, dancer; things that are implausible/immersion breaking and not shown by default
+                    AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits_Misc", configMergeFile),
+                    // CTHa Alliance Formals CTHa
+                    AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits_CTHa", configMergeFile),
+                    // CTHb Allicance Casual/CSec/some civilian
+                    AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits_CTHb", configMergeFile),
+                    // CTHc Dress 1 (hmm is suit 1)
+                    AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits_CTHc", configMergeFile),
+                    // CTHd Dress 2 (hmm is Civilian/laborer clothes)
+                    AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits_CTHd", configMergeFile),
+                    // CTHe civilian/laborer
+                    AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits_CTHe", configMergeFile),
+                    // CTHf miner
+                    AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits_CTHf", configMergeFile),
+                    // CTHg dress 3 (hmm is puffy jacket casual)
+                    AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits_CTHg", configMergeFile),
+                    // CTHh scientist/medical
+                    AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits_CTHh", configMergeFile),
+                    ];
+            }
+            var humanFemale = GetOrCreateMenus("HumanFemale");
+            var humanMale = GetOrCreateMenus("HumanMale");
+            var asari = GetOrCreateMenus("Asari");
+            AddHumanIshMenus(ref humanFemale, "HumanFemale");
+            AddHumanIshMenus(ref humanMale, "HumanMale");
+            AddHumanIshMenus(ref asari, "Asari");
+            var turian = GetOrCreateMenus("Turian");
+            turian.CasualOutfitMenus = [
+                // CTHa (and the alt no hood version)
+                AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.Turian.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}Turian_NonArmorOutfits_CTHa", configMergeFile),
+                // CTHb
+                AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.Turian.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}Turian_NonArmorOutfits_CTHb", configMergeFile),
+                // CTHc
+                AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.Turian.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}Turian_NonArmorOutfits_CTHc", configMergeFile)
+                ];
+            var quarian = GetOrCreateMenus("Quarian", true);
+            // no additional submenus for Quarians
+            var krogan = GetOrCreateMenus("Krogan");
+            krogan.CasualOutfitMenus = [
+                // CTHa, to be inlined
+                AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.Krogan.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}Krogan_NonArmorOutfits_CTHa", configMergeFile),
+                ];
+
+            return (humanFemale, humanMale, asari, turian, quarian, krogan);
         }
 
         private void MakeCommonSubmenus(IMEPackage submenuPackageFile, ModConfigMergeFile configMergeFile)
         {
-            (HumanOutfitMenus, AsariOutfitMenus, TurianOutfitMenus, QuarianOutfitMenus, KroganOutfitMenus) = InitCommonMenus(configMergeFile);
+            (HumanFemaleOutfitMenus, HumanMaleOutfitMenus, AsariOutfitMenus, TurianOutfitMenus, QuarianOutfitMenus, KroganOutfitMenus) = InitCommonMenus(configMergeFile);
             void SetupMenu(string bodyType, SpeciesOutfitMenus menus)
             {
                 var packageExp = ExportCreator.CreatePackageExport(submenuPackageFile, bodyType);
@@ -191,8 +239,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     menus.Casual.AddMenuEntry(menus.Armor.GetInlineEntryPoint());
                     menus.Combat.AddMenuEntry(menus.Armor.GetInlineEntryPoint());
                 }
-                
 
+                // TODO I should hide this if there is no headgear available.../perhaps skip it entirely for Tali and make mods add it/enable it
                 menus.Headgear.AddMenuEntry(new AppearanceItemData()
                 {
                     // "Default"
@@ -246,28 +294,119 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
                 // TODO add titles and subtitles to these?
             }
-            SetupMenu("Human", HumanOutfitMenus);
+            SetupMenu("HumanFemale", HumanFemaleOutfitMenus);
+            SetupMenu("HumanMale", HumanMaleOutfitMenus);
             SetupMenu("Asari", AsariOutfitMenus);
             SetupMenu("Turian", TurianOutfitMenus);
             SetupMenu("Quarian", QuarianOutfitMenus);
             SetupMenu("Krogan", KroganOutfitMenus);
+
+            void hmfAsaCommon(string bodyType, SpeciesOutfitMenus menus)
+            {
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits_Misc", [bodyType, "NonArmor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits_CTHa", [bodyType, "NonArmor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits_CTHb", [bodyType, "NonArmor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits_CTHc", [bodyType, "NonArmor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits_CTHd", [bodyType, "NonArmor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits_CTHe", [bodyType, "NonArmor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits_CTHf", [bodyType, "NonArmor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits_CTHg", [bodyType, "NonArmor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits_CTHh", [bodyType, "NonArmor"]));
+
+                // TODO better names for these menus
+                // misc (mostly NKD)
+                // TODO this should not show up without opting in
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[0].GetEntryPoint(210210253));
+                // CTHa
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[1].GetEntryPoint(210210253));
+                // CTHb
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[2].GetEntryPoint(210210253));
+                // CTHc
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[3].GetEntryPoint(210210253));
+                // CTHd
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[4].GetEntryPoint(210210253));
+                // CTHe
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[5].GetEntryPoint(210210253));
+                // CTHf
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[6].GetEntryPoint(210210253));
+                // CTHg
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[7].GetEntryPoint(210210253));
+                // CTHh
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[8].GetEntryPoint(210210253));
+            }
+            void hmmCasualMenus(string bodyType, SpeciesOutfitMenus menus)
+            {
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits_Misc", [bodyType, "NonArmor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits_CTHa", [bodyType, "NonArmor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits_CTHb", [bodyType, "NonArmor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits_CTHc", [bodyType, "NonArmor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits_CTHd", [bodyType, "NonArmor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits_CTHe", [bodyType, "NonArmor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits_CTHf", [bodyType, "NonArmor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits_CTHg", [bodyType, "NonArmor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits_CTHh", [bodyType, "NonArmor"]));
+
+                // TODO real names for these menus
+                // misc (mostly NKD)
+                // TODO this should not show up without opting in
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[0].GetEntryPoint(210210253));
+                // CTHa
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[1].GetEntryPoint(210210253));
+                // CTHb
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[2].GetEntryPoint(210210253));
+                // CTHc
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[3].GetEntryPoint(210210253));
+                // CTHd
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[4].GetEntryPoint(210210253));
+                // CTHe
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[5].GetEntryPoint(210210253));
+                // CTHf
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[6].GetEntryPoint(210210253));
+                // CTHg
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[7].GetEntryPoint(210210253));
+                // CTHh
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[8].GetEntryPoint(210210253));
+            }
+            hmfAsaCommon("HumanFemale", HumanFemaleOutfitMenus);
+            hmfAsaCommon("Asari", AsariOutfitMenus);
+            hmmCasualMenus("HumanMale", HumanMaleOutfitMenus);
+
+            // the single krogan menu
+            classes.Add(SquadMemberSubmenus.GetSubmenuClass($"Krogan_NonArmorOutfits_CTHa", ["Krogan", "NonArmor"]));
+            KroganOutfitMenus.NonArmor!.AddMenuEntry(KroganOutfitMenus.CasualOutfitMenus[0].GetInlineEntryPoint());
+
+            // the three Turian menus
+            classes.Add(SquadMemberSubmenus.GetSubmenuClass($"Turian_NonArmorOutfits_CTHa", ["Turian", "NonArmor"]));
+            TurianOutfitMenus.NonArmor!.AddMenuEntry(TurianOutfitMenus.CasualOutfitMenus[0].GetEntryPoint(210210253));
+            classes.Add(SquadMemberSubmenus.GetSubmenuClass($"Turian_NonArmorOutfits_CTHb", ["Turian", "NonArmor"]));
+            TurianOutfitMenus.NonArmor!.AddMenuEntry(TurianOutfitMenus.CasualOutfitMenus[1].GetEntryPoint(210210253));
+            classes.Add(SquadMemberSubmenus.GetSubmenuClass($"Turian_NonArmorOutfits_CTHc", ["Turian", "NonArmor"]));
+            TurianOutfitMenus.NonArmor!.AddMenuEntry(TurianOutfitMenus.CasualOutfitMenus[2].GetEntryPoint(210210253));
         }
 
         private List<SquadMemberSubmenus> MakeSquadmateSubmenus()
         {
             List<SquadMemberSubmenus> squadMembers = [];
 
-            squadMembers.Add(new SquadMemberSubmenus("Shepard", 210210218, "Player", HumanOutfitMenus)
+            squadMembers.Add(new SquadMemberSubmenus("FemaleShepard", 210210218, "Player", HumanFemaleOutfitMenus)
             {
                 Romanceable = true,
+                // true only if player is female
+                DisplayConditional = 144
             });
-            squadMembers.Add(new SquadMemberSubmenus("Kaidan", 166121, "Hench_HumanMale", HumanOutfitMenus)
+            squadMembers.Add(new SquadMemberSubmenus("MaleShepard", 210210218, "Player", HumanMaleOutfitMenus)
+            {
+                Romanceable = true,
+                // true only if player is male
+                DisplayConditional = 143
+            });
+            squadMembers.Add(new SquadMemberSubmenus("Kaidan", 166121, "Hench_HumanMale", HumanMaleOutfitMenus)
             {
                 Romanceable = true,
                 // TODO add this in once I have actually implemented conditionals
                 //DisplayConditional = 2500
             });
-            squadMembers.Add(new SquadMemberSubmenus("Ashley", 163457, "Hench_HumanFemale", HumanOutfitMenus)
+            squadMembers.Add(new SquadMemberSubmenus("Ashley", 163457, "Hench_HumanFemale", HumanFemaleOutfitMenus)
             {
                 Romanceable = true,
                 // TODO add this in once I have actually implemented conditionals
@@ -294,7 +433,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 // TODO add this in once I have actually implemented conditionals
                 //DisplayConditional = 2504
             });
-            squadMembers.Add(new SquadMemberSubmenus("Jenkins", 163868, "Hench_Jenkins", HumanOutfitMenus)
+            squadMembers.Add(new SquadMemberSubmenus("Jenkins", 163868, "Hench_Jenkins", HumanMaleOutfitMenus)
             {
                 // this bool will be set to true once Jenkins dies, which will block the menu from showing him from that point forward
                 DisplayBool = -3551

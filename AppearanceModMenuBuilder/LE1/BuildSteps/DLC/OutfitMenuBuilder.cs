@@ -39,6 +39,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 .. VanillaBodyAppearance.GetVanillaVariants(19, EArmorType.MED, hmfBodyType, (16, 1), (1, 1), (9,1)),
                 .. VanillaBodyAppearance.GetVanillaVariants(45, EArmorType.HVY, hmfBodyType, (16, 1), (1, 1))
                 ];
+            // identical except there is no LGTc
             VanillaBodyAppearance[] HMMAppearances = [
                 .. VanillaBodyAppearance.GetVanillaVariants(1, EArmorType.LGT, hmmBodyType, (16, 1), (1, 1)),
                 .. VanillaBodyAppearance.GetVanillaVariants(19, EArmorType.MED, hmmBodyType, (16, 1), (1, 1), (9,1)),
@@ -89,6 +90,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 matchAppearances(armor, armor.MalePlayerVariant, HMMAppearances, true);
                 matchAppearances(armor, armor.AnyHumanVariant, HMFAppearances);
                 matchAppearances(armor, armor.AnyPlayerVariant, HMFAppearances, true);
+                matchAppearances(armor, armor.AnyHumanVariant, HMMAppearances);
+                matchAppearances(armor, armor.AnyPlayerVariant, HMMAppearances, true);
                 matchAppearances(armor, armor.TurianVariant, TURAppearances); 
                 matchAppearances(armor, armor.KroganVariant, KROAppearances);
                 matchAppearances(armor, armor.QuarianVariant, QRNAppearances);
@@ -96,8 +99,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             // the code below detects unused appearances and when more than one set of armor uses the same appearance
             CheckAppearances(HMFAppearances, "hmf");
-            // because HMF and HMM are nearly identical, HMM gets kinda ignored and therefore a bunch of things appear unused
-            //CheckAppearances(HMMAppearances, "hmm");
+            CheckAppearances(HMMAppearances, "hmm");
             // I am aware that Turian Guardian L/M duplicates appearance with Onyx (there is a Guardian H but not Onyx)
             // I'm choosing to leave that in place, as it is not confusing
             CheckAppearances(TURAppearances, "tur");
@@ -388,38 +390,57 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         {
             var configMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-amm_Submenus.m3cd");
 
-            var (humanOutfitMenus, asariOutfitMenus, turianOutfitMenus, _, _) = InitCommonMenus(configMergeFile);
+            var (humanFemaleOutfitMenus, humanMaleOutfitMenus, asariOutfitMenus, turianOutfitMenus, _, _) = InitCommonMenus(configMergeFile);
 
-            // hmm/hmf breathers
-            humanOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
+            // hmf breathers
+            humanFemaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
             {
                 // "Shepard"
                 SrCenterText = 125303,
                 ApplyBreatherId = -11
             });
-            humanOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
+            humanFemaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
             {
                 // "Ashley"
                 SrCenterText = 168842,
                 ApplyBreatherId = -13,
-                // TODO remove the gender restriction once I have ported the mesh for male
-                Gender = EGender.Female
+                // TODO port to male
             });
-            humanOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
+            humanFemaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
             {
                 // "Liara"
                 SrCenterText = 149285,
                 ApplyBreatherId = -12,
-                // TODO remove the gender restriction once I have ported the mesh for male
-                Gender = EGender.Female
+                // TODO port to male
             });
-            humanOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
+            humanFemaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
             {
                 // "Kaidan"
                 SrCenterText = 151316,
                 ApplyBreatherId = -14,
             });
-            humanOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
+            humanFemaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
+            {
+                // "NPC"
+                SrCenterText = 210210245,
+                ApplyBreatherId = -15,
+            });
+
+            // hmm breathers
+            humanMaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
+            {
+                // "Shepard"
+                SrCenterText = 125303,
+                ApplyBreatherId = -11
+            });
+
+            humanMaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
+            {
+                // "Kaidan"
+                SrCenterText = 151316,
+                ApplyBreatherId = -14,
+            });
+            humanMaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
             {
                 // "NPC"
                 SrCenterText = 210210245,
@@ -470,16 +491,18 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         {
             var configMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-amm_Submenus.m3cd");
 
-            var (humanOutfitMenus, asariOutfitMenus, turianOutfitMenus, quarianOutfitMenus, kroganOutfitMenus) = InitCommonMenus(configMergeFile);
+            var (humanFemaleOutfitMenus, humanMaleOutfitMenus, asariOutfitMenus, turianOutfitMenus, quarianOutfitMenus, kroganOutfitMenus) = InitCommonMenus(configMergeFile);
 
             foreach (var item in armorSets)
             {
-                AddArmorToMenu(humanOutfitMenus, item, item.MalePlayerVariant, EGender.Male);
-                AddArmorToMenu(humanOutfitMenus, item, item.FemalePlayerVariant, EGender.Female);
-                AddArmorToMenu(humanOutfitMenus, item, item.HumanMaleHenchVariant, EGender.Male);
-                AddArmorToMenu(humanOutfitMenus, item, item.HumanFemaleHenchVariant, EGender.Female);
-                AddArmorToMenu(humanOutfitMenus, item, item.AnyHumanVariant);
-                AddArmorToMenu(humanOutfitMenus, item, item.AnyPlayerVariant);
+                AddArmorToMenu(humanMaleOutfitMenus, item, item.MalePlayerVariant);
+                AddArmorToMenu(humanFemaleOutfitMenus, item, item.FemalePlayerVariant);
+                AddArmorToMenu(humanMaleOutfitMenus, item, item.HumanMaleHenchVariant);
+                AddArmorToMenu(humanFemaleOutfitMenus, item, item.HumanFemaleHenchVariant);
+                AddArmorToMenu(humanFemaleOutfitMenus, item, item.AnyHumanVariant);
+                AddArmorToMenu(humanFemaleOutfitMenus, item, item.AnyPlayerVariant);
+                AddArmorToMenu(humanMaleOutfitMenus, item, item.AnyHumanVariant);
+                AddArmorToMenu(humanMaleOutfitMenus, item, item.AnyPlayerVariant);
                 AddArmorToMenu(asariOutfitMenus, item, item.FemalePlayerVariant);
                 AddArmorToMenu(asariOutfitMenus, item, item.HumanFemaleHenchVariant);
                 AddArmorToMenu(asariOutfitMenus, item, item.AnyHumanVariant);
@@ -489,7 +512,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 AddArmorToMenu(quarianOutfitMenus, item, item.QuarianVariant, skipHelmets: true);
             }
 
-            void AddArmorToMenu(SpeciesOutfitMenus submenu, VanillaArmorSet armorSet, ArmorVariant? variant, EGender? gender = null, bool skipHelmets = false)
+            void AddArmorToMenu(SpeciesOutfitMenus submenu, VanillaArmorSet armorSet, ArmorVariant? variant, bool skipHelmets = false)
             {
                 if (variant == null)
                 {
@@ -501,7 +524,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     {
                         return new AppearanceItemData()
                         {
-                            Gender = gender,
                             SrCenterText = armorSet.SrArmorName,
                             ApplyOutfitId = ammAppearanceId
                         };
@@ -510,7 +532,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     {
                         return new AppearanceItemData()
                         {
-                            Gender = gender,
                             // "<ArmorName> - <Weight>"
                             SrCenterText = 210210236,
                             ApplyOutfitId = ammAppearanceId,
@@ -524,7 +545,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     {
                         return new AppearanceItemData()
                         {
-                            Gender = gender,
                             SrCenterText = armorSet.SrArmorName,
                             ApplyHelmetId = ammAppearanceId
                         };
@@ -533,7 +553,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     {
                         return new AppearanceItemData()
                         {
-                            Gender = gender,
                             // "<ArmorName> - <Weight>"
                             SrCenterText = 210210236,
                             ApplyHelmetId = ammAppearanceId,

@@ -118,5 +118,18 @@ namespace AppearanceModMenuBuilder.LE1.UScriptModels
             get => GetStruct<PlotIntSetting>(nameof(DisplayInt));
             set => SetStruct(nameof(DisplayInt), value);
         }
+
+
+        public int? DisplayConditional
+        {
+            get => GetInt(nameof(DisplayConditional));
+            set => SetInt(nameof(DisplayConditional), value);
+        }
+
+        public int? DisplayBool
+        {
+            get => GetInt(nameof(DisplayBool));
+            set => SetInt(nameof(DisplayBool), value);
+        }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using AppearanceModMenuBuilder.LE1.UScriptModels;
 using LegendaryExplorerCore.Packages;
-using MassEffectModBuilder.Models;
 using static AppearanceModMenuBuilder.LE1.BuildSteps.DLC.BuildSubmenuFile;
 using static LegendaryExplorerCore.Unreal.UnrealFlags;
 using static MassEffectModBuilder.LEXHelpers.LooseClassCompile;
@@ -127,15 +126,9 @@ namespace AppearanceModMenuBuilder.LE1.Models
             }
             var rootMenu = Submenus.First();
             var entryPoint = rootMenu.GetEntryPoint(SquadMemberNameStringref);
-            // TODO convert these to strongly typed
-            if (DisplayConditional != null)
-            {
-                entryPoint[nameof(DisplayConditional)] = new IntCoalesceValue(DisplayConditional.Value);
-            }
-            if (DisplayBool != null)
-            {
-                entryPoint[nameof(DisplayBool)] = new IntCoalesceValue(DisplayBool.Value);
-            }
+
+            entryPoint.DisplayConditional = DisplayConditional;
+            entryPoint.DisplayBool = DisplayBool;
 
             return entryPoint;
         }

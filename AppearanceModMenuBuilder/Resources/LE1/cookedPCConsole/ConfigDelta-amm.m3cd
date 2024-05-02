@@ -17,11 +17,8 @@
 +pawnParamSpecs=(parameterPath="PawnParams.AMM_Pawn_Parameters_Wrex")
 +pawnParamSpecs=(parameterPath="PawnParams.AMM_Pawn_Parameters_Jenkins")
 
-[BioGame.ini PawnParams.AMM_Pawn_Parameters_Player]
-menuRootPath=amm_submenus.Shepard.AppearanceSubmenu_Shepard
-; defaultBreatherSpec=-11
-
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_MShep]
+menuRootPath=amm_submenus.MaleShepard.AppearanceSubmenu_MaleShepard
 Tag=Human_Male
 ; TODO it would be nice if I didn't have to duplicate this
 romancePawnTag=Human_Male_Naked
@@ -43,6 +40,7 @@ breatherSpecListPath=OutfitSpecs.HMM_BreatherSpec
 ; CharacterCreatorBodyAppearanceId_Infiltrator=7
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_FShep]
+menuRootPath=amm_submenus.FemaleShepard.AppearanceSubmenu_FemaleShepard
 Tag=Human_Female
 romancePawnTag=Human_Female_Naked
 +alternateTags=Human_Female_Naked
