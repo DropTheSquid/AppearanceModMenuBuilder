@@ -140,7 +140,7 @@ You can customize characters' appearances at any time from the Inventory screen 
 	<string>
 		<id>210210235</id>
 		<flags>1</flags>
-		<data>Outfit &lt;CUSTOM0&gt;</data>
+		<data>Style &lt;CUSTOM0&gt;</data>
 	</string>
 	<!-- used for "Manufacturer — ArmorName" when there are no different weight versions -->
 	<string>
@@ -234,5 +234,98 @@ You can customize characters' appearances at any time from the Inventory screen 
 		<id>210210252</id>
 		<flags>1</flags>
 		<data>Allow Combat Outfits as Casual Outfit Description</data>
+	</string>
+	<string>
+		<id>210210253</id>
+		<flags>1</flags>
+		<data>&lt;CUSTOM0&gt;
+Casual</data>
+	</string>
+	<string>
+		<id>210210254</id>
+		<flags>1</flags>
+		<data>&lt;CUSTOM0&gt;
+Combat</data>
+	</string>
+	<string>
+		<id>210210255</id>
+		<flags>1</flags>
+		<data>&lt;CUSTOM0&gt;
+Romance</data>
+	</string>
+	<string>
+		<id>210210256</id>
+		<flags>1</flags>
+		<data>Choose an outfit</data>
+	</string>
+	<string>
+		<id>210210257</id>
+		<flags>1</flags>
+		<data>Alliance Formal</data>
+	</string>
+	<string>
+		<id>210210258</id>
+		<flags>1</flags>
+		<data>Science/Medical Uniform</data>
+	</string>
+	<string>
+		<id>210210259</id>
+		<flags>1</flags>
+		<data>Miscellaneous</data>
+	</string>
+	<string>
+		<id>210210260</id>
+		<flags>1</flags>
+		<data>Nude</data>
+	</string>
+	<string>
+		<id>210210261</id>
+		<flags>1</flags>
+		<data>Dancer</data>
+	</string>
+	<string>
+		<id>210210262</id>
+		<flags>1</flags>
+		<data>Fatigues</data>
+	</string>
+	<string>
+		<id>210210263</id>
+		<flags>1</flags>
+		<data>Suit</data>
+	</string>
+	<string>
+		<id>210210264</id>
+		<flags>1</flags>
+		<data>Dress 1</data>
+	</string>
+	<string>
+		<id>210210265</id>
+		<flags>1</flags>
+		<data>Dress 2</data>
+	</string>
+	<string>
+		<id>210210266</id>
+		<flags>1</flags>
+		<data>Dress 3</data>
+	</string>
+	<string>
+		<id>210210267</id>
+		<flags>1</flags>
+		<data>Civilian Outfit 1</data>
+	</string>
+	<string>
+		<id>210210268</id>
+		<flags>1</flags>
+		<data>Civilian Outfit 2</data>
+	</string>
+	<string>
+		<id>210210269</id>
+		<flags>1</flags>
+		<data>Civilian Outfit 3</data>
+	</string>
+	<string>
+		<id>210210270</id>
+		<flags>1</flags>
+		<data>Civilian Outfit 4</data>
 	</string>
 </tlkFile>

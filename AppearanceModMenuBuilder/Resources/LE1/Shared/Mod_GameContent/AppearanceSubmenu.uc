@@ -78,6 +78,8 @@ var config string pawnAppearanceType;
 // TODO implement this
 var config eMenuHelmetOverride menuHelmetOverride;
 var config bool preloadPawn;
+var config bool UseTitleForChildMenus;
+var config bool UseSubtitleForChildMenus;
 
 // Functions
 public function bool OnRefreshMenu(Object outerMenu)

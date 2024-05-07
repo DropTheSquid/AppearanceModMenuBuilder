@@ -228,14 +228,35 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             }
             // Avina VI
             miscEndId = AddCustomOutfitSpecs(bodyConfig, miscEndId, "BIOG_HMF_NKD_AMM.NKDa.HMF_ARM_NKDa_MDL",
-                
                 "BIOG_HMF_NKD_AMM.NKDa.HMF_ARM_NKDa_Mat_2a");
             // Mira VI
             miscEndId = AddCustomOutfitSpecs(bodyConfig, miscEndId, "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MDL",
                 "BIOG_HMF_CTHc_AMM.CTHc.HMF_ARM_CTHc_MAT_6a");
 
-            // misc menu
-            AddMenuEntries(speciesMenus.CasualOutfitMenus[0], 100, miscEndId - 100);
+            speciesMenus.CasualOutfitMenus[0].AddMenuEntry(new AppearanceItemData()
+            {
+                // "Dancer"
+                SrCenterText = 210210261,
+                ApplyOutfitId = 100
+            });
+            speciesMenus.CasualOutfitMenus[0].AddMenuEntry(new AppearanceItemData()
+            {
+                // "Nude"
+                SrCenterText = 210210260,
+                ApplyOutfitId = 101
+            });
+            speciesMenus.CasualOutfitMenus[0].AddMenuEntry(new AppearanceItemData()
+            {
+                // "Avina"
+                SrCenterText = 169391,
+                ApplyOutfitId = 102
+            });
+            speciesMenus.CasualOutfitMenus[0].AddMenuEntry(new AppearanceItemData()
+            {
+                // "Mira"
+                SrCenterText = 169193,
+                ApplyOutfitId = 103
+            });
 
             // CTHa vanilla
             var cthaEndId = AddCustomOutfitSpecs(bodyConfig, miscEndId, "BIOG_HMF_CTHa_AMM.CTHa.HMF_ARM_CTHa_MDL",
@@ -246,7 +267,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 "BIOG_HMF_CTHa_AMM.CTHa.HMF_ARM_CTHa_MAT_5a",
                 "BIOG_HMF_CTHa_AMM.CTHa.HMF_ARM_CTHa_MAT_6a");
 
-            // CTHa menu
+            // CTHa
             AddMenuEntries(speciesMenus.CasualOutfitMenus[1], miscEndId, cthaEndId - miscEndId);
 
             // CTHb
@@ -640,8 +661,18 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             miscEndId = AddCustomOutfitSpecs(bodyConfig, miscEndId, "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MDL",
                 "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_5a");
 
-            // misc menu
-            AddMenuEntries(humanMaleOutfitMenus.CasualOutfitMenus[0], 100, miscEndId - 100);
+            humanMaleOutfitMenus.CasualOutfitMenus[0].AddMenuEntry(new AppearanceItemData()
+            {
+                // "Nude"
+                SrCenterText = 210210260,
+                ApplyOutfitId = 100
+            });
+            humanMaleOutfitMenus.CasualOutfitMenus[0].AddMenuEntry(new AppearanceItemData()
+            {
+                // "VI"
+                SrCenterText = 145793,
+                ApplyOutfitId = 101
+            });
 
             // CTHa vanilla
             var cthaEndId = AddCustomOutfitSpecs(bodyConfig, miscEndId, "BIOG_HMM_CTHa_AMM.CTHa.HMM_ARM_CTHa_MDL",
@@ -720,7 +751,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_3n",
                 "BIOG_HMM_CTHc_AMM.CTHc.HMM_ARM_CTHc_MAT_4b");
 
-			// CTHc menu
+			// CTHc
             AddMenuEntries(humanMaleOutfitMenus.CasualOutfitMenus[3], cthbEndId, cthcEndId - cthbEndId);
 
             // CTHd
@@ -741,7 +772,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 "BIOG_HMM_CTHd_AMM.CTHd.HMM_ARM_CTHd_MAT_3b",
                 "BIOG_HMM_CTHd_AMM.CTHd.HMM_ARM_CTHd_MAT_3c");
 
-            // CTHd menu
+            // CTHd
             AddMenuEntries(humanMaleOutfitMenus.CasualOutfitMenus[4], cthcEndId, cthdEndId - cthcEndId);
 
             // CTHe
@@ -1270,14 +1301,14 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
         private static void AddMenuEntries(AppearanceSubmenu submenu, int startingId, int count)
         {
-            for (int i = startingId; i < startingId + count; i++)
+            for (int i = 0; i < count; i++)
             {
                 submenu.AddMenuEntry(new AppearanceItemData()
                 {
-                    // "Outfit <0>"
+                    // "Style <0>"
                     SrCenterText = 210210235,
-                    ApplyOutfitId = i,
-                    DisplayVars = [i.ToString()]
+                    ApplyOutfitId = startingId + i,
+                    DisplayVars = [(i + 1).ToString()]
                 });
             }
         }

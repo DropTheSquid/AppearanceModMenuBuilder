@@ -5,7 +5,6 @@ using LegendaryExplorerCore.Packages;
 using LegendaryExplorerCore.Unreal.Classes;
 using MassEffectModBuilder;
 using static AppearanceModMenuBuilder.LE1.BuildSteps.DLC.BuildSubmenuFile;
-using static AppearanceModMenuBuilder.LE1.UScriptModels.AppearanceItemData;
 using static AppearanceModMenuBuilder.LE1.Models.VanillaArmorSet;
 using static AppearanceModMenuBuilder.LE1.Models.VanillaMeshUtilities;
 using AppearanceModMenuBuilder.LE1.UScriptModels;
@@ -23,7 +22,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             // add "fake" armor sets to use the unused appearances
             ModifyArmorSets(armorSets);
-            // TODO consolidate together the armors that always look the same?
 
             // remove actual duplicates that arise from the structure of the 2DA we are reading from
             DeduplicateArmors(armorSets);

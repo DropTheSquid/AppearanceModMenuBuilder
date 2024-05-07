@@ -11,6 +11,8 @@ struct menuState
     var AppearanceIdLookups AppearanceIdLookups;
     var string appearanceTypeOverride;
     var eMenuHelmetOverride currentMenuHelmetOverride;
+	var string inheritedTitle;
+	var string inheritedSubtitle;
 };
 
 // Variables
@@ -63,6 +65,8 @@ private final function menuState getMenuState()
     local menuState newState;
     local int i;
     local AppearanceSubmenu currentSubmenu;
+	local string currentTitle;
+	local string currentSubtitle;
     
     for (i = 0; i < submenuStack.Length; i++)
     {
@@ -85,6 +89,15 @@ private final function menuState getMenuState()
         {
             newState.currentMenuHelmetOverride = currentSubmenu.menuHelmetOverride;
         }
+		SetTitleCustomTokens(newState);
+		if (currentSubmenu.UseTitleForChildMenus)
+		{
+			newState.inheritedTitle = GetString(currentSubmenu.sTitle, currentSubmenu.srTitle);
+		}
+		if (currentSubmenu.UseSubtitleForChildMenus)
+		{
+			newState.inheritedSubtitle = GetString(currentSubmenu.sSubtitle, currentSubmenu.srSubtitle);
+		}
     }
     return newState;
 }
@@ -248,7 +261,7 @@ public function RefreshMenu(optional bool firstEnter = FALSE)
                 TryDisplayPawn(state.pawnTag, state.appearanceTypeOverride);
             }
             // updater.appearanceTypeOverride = state.appearanceTypeOverride;
-            // // LogInternal("currentMenu.pawnOverride" @ currentMenu.pawnOverride);
+            // LogInternal("currentMenu.pawnOverride" @ currentMenu.pawnOverride);
             pawnHandler.ForceAppearanceType(state.armorOverrideState);
         }
         // comment("If the submenu you are in overrides the chosen menu helmet appearance, that takes precedence");
@@ -278,7 +291,7 @@ public function RefreshMenu(optional bool firstEnter = FALSE)
         currentDisplayItems.Length = 0;
         currentMenu.inlineStack.AddItem(PathName(currentMenu.Class));
         PopulateFromSubmenu(currentMenu);
-        RenderMenu();
+        RenderMenu(state);
     }
 }
 private function TryDisplayPawn(string tag, string appearanceType)
@@ -289,7 +302,11 @@ private function TryDisplayPawn(string tag, string appearanceType)
 	// Log("Setting up pawn");
 	if (state == PawnLoadState.Loaded)
 	{
-		cameraHandler.ResetCameraForCharacter(tag);
+		// do not reset the camera if the pawn has not changed
+		if (!pawnHandler.IsPawnDisplayed(tag))
+		{
+			cameraHandler.ResetCameraForCharacter(tag);
+		}
 		pawnHandler.DisplayPawn(tag, appearanceType);
 	}
 	else if (state == PawnLoadState.Loading)
@@ -312,15 +329,32 @@ public function PopulateFromSubmenu(AppearanceSubmenu currentSubmenu)
         AddItemForDisplay(currentItem, currentSubmenu, state);
     }
 }
-public function RenderMenu()
+public function RenderMenu(menuState state)
 {
     local int i;
     local AppearanceItemData item;
     local AppearanceSubmenu currentSubmenu;
     
     currentSubmenu = GetCurrentSubmenu();
-    ASSetTitle(GetString(currentSubmenu.sTitle, currentSubmenu.srTitle));
-    ASSetSubTitle(GetString(currentSubmenu.sSubtitle, currentSubmenu.srSubtitle));
+	SetTitleCustomTokens(state);
+	// second check prevents it from double substituting
+	if (IsStringSet(currentSubmenu.sTitle, currentSubmenu.srTitle) && !currentSubmenu.UseTitleForChildMenus)
+	{
+		ASSetTitle(GetString(currentSubmenu.sTitle, currentSubmenu.srTitle));
+	}
+	else
+	{
+		ASSetTitle(state.inheritedTitle);
+	}
+	if (IsStringSet(currentSubmenu.sSubtitle, currentSubmenu.srSubtitle) && !currentSubmenu.UseSubtitleForChildMenus)
+	{
+		ASSetSubTitle(GetString(currentSubmenu.sSubtitle, currentSubmenu.srSubtitle));
+	}
+	else
+	{
+		ASSetSubTitle(state.inheritedSubtitle);
+	}
+    
     ASStartSlotList(currentDisplayItems.Length);
     sortDisplayItems();
     for (i = 0; i < currentDisplayItems.Length; i++)
@@ -332,6 +366,12 @@ public function RenderMenu()
     ASSetSelectedIndex(currentSubmenu.selectedIndex);
     ASSetListScrollPosition(currentSubmenu.scrollIndex, TRUE);
     ASSetBackButtonText(string(submenuStack.Length > 1 ? srBack : srClose));
+}
+private function SetTitleCustomTokens(menuState state)
+{
+	ClearCustomTokens();
+	SetCustomToken(0, state.inheritedTitle);
+	SetCustomToken(1, state.inheritedSubtitle);
 }
 public function SetCustomTokens(AppearanceItemData item)
 {

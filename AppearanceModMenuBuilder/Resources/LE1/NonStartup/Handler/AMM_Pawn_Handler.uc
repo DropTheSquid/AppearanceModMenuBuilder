@@ -198,6 +198,20 @@ public function PawnLoadState LoadPawn(string tag, string appearanceType, option
 }
 
 // display an already loaded pawn
+public function bool IsPawnDisplayed(string tag)
+{
+	local RealWorldPawnRecord currentRecord;
+	local BioPawn newDisplayPawn;
+
+	foreach pawnRecords(currentRecord)
+	{
+		if (currentRecord.tag ~= tag)
+		{
+			return currentRecord.pawn == _currentDisplayedPawn;
+		}
+	}
+	return false;
+}
 public function bool DisplayPawn(string tag, string appearanceType)
 {
 	local RealWorldPawnRecord currentRecord;

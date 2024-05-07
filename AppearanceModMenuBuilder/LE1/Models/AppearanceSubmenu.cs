@@ -74,5 +74,17 @@ namespace AppearanceModMenuBuilder.LE1.Models
             get => GetIntValue(nameof(SrSubtitle));
             set => SetIntValue(nameof(SrSubtitle), value);
         }
+
+        public bool? UseTitleForChildMenus
+        {
+            get => GetBoolValue(nameof(UseTitleForChildMenus));
+            set => SetBoolValue(nameof(UseTitleForChildMenus), value);
+        }
+
+        public bool? UseSubtitleForChildMenus
+        {
+            get => GetBoolValue(nameof(UseSubtitleForChildMenus));
+            set => SetBoolValue(nameof(UseSubtitleForChildMenus), value);
+        }
     }
 }

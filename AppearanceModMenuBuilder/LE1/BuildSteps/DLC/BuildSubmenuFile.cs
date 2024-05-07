@@ -115,21 +115,21 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 menus.CasualOutfitMenus = [
                     // misc, such as nude, VI materials, dancer; things that are implausible/immersion breaking and not shown by default
                     AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits_Misc", configMergeFile),
-                    // CTHa Alliance Formals CTHa
+                    // CTHa
                     AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits_CTHa", configMergeFile),
-                    // CTHb Allicance Casual/CSec/some civilian
+                    // CTHb
                     AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits_CTHb", configMergeFile),
-                    // CTHc Dress 1 (hmm is suit 1)
+                    // CTHc
                     AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits_CTHc", configMergeFile),
-                    // CTHd Dress 2 (hmm is Civilian/laborer clothes)
+                    // CTHd
                     AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits_CTHd", configMergeFile),
-                    // CTHe civilian/laborer
+                    // CTHe
                     AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits_CTHe", configMergeFile),
-                    // CTHf miner
+                    // CTHf
                     AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits_CTHf", configMergeFile),
-                    // CTHg dress 3 (hmm is puffy jacket casual)
+                    // CTHg
                     AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits_CTHg", configMergeFile),
-                    // CTHh scientist/medical
+                    // CTHh
                     AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits_CTHh", configMergeFile),
                     ];
             }
@@ -313,26 +313,42 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits_CTHg", [bodyType, "NonArmor"]));
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits_CTHh", [bodyType, "NonArmor"]));
 
-                // TODO better names for these menus
-                // misc (mostly NKD)
+                // "Miscellaneous"  (Naked, VI)
+                menus.CasualOutfitMenus[0].SrSubtitle = 210210259;
                 // TODO this should not show up without opting in
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[0].GetEntryPoint(210210253));
-                // CTHa
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[1].GetEntryPoint(210210253));
-                // CTHb
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[2].GetEntryPoint(210210253));
-                // CTHc
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[3].GetEntryPoint(210210253));
-                // CTHd
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[4].GetEntryPoint(210210253));
-                // CTHe
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[5].GetEntryPoint(210210253));
-                // CTHf
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[6].GetEntryPoint(210210253));
-                // CTHg
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[7].GetEntryPoint(210210253));
-                // CTHh
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[8].GetEntryPoint(210210253));
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[0].GetEntryPoint(210210259));
+
+                // "Alliance Formal" CTHa
+                menus.CasualOutfitMenus[1].SrSubtitle = 210210257;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[1].GetEntryPoint(210210257));
+
+                // "Fatgiues" CTHb
+                menus.CasualOutfitMenus[2].SrSubtitle = 210210262;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[2].GetEntryPoint(210210262));
+
+                // "Science/Medical Uniform"
+                menus.CasualOutfitMenus[8].SrSubtitle = 210210258;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[8].GetEntryPoint(210210258));
+                
+                // "Civilian Outfit 1"
+                menus.CasualOutfitMenus[5].SrSubtitle = 210210267;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[5].GetEntryPoint(210210267));
+
+                // "Civilian Outfit 2"
+                menus.CasualOutfitMenus[6].SrSubtitle = 210210268;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[6].GetEntryPoint(210210268));
+
+                // "Dress 1"
+                menus.CasualOutfitMenus[3].SrSubtitle = 210210264;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[3].GetEntryPoint(210210264));
+
+                // "Dress 2"
+                menus.CasualOutfitMenus[4].SrSubtitle = 210210265;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[4].GetEntryPoint(210210265));
+
+                // "Dress 3"
+                menus.CasualOutfitMenus[7].SrSubtitle = 210210266;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[7].GetEntryPoint(210210266));
             }
             void hmmCasualMenus(string bodyType, SpeciesOutfitMenus menus)
             {
@@ -346,26 +362,41 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits_CTHg", [bodyType, "NonArmor"]));
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits_CTHh", [bodyType, "NonArmor"]));
 
-                // TODO real names for these menus
-                // misc (mostly NKD)
+                // "Miscellaneous"  (Naked, VI)
+                menus.CasualOutfitMenus[0].SrSubtitle = 210210259;
                 // TODO this should not show up without opting in
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[0].GetEntryPoint(210210253));
-                // CTHa
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[1].GetEntryPoint(210210253));
-                // CTHb
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[2].GetEntryPoint(210210253));
-                // CTHc
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[3].GetEntryPoint(210210253));
-                // CTHd
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[4].GetEntryPoint(210210253));
-                // CTHe
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[5].GetEntryPoint(210210253));
-                // CTHf
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[6].GetEntryPoint(210210253));
-                // CTHg
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[7].GetEntryPoint(210210253));
-                // CTHh
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[8].GetEntryPoint(210210253));
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[0].GetEntryPoint(210210259));
+
+                // "Alliance Formal" CTHa
+                menus.CasualOutfitMenus[1].SrSubtitle = 210210257;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[1].GetEntryPoint(210210257));
+
+                // "Fatgiues" CTHb
+                menus.CasualOutfitMenus[2].SrSubtitle = 210210262;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[2].GetEntryPoint(210210262));
+
+                // "Science/Medical Uniform"
+                menus.CasualOutfitMenus[8].SrSubtitle = 210210258;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[8].GetEntryPoint(210210258));
+
+                // "Civilian Outfit 1"
+                menus.CasualOutfitMenus[5].SrSubtitle = 210210267;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[5].GetEntryPoint(210210267));
+
+                // "Civilian Outfit 2"
+                menus.CasualOutfitMenus[6].SrSubtitle = 210210268;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[6].GetEntryPoint(210210268));
+
+                
+                // "Civilian Outfit 3"
+                menus.CasualOutfitMenus[4].SrSubtitle = 210210269;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[4].GetEntryPoint(210210269));
+                // "Civilian Outfit 4"
+                menus.CasualOutfitMenus[7].SrSubtitle = 210210270;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[7].GetEntryPoint(210210270));
+                // "Suit"
+                menus.CasualOutfitMenus[3].SrSubtitle = 210210263;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[3].GetEntryPoint(210210263));
             }
             hmfAsaCommon("HumanFemale", HumanFemaleOutfitMenus);
             hmfAsaCommon("Asari", AsariOutfitMenus);
@@ -377,11 +408,11 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             // the three Turian menus
             classes.Add(SquadMemberSubmenus.GetSubmenuClass($"Turian_NonArmorOutfits_CTHa", ["Turian", "NonArmor"]));
-            TurianOutfitMenus.NonArmor!.AddMenuEntry(TurianOutfitMenus.CasualOutfitMenus[0].GetEntryPoint(210210253));
+            TurianOutfitMenus.NonArmor!.AddMenuEntry(TurianOutfitMenus.CasualOutfitMenus[0].GetEntryPoint(210210267));
             classes.Add(SquadMemberSubmenus.GetSubmenuClass($"Turian_NonArmorOutfits_CTHb", ["Turian", "NonArmor"]));
-            TurianOutfitMenus.NonArmor!.AddMenuEntry(TurianOutfitMenus.CasualOutfitMenus[1].GetEntryPoint(210210253));
+            TurianOutfitMenus.NonArmor!.AddMenuEntry(TurianOutfitMenus.CasualOutfitMenus[1].GetEntryPoint(210210268));
             classes.Add(SquadMemberSubmenus.GetSubmenuClass($"Turian_NonArmorOutfits_CTHc", ["Turian", "NonArmor"]));
-            TurianOutfitMenus.NonArmor!.AddMenuEntry(TurianOutfitMenus.CasualOutfitMenus[2].GetEntryPoint(210210253));
+            TurianOutfitMenus.NonArmor!.AddMenuEntry(TurianOutfitMenus.CasualOutfitMenus[2].GetEntryPoint(210210269));
         }
 
         private List<SquadMemberSubmenus> MakeSquadmateSubmenus()

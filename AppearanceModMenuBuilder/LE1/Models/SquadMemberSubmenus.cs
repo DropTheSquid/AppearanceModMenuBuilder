@@ -58,7 +58,9 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 ArmorOverride = "overridden",
                 SrTitle = SquadMemberNameStringref,
                 // "Choose an outfit type"
-                SrSubtitle = 210210213
+                SrSubtitle = 210210213,
+                // we want the character name to carry through to child menus
+                UseTitleForChildMenus = true,
             };
             _submenus.Add(rootCharacterMenu);
             _classes.Add(GetSubmenuClass(SquadMemberName, [SquadMemberName]));
@@ -68,9 +70,11 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 PawnTag = PawnTag,
                 PawnAppearanceType = "casual",
                 ArmorOverride = "overridden",
-                // TODO make it so menus can easily inherit this from the outer menu
-                SrTitle = SquadMemberNameStringref,
-                SrSubtitle = srCausalAppearance
+                // Character name, newline, Casual
+                SrTitle = 210210253,
+                UseTitleForChildMenus = true,
+                // "Choose an outfit"
+                SrSubtitle = 210210256,
             };
             // add this menu into the root character menu
             rootCharacterMenu.AddMenuEntry(casualMenu.GetEntryPoint(srCausalAppearance));
@@ -84,9 +88,11 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 PawnTag = PawnTag,
                 PawnAppearanceType = "combat",
                 ArmorOverride = "equipped",
-                // TODO make it so menus can easily inherit this from the outer menu
-                SrTitle = SquadMemberNameStringref,
-                SrSubtitle = srCombatAppearance
+                // Character name, newline, Combat
+                SrTitle = 210210254,
+                UseTitleForChildMenus = true,
+                // "Choose an outfit"
+                SrSubtitle = 210210256,
             };
             // add this menu into the root character menu
             rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(srCombatAppearance));
@@ -104,9 +110,11 @@ namespace AppearanceModMenuBuilder.LE1.Models
                     PawnTag = PawnTag,
                     PawnAppearanceType = "romance",
                     ArmorOverride = "overridden",
-                    // TODO make it so menus can easily inherit this from the outer menu
-                    SrTitle = SquadMemberNameStringref,
-                    SrSubtitle = srRomanceAppearance
+                    // Character name, newline, Romance
+                    SrTitle = 210210255,
+                    UseTitleForChildMenus = true,
+                    // "Choose an outfit"
+                    SrSubtitle = 210210256,
                 };
                 // add this menu into the root character menu
                 rootCharacterMenu.AddMenuEntry(romanceMenu.GetEntryPoint(srRomanceAppearance, requiresFramework: true));
