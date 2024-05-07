@@ -69,7 +69,6 @@ menuRootPath=amm_submenus.Kaidan.AppearanceSubmenu_Kaidan
 outfitSpecListPath=outfitSpecs.HMM_OutfitSpec
 helmetSpecListPath=OutfitSpecs.HMM_HelmetSpec
 breatherSpecListPath=OutfitSpecs.HMM_BreatherSpec
-; defaultBreatherSpec=-14
 +AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1524), helmetAppearanceLookup=(plotIntId=1525), breatherAppearanceLookup=(plotIntId=1526), appearanceFlagsLookup=(plotIntId=1527), FrameworkFileName="BIONPC_Kaidan_Normandy")
 +AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1528), helmetAppearanceLookup=(plotIntId=1529), breatherAppearanceLookup=(plotIntId=1530), appearanceFlagsLookup=(plotIntId=1531))
 +AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1532), helmetAppearanceLookup=(plotIntId=1533), breatherAppearanceLookup=(plotIntId=1534), appearanceFlagsLookup=(plotIntId=1535), FrameworkFileName="BIONPC_Kaidan_Romance")
@@ -82,7 +81,6 @@ menuRootPath=amm_submenus.Ashley.AppearanceSubmenu_Ashley
 outfitSpecListPath=outfitSpecs.HMF_OutfitSpec
 helmetSpecListPath=OutfitSpecs.HMF_HelmetSpec
 breatherSpecListPath=OutfitSpecs.HMF_BreatherSpec
-; defaultBreatherSpec=-13
 +alternateTags=pro10_ash
 +alternateTags=hench_humanFemale_nkd
 +AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1536), helmetAppearanceLookup=(plotIntId=1537), breatherAppearanceLookup=(plotIntId=1538), appearanceFlagsLookup=(plotIntId=1539), FrameworkFileName="BIONPC_Ashley_Normandy")
@@ -98,7 +96,6 @@ menuRootPath=amm_submenus.Liara.AppearanceSubmenu_Liara
 outfitSpecListPath=outfitSpecs.HMF_OutfitSpec
 helmetSpecListPath=OutfitSpecs.ASA_HelmetSpec
 breatherSpecListPath=OutfitSpecs.HMF_BreatherSpec
-; defaultBreatherSpec=-12
 +AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1548), helmetAppearanceLookup=(plotIntId=1549), breatherAppearanceLookup=(plotIntId=1550), appearanceFlagsLookup=(plotIntId=1551), FrameworkFileName="BIONPC_Liara_Normandy")
 +AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1552), helmetAppearanceLookup=(plotIntId=1553), breatherAppearanceLookup=(plotIntId=1554), appearanceFlagsLookup=(plotIntId=1555))
 +AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1556), helmetAppearanceLookup=(plotIntId=1557), breatherAppearanceLookup=(plotIntId=1558), appearanceFlagsLookup=(plotIntId=1559), FrameworkFileName="BIONPC_Liara_Romance")
@@ -113,10 +110,11 @@ menuRootPath=amm_submenus.Tali.AppearanceSubmenu_Tali
 outfitSpecListPath=outfitSpecs.QRN_OutfitSpec
 helmetSpecListPath=OutfitSpecs.QRN_HelmetSpec
 breatherSpecListPath=OutfitSpecs.QRN_BreatherSpec
-; defaultBreatherSpec=-2
 +AppearanceIdLookupsList=(appearanceType="casual", bodyAppearanceLookup=(plotIntId=1560), helmetAppearanceLookup=(plotIntId=1561), breatherAppearanceLookup=(plotIntId=1562), appearanceFlagsLookup=(plotIntId=1563), FrameworkFileName="BIONPC_Tali_Normandy")
 +AppearanceIdLookupsList=(appearanceType="combat", bodyAppearanceLookup=(plotIntId=1564), helmetAppearanceLookup=(plotIntId=1565), breatherAppearanceLookup=(plotIntId=1566), appearanceFlagsLookup=(plotIntId=1567))
 bIgnoreForcedHelmet=true
+suppressHeadgearMenu=true
+suppressBreatherMenu=true
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Garrus]
 Tag=hench_turian
@@ -125,7 +123,6 @@ menuRootPath=amm_submenus.Garrus.AppearanceSubmenu_Garrus
 outfitSpecListPath=outfitSpecs.TUR_OutfitSpec
 helmetSpecListPath=OutfitSpecs.TUR_HelmetSpec
 breatherSpecListPath=OutfitSpecs.TUR_BreatherSpec
-; defaultBreatherSpec=-10
 +AppearanceIdLookupsList=(appearanceType="casual", bodyAppearanceLookup=(plotIntId=1568), helmetAppearanceLookup=(plotIntId=1569), breatherAppearanceLookup=(plotIntId=1570), appearanceFlagsLookup=(plotIntId=1571), FrameworkFileName="BIONPC_Garrus_Normandy")
 +AppearanceIdLookupsList=(appearanceType="combat", bodyAppearanceLookup=(plotIntId=1572), helmetAppearanceLookup=(plotIntId=1573), breatherAppearanceLookup=(plotIntId=1574), appearanceFlagsLookup=(plotIntId=1575))
 
@@ -136,9 +133,9 @@ menuRootPath=amm_submenus.Wrex.AppearanceSubmenu_Wrex
 outfitSpecListPath=outfitSpecs.KRO_OutfitSpec
 helmetSpecListPath=OutfitSpecs.KRO_HelmetSpec
 breatherSpecListPath=OutfitSpecs.KRO_BreatherSpec
-; defaultBreatherSpec=-2
 +AppearanceIdLookupsList=(appearanceType="casual", bodyAppearanceLookup=(plotIntId=1576), helmetAppearanceLookup=(plotIntId=1577), breatherAppearanceLookup=(plotIntId=1578), appearanceFlagsLookup=(plotIntId=1579), FrameworkFileName="BIONPC_Wrex_Normandy")
 +AppearanceIdLookupsList=(appearanceType="combat", bodyAppearanceLookup=(plotIntId=1580), helmetAppearanceLookup=(plotIntId=1581), breatherAppearanceLookup=(plotIntId=1582), appearanceFlagsLookup=(plotIntId=1583))
+suppressBreatherMenu=true
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Jenkins]
 Tag=Hench_Jenkins

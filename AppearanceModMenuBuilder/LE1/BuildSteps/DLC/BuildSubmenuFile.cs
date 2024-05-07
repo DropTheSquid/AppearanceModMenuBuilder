@@ -177,7 +177,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_Breather", [bodyType]));
 
                 // TODO I should hide this if there is no headgear available/perhaps skip it entirely for Tali and make mods add it/enable it
-                menus.Casual.AddMenuEntry(menus.Headgear.GetEntryPoint(210210237));
+                menus.Casual.AddMenuEntry(menus.Headgear.GetEntryPoint(210210237, hideIfHeadgearSuppressed: true));
                 menus.Casual.AddMenuEntry(new AppearanceItemData()
                 {
                     // "Default"
@@ -197,7 +197,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 //    ApplyOutfitId = -3,
                 //});
 
-                menus.Combat.AddMenuEntry(menus.Headgear.GetEntryPoint(210210237));
+                menus.Combat.AddMenuEntry(menus.Headgear.GetEntryPoint(210210237, hideIfHeadgearSuppressed: true));
                 menus.Combat.AddMenuEntry(new AppearanceItemData()
                 {
                     // "Default"
@@ -282,7 +282,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     DisplayVars = ["helmet preference", "full"]
                 });
 
-                menus.Headgear.AddMenuEntry(menus.Breather.GetEntryPoint(210210244));
+                menus.Headgear.AddMenuEntry(menus.Breather.GetEntryPoint(210210244, hideIfBreatherSuppressed: true));
 
                 // "Breather"
                 menus.Breather.SrSubtitle = 210210244;

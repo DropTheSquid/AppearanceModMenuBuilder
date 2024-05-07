@@ -131,5 +131,17 @@ namespace AppearanceModMenuBuilder.LE1.UScriptModels
             get => GetInt(nameof(DisplayBool));
             set => SetInt(nameof(DisplayBool), value);
         }
+
+        public bool? HideIfHeadgearSuppressed
+        {
+            get => GetBool(nameof(HideIfHeadgearSuppressed));
+            set => SetBool(nameof(HideIfHeadgearSuppressed), value);
+        }
+
+        public bool? HideIfBreatherSuppressed
+        {
+            get => GetBool(nameof(HideIfBreatherSuppressed));
+            set => SetBool(nameof(HideIfBreatherSuppressed), value);
+        }
     }
 }

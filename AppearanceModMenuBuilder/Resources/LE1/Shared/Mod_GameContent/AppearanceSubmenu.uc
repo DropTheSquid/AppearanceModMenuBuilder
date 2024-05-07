@@ -2,12 +2,12 @@ Class AppearanceSubmenu
     config(UI);
 
 // Types
-struct PlotIntSetting 
+struct PlotIntSetting
 {
     var int Id;
     var int Value;
 };
-struct AppearanceItemData 
+struct AppearanceItemData
 {
     var stringref srActionText;
     var string sActionText;
@@ -45,6 +45,8 @@ struct AppearanceItemData
 	// applies an override of the helmet visibility in the AMM plot ints for the character
     var eMenuHelmetOverride applyHelmetPreference;
 	var bool requiresFramework;
+	var bool hideIfHeadgearSuppressed;
+	var bool hideIfBreatherSuppressed;
 };
 enum eArmorOverrideState
 {

@@ -24,14 +24,16 @@ namespace AppearanceModMenuBuilder.LE1.Models
             AddArrayEntries("menuItems", item.OutputValue());
         }
 
-        public AppearanceItemData GetEntryPoint(int srCenterText, bool requiresFramework = false, bool inline = false, (int id, int value)? displayInt = null)
+        public AppearanceItemData GetEntryPoint(int srCenterText, bool requiresFramework = false, bool inline = false, (int id, int value)? displayInt = null, bool? hideIfHeadgearSuppressed = null, bool? hideIfBreatherSuppressed = null)
         {
             var result =  new AppearanceItemData()
             {
                 InlineSubmenu = inline ? true : null,
                 SrCenterText = srCenterText == 0 ? null : srCenterText,
                 SubMenuClassName = ClassFullPath,
-                RequiresFramework = requiresFramework ? true : null
+                RequiresFramework = requiresFramework ? true : null,
+                HideIfHeadgearSuppressed = hideIfHeadgearSuppressed,
+                HideIfBreatherSuppressed= hideIfBreatherSuppressed,
             };
             if (displayInt.HasValue)
             {

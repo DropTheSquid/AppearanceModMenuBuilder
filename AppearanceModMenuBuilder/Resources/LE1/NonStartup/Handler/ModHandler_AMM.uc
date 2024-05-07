@@ -442,14 +442,20 @@ private final function bool ShouldItemBeDisplayedBasedOnCharacter(AppearanceItem
 {
     if (state.params != None)
     {
-        if (state.params.gender == eGender.Either || item.gender == eGender.Either)
+		// show/hide based on gender (mostly obsolete now)
+        if (state.params.gender != eGender.Either && item.gender != eGender.Either && int(item.gender) != int(state.params.gender))
         {
-            return TRUE;
+            return false;
         }
-        else
-        {
-            return int(item.gender) == int(state.params.gender);
-        }
+		// some characters hide the headgear and breather menus by default becuase there is nothing there
+		if (item.hideIfHeadgearSuppressed && state.params.suppressHeadgearMenu)
+		{
+			return false;
+		}
+		if (item.hideIfBreatherSuppressed && state.params.suppressBreatherMenu)
+		{
+			return false;
+		}
     }
     return TRUE;
 }
