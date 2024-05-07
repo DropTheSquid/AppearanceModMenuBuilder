@@ -371,7 +371,7 @@ public function ASStartSlotList(int length)
     Parameters.AddItem(Param);
     oPanel.InvokeMethodArgs("StartSlotList", Parameters);
 }
-public function ASAddOrUpdateEntry(int index, string leftText, string centerText, string rightText, eMenuItemState state)
+public function ASAddOrUpdateEntry(int index, string leftText, string centerText, string rightText, eMenuItemState state, bool showPlus)
 {
     local ASParams Param;
     local array<ASParams> Parameters;
@@ -391,6 +391,9 @@ public function ASAddOrUpdateEntry(int index, string leftText, string centerText
     Param.Type = ASParamTypes.ASParam_Integer;
     Param.nVar = int(state);
     Parameters.AddItem(Param);
+	Param.Type = ASParamTypes.ASParam_Boolean;
+	Param.bVar = showPlus;
+	Parameters.AddItem(Param);
     oPanel.InvokeMethodArgs("AddOrUpdateMenuItem", Parameters);
 }
 public function ASSetSelectedIndex(int index)

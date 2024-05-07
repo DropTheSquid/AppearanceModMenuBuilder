@@ -361,7 +361,13 @@ public function RenderMenu(menuState state)
     {
         item = currentDisplayItems[i];
         SetCustomTokens(item);
-        ASAddOrUpdateEntry(i, GetString(item.sLeftText, item.srLeftText), GetString(item.sCenterText, item.srCenterText), GetString(item.sRightText, item.srRightText), item.disabled ? 1 : 0);
+        ASAddOrUpdateEntry(
+			i,
+			GetString(item.sLeftText, item.srLeftText),
+			GetString(item.sCenterText, item.srCenterText),
+			GetString(item.sRightText, item.srRightText),
+			item.disabled ? 1 : 0,
+			GetSubmenuFromItem(item) != None);
     }
     ASSetSelectedIndex(currentSubmenu.selectedIndex);
     ASSetListScrollPosition(currentSubmenu.scrollIndex, TRUE);
