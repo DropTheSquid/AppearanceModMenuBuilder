@@ -176,6 +176,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_Headgear", [bodyType]));
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_Breather", [bodyType]));
 
+                // TODO I should hide this if there is no headgear available/perhaps skip it entirely for Tali and make mods add it/enable it
                 menus.Casual.AddMenuEntry(menus.Headgear.GetEntryPoint(210210237));
                 menus.Casual.AddMenuEntry(new AppearanceItemData()
                 {
@@ -218,6 +219,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
                 if (menus.NonArmor != null)
                 {
+                    // "Armor"
+                    menus.Armor.SrSubtitle = 210210233;
+                    // "Non Armor"
+                    menus.NonArmor.SrSubtitle = 210210234;
                     // the submenus only appear if the "allow armor in casual" setting is on
                     // "Armor"
                     menus.Casual.AddMenuEntry(menus.Armor.GetEntryPoint(210210233, displayInt: (1595, 1)));
@@ -240,7 +245,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     menus.Combat.AddMenuEntry(menus.Armor.GetInlineEntryPoint());
                 }
 
-                // TODO I should hide this if there is no headgear available.../perhaps skip it entirely for Tali and make mods add it/enable it
+                // "Headgear"
+                menus.Headgear.SrSubtitle = 210210237;
                 menus.Headgear.AddMenuEntry(new AppearanceItemData()
                 {
                     // "Default"
@@ -278,6 +284,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
                 menus.Headgear.AddMenuEntry(menus.Breather.GetEntryPoint(210210244));
 
+                // "Breather"
+                menus.Breather.SrSubtitle = 210210244;
                 menus.Breather.AddMenuEntry(new AppearanceItemData()
                 {
                     // "Default"
@@ -291,8 +299,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     SrCenterText = 174743,
                     ApplyBreatherId = -2
                 });
-
-                // TODO add titles and subtitles to these?
             }
             SetupMenu("HumanFemale", HumanFemaleOutfitMenus);
             SetupMenu("HumanMale", HumanMaleOutfitMenus);
@@ -387,7 +393,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 menus.CasualOutfitMenus[6].SrSubtitle = 210210268;
                 menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[6].GetEntryPoint(210210268));
 
-                
                 // "Civilian Outfit 3"
                 menus.CasualOutfitMenus[4].SrSubtitle = 210210269;
                 menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[4].GetEntryPoint(210210269));
@@ -398,21 +403,32 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 menus.CasualOutfitMenus[3].SrSubtitle = 210210263;
                 menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[3].GetEntryPoint(210210263));
             }
+            void turCasualMenus()
+            {
+                // the three Turian menus
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"Turian_NonArmorOutfits_CTHa", ["Turian", "NonArmor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"Turian_NonArmorOutfits_CTHb", ["Turian", "NonArmor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"Turian_NonArmorOutfits_CTHc", ["Turian", "NonArmor"]));
+
+                // "Civilian Outfit 1"
+                TurianOutfitMenus.CasualOutfitMenus[0].SrSubtitle = 210210267;
+                TurianOutfitMenus.NonArmor!.AddMenuEntry(TurianOutfitMenus.CasualOutfitMenus[0].GetEntryPoint(210210267));
+
+                // "Civilian Outfit 2"
+                TurianOutfitMenus.CasualOutfitMenus[1].SrSubtitle = 210210268;
+                TurianOutfitMenus.NonArmor!.AddMenuEntry(TurianOutfitMenus.CasualOutfitMenus[1].GetEntryPoint(210210268));
+
+                // "Civilian Outfit 3"
+                TurianOutfitMenus.CasualOutfitMenus[2].SrSubtitle = 210210269;
+                TurianOutfitMenus.NonArmor!.AddMenuEntry(TurianOutfitMenus.CasualOutfitMenus[2].GetEntryPoint(210210269));
+            }
             hmfAsaCommon("HumanFemale", HumanFemaleOutfitMenus);
             hmfAsaCommon("Asari", AsariOutfitMenus);
             hmmCasualMenus("HumanMale", HumanMaleOutfitMenus);
-
-            // the single krogan menu
+            turCasualMenus();
+            // the single krogan menu, which is inline and therefore doesn't need subtitle set
             classes.Add(SquadMemberSubmenus.GetSubmenuClass($"Krogan_NonArmorOutfits_CTHa", ["Krogan", "NonArmor"]));
             KroganOutfitMenus.NonArmor!.AddMenuEntry(KroganOutfitMenus.CasualOutfitMenus[0].GetInlineEntryPoint());
-
-            // the three Turian menus
-            classes.Add(SquadMemberSubmenus.GetSubmenuClass($"Turian_NonArmorOutfits_CTHa", ["Turian", "NonArmor"]));
-            TurianOutfitMenus.NonArmor!.AddMenuEntry(TurianOutfitMenus.CasualOutfitMenus[0].GetEntryPoint(210210267));
-            classes.Add(SquadMemberSubmenus.GetSubmenuClass($"Turian_NonArmorOutfits_CTHb", ["Turian", "NonArmor"]));
-            TurianOutfitMenus.NonArmor!.AddMenuEntry(TurianOutfitMenus.CasualOutfitMenus[1].GetEntryPoint(210210268));
-            classes.Add(SquadMemberSubmenus.GetSubmenuClass($"Turian_NonArmorOutfits_CTHc", ["Turian", "NonArmor"]));
-            TurianOutfitMenus.NonArmor!.AddMenuEntry(TurianOutfitMenus.CasualOutfitMenus[2].GetEntryPoint(210210269));
         }
 
         private List<SquadMemberSubmenus> MakeSquadmateSubmenus()
