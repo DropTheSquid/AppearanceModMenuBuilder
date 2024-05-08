@@ -21,7 +21,7 @@ public function SpecialHandling(BioPawn targetPawn)
 			// and it has his default combat appearance set
 			if (pawnType.m_oAppearanceSettings.m_oBodySettings.m_eArmorType == EBioArmorType.ARMOR_TYPE_LIGHT && pawnType.m_oAppearanceSettings.m_oBodySettings.m_nModelVariant == 0 && pawnType.m_oAppearanceSettings.m_oBodySettings.m_nMaterialConfig == 4)
 			{
-				// the overwrite it with his default Normandy appearance
+				// then overwrite it with his default Normandy appearance
 				pawnType.m_oAppearanceSettings.m_oBodySettings.m_eArmorType = EBioArmorType.ARMOR_TYPE_CLOTHING;
 				pawnType.m_oAppearanceSettings.m_oBodySettings.m_nModelVariant = 1;
 				pawnType.m_oAppearanceSettings.m_oBodySettings.m_nMaterialConfig = 0;
@@ -30,4 +30,18 @@ public function SpecialHandling(BioPawn targetPawn)
 			}
 		}
 	}
+}
+
+public function string GetAppearanceType(BioPawn targetPawn)
+{
+	if (targetPawn.Tag == 'hench_humanmale')
+	{
+		// if this is streamed in with the framework or it's in the Salarian Camp on Virmire, count it as combat
+		if (targetPawn.GetPackageName() == 'BIONPC_Kaidan' || targetPawn.GetPackageName() == 'BIOA_JUG20_08_DSG')
+		{
+			return "combat";
+		}
+	}
+	// otherwise, go with the normal system of relying on the armor override to account for in party with/without casual hubs
+    return Super.GetAppearanceType(targetPawn);
 }
