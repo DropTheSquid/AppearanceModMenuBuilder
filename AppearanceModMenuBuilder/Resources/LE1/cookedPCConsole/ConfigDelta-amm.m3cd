@@ -23,6 +23,7 @@ Tag=Human_Male
 ; TODO it would be nice if I didn't have to duplicate this
 romancePawnTag=Human_Male_Naked
 +alternateTags=Human_Male_Naked
+gender=Male
 outfitSpecListPath=outfitSpecs.HMM_OutfitSpec
 helmetSpecListPath=OutfitSpecs.HMM_HelmetSpec
 breatherSpecListPath=OutfitSpecs.HMM_BreatherSpec
@@ -43,6 +44,7 @@ menuRootPath=amm_submenus.FemaleShepard.AppearanceSubmenu_FemaleShepard
 Tag=Human_Female
 romancePawnTag=Human_Female_Naked
 +alternateTags=Human_Female_Naked
+gender=Female
 outfitSpecListPath=outfitSpecs.HMF_OutfitSpec
 helmetSpecListPath=OutfitSpecs.HMF_HelmetSpec
 breatherSpecListPath=OutfitSpecs.HMF_BreatherSpec
