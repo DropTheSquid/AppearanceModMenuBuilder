@@ -133,10 +133,10 @@ suppressBreatherMenu=true
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Jenkins]
 Tag=Hench_Jenkins
-menuRootPath=amm_submenus.Jenkins.AppearanceSubmenu_Jenkins
 +alternateTags=nor10_jenkins
 +alternateTags=cutscene_jenkins
 +alternateTags=cutscene_jenkins2
+menuRootPath=amm_submenus.Jenkins.AppearanceSubmenu_Jenkins
 outfitSpecListPath=outfitSpecs.HMM_OutfitSpec
 helmetSpecListPath=OutfitSpecs.HMM_HelmetSpec
 breatherSpecListPath=OutfitSpecs.HMM_BreatherSpec

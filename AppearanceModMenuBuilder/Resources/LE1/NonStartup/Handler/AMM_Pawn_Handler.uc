@@ -189,8 +189,17 @@ public function PawnLoadState LoadPawn(string tag, string appearanceType, option
 			return PawnLoadState.loading;
 		}
 		
-		LogInternal("Warning: found params but couldn't find pawn for tag"@tag);
-		return PawnLoadState.failed;
+		if (!class'AMM_Utilities'.static.IsFrameworkInstalled() && avoidSlowdown)
+		{
+			// this is expected in this case; we do not pre spawn if the framework is not installed, so don't log a warning
+			return PawnLoadState.failed;
+		}
+		else
+		{
+			LogInternal("Warning: found params but couldn't find pawn for tag"@tag);
+			return PawnLoadState.failed;
+		}
+		
 	}
 	// could not find any params for this tag; that's not great.
 	LogInternal("Warning: Could not find params for tag"@tag);
