@@ -27,3 +27,16 @@ srSubtitle=210210222
 ; allow combat outfits in casual situations
 +menuItems=(srLeftText=210210251, srRightText=200054, srDescriptionText=210210252, srDescriptionTitleText=210210251, srActionText=200008, DisplayInt=(Id=1595,Value=0), ApplySettingInts=((Id=1595,Value=1)) Images=())
 +menuItems=(srLeftText=210210251, srRightText=200053, srDescriptionText=210210252, srDescriptionTitleText=210210251, srActionText=200009, DisplayInt=(Id=1595,Value=1), ApplySettingInts=((Id=1595,Value=0)) Images=())
+
+; allow romance appearance customization
+; hide unless framework is installed
++menuItems=(srLeftText=210210271, srRightText=200054, srDescriptionText=210210273, srDescriptionTitleText=210210271, srActionText=200008, DisplayInt=(Id=1596,Value=0), ApplySettingInts=((Id=1596,Value=1)) Images=(),displayRequiredPackageExports=("DLC_MOD_Framework_GlobalTlk.GlobalTlk_tlk"))
++menuItems=(srLeftText=210210271, srRightText=200053, srDescriptionText=210210272, srDescriptionTitleText=210210271, srActionText=200009, DisplayInt=(Id=1596,Value=1), ApplySettingInts=((Id=1596,Value=0)) Images=(),displayRequiredPackageExports=("DLC_MOD_Framework_GlobalTlk.GlobalTlk_tlk"))
+
+; allow pre recruitment appearance customization
++menuItems=(srLeftText=210210274, srRightText=200054, srDescriptionText=210210276, srDescriptionTitleText=210210274, srActionText=200008, DisplayInt=(Id=1597,Value=0), ApplySettingInts=((Id=1597,Value=1)) Images=())
++menuItems=(srLeftText=210210274, srRightText=200053, srDescriptionText=210210275, srDescriptionTitleText=210210274, srActionText=200009, DisplayInt=(Id=1597,Value=1), ApplySettingInts=((Id=1597,Value=0)) Images=())
+
+; show immersion breaking outfits
++menuItems=(srLeftText=210210277, srRightText=200054, srDescriptionText=210210279, srDescriptionTitleText=210210277, srActionText=200008, DisplayInt=(Id=1598,Value=0), ApplySettingInts=((Id=1598,Value=1)) Images=())
++menuItems=(srLeftText=210210277, srRightText=200053, srDescriptionText=210210278, srDescriptionTitleText=210210277, srActionText=200009, DisplayInt=(Id=1598,Value=1), ApplySettingInts=((Id=1598,Value=0)) Images=())

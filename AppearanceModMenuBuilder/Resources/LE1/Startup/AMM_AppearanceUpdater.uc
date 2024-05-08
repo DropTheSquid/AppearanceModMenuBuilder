@@ -12,10 +12,11 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 	local pawnAppearance pawnAppearance;
 
 	UpdateOuterWorldInfo();
-	LogInternal("appearance update for target"@PathName(target)@Target.Tag@"from source"@source);
 	if (paramHandler.GetPawnParams(target, params))
 	{
 		params.SpecialHandling(target);
+		LogInternal("appearance update for target"@PathName(target)@Target.Tag@Target.UniqueTag@"from source"@source);
+		LogInternal("target is in appearance type"@params.GetAppearanceType(target));
 		if (params.GetCurrentAppearanceIds(target, appearanceIds))
 		{
 			specLists = params.GetSpecLists(target);
@@ -32,6 +33,10 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 		{
 			LogInternal("Warning: Could not get appearance Ids from params"@params@target);
 		}
+	}
+	else
+	{
+		LogInternal("appearance update with no params for target"@PathName(target)@Target.Tag@Target.UniqueTag@"from source"@source);
 	}
 }
 private function UpdateOuterWorldInfo()

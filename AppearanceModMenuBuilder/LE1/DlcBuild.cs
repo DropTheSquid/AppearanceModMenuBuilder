@@ -31,6 +31,8 @@ namespace AppearanceModMenuBuilder.LE1
                 .AddTask(new BuildInventoryHandlerTask())
                 // build UI world
                 .AddTask(new BuildUIWorldTask())
+                // add some new conditionals we need
+                .AddTask(new BuildPlotManagerFile())
                 // output any config merge files we worked on
                 .AddTask(new OutputConfigMerge())
                 // compile tlks

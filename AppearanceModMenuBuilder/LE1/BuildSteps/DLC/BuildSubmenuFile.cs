@@ -321,8 +321,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
                 // "Miscellaneous"  (Naked, VI)
                 menus.CasualOutfitMenus[0].SrSubtitle = 210210259;
-                // TODO this should not show up without opting in
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[0].GetEntryPoint(210210259));
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[0].GetEntryPoint(210210259, displayInt: (1598, 1)));
 
                 // "Alliance Formal" CTHa
                 menus.CasualOutfitMenus[1].SrSubtitle = 210210257;
@@ -370,8 +369,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
                 // "Miscellaneous"  (Naked, VI)
                 menus.CasualOutfitMenus[0].SrSubtitle = 210210259;
-                // TODO this should not show up without opting in
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[0].GetEntryPoint(210210259));
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[0].GetEntryPoint(210210259, displayInt: (1598, 1)));
 
                 // "Alliance Formal" CTHa
                 menus.CasualOutfitMenus[1].SrSubtitle = 210210257;
@@ -437,48 +435,52 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             squadMembers.Add(new SquadMemberSubmenus("FemaleShepard", 210210218, "Player", HumanFemaleOutfitMenus)
             {
-                Romanceable = true,
+                RomanceConditional = 2506,
                 // true only if player is female
                 DisplayConditional = 144
             });
             squadMembers.Add(new SquadMemberSubmenus("MaleShepard", 210210218, "Player", HumanMaleOutfitMenus)
             {
-                Romanceable = true,
+                RomanceConditional = 2506,
                 // true only if player is male
                 DisplayConditional = 143
             });
             squadMembers.Add(new SquadMemberSubmenus("Kaidan", 166121, "Hench_HumanMale", HumanMaleOutfitMenus)
             {
-                Romanceable = true,
-                // TODO add this in once I have actually implemented conditionals
-                //DisplayConditional = 2500
+                RomanceConditional = 2508,
+                // True as long as Kaidan is alive
+                DisplayConditional = 2500
             });
             squadMembers.Add(new SquadMemberSubmenus("Ashley", 163457, "Hench_HumanFemale", HumanFemaleOutfitMenus)
             {
-                Romanceable = true,
-                // TODO add this in once I have actually implemented conditionals
-                //DisplayConditional = 2501
+                RomanceConditional = 2509,
+                // true as long as Ashley is alive and (in party or pre recruitment enabled)
+                DisplayConditional = 2501,
+                RecruitedBool = 3940
             });
             squadMembers.Add(new SquadMemberSubmenus("Liara", 172365, "Hench_Asari", AsariOutfitMenus)
             {
-                Romanceable = true,
-                // TODO add this in once I have actually implemented conditionals
-                //DisplayConditional = 2505
+                RomanceConditional = 2507,
+                // True as long as pre recruitment is enabled or Liara is in party
+                DisplayConditional = 2505,
+                RecruitedBool = 3943,
+                PreRecruitmentIsCasual = true
             });
             squadMembers.Add(new SquadMemberSubmenus("Garrus", 125308, "Hench_Turian", TurianOutfitMenus)
             {
-                // TODO add this in once I have actually implemented conditionals
-                //DisplayConditional = 2503
+                // true as long as Garrus is recruited or (pre recruitment enabled && haven't missed the chance to recruit)
+                DisplayConditional = 2503,
+                RecruitedBool = 3941
             });
             squadMembers.Add(new SquadMemberSubmenus("Wrex", 125307, "Hench_Krogan", KroganOutfitMenus)
             {
-                // TODO add this in once I have actually implemented conditionals
-                //DisplayConditional = 2502
+                DisplayConditional = 2502,
+                RecruitedBool = 3942
             });
             squadMembers.Add(new SquadMemberSubmenus("Tali", 146007, "Hench_Quarian", QuarianOutfitMenus)
             {
-                // TODO add this in once I have actually implemented conditionals
-                //DisplayConditional = 2504
+                DisplayConditional = 2504,
+                RecruitedBool = 3944
             });
             squadMembers.Add(new SquadMemberSubmenus("Jenkins", 163868, "Hench_Jenkins", HumanMaleOutfitMenus)
             {

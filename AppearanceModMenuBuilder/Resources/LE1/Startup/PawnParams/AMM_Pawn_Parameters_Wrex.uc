@@ -32,6 +32,25 @@ public function SpecialHandling(BioPawn targetPawn)
 	}
 }
 
+public function string GetAppearanceType(BioPawn targetPawn)
+{
+	// Wrex has a few weird appearances. He appears in CSec (BIOA_STA30_01_DSG) to recruit him before taking on Fist or after taking on Fist (check if this is the same file)
+	// or in Chora's Den for recruitment if you refuse him in c sec
+	if (targetPawn.Tag == 'hench_krogan')
+	{
+		// if this is streamed in with the framework or it's in the Salarian Camp on Virmire, or the normal recruitment pickup in csec count it as combat
+		// TODO what about late recruitment in csec?
+		// TODO recruitment in Chora's Den
+		if (targetPawn.GetPackageName() == 'BIONPC_Wrex' || targetPawn.GetPackageName() == 'BIOA_JUG20_08_DSG' || targetPawn.GetPackageName() == 'BIOA_STA30_01_DSG')
+		{
+			return "combat";
+		}
+	}
+	// otherwise, go with the normal system of relying on the armor override to account for in party with/without casual hubs
+	return Super(AMM_Pawn_Parameters_Squad).GetAppearanceType(targetPawn);
+}
+
+
 defaultproperties
 {
 	// Wrex is too tall for the default camera height

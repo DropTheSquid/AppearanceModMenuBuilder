@@ -328,4 +328,59 @@ Romance</data>
 		<flags>1</flags>
 		<data>Civilian Outfit 4</data>
 	</string>
+	<string>
+		<id>210210271</id>
+		<flags>1</flags>
+		<data>Romance Appearance Customization</data>
+	</string>
+	<string>
+		<id>210210272</id>
+		<flags>1</flags>
+		<data>Romance Appearance Customization enabled description</data>
+	</string>
+	<string>
+		<id>210210273</id>
+		<flags>1</flags>
+		<data>Romance Appearance Customization disabled description</data>
+	</string>
+	<string>
+		<id>210210274</id>
+		<flags>1</flags>
+		<data>Pre recruitment Appearance Customization</data>
+	</string>
+	<string>
+		<id>210210275</id>
+		<flags>1</flags>
+		<data>Pre recruitment Appearance Customization enabled description</data>
+	</string>
+	<string>
+		<id>210210276</id>
+		<flags>1</flags>
+		<data>Pre recruitment Appearance Customization diabled description</data>
+	</string>
+	<string>
+		<id>210210277</id>
+		<flags>1</flags>
+		<data>Show weird outfits</data>
+	</string>
+	<string>
+		<id>210210278</id>
+		<flags>1</flags>
+		<data>Show weird outfits enabled description</data>
+	</string>
+	<string>
+		<id>210210279</id>
+		<flags>1</flags>
+		<data>Show weird outfits disabled description</data>
+	</string>
+	<string>
+		<id>210210280</id>
+		<flags>1</flags>
+		<data>Casual/Pre Recruitment Appearance</data>
+	</string>
+	<string>
+		<id>210210281</id>
+		<flags>1</flags>
+		<data>Combat/Pre Recruitment Appearance</data>
+	</string>
 </tlkFile>

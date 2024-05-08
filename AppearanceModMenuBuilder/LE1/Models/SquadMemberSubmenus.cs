@@ -13,7 +13,9 @@ namespace AppearanceModMenuBuilder.LE1.Models
 
         public int? DisplayBool { get; init; } = null;
         public int? DisplayConditional { get; init; } = null;
-        public bool Romanceable { get; init; } = false;
+        public int? RomanceConditional { get; init; } = null;
+        public int? RecruitedBool { get; init; } = null;
+        public bool PreRecruitmentIsCasual { get; init; } = false;
 
         public string ClassPath => $"AMM_Submenus.{SquadMemberName}.AppearanceSubmenu_{SquadMemberName}";
 
@@ -50,6 +52,8 @@ namespace AppearanceModMenuBuilder.LE1.Models
             if (initCompleted) return;
             const int srCausalAppearance = 210210214;
             const int srCombatAppearance = 210210215;
+            const int srCausalOrPreRecruitAppearance = 210210280;
+            const int srCombatOrPreRecruitAppearance = 210210281;
 
             var rootCharacterMenu = new AppearanceSubmenu(ClassPath)
             {
@@ -76,8 +80,19 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 // "Choose an outfit"
                 SrSubtitle = 210210256,
             };
-            // add this menu into the root character menu
-            rootCharacterMenu.AddMenuEntry(casualMenu.GetEntryPoint(srCausalAppearance));
+
+            if (RecruitedBool.HasValue && PreRecruitmentIsCasual)
+            {
+                // add two entry points, one that shows up pre recruitment, one that shows up post
+                rootCharacterMenu.AddMenuEntry(casualMenu.GetEntryPoint(srCausalOrPreRecruitAppearance, displayBool: -RecruitedBool.Value));
+                rootCharacterMenu.AddMenuEntry(casualMenu.GetEntryPoint(srCausalAppearance, displayBool: RecruitedBool.Value));
+            }
+            else
+            {
+                // add this menu into the root character menu
+                rootCharacterMenu.AddMenuEntry(casualMenu.GetEntryPoint(srCausalAppearance));
+            }
+            
             // add the appropriate submenu into this one
             casualMenu.AddMenuEntry(OutfitSubmenus.Casual.GetInlineEntryPoint());
             _submenus.Add(casualMenu);
@@ -94,14 +109,24 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 // "Choose an outfit"
                 SrSubtitle = 210210256,
             };
-            // add this menu into the root character menu
-            rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(srCombatAppearance));
+
+            if (RecruitedBool.HasValue && !PreRecruitmentIsCasual)
+            {
+                // add two entry points, one that shows up pre recruitment, one that shows up post
+                rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(srCombatOrPreRecruitAppearance, displayBool: -RecruitedBool.Value));
+                rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(srCombatAppearance, displayBool: RecruitedBool.Value));
+            }
+            else
+            {
+                // add this menu into the root character menu
+                rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(srCombatAppearance));
+            }
             // add the appropriate submenu into this one
             combatMenu.AddMenuEntry(OutfitSubmenus.Combat.GetInlineEntryPoint());
             _submenus.Add(combatMenu);
             _classes.Add(GetSubmenuClass($"{SquadMemberName}_Combat", [SquadMemberName]));
 
-            if (Romanceable)
+            if (RomanceConditional.HasValue)
             {
                 const int srRomanceAppearance = 210210216;
 
@@ -117,7 +142,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
                     SrSubtitle = 210210256,
                 };
                 // add this menu into the root character menu
-                rootCharacterMenu.AddMenuEntry(romanceMenu.GetEntryPoint(srRomanceAppearance, requiresFramework: true));
+                rootCharacterMenu.AddMenuEntry(romanceMenu.GetEntryPoint(srRomanceAppearance, requiresFramework: true, displayConditional: RomanceConditional.Value));
                 // add the appropriate submenu into this one
                 romanceMenu.AddMenuEntry(OutfitSubmenus.Casual.GetInlineEntryPoint());
                 _submenus.Add(romanceMenu);

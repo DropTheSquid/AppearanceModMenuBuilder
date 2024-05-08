@@ -24,7 +24,15 @@ namespace AppearanceModMenuBuilder.LE1.Models
             AddArrayEntries("menuItems", item.OutputValue());
         }
 
-        public AppearanceItemData GetEntryPoint(int srCenterText, bool requiresFramework = false, bool inline = false, (int id, int value)? displayInt = null, bool? hideIfHeadgearSuppressed = null, bool? hideIfBreatherSuppressed = null)
+        public AppearanceItemData GetEntryPoint(
+            int srCenterText,
+            bool requiresFramework = false,
+            bool inline = false,
+            (int id, int value)? displayInt = null,
+            int? displayBool = null,
+            int? displayConditional = null,
+            bool? hideIfHeadgearSuppressed = null,
+            bool? hideIfBreatherSuppressed = null)
         {
             var result =  new AppearanceItemData()
             {
@@ -34,6 +42,8 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 RequiresFramework = requiresFramework ? true : null,
                 HideIfHeadgearSuppressed = hideIfHeadgearSuppressed,
                 HideIfBreatherSuppressed= hideIfBreatherSuppressed,
+                DisplayBool = displayBool,
+                DisplayConditional = displayConditional,
             };
             if (displayInt.HasValue)
             {

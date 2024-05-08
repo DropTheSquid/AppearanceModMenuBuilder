@@ -34,8 +34,14 @@ public function SpecialHandling(BioPawn targetPawn)
 }
 public function string GetAppearanceType(BioPawn targetPawn)
 {
-	// Also not an issue as long as the Framework is installed, but the Ashley Pawn just before here recruitment has the appearance overridden, and so it would normally be seen as casual
-	// this overrides it so it is seen as combat
+	// all Ashley appearances:
+	// pre recruitment (pro10_ash) needs to be overridden to combat
+	// in party w/ or w/o casual hubs
+	// Virmire Camp
+	// Nomrandy debrief?
+	
+	// TODO check how this interacts with framework
+	// pro10_ash is immediately pre recruitment. It has the armor override flag set to true, so it would normally be seen as casual
     if (targetPawn.Tag == 'pro10_ash')
     {
         return "combat";
