@@ -5,10 +5,15 @@ public function SpecialHandling(BioPawn targetPawn)
 {
     local BioPawnType pawnType;
 
+	pawnType = Class'AMM_Utilities'.static.GetPawnType(targetPawn);
+
+	// remove Jenkins' faceplate spec so that you cannot cycle to a full helmet and see the ugly pink default NPC faceplate.
+	pawnType.m_oAppearance.Body.m_oHeadGearAppearance.m_aFacePlateMeshSpec.Length = 0;
+	pawnType.m_oAppearance.Body.m_oHeadGearAppearance.m_apFacePlateMaterial.Length = 0;
+
 	// Jenkins has a slew of issues if the framework is not installed
 	if (!Class'AMM_Utilities'.static.IsFrameworkInstalled())
 	{
-		pawnType = Class'AMM_Utilities'.static.GetPawnType(targetPawn);
 		// if we are in the menu trying to customize Jenkins' casual appearance
 		// we are relying on the spawned in combat pawn
 		// who has the wrong settings on his pawn.
