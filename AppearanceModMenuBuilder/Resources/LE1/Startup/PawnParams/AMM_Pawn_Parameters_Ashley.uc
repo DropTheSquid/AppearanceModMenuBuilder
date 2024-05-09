@@ -46,5 +46,5 @@ public function string GetAppearanceType(BioPawn targetPawn)
     {
         return "combat";
     }
-    return Super(AMM_Pawn_Parameters_Squad).GetAppearanceType(targetPawn);
+    return Super(AMM_Pawn_Parameters_Romanceable).GetAppearanceType(targetPawn);
 }

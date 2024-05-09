@@ -31,31 +31,32 @@ public function bool F2501(BioWorldInfo bioWorld, int Argument)
 public function bool F2502(BioWorldInfo bioWorld, int Argument)
 {
 	// Should AMM submenu for Wrex show up?
-	// yes from when he is added to the party (or before if pre recruitment) until/unless he dies
-	// Wrex in Party and alive 
-	// OR (pre recruitment AND Wrex not Rejected AND citadel prologue not complete)
+	// yes, if he is in the party (which should cover him dying) or if pre recruitment is turned on and we have not started virmire
+	// just before virmire is the last time you can recruit him, and he can't die before then
+	// he stands in BIOA_STA60_05A_DSG
 	local BioGlobalVariableTable gv;
 
 	gv = bioWorld.GetGlobalVariables();
 
-	// Wrex in party and alive (3942) || allow pre recruitment
-	// TODO remove once you are no longer able to recruit him (post starting Virmire I think?)
-	return gv.GetBool(3942) == TRUE || gv.GetInt(1597) == 1;
+	// Wrex in party and alive [3942] || (allow pre recruitment i[1597] && !started Virmire [4438])
+	return gv.GetBool(3942) || (gv.GetInt(1597) == 1 && !gv.GetBool(4438));
 }
 public function bool F2503(BioWorldInfo bioWorld, int Argument)
 {
 	// Should AMM submenu for Garrus show up?
+	// yes, if he has been recruited or pre recruitment is on and you have not yet escaped from the citadel to do ilos
+	// he stands in BIOA_STA30_01_DSG for the rest of the game. the last time you can go back there is before escaping to do ilos
 	local BioGlobalVariableTable gv;
 
 	gv = bioWorld.GetGlobalVariables();
 
-	// Garrus in party (3941) || allow pre recruitment
-	// TODO remove once you can no longer recruit him (I think post starting Ilos?)
-	return gv.GetBool(3941) == TRUE || gv.GetInt(1597) == 1;
+	// Garrus in party [3941] || (allow pre recruitment i[1597] && !left citadel for ilos [4393])
+	return gv.GetBool(3941) == TRUE || (gv.GetInt(1597) == 1 && !gv.GetBool(4393));
 }
 public function bool F2504(BioWorldInfo bioWorld, int Argument)
 {
 	// Should AMM submenu for Tali show up?
+	// yes, if she is in the party or pre recruitment customization is on
 	local BioGlobalVariableTable gv;
 
 	gv = bioWorld.GetGlobalVariables();
@@ -66,6 +67,7 @@ public function bool F2504(BioWorldInfo bioWorld, int Argument)
 public function bool F2505(BioWorldInfo bioWorld, int Argument)
 {
 	// Should AMM submenu for Liara show up?
+	// yes, if she is in the party or pre recruitment customization is on
 	local BioGlobalVariableTable gv;
 
 	gv = bioWorld.GetGlobalVariables();
