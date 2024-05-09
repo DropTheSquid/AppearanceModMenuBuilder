@@ -32,11 +32,15 @@ public event function BioPawn SpawnHenchman(Name pawnTag, Actor Player, float ba
     SetupPartyMemberAttributes(BioPawn.m_oBehavior, Class'BioAttributesPawnParty');
     if (BioWorldInfo.CurrentGame.GetME2SaveGame().LoadHenchman(pawnTag, BioPawn.m_oBehavior) == FALSE)
     {
+		// this code path only runs if this is initializing the character for the first time
         if (!BioWorldInfo.GetCharacterImporter().LoadCharacterDefinitionByIndex(BioPawn.m_oBehavior, characterID))
         {
             WarnInternal("Warning! Failed to load default character definition for pawn " $ BioPawn);
         }
+		// this sets the initial helmet preference, which is true for Jenkins, Kaidan, and Ashley per Engine.BIOG_2DA_Characters_X.Characters_Character
         BioPawn.SetHeadGearVisiblePreference(bool(nIsHeadGearVisible));
+		// I want to also set this in AMM's settings so they use the right helmet setting initially
+		Class'AMM_AppearanceUpdater_Base'.static.UpdateHelmetPreferenceStatic(BioPawn, bool(nIsHeadGearVisible), false);
     }
     BioPawn.m_oBehavior.m_oSquadInterface.ChangeSquads(BioWorldInfo.m_playerSquad);
     if (BioPawn != None)

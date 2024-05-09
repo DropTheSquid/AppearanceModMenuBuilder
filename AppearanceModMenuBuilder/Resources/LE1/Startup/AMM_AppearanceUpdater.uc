@@ -39,6 +39,7 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 		LogInternal("appearance update with no params for target"@PathName(target)@Target.Tag@Target.UniqueTag@"from source"@source);
 	}
 }
+
 private function UpdateOuterWorldInfo()
 {
 	local BioWorldInfo tempWorldInfo;
@@ -49,6 +50,7 @@ private function UpdateOuterWorldInfo()
         outerWorldInfoPath = PathName(tempWorldInfo);
     }
 }
+
 public static function bool IsInCharacterCreator(out BioSFHandler_NewCharacter ncHandler)
 {
 	local AMM_AppearanceUpdater_Base instance;
@@ -68,6 +70,7 @@ public static function bool IsInCharacterCreator(out BioSFHandler_NewCharacter n
 	}
 	return false;
 }
+
 public static function bool IsInAMM(out BioSFPanel panel)
 {
 	local AMM_AppearanceUpdater_Base instance;
@@ -85,6 +88,7 @@ public static function bool IsInAMM(out BioSFPanel panel)
 	}
 	return false;
 }
+
 public static function bool GetPawnParams(BioPawn Target, out AMM_Pawn_Parameters params)
 {
 	local AMM_AppearanceUpdater_Base instance;
@@ -293,6 +297,51 @@ private function CommitHelmetPreference(BioPawn target, AMM_Pawn_Parameters para
 		{
 			globalVars.SetInt(flagsPlotInt, class'AMM_Utilities'.static.EncodeAppearanceSettings(currentAppearance.m_appearanceSettings));
 		}
+	}
+}
+
+public function UpdateHelmetPreference(BioPawn target, bool bPreferVisible, bool bForce)
+{
+	// so, identify who this is applying to. possibly force it to combat mode?
+	local BioGlobalVariableTable globalVars;
+	local AMM_Pawn_Parameters params;
+	// local string appearanceType;
+	local PawnAppearanceIds appearanceIds;
+
+	// first check if the mod setting says to ignore forced helmet stuff; if so, do nothing in response to this
+	globalVars = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo()).GetGlobalVariables();
+	if (globalVars.GetInt(1593) == 1)
+	{
+		return;
+	}
+
+	// next, identify who this is applying to
+	if (!GetPawnParams(target, params))
+	{
+		// if it is not a pawn whose parameters we control, do nothing
+		return;
+	}
+	params.SpecialHandling(target);
+	// appearanceType = params.GetAppearanceType(target);
+	LogInternal("UpdateHelmetPreference"@target.tag@bPreferVisible@bForce);
+	if (!params.GetCurrentAppearanceIds(target, appearanceIds))
+	{
+		LogInternal("Warning: Could not get appearance Ids from params"@params@target);
+		return;
+	}
+
+	// the preference can upgrade from off to on, but will not downgrade from full to down
+	if (appearanceIds.m_appearanceSettings.helmetDisplayState == eHelmetDisplayState.off && bPreferVisible)
+	{
+		// set the helmet preference to on
+		appearanceIds.m_appearanceSettings.helmetDisplayState = eHelmetDisplayState.on;
+		CommitHelmetPreference(target, params, appearanceIds);
+	}
+	if (appearanceIds.m_appearanceSettings.helmetDisplayState == eHelmetDisplayState.on && !bPreferVisible)
+	{
+		// set the helmet preference to on
+		appearanceIds.m_appearanceSettings.helmetDisplayState = eHelmetDisplayState.off;
+		CommitHelmetPreference(target, params, appearanceIds);
 	}
 }
 

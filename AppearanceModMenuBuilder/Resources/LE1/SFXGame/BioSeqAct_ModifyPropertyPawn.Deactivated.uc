@@ -1,49 +1,100 @@
 public event function Deactivated()
 {
-    local BioPawn TargetPawn;
-    local array<string> matchingDescs;
-    local bool shouldUpdateAppearance;
-    local string tempString;
-    local int I;
-    local array<BioPawn> targetPawns;
-    local SequenceVariable tempSeqVar;
-    
-	// entirely added. covers a wide variety of places where 
-    Super(SequenceOp).Deactivated();
-    I = VariableLinks.Find('LinkDesc', "Target");
-    if (I == -1)
+	local BioPawn TargetPawn;
+	local array<string> matchingDescs;
+	local bool shouldUpdateAppearance;
+	local string tempString;
+	local int i;
+	local array<BioPawn> targetPawns;
+	local SequenceVariable tempSeqVar;
+	local bool overrideHelmet;
+	local bool forceHelmet;
+	local bool forceBreather;
+	local bool setHelmetPreference;
+	local bool helmetPreference;
+	local SeqVarLink tempSeqVarLink;
+
+	// entirely added. covers a wide variety of places where a pawn's appearance might need to be updated
+	Super(SequenceOp).Deactivated();
+	// first, find the list of Target variable links
+	i = VariableLinks.Find('LinkDesc', "Target");
+	if (i == -1)
+	{
+		return;
+	}
+	// and collect any valid target pawns this seq action links to
+	foreach VariableLinks[i].LinkedVariables(tempSeqVar, )
+	{
+		if (SeqVar_Object(tempSeqVar) != None && BioPawn(SeqVar_Object(tempSeqVar).GetObjectValue()) != None)
+		{
+			targetPawns.AddItem(BioPawn(SeqVar_Object(tempSeqVar).GetObjectValue()));
+		}
+	}
+	foreach VariableLinks(tempSeqVarLink, I)
     {
-        return;
-    }
-    foreach VariableLinks[I].LinkedVariables(tempSeqVar, )
-    {
-        if (SeqVar_Object(tempSeqVar) != None && BioPawn(SeqVar_Object(tempSeqVar).GetObjectValue()) != None)
-        {
-            targetPawns.AddItem(BioPawn(SeqVar_Object(tempSeqVar).GetObjectValue()));
-        }
-    }
-    matchingDescs.AddItem("Armor Override");
-    matchingDescs.AddItem("Tag");
-    matchingDescs.AddItem("Hidden");
-    matchingDescs.AddItem("Helmet: Override");
-    matchingDescs.AddItem("Helmet: Show Visor");
-    matchingDescs.AddItem("Helmet: Show Helmet");
-    matchingDescs.AddItem("Helmet: Show Face-plate");
-    matchingDescs.AddItem("Helmet: Prefer Visible");
-	// active?
-    foreach matchingDescs(tempString, )
-    {
-        if (VariableLinks.Find('LinkDesc', tempString) != -1)
-        {
-            shouldUpdateAppearance = TRUE;
-            break;
-        }
-    }
-    if (shouldUpdateAppearance)
-    {
-        foreach targetPawns(TargetPawn, )
-        {
+		switch (tempSeqVarLink.LinkDesc)
+		{
+			case "Armor Override":
+			case "Tag":
+			case "Active":
+			case "Hidden":
+			case "Helmet: Show Visor":
+				shouldUpdateAppearance = true;
+				break;
+			case "Helmet: Override":
+				shouldUpdateAppearance = true;
+				tempSeqVar = tempSeqVarLink.LinkedVariables[0];
+				if (SeqVar_Bool(tempSeqVar) != None && SeqVar_Bool(tempSeqVar).bValue == 1)
+				{
+					overrideHelmet = true;
+				}
+				break;
+			case "Helmet: Show Helmet":
+				shouldUpdateAppearance = true;
+				tempSeqVar = tempSeqVarLink.LinkedVariables[0];
+				if (SeqVar_Bool(tempSeqVar) != None && SeqVar_Bool(tempSeqVar).bValue == 1)
+				{
+					forceHelmet = true;
+				}
+				break;
+			case "Helmet: Show Face-plate":
+				shouldUpdateAppearance = true;
+				tempSeqVar = tempSeqVarLink.LinkedVariables[0];
+				if (SeqVar_Bool(tempSeqVar) != None && SeqVar_Bool(tempSeqVar).bValue == 1)
+				{
+					forceBreather = true;
+				}
+				break;
+			case "Helmet: Prefer Visible":
+				shouldUpdateAppearance = true;
+				tempSeqVar = tempSeqVarLink.LinkedVariables[0];
+				if (SeqVar_Bool(tempSeqVar) != None)
+				{
+					setHelmetPreference = true;
+					helmetPreference = SeqVar_Bool(tempSeqVar).bValue == 1;
+				}
+				break;
+		}
+	}
+	if (setHelmetPreference)
+	{
+		foreach targetPawns(TargetPawn, )
+		{
+			Class'AMM_AppearanceUpdater_Base'.static.UpdateHelmetPreferenceStatic(TargetPawn, helmetPreference, false);
+		}
+	}
+	if (overrideHelmet && !forceBreather)
+	{
+		foreach targetPawns(TargetPawn, )
+		{
+			Class'AMM_AppearanceUpdater_Base'.static.UpdateHelmetPreferenceStatic(TargetPawn, forceHelmet, true);
+		}
+	}
+	if (shouldUpdateAppearance)
+	{
+		foreach targetPawns(TargetPawn, )
+		{
 			Class'AMM_AppearanceUpdater_Base'.static.UpdatePawnAppearanceStatic(TargetPawn, "BioSeqAct_ModifyPropertyPawn.Deactivate");
-        }
-    }
+		}
+	}
 }
