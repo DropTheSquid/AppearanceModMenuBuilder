@@ -11,6 +11,13 @@ public function SpecialHandling(BioPawn targetPawn)
 	pawnType.m_oAppearance.Body.m_oHeadGearAppearance.m_aFacePlateMeshSpec.Length = 0;
 	pawnType.m_oAppearance.Body.m_oHeadGearAppearance.m_apFacePlateMaterial.Length = 0;
 
+	// if this is cutscene Jenkins (1 or 2) and it is active, remove his visor spec so it will disappear with his vanilla look so Kaidan can close his eyes without clipping through the visor
+	if ((targetPawn.Tag == 'cutscene_jenkins' || targetPawn.Tag == 'cutscene_jenkins2') && targetPawn.m_oBehavior.bActive)
+	{
+		pawnType.m_oAppearance.Body.m_oHeadGearAppearance.m_apVisorMesh.Length = 0;
+		pawnType.m_oAppearance.Body.m_oHeadGearAppearance.m_apVisorMaterial.Length = 0;
+	}
+
 	// Jenkins has a slew of issues if the framework is not installed
 	if (!Class'AMM_Utilities'.static.IsFrameworkInstalled())
 	{
@@ -60,7 +67,7 @@ public function string GetAppearanceType(BioPawn targetPawn)
         return "combat";
     }
 
-	// if he is hench_Jenkins, then it depends on whether he is in the party (root will be )
+	// if he is hench_Jenkins, go with the behavior Armor override, but not the pawnType override, because he is set up super weirdly
 	if (targetPawn.Tag == 'hench_jenkins')
 	{
 		return targetPawn.m_oBehavior.m_bArmorOverridden ? "casual" : "combat";

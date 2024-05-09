@@ -12,6 +12,11 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 	local pawnAppearance pawnAppearance;
 
 	UpdateOuterWorldInfo();
+	if (SFXPawn_Player(target) != None && source ~= "BioPawn.PostBeginPlay")
+	{
+		// skip this; it will sometimes do incorrect things before the pawn is fully initialized, and it will be called again from SpawnPlayer
+		return;
+	}
 	if (paramHandler.GetPawnParams(target, params))
 	{
 		params.SpecialHandling(target);
@@ -302,15 +307,21 @@ private function CommitHelmetPreference(BioPawn target, AMM_Pawn_Parameters para
 
 public function UpdateHelmetPreference(BioPawn target, bool bPreferVisible, bool bForce)
 {
-	// so, identify who this is applying to. possibly force it to combat mode?
 	local BioGlobalVariableTable globalVars;
 	local AMM_Pawn_Parameters params;
-	// local string appearanceType;
 	local PawnAppearanceIds appearanceIds;
 
 	// first check if the mod setting says to ignore forced helmet stuff; if so, do nothing in response to this
 	globalVars = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo()).GetGlobalVariables();
 	if (globalVars.GetInt(1593) == 1)
+	{
+		return;
+	}
+
+	// I have not found a situation where I actually need this
+	// Shep gets their helmet forced on, but they also have the helmet preference covering that
+	// Jenkins same, and without this it doesn't get forced back on if you remove it and reload
+	if (bForce)
 	{
 		return;
 	}
@@ -322,24 +333,24 @@ public function UpdateHelmetPreference(BioPawn target, bool bPreferVisible, bool
 		return;
 	}
 	params.SpecialHandling(target);
-	// appearanceType = params.GetAppearanceType(target);
-	LogInternal("UpdateHelmetPreference"@target.tag@bPreferVisible@bForce);
+
 	if (!params.GetCurrentAppearanceIds(target, appearanceIds))
 	{
 		LogInternal("Warning: Could not get appearance Ids from params"@params@target);
 		return;
 	}
 
-	// the preference can upgrade from off to on, but will not downgrade from full to down
+	// the preference can upgrade from off to on, but will not downgrade from full to on
 	if (appearanceIds.m_appearanceSettings.helmetDisplayState == eHelmetDisplayState.off && bPreferVisible)
 	{
 		// set the helmet preference to on
 		appearanceIds.m_appearanceSettings.helmetDisplayState = eHelmetDisplayState.on;
 		CommitHelmetPreference(target, params, appearanceIds);
 	}
+	// if the game requests that the helmet be off, do so as long as the preference is just on
 	if (appearanceIds.m_appearanceSettings.helmetDisplayState == eHelmetDisplayState.on && !bPreferVisible)
 	{
-		// set the helmet preference to on
+		// set the helmet preference to off
 		appearanceIds.m_appearanceSettings.helmetDisplayState = eHelmetDisplayState.off;
 		CommitHelmetPreference(target, params, appearanceIds);
 	}
