@@ -96,6 +96,7 @@ breatherSpecListPath=OutfitSpecs.HMF_BreatherSpec
 +AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1548), helmetAppearanceLookup=(plotIntId=1549), breatherAppearanceLookup=(plotIntId=1550), appearanceFlagsLookup=(plotIntId=1551), FrameworkFileName="BIONPC_Liara_Normandy")
 +AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1552), helmetAppearanceLookup=(plotIntId=1553), breatherAppearanceLookup=(plotIntId=1554), appearanceFlagsLookup=(plotIntId=1555))
 +AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1556), helmetAppearanceLookup=(plotIntId=1557), breatherAppearanceLookup=(plotIntId=1558), appearanceFlagsLookup=(plotIntId=1559), FrameworkFileName="BIONPC_Liara_Romance")
+LiaraWearsArmor=true
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Tali]
 Tag=hench_quarian
