@@ -14,20 +14,34 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         {
             Console.WriteLine("Building BIOG_UIWorld.pcc");
             // I am getting the vanilla version of BIOG_UIWorld and copying it into my mod, then programatically modifying it
-            if (!PackageHelpers.TryGetHighestMountedOfficialFile(UIWorldFileName, context.Game, out var packagePath) || packagePath == null)
+            if (!PackageHelpers.TryGetHighestMountedOfficialFile(UIWorldFileName, context.Game, out var basegamePackagePath) || basegamePackagePath == null)
             {
                 throw new Exception($"Could not find basegame file {UIWorldFileName}");
             }
-            // this is how I would get the Mello/other mod version if installed
-            //if (MELoadedFiles.TryGetHighestMountedFile(context.Game, UIWorldFileName, out string packagePath))
-            //{
-
-            //}
             var destinationPath = Path.Combine(context.CookedPCConsoleFolder, UIWorldFileName);
-            File.Copy(packagePath, destinationPath);
+            File.Copy(basegamePackagePath, destinationPath);
 
-            var pcc = MEPackageHandler.OpenMEPackage(destinationPath);
+            var basegamePcc = MEPackageHandler.OpenMEPackage(destinationPath);
 
+            BuildUIWorldFile(basegamePcc, context);
+
+            // now do the same with the Mello patched version
+            var LE1WorkspaceRoot = Directory.GetParent(context.ModOutputPathBase)!.FullName;
+            var melloSourceFilePath = Path.Combine(LE1WorkspaceRoot, @"ME¹LLO\DLC_MOD_MELLO\CookedPCConsole\Main-Core\UIWorld\BIOG_UIWorld.pcc");
+
+            Directory.CreateDirectory(Path.Combine(context.ModOutputPathBase, $@"Compat"));
+            Directory.CreateDirectory(Path.Combine(context.ModOutputPathBase, $@"Compat\Mello"));
+            destinationPath = Path.Combine(context.ModOutputPathBase, $@"Compat\Mello\{UIWorldFileName}");
+
+            File.Copy(melloSourceFilePath, destinationPath);
+
+            var melloCompatPcc = MEPackageHandler.OpenMEPackage(destinationPath);
+
+            BuildUIWorldFile(melloCompatPcc, context);
+        }
+
+        private void BuildUIWorldFile(IMEPackage pcc, ModBuilderContext context)
+        {
             // add the basegame class I need in
             var mergeClassTask = new AddMergeClassesToFile("SFXGame.pcc", "AMM_AppearanceUpdater_Base", _ => pcc);
             mergeClassTask.RunModTask(context);
