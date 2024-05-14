@@ -29,7 +29,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             var LE1WorkspaceRoot = Directory.GetParent(context.ModOutputPathBase)!.FullName;
             var melloSourceFilePath = Path.Combine(LE1WorkspaceRoot, @"ME¹LLO\DLC_MOD_MELLO\CookedPCConsole\Main-Core\UIWorld\BIOG_UIWorld.pcc");
 
-            Directory.CreateDirectory(Path.Combine(context.ModOutputPathBase, $@"Compat"));
             Directory.CreateDirectory(Path.Combine(context.ModOutputPathBase, $@"Compat\Mello"));
             destinationPath = Path.Combine(context.ModOutputPathBase, $@"Compat\Mello\{UIWorldFileName}");
 
@@ -40,7 +39,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             BuildUIWorldFile(melloCompatPcc, context);
         }
 
-        private void BuildUIWorldFile(IMEPackage pcc, ModBuilderContext context)
+        private static void BuildUIWorldFile(IMEPackage pcc, ModBuilderContext context)
         {
             // add the basegame class I need in
             var mergeClassTask = new AddMergeClassesToFile("SFXGame.pcc", "AMM_AppearanceUpdater_Base", _ => pcc);
