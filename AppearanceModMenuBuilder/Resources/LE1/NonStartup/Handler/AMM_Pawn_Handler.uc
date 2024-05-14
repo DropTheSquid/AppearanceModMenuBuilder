@@ -273,16 +273,51 @@ public function ForceAppearanceType(eArmorOverrideState state)
     }
 }
 
-public function SetHelmetVisibilityPreference(bool bVisible)
-{
-	local BioWorldInfo oBWI;
+// public function SetHelmetVisibilityPreference(bool bVisible)
+// {
+// 	local BioWorldInfo oBWI;
     
-	if (_currentDisplayedPawn != None)
+// 	if (_currentDisplayedPawn != None)
+// 	{
+// 		oBWI = BioWorldInfo(_outerMenu.oWorldInfo);
+// 		_currentDisplayedPawn.SetHeadGearVisiblePreference(bVisible);
+// 		oBWI.m_UIWorld.UpdateHeadGearVisibility(_currentDisplayedPawn);
+// 	}
+// }
+
+public function bool HelmetButtonPressed()
+{
+	if (GetUIWorldPawn() != None)
 	{
-		oBWI = BioWorldInfo(_outerMenu.oWorldInfo);
-		_currentDisplayedPawn.SetHeadGearVisiblePreference(bVisible);
-		oBWI.m_UIWorld.UpdateHeadGearVisibility(_currentDisplayedPawn);
+		// cycle to the next helmet appearance
+		class'AMM_AppearanceUpdater'.static.HelmetButtonPressedStatic(GetUIWorldPawn());
+		return true;
 	}
+	return false;
+}
+
+public function string GetHelmetButtonText(string appearanceType)
+{
+	// LogInternal("GetHelmetButtonText"@PathName(_currentDisplayedPawn));
+	if (GetUIWorldPawn() != None)
+	{
+		return _outermenu.helmetHandler.GetHelmetButtonText(GetUIWorldPawn(), appearanceType);
+		// return class'AMM_AppearanceUpdater'.static.GetHelmetButtonTextStatic();
+	}
+	return "";
+}
+
+private function BioPawn GetUIWorldPawn()
+{
+	local Object obj;
+	local SeqVar_Object svo;
+
+	obj = FindObject("BIOG_UIWorld.TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_0", class'SeqVar_Object');
+	LogInternal("GetUIWorldPawn svo"@PathName(obj));
+	svo = SeqVar_Object(obj);
+	obj = svo.GetObjectValue();
+	LogInternal("GetUIWorldPawn val"@PathName(obj));
+	return BioPawn(obj);
 }
 
 // returns true if it is already loaded, false if it is happening asynchronously

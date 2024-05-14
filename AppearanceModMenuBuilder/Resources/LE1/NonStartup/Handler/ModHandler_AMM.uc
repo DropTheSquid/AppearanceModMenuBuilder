@@ -31,11 +31,13 @@ var transient bool launchedInPrologue;
 var transient Pawn_Parameter_Handler paramHandler;
 var transient AMM_Camera_Handler cameraHandler;
 var transient AMM_DialogBox_Handler dialogHandler;
+var transient AMM_Helmet_Handler helmetHandler;
 var transient bool isAppearanceDirty;
 // var transient eMenuHelmetOverride chosenMenuHelmetVisibilityOverride;
 var GFxMovieInfo movieInfo;
 var transient bool GameWasPaused;
 var transient bool rightClickHeld;
+var transient float RefreshHelmetTimer;
 
 // overrides the same function in CustomUIHandlerInterface; this signature must stay the same
 public static function CustomUIHandlerInterface LaunchMenu(optional string Param)
@@ -120,6 +122,8 @@ public function OnPanelAdded()
     paramHandler = new Class'Pawn_Parameter_Handler';
     cameraHandler = new Class'AMM_Camera_Handler';
     cameraHandler.Init(self);
+	helmetHandler = new (self) Class'AMM_Helmet_Handler';
+	helmetHandler.Init(self);
 	// if we launched from the prologue, just start at character selection
 	if (launchedInPrologue)
 	{
@@ -143,6 +147,7 @@ public function Close()
 {
     pawnHandler.Cleanup();
     cameraHandler.Cleanup();
+	helmetHandler.Cleanup();
 	if (dialogHandler != None)
 	{
 		dialogHandler.Cleanup();
@@ -169,6 +174,8 @@ public function UpdateAsyncPawnLoadingState(string tag, string appearanceType, P
 		{
 			cameraHandler.ResetCameraForCharacter(tag);
 			pawnHandler.DisplayPawn(tag, appearanceType);
+			RefreshHelmetButton();
+			RefreshHelmetTimer = 0.02;
 		}
 		// TODO get rid of the loading spinner here
 	}
@@ -221,6 +228,15 @@ public event function Update(float fDeltaT)
 	SetMouseShown(!oPanel.bUsingGamepad && !rightClickHeld);
 	pawnHandler.Update(fDeltaT);
 	cameraHandler.Update(fDeltaT);
+	if (RefreshHelmetTimer > 0)
+	{
+		RefreshHelmetTimer -= fDeltaT;
+		if (RefreshHelmetTimer <= 0)
+		{
+			RefreshHelmetButton();
+			RefreshHelmetTimer = 0;
+		}
+	}
 }
 public function RefreshMenu(optional bool firstEnter = FALSE)
 {
@@ -283,6 +299,8 @@ public function RefreshMenu(optional bool firstEnter = FALSE)
         //     LogInternal("Using chosen helmet override of" @ chosenMenuHelmetVisibilityOverride, );
         //     updater.tempHelmetOverride = chosenMenuHelmetVisibilityOverride;
         // }
+		RefreshHelmetButton();
+		RefreshHelmetTimer = 0.02;
         if (isAppearanceDirty)
         {
             BioWorldInfo(oWorldInfo).m_UIWorld.TriggerEvent('re_AMM_update_Appearance', oWorldInfo);
@@ -293,6 +311,26 @@ public function RefreshMenu(optional bool firstEnter = FALSE)
         PopulateFromSubmenu(currentMenu);
         RenderMenu(state);
     }
+}
+private function RefreshHelmetButton()
+{
+	local string helmetButtonText;
+	local menuState state;
+    
+	state = getMenuState();
+
+	helmetButtonText = pawnHandler.GetHelmetButtonText(state.appearanceTypeOverride);
+	// LogInternal("RefreshHelmetButton"@helmetButtonText);
+	if (helmetButtonText == "")
+	{
+		ASSetAuxButtonText("");
+		ASSetAuxButtonActive(false);
+	}
+	else
+	{
+		ASSetAuxButtonText(helmetButtonText);
+		ASSetAuxButtonActive(true);
+	}
 }
 private function TryDisplayPawn(string tag, string appearanceType)
 {
@@ -850,44 +888,23 @@ public function ActionButtonPressedEx(int selectedIndex)
         }
     }
 }
+// this is going to be the toggle/cycle helmet button
 public function AuxButtonPressedEx(int selectedIndex)
 {
-    local AppearanceItemData selectedItem;
-    local AppearanceSubmenu currentSubmenu;
-    
-    // if (CameraDebug)
-    // {
-    //     Self.cameraHandler.DebugChangeAxis(TRUE, cameraDebugAxis);
-    // }
-    // else
-    // {
-        currentSubmenu = GetCurrentSubmenu();
-        if (!currentSubmenu.OnAuxButtonPressed(Self, selectedIndex))
-        {
-            // selectedItem = currentDisplayItems[selectedIndex];
-            // comment("TODO undo probably?");
-            // LogInternal("This should eventually be an undo button", );
-        }
-    // }
+	pawnHandler.HelmetButtonPressed();
+	isAppearanceDirty = true;
+	RefreshMenu();
 }
 public function Aux2ButtonPressedEx(int selectedIndex)
 {
     local AppearanceSubmenu currentSubmenu;
-    
-    // if (CameraDebug)
-    // {
-    //     Self.cameraDebugAxis++;
-    //     Self.SetAux2CameraDebug();
-    // }
-    // else
-    // {
-        currentSubmenu = GetCurrentSubmenu();
-        if (!currentSubmenu.OnAux2ButtonPressed(Self, selectedIndex))
-        {
-            SetRootSubmenu(Class'ModHandler_AMM'.default.RootSubmenuPath);
-            RefreshMenu(TRUE);
-        }
-    // }
+
+	currentSubmenu = GetCurrentSubmenu();
+	if (!currentSubmenu.OnAux2ButtonPressed(Self, selectedIndex))
+	{
+		SetRootSubmenu(Class'ModHandler_AMM'.default.RootSubmenuPath);
+		RefreshMenu(TRUE);
+	}
 }
 public function ApplyItem(AppearanceItemData item)
 {

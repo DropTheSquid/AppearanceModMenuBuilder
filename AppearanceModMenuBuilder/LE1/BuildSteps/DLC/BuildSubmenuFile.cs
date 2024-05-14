@@ -45,7 +45,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             classes.AddRange([
                 GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AppearanceSubmenu.uc", ["Mod_GameContent"]),
                 GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AMM_Utilities.uc", ["Mod_GameContent"]),
-                GetClassFromFile(@"Resources\LE1\Startup\AMM_AppearanceUpdater.uc", ["Mod_GameContent"]),
+                GetClassFromFile(@"Resources\LE1\Startup\AMM_AppearanceUpdater.uc", ["Startup_MOD_AMM"]),
                 GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\Pawn_Parameter_Handler.uc", ["Mod_GameContent"]),
                 GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AMM_Pawn_Parameters.uc", ["Mod_GameContent"]),
                 GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\OutfitSpecBase.uc", ["Mod_GameContent"]),
