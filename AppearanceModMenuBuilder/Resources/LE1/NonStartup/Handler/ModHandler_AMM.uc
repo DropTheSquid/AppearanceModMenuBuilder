@@ -492,7 +492,11 @@ private final function bool ShouldItemBeDisplayedBasedOnCharacter(AppearanceItem
             return false;
         }
 		// some characters hide the headgear and breather menus by default becuase there is nothing there
-		if (item.hideIfHeadgearSuppressed && state.params.suppressHeadgearMenu)
+		if (item.hideIfHeadgearSuppressed && state.params.suppressHelmetMenu)
+		{
+			return false;
+		}
+		if (item.hideIfHatsSuppressed && state.params.suppressHatMenu)
 		{
 			return false;
 		}

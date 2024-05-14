@@ -110,7 +110,7 @@ breatherSpecListPath=OutfitSpecs.QRN_BreatherSpec
 +AppearanceIdLookupsList=(appearanceType="casual", bodyAppearanceLookup=(plotIntId=1560), helmetAppearanceLookup=(plotIntId=1561), breatherAppearanceLookup=(plotIntId=1562), appearanceFlagsLookup=(plotIntId=1563), FrameworkFileName="BIONPC_Tali_Normandy")
 +AppearanceIdLookupsList=(appearanceType="combat", bodyAppearanceLookup=(plotIntId=1564), helmetAppearanceLookup=(plotIntId=1565), breatherAppearanceLookup=(plotIntId=1566), appearanceFlagsLookup=(plotIntId=1567))
 bIgnoreForcedHelmet=true
-suppressHeadgearMenu=true
+suppressHelmetMenu=true
 suppressBreatherMenu=true
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Garrus]

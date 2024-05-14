@@ -20,7 +20,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             public AppearanceSubmenu Combat;
             public AppearanceSubmenu Armor;
             public AppearanceSubmenu? NonArmor;
-            public AppearanceSubmenu Headgear;
+            public AppearanceSubmenu ArmorHeadgear;
+            public AppearanceSubmenu? NonArmorHeadgear;
             public AppearanceSubmenu Breather;
             public AppearanceSubmenu[] CasualOutfitMenus;
         }
@@ -106,7 +107,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     Combat = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_CombatOutfits", configMergeFile),
                     Armor = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.Armor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_ArmorOutfits", configMergeFile),
                     NonArmor = skipNonArmor ? null : AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits", configMergeFile),
-                    Headgear = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_Headgear", configMergeFile),
+                    ArmorHeadgear = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.Armor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_Headgear_Armor", configMergeFile),
+                    NonArmorHeadgear = skipNonArmor ? null : AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_Headgear_NonArmor", configMergeFile),
                     Breather = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_Breather", configMergeFile)
                 };
             }
@@ -173,51 +175,25 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_CombatOutfits", [bodyType]));
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_ArmorOutfits", [bodyType, "Armor"]));
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits", [bodyType, "NonArmor"]));
-                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_Headgear", [bodyType]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_Headgear_Armor", [bodyType, "Armor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_Headgear_NonArmor", [bodyType, "NonArmor"]));
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_Breather", [bodyType]));
 
-                // TODO I should hide this if there is no headgear available/perhaps skip it entirely for Tali and make mods add it/enable it
-                menus.Casual.AddMenuEntry(menus.Headgear.GetEntryPoint(210210237, hideIfHeadgearSuppressed: true));
-                menus.Casual.AddMenuEntry(new AppearanceItemData()
+                menus.NonArmor?.AddMenuEntry(new AppearanceItemData()
                 {
-                    // "Default"
-                    SrCenterText = 184218,
+                    // "Default outfit"
+                    SrCenterText = 210210283,
                     ApplyOutfitId = -1,
                 });
-                //menus.Casual.AddMenuEntry(new AppearanceItemData()
-                //{
-                //    // "Casual"
-                //    SrCenterText = 771301,
-                //    ApplyOutfitId = -2,
-                //});
-                //menus.Casual.AddMenuEntry(new AppearanceItemData()
-                //{
-                //    // "Combat"
-                //    SrCenterText = 163187,
-                //    ApplyOutfitId = -3,
-                //});
 
-                menus.Combat.AddMenuEntry(menus.Headgear.GetEntryPoint(210210237, hideIfHeadgearSuppressed: true));
-                menus.Combat.AddMenuEntry(new AppearanceItemData()
+                menus.Armor.AddMenuEntry(new AppearanceItemData()
                 {
-                    // "Default"
-                    SrCenterText = 184218,
+                    // "Default outfit"
+                    SrCenterText = 210210283,
                     ApplyOutfitId = -1,
                 });
-                //menus.Combat.AddMenuEntry(new AppearanceItemData()
-                //{
-                //    // "Casual"
-                //    SrCenterText = 771301,
-                //    ApplyOutfitId = -2,
-                //});
-                //menus.Combat.AddMenuEntry(new AppearanceItemData()
-                //{
-                //    // "Combat"
-                //    SrCenterText = 163187,
-                //    ApplyOutfitId = -3,
-                //});
 
-                if (menus.NonArmor != null)
+                if (menus.NonArmor != null && menus.NonArmorHeadgear != null)
                 {
                     // "Armor"
                     menus.Armor.SrSubtitle = 210210233;
@@ -238,6 +214,19 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     menus.Combat.AddMenuEntry(menus.NonArmor.GetEntryPoint(210210234, displayInt: (1594, 1)));
                     // otherwise armors appear inline
                     menus.Combat.AddMenuEntry(menus.Armor.GetInlineEntryPoint(displayInt: (1594, 0)));
+
+                    // add non armor headgear/hats
+                    menus.NonArmor.AddMenuEntry(menus.NonArmorHeadgear.GetEntryPoint(210210282, hideIfHatsSuppressed: true));
+
+                    // "Hats"
+                    menus.NonArmorHeadgear.SrSubtitle = 210210282;
+                    menus.NonArmorHeadgear.AddMenuEntry(new AppearanceItemData()
+                    {
+                        // TODO make it more clear this is default headgear
+                        // "Default"
+                        SrCenterText = 184218,
+                        ApplyHelmetId = -1
+                    });
                 }
                 else
                 {
@@ -245,60 +234,34 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     menus.Combat.AddMenuEntry(menus.Armor.GetInlineEntryPoint());
                 }
 
-                // "Headgear"
-                menus.Headgear.SrSubtitle = 210210237;
-                menus.Headgear.AddMenuEntry(new AppearanceItemData()
+                menus.Armor.AddMenuEntry(menus.ArmorHeadgear.GetEntryPoint(210210237, hideIfHeadgearSuppressed: true));
+
+                // "Helmets"
+                menus.ArmorHeadgear.SrSubtitle = 210210237;
+                menus.ArmorHeadgear.AddMenuEntry(new AppearanceItemData()
                 {
-                    // "Default"
-                    SrCenterText = 184218,
+                    // "Default Helmet"
+                    SrCenterText = 210210284,
                     ApplyHelmetId = -1
                 });
-                //menus.Headgear.AddMenuEntry(new AppearanceItemData()
-                //{
-                //    // "None"
-                //    SrCenterText = 174743,
-                //    ApplyHelmetId = -2
-                //});
-                // TODO this should have visibility rules similar to the button in squad screen based on what helmet will show up, should be a single button to cycle
-                menus.Headgear.AddMenuEntry(new AppearanceItemData()
-                {
-                    // "[1] - [2]"
-                    SrCenterText = 210210236,
-                    ApplyHelmetPreference = AppearanceItemData.EMenuHelmetOverride.Off,
-                    DisplayVars = ["helmet preference", "off"]
-                });
-                menus.Headgear.AddMenuEntry(new AppearanceItemData()
-                {
-                    // "[1] - [2]"
-                    SrCenterText = 210210236,
-                    ApplyHelmetPreference = AppearanceItemData.EMenuHelmetOverride.On,
-                    DisplayVars = ["helmet preference", "on"]
-                });
-                menus.Headgear.AddMenuEntry(new AppearanceItemData()
-                {
-                    // "[1] - [2]"
-                    SrCenterText = 210210236,
-                    ApplyHelmetPreference = AppearanceItemData.EMenuHelmetOverride.Full,
-                    DisplayVars = ["helmet preference", "full"]
-                });
 
-                menus.Headgear.AddMenuEntry(menus.Breather.GetEntryPoint(210210244, hideIfBreatherSuppressed: true));
+                menus.ArmorHeadgear.AddMenuEntry(menus.Breather.GetEntryPoint(210210244, hideIfBreatherSuppressed: true));
 
                 // "Breather"
                 menus.Breather.SrSubtitle = 210210244;
                 menus.Breather.AddMenuEntry(new AppearanceItemData()
                 {
-                    // "Default"
-                    SrCenterText = 184218,
+                    // "Default Breather"
+                    SrCenterText = 210210285,
                     ApplyBreatherId = -1
                 });
 
-                menus.Breather.AddMenuEntry(new AppearanceItemData()
-                {
-                    // "None"
-                    SrCenterText = 174743,
-                    ApplyBreatherId = -2
-                });
+                //menus.Breather.AddMenuEntry(new AppearanceItemData()
+                //{
+                //    // "None"
+                //    SrCenterText = 174743,
+                //    ApplyBreatherId = -2
+                //});
             }
             SetupMenu("HumanFemale", HumanFemaleOutfitMenus);
             SetupMenu("HumanMale", HumanMaleOutfitMenus);

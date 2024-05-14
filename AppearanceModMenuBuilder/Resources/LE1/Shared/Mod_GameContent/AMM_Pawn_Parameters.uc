@@ -38,7 +38,8 @@ var config array<AppearanceIdLookups> AppearanceIdLookupsList;
 var config bool bIgnoreForcedHelmet;
 // set the max height of the camera in the menu, as this varies based on the height of the character
 var config float PreviewCameraMaxHeight;
-var config bool suppressHeadgearMenu;
+var config bool suppressHelmetMenu;
+var config bool suppressHatMenu;
 var config bool suppressBreatherMenu;
 
 // Functions
@@ -189,4 +190,6 @@ defaultproperties
 {
 	// good enough for most characters, but too short for Turian or Krogan
 	PreviewCameraMaxHeight = 87
+	// hide hats by default
+	suppressHatMenu=true
 }

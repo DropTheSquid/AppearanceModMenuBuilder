@@ -32,7 +32,9 @@ namespace AppearanceModMenuBuilder.LE1.Models
             int? displayBool = null,
             int? displayConditional = null,
             bool? hideIfHeadgearSuppressed = null,
-            bool? hideIfBreatherSuppressed = null)
+            bool? hideIfBreatherSuppressed = null,
+            bool? hideIfHatsSuppressed = null,
+            string[]? displayVars = null)
         {
             var result =  new AppearanceItemData()
             {
@@ -41,9 +43,11 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 SubMenuClassName = ClassFullPath,
                 RequiresFramework = requiresFramework ? true : null,
                 HideIfHeadgearSuppressed = hideIfHeadgearSuppressed,
-                HideIfBreatherSuppressed= hideIfBreatherSuppressed,
+                HideIfBreatherSuppressed = hideIfBreatherSuppressed,
+                HideIfHatsSuppressed = hideIfHatsSuppressed,
                 DisplayBool = displayBool,
                 DisplayConditional = displayConditional,
+                DisplayVars = displayVars
             };
             if (displayInt.HasValue)
             {

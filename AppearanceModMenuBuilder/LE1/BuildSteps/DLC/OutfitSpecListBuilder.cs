@@ -530,9 +530,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // CTHh menu
             AddMenuEntries(speciesMenus.CasualOutfitMenus[8], cthgEndId, cthhEndId - cthgEndId);
 
-            // add all the outfits for Human Female/Asari to the menu
-            //AddMenuEntries(speciesMenus.NonArmor!, 100, cthhEndId - 100);
-
             configs.Add(bodyConfig);
             configs.Add(helmetConfig);
             configs.Add(breatherConfig);
@@ -846,9 +843,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             // CTHh menu
             AddMenuEntries(humanMaleOutfitMenus.CasualOutfitMenus[8], cthgEndId, cthhEndId - cthgEndId);
-
-            // add all the outfits for Human Male to the menu
-            //AddMenuEntries(humanMaleOutfitMenus.NonArmor!, 100, cthhEndId - 100);
 
             configs.Add(bodyConfig);
             configs.Add(helmetConfig);
@@ -1240,8 +1234,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             }
 
             specListConfig.AddArrayEntries("outfitSpecs", specs.Select(x => x.OutputValue()));
-
-            // TODO add them into the menu as well here?
 
             // the starting id for the next set
             return startingId + specs.Length;

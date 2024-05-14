@@ -565,7 +565,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     );
                     if (!skipHelmets)
                     {
-                        submenu.Headgear.AddMenuEntry(
+                        submenu.ArmorHeadgear.AddMenuEntry(
                             GetHelmetMenuEntry(EArmorType.LGT, variant.LGT.AmmAppearanceId)
                         );
                     }
@@ -577,7 +577,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     );
                     if (!skipHelmets)
                     {
-                        submenu.Headgear.AddMenuEntry(
+                        submenu.ArmorHeadgear.AddMenuEntry(
                             GetHelmetMenuEntry(EArmorType.MED, variant.MED.AmmAppearanceId)
                         );
                     }
@@ -589,7 +589,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     );
                     if (!skipHelmets)
                     {
-                        submenu.Headgear.AddMenuEntry(
+                        submenu.ArmorHeadgear.AddMenuEntry(
                             GetHelmetMenuEntry(EArmorType.HVY, variant.HVY.AmmAppearanceId)
                         );
                     }
@@ -601,7 +601,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     );
                     if (!skipHelmets)
                     {
-                        submenu.Headgear.AddMenuEntry(
+                        submenu.ArmorHeadgear.AddMenuEntry(
                             GetHelmetMenuEntry(EArmorType.All, variant.AllWeights.AmmAppearanceId)
                         );
                     }

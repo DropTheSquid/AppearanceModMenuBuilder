@@ -151,7 +151,7 @@ You can customize characters' appearances at any time from the Inventory screen 
 	<string>
 		<id>210210237</id>
 		<flags>1</flags>
-		<data>Headgear</data>
+		<data>Helmet</data>
 	</string>
 	<!-- used for armor weight in the above stringref -->
 	<string>
@@ -382,5 +382,25 @@ Romance</data>
 		<id>210210281</id>
 		<flags>1</flags>
 		<data>Combat/Pre Recruitment Appearance</data>
+	</string>
+	<string>
+		<id>210210282</id>
+		<flags>1</flags>
+		<data>Hats</data>
+	</string>
+	<string>
+		<id>210210283</id>
+		<flags>1</flags>
+		<data>Default Outfit</data>
+	</string>
+	<string>
+		<id>210210284</id>
+		<flags>1</flags>
+		<data>Default Helmet</data>
+	</string>
+	<string>
+		<id>210210285</id>
+		<flags>1</flags>
+		<data>Default Breather</data>
 	</string>
 </tlkFile>

@@ -143,5 +143,11 @@ namespace AppearanceModMenuBuilder.LE1.UScriptModels
             get => GetBool(nameof(HideIfBreatherSuppressed));
             set => SetBool(nameof(HideIfBreatherSuppressed), value);
         }
+
+        public bool? HideIfHatsSuppressed
+        {
+            get => GetBool(nameof(HideIfHatsSuppressed));
+            set => SetBool(nameof(HideIfHatsSuppressed), value);
+        }
     }
 }
