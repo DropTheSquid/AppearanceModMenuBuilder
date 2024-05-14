@@ -18,6 +18,9 @@ namespace AppearanceModMenuBuilder.LE1.UScriptModels
             Off,
             On,
             Full,
+			onOrFull,
+			offOrOn,
+			offOrFull
         }
 
         public class PlotIntSetting : StructCoalesceValue

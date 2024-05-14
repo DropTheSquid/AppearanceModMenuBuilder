@@ -3,6 +3,7 @@ class AMM_AppearanceUpdater extends AMM_AppearanceUpdater_Base
 
 var Pawn_Parameter_Handler paramHandler;
 var transient string outerWorldInfoPath;
+var transient int menuHelmetOverride;
 
 public function UpdatePawnAppearance(BioPawn target, string source)
 {
@@ -103,6 +104,17 @@ public static function bool GetPawnParams(BioPawn Target, out AMM_Pawn_Parameter
 		return AMM_AppearanceUpdater(instance).paramHandler.GetPawnParams(target, params);
 	}
 	return false;
+}
+
+public static function AMM_AppearanceUpdater GetDlcInstance()
+{
+	local AMM_AppearanceUpdater_Base baseInstance;
+
+	if (GetInstance(baseInstance) && AMM_AppearanceUpdater(baseInstance) != None)
+	{
+		return AMM_AppearanceUpdater(baseInstance);
+	}
+	return None;
 }
 
 protected function string ShouldShowHelmetButton(BioPawn Target)

@@ -46,6 +46,17 @@ enum eHelmetDisplayState
 	full
 };
 
+enum eMenuHelmetOverride
+{
+    unchanged,
+    Off,
+    On,
+    Full,
+	onOrFull,
+	offOrOn,
+	offOrFull
+};
+
 public static function BioPawnType GetPawnType(BioPawn targetPawn)
 {
     local BioPawnType pawnType;
@@ -665,8 +676,83 @@ public static function eHelmetDisplayState GetHelmetDisplayState(PawnAppearanceI
 	{
 		return eHelmetDisplayState.full;
 	}
+
+	if (GetMenuHelmetOverride(target, appearanceIds.m_appearanceSettings.helmetDisplayState, forceHelmetState))
+	{
+		return forceHelmetState;
+	}
+
 	// else use what the player has requested
 	return appearanceIds.m_appearanceSettings.helmetDisplayState;
+}
+
+private static function bool GetMenuHelmetOverride(BioPawn target, eHelmetDisplayState desiredState, out eHelmetDisplayState result)
+{
+	local BioSFPanel panel;
+	local AMM_AppearanceUpdater updaterInstance;
+	local AMM_Pawn_Parameters params;
+	local eMenuHelmetOverride menuOverride;
+
+	// if we are not in AMM and working with a UI world pawn, move on
+	if (target.GetPackageName() != 'BIOG_UIWORLD' || !class'AMM_AppearanceUpdater'.static.IsInAMM(panel))
+	{
+		return false;
+	}
+
+	updaterInstance = class'AMM_AppearanceUpdater'.static.GetDlcInstance();
+	if (updaterInstance == None)
+	{
+		return false;
+	}
+
+	menuOverride = eMenuHelmetOverride(updaterInstance.menuHelmetOverride);
+
+	switch (menuOverride)
+	{
+		// it is forced to a specific state
+		case eMenuHelmetOverride.off:
+			result = eHelmetDisplayState.off;
+			return true;
+		case eMenuHelmetOverride.on:
+			result = eHelmetDisplayState.on;
+			return true;
+		case eMenuHelmetOverride.full:
+			result = eHelmetDisplayState.full;
+			return true;
+		case eMenuHelmetOverride.offOrOn:
+			if (desiredState == eHelmetDisplayState.Full)
+			{
+				result = eHelmetDisplayState.on;
+			}
+			else
+			{
+				result = desiredState;
+			}
+			return true;
+		case eMenuHelmetOverride.onOrFull:
+			if (desiredState == eHelmetDisplayState.off)
+			{
+				result = eHelmetDisplayState.on;
+			}
+			else
+			{
+				result = desiredState;
+			}
+			return true;
+		case eMenuHelmetOverride.offOrFull:
+			if (desiredState == eHelmetDisplayState.on)
+			{
+				result = eHelmetDisplayState.off;
+			}
+			else
+			{
+				result = desiredState;
+			}
+			return true;
+		case eMenuHelmetOverride.unchanged:
+		default:
+			return false;
+	}
 }
 
 private static function bool ShouldUseForcedBreather(BioPawn target)

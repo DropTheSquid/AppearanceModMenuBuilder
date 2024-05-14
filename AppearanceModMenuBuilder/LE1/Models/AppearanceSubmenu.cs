@@ -1,5 +1,6 @@
 ﻿using AppearanceModMenuBuilder.LE1.UScriptModels;
 using MassEffectModBuilder.Models;
+using static AppearanceModMenuBuilder.LE1.UScriptModels.AppearanceItemData;
 
 namespace AppearanceModMenuBuilder.LE1.Models
 {
@@ -101,6 +102,12 @@ namespace AppearanceModMenuBuilder.LE1.Models
         {
             get => GetBoolValue(nameof(UseSubtitleForChildMenus));
             set => SetBoolValue(nameof(UseSubtitleForChildMenus), value);
+        }
+
+        public EMenuHelmetOverride? MenuHelmetOverride
+        {
+            get => GetEnumValue<EMenuHelmetOverride>(nameof(MenuHelmetOverride));
+            set => SetEnumValue(nameof(MenuHelmetOverride), value);
         }
     }
 }

@@ -220,6 +220,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
                     // "Hats"
                     menus.NonArmorHeadgear.SrSubtitle = 210210282;
+                    menus.NonArmorHeadgear.MenuHelmetOverride = AppearanceItemData.EMenuHelmetOverride.onOrFull;
                     menus.NonArmorHeadgear.AddMenuEntry(new AppearanceItemData()
                     {
                         // TODO make it more clear this is default headgear
@@ -238,6 +239,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
                 // "Helmets"
                 menus.ArmorHeadgear.SrSubtitle = 210210237;
+                menus.ArmorHeadgear.MenuHelmetOverride = AppearanceItemData.EMenuHelmetOverride.onOrFull;
                 menus.ArmorHeadgear.AddMenuEntry(new AppearanceItemData()
                 {
                     // "Default Helmet"
@@ -249,6 +251,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
                 // "Breather"
                 menus.Breather.SrSubtitle = 210210244;
+                menus.Breather.MenuHelmetOverride = AppearanceItemData.EMenuHelmetOverride.Full;
                 menus.Breather.AddMenuEntry(new AppearanceItemData()
                 {
                     // "Default Breather"

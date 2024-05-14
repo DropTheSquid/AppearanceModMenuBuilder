@@ -55,13 +55,6 @@ enum eArmorOverrideState
     overridden,
     equipped,
 };
-enum eMenuHelmetOverride
-{
-    unchanged,
-    Off,
-    On,
-    Full,
-};
 
 // Variables
 var config stringref srTitle;

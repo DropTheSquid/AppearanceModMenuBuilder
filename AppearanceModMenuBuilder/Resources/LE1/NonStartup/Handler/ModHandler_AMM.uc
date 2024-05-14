@@ -243,7 +243,7 @@ public function RefreshMenu(optional bool firstEnter = FALSE)
     local AppearanceSubmenu currentMenu;
     local bool IsInCharacterSelect;
     local menuState state;
-    // local AMM_AppearanceUpdater updater;
+    local AMM_AppearanceUpdater updaterInstance;
     local bool WaitingForPawnToSpawn;
     
     currentMenu = GetCurrentSubmenu();
@@ -280,25 +280,9 @@ public function RefreshMenu(optional bool firstEnter = FALSE)
             // LogInternal("currentMenu.pawnOverride" @ currentMenu.pawnOverride);
             pawnHandler.ForceAppearanceType(state.armorOverrideState);
         }
-        // comment("If the submenu you are in overrides the chosen menu helmet appearance, that takes precedence");
-        // if (state.currentMenuHelmetOverride != eMenuHelmetOverride.unchanged)
-        // {
-        //     if (state.currentMenuHelmetOverride == eMenuHelmetOverride.forcedOn && chosenMenuHelmetVisibilityOverride == eMenuHelmetOverride.forcedFull)
-        //     {
-        //         LogInternal("Special case: if the menu only requests on but the user has requested full for the preview, use full.", );
-        //         updater.tempHelmetOverride = eMenuHelmetOverride.forcedFull;
-        //     }
-        //     else
-        //     {
-        //         LogInternal("Using menu helmet override of" @ state.currentMenuHelmetOverride, );
-        //         updater.tempHelmetOverride = state.currentMenuHelmetOverride;
-        //     }
-        // }
-        // else
-        // {
-        //     LogInternal("Using chosen helmet override of" @ chosenMenuHelmetVisibilityOverride, );
-        //     updater.tempHelmetOverride = chosenMenuHelmetVisibilityOverride;
-        // }
+		// apply (or remove) the menu helmet override
+		updaterInstance = class'AMM_AppearanceUpdater'.static.GetDlcInstance();
+		updaterInstance.menuHelmetOverride = int(state.currentMenuHelmetOverride);
 		RefreshHelmetButton();
 		RefreshHelmetTimer = 0.02;
         if (isAppearanceDirty)
@@ -976,7 +960,11 @@ private final function ApplyHelmetSetting(AppearanceItemData item, menuState sta
 	local int updatedFlags;
 
     flagsPlotId = state.AppearanceIdLookups.appearanceFlagsLookup.plotIntId;
-    if (flagsPlotId != 0 && item.applyHelmetPreference != eMenuHelmetOverride.unchanged)
+    if (flagsPlotId != 0
+		&& item.applyHelmetPreference != eMenuHelmetOverride.unchanged
+		&& item.applyHelmetPreference != eMenuHelmetOverride.onOrFull
+		&& item.applyHelmetPreference != eMenuHelmetOverride.offOrOn
+		&& item.applyHelmetPreference != eMenuHelmetOverride.offOrFull)
     {
         // LogInternal("Trying to apply helmet visibility override" @ item.applyHelmetOverride @ flagsPlotId, );
         appearanceSettings = class'Amm_Utilities'.static.DecodeAppearanceSettings(globalVars.GetInt(flagsPlotId));
@@ -988,25 +976,6 @@ private final function ApplyHelmetSetting(AppearanceItemData item, menuState sta
         globalVars.SetInt(flagsPlotId, updatedFlags);
 		isAppearanceDirty = TRUE;
     }
-    // if (item.applyHelmetVisibilityPreference != eHelmetVisibilityPreference.unchanged)
-    // {
-    //     // LogInternal("trying to apply a helmet visibility preference" @ item.applyHelmetVisibilityPreference, );
-    //     pawnHandler.SetHelmetVisibilityPreference(item.applyHelmetVisibilityPreference == eHelmetVisibilityPreference.preferOn);
-    //     isAppearanceDirty = TRUE;
-    // }
-    // if (item.menuHelmetOverride != eMenuHelmetOverride.unchanged)
-    // {
-    //     LogInternal("Setting chosen menu helmet override to" @ item.menuHelmetOverride, );
-    //     if (item.menuHelmetOverride == eMenuHelmetOverride.vanilla)
-    //     {
-    //         chosenMenuHelmetVisibilityOverride = eMenuHelmetOverride.unchanged;
-    //     }
-    //     else
-    //     {
-    //         chosenMenuHelmetVisibilityOverride = item.menuHelmetOverride;
-    //     }
-    //     isAppearanceDirty = TRUE;
-    // }
 }
 public function EmitSettingsRemoteEvent()
 {
