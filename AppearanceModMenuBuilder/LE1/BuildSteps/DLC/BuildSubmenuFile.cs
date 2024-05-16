@@ -429,8 +429,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 RomanceConditional = 2507,
                 // True as long as pre recruitment is enabled or Liara is in party
                 DisplayConditional = 2505,
-                RecruitedBool = 3943,
-                PreRecruitmentIsCasual = true
+                LiaraSpecialHandling = true
             });
             squadMembers.Add(new SquadMemberSubmenus("Garrus", 125308, "Hench_Turian", TurianOutfitMenus)
             {
@@ -446,7 +445,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             squadMembers.Add(new SquadMemberSubmenus("Tali", 146007, "Hench_Quarian", QuarianOutfitMenus)
             {
                 DisplayConditional = 2504,
-                RecruitedBool = 3944
+                TaliSpecialHandling = true
             });
             squadMembers.Add(new SquadMemberSubmenus("Jenkins", 163868, "Hench_Jenkins", HumanMaleOutfitMenus)
             {

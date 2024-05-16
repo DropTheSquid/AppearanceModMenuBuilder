@@ -403,4 +403,49 @@ Romance</data>
 		<flags>1</flags>
 		<data>Default Breather</data>
 	</string>
+	<string>
+		<id>210210286</id>
+		<flags>1</flags>
+		<data>Liara Wears Armor In The Field</data>
+	</string>
+	<string>
+		<id>210210287</id>
+		<flags>1</flags>
+		<data>Liara Wears Armor In The Field enabled description</data>
+	</string>
+	<string>
+		<id>210210288</id>
+		<flags>1</flags>
+		<data>Liara Wears Armor In The Field disabled description</data>
+	</string>
+	<string>
+		<id>210210289</id>
+		<flags>1</flags>
+		<data>Tali uses the same appearance on and off the Normandy</data>
+	</string>
+	<string>
+		<id>210210290</id>
+		<flags>1</flags>
+		<data>Tali uses the same appearance on and off the Normandy enabled description</data>
+	</string>
+	<string>
+		<id>210210291</id>
+		<flags>1</flags>
+		<data>Tali uses the same appearance on and off the Normandy disabled description</data>
+	</string>
+	<string>
+		<id>210210292</id>
+		<flags>1</flags>
+		<data>Squadmates Wear Equipped Armor</data>
+	</string>
+	<string>
+		<id>210210293</id>
+		<flags>1</flags>
+		<data>Squadmates Wear Equipped Armor enabled description</data>
+	</string>
+	<string>
+		<id>210210294</id>
+		<flags>1</flags>
+		<data>Squadmates Wear Equipped Armor disabled description</data>
+	</string>
 </tlkFile>

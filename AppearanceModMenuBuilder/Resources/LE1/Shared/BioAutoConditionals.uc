@@ -131,3 +131,42 @@ public function bool F2509(BioWorldInfo bioWorld, int Argument)
 		// and player is male or SGR installed
 		&& (!gv.GetBool(4639) || isSGRInstalled);
 }
+public function bool F2510(BioWorldInfo bioWorld, int Argument)
+{
+	// used to determine visibility of Liara's pre recruitment menu casual entrance
+	local BioGlobalVariableTable gv;
+
+	gv = bioWorld.GetGlobalVariables();
+
+	// "Casual"
+	// Liara recruited || Liara wears armor
+	// (3943) || [1599]
+	return gv.GetBool(3943) || gv.GetInt(1599) == 1;
+}
+
+public function bool F2511(BioWorldInfo bioWorld, int Argument)
+{
+	// used to determine visibility of Liara's pre recruitment menu casual entrance
+	local BioGlobalVariableTable gv;
+
+	gv = bioWorld.GetGlobalVariables();
+
+	// "Combat"
+	// !(!Liara recruited && Liara wears armor) AKA Liara Recruited || !Liara Wears Armor
+	// (3943) || ![1599]
+	return gv.GetBool(3943) || gv.GetInt(1599) != 1;
+}
+
+
+// overall logic:
+// Pre recruit/Casual
+// !recruited && !Liara wears armor
+
+// casual
+// recruited || Liara Wears armor
+
+// pre recruit/Combat
+// !recruited && Liara wears armor
+
+// combat
+// !recruited || !Liara wears armor

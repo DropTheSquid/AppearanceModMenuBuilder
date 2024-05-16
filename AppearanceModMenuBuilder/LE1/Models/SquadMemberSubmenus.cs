@@ -15,7 +15,11 @@ namespace AppearanceModMenuBuilder.LE1.Models
         public int? DisplayConditional { get; init; } = null;
         public int? RomanceConditional { get; init; } = null;
         public int? RecruitedBool { get; init; } = null;
-        public bool PreRecruitmentIsCasual { get; init; } = false;
+        // Liara gets a bit of special handling, in that her pre recruitment look is casual unless a setting is turned on to put her in armor
+        public bool LiaraSpecialHandling { get; init; } = false;
+
+        // Tali get a bit of special handling in that there is a setting to take her down to only a single appearance type (combat)
+        public bool TaliSpecialHandling { get; init; } = false;
 
         public string ClassPath => $"AMM_Submenus.{SquadMemberName}.AppearanceSubmenu_{SquadMemberName}";
 
@@ -81,18 +85,6 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 SrSubtitle = 210210256,
             };
 
-            if (RecruitedBool.HasValue && PreRecruitmentIsCasual)
-            {
-                // add two entry points, one that shows up pre recruitment, one that shows up post
-                rootCharacterMenu.AddMenuEntry(casualMenu.GetEntryPoint(srCausalOrPreRecruitAppearance, displayBool: -RecruitedBool.Value));
-                rootCharacterMenu.AddMenuEntry(casualMenu.GetEntryPoint(srCausalAppearance, displayBool: RecruitedBool.Value));
-            }
-            else
-            {
-                // add this menu into the root character menu
-                rootCharacterMenu.AddMenuEntry(casualMenu.GetEntryPoint(srCausalAppearance));
-            }
-            
             // add the appropriate submenu into this one
             casualMenu.AddMenuEntry(OutfitSubmenus.Casual.GetInlineEntryPoint());
             _submenus.Add(casualMenu);
@@ -110,17 +102,47 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 SrSubtitle = 210210256,
             };
 
-            if (RecruitedBool.HasValue && !PreRecruitmentIsCasual)
+            if (LiaraSpecialHandling)
             {
-                // add two entry points, one that shows up pre recruitment, one that shows up post
-                rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(srCombatOrPreRecruitAppearance, displayBool: -RecruitedBool.Value));
-                rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(srCombatAppearance, displayBool: RecruitedBool.Value));
+                // Liara is complicated. this first menu entry point is "Pre Recruitment/Casual"
+                // and it shows up as long as Liara has not been recruited and the setting to put Liara in Armor is not on
+                rootCharacterMenu.AddMenuEntry(casualMenu.GetEntryPoint(srCausalOrPreRecruitAppearance, displayBool: -3943, displayInt: (-1599, 1)));
+                // the one that just says "Casual" appears with the inverse of that logic, which is in a conditional
+                rootCharacterMenu.AddMenuEntry(casualMenu.GetEntryPoint(srCausalAppearance, displayConditional: 2510));
+
+                // next menu entry point is "Pre Recruitment/Combat"
+                // and it shows up as long as Liara has not been recruited and the setting to put Liara in Armor is on
+                rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(srCombatOrPreRecruitAppearance, displayBool: -3943, displayInt: (1599, 1)));
+                // the one that just says "Combat" appears with the inverse of that logic, which is in a conditional
+                rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(srCombatAppearance, displayConditional: 2511));
+            }
+            else if (TaliSpecialHandling)
+            {
+                // Tali get the normal casual and combat or combat/pre recruitment, but all are hidden if int 1600 is 1, which is the setting for Tali having a single appearance type
+                rootCharacterMenu.AddMenuEntry(casualMenu.GetEntryPoint(srCausalAppearance, displayInt: (-1600, 1)));
+                // one of these two will show up based on whether Tali has been recruited yet
+                rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(srCombatOrPreRecruitAppearance, displayBool: -3944, displayInt: (-1600, 1)));
+                rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(srCombatAppearance, displayBool: 3944, displayInt: (-1600, 1)));
+                // and another inline entry point to Tali's combat menu if the setting is on
+                rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(0, displayInt: (1600, 1), inline: true));
             }
             else
             {
                 // add this menu into the root character menu
-                rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(srCombatAppearance));
+                rootCharacterMenu.AddMenuEntry(casualMenu.GetEntryPoint(srCausalAppearance));
+                if (RecruitedBool.HasValue)
+                {
+                    // add two entry points, one that shows up pre recruitment, one that shows up post
+                    rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(srCombatOrPreRecruitAppearance, displayBool: -RecruitedBool.Value));
+                    rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(srCombatAppearance, displayBool: RecruitedBool.Value));
+                }
+                else
+                {
+                    // add this menu into the root character menu
+                    rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(srCombatAppearance));
+                }
             }
+
             // add the appropriate submenu into this one
             combatMenu.AddMenuEntry(OutfitSubmenus.Combat.GetInlineEntryPoint());
             _submenus.Add(combatMenu);

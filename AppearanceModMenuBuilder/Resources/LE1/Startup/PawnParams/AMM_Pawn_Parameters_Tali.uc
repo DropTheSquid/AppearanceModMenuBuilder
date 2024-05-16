@@ -3,6 +3,17 @@ Class AMM_Pawn_Parameters_Tali extends AMM_Pawn_Parameters_Squad
 
 public function string GetAppearanceType(BioPawn targetPawn)
 {
+	local BioWorldInfo BWI;
+    local BioGlobalVariableTable globalVars;
+
+	// check if we have the setting to always show Tali in her combat appearance regardless of the situation
+    BWI = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo());
+    globalVars = BWI.GetGlobalVariables();
+    if (globalVars.GetInt(1600) != 0)
+	{
+		return "combat";
+	}
+
 	// Normandy unique tag; make sure she shows up as casual here; it is the only time unless Casual Hubs is installed
 	if (targetPawn.UniqueTag == 'hench_quarian_engineering')
     {

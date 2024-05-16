@@ -40,3 +40,15 @@ srSubtitle=210210222
 ; show immersion breaking outfits
 +menuItems=(srLeftText=210210277, srRightText=200054, srDescriptionText=210210279, srDescriptionTitleText=210210277, srActionText=200008, DisplayInt=(Id=1598,Value=0), ApplySettingInts=((Id=1598,Value=1)), Images=())
 +menuItems=(srLeftText=210210277, srRightText=200053, srDescriptionText=210210278, srDescriptionTitleText=210210277, srActionText=200009, DisplayInt=(Id=1598,Value=1), ApplySettingInts=((Id=1598,Value=0)), Images=())
+
+; Liara wears armor in the field
++menuItems=(srLeftText=210210286, srRightText=200054, srDescriptionText=210210288, srDescriptionTitleText=210210286, srActionText=200008, DisplayInt=(Id=1599,Value=0), ApplySettingInts=((Id=1599,Value=1)), Images=())
++menuItems=(srLeftText=210210286, srRightText=200053, srDescriptionText=210210287, srDescriptionTitleText=210210286, srActionText=200009, DisplayInt=(Id=1599,Value=1), ApplySettingInts=((Id=1599,Value=0)), Images=())
+
+; Tali always in combat appearance
++menuItems=(srLeftText=210210289, srRightText=200054, srDescriptionText=210210291, srDescriptionTitleText=210210289, srActionText=200008, DisplayInt=(Id=1600,Value=0), ApplySettingInts=((Id=1600,Value=1)), Images=())
++menuItems=(srLeftText=210210289, srRightText=200053, srDescriptionText=210210290, srDescriptionTitleText=210210289, srActionText=200009, DisplayInt=(Id=1600,Value=1), ApplySettingInts=((Id=1600,Value=0)), Images=())
+
+; Squadmates wear equipped armor
+; +menuItems=(srLeftText=210210292, srRightText=200054, srDescriptionText=210210294, srDescriptionTitleText=210210292, srActionText=200008, DisplayInt=(Id=1601,Value=0), ApplySettingInts=((Id=1601,Value=1)), Images=())
+; +menuItems=(srLeftText=210210292, srRightText=200053, srDescriptionText=210210293, srDescriptionTitleText=210210292, srActionText=200009, DisplayInt=(Id=1601,Value=1), ApplySettingInts=((Id=1601,Value=0)), Images=())

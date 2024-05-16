@@ -1,14 +1,12 @@
 Class AMM_Pawn_Parameters_Liara extends AMM_Pawn_Parameters_Romanceable
 	config(Game);
 
-var config bool LiaraWearsArmor;
-
 public function SpecialHandling(BioPawn targetPawn)
 {
 	local BioPawnType pawnType;
 
 	// if we have configured Liara to wear armor on Therum and Virmire, update her pawn settings to reflect this
-	if (LiaraWearsArmor)
+	if (LiaraWearsArmor())
 	{
 		if (targetPawn.GetPackageName() == 'BIOA_LAV70_07_DSG'
 			|| targetPawn.GetPackageName() == 'BIOA_JUG20_08_DSG'
@@ -36,8 +34,18 @@ public function string GetAppearanceType(BioPawn targetPawn)
 		|| targetPawn.GetPackageName() == 'BIOA_JUG20_08_DSG'
 		|| targetPawn.GetPackageName() == 'BIONPC_Liara')
 	{
-		return LiaraWearsArmor ? "combat" : "casual";
+		return LiaraWearsArmor() ? "combat" : "casual";
 	}
 
 	return Super(AMM_Pawn_Parameters_Romanceable).GetAppearanceType(targetPawn);
+}
+
+private function bool LiaraWearsArmor()
+{
+	local BioWorldInfo BWI;
+    local BioGlobalVariableTable globalVars;
+
+    BWI = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo());
+    globalVars = BWI.GetGlobalVariables();
+    return globalVars.GetInt(1599) != 0;
 }
