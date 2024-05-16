@@ -20,9 +20,7 @@
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_MShep]
 menuRootPath=amm_submenus.MaleShepard.AppearanceSubmenu_MaleShepard
 Tag=Human_Male
-; TODO it would be nice if I didn't have to duplicate this
 romancePawnTag=Human_Male_Naked
-+alternateTags=Human_Male_Naked
 gender=Male
 outfitSpecListPath=outfitSpecs.HMM_OutfitSpec
 helmetSpecListPath=OutfitSpecs.HMM_HelmetSpec
@@ -43,7 +41,6 @@ breatherSpecListPath=OutfitSpecs.HMM_BreatherSpec
 menuRootPath=amm_submenus.FemaleShepard.AppearanceSubmenu_FemaleShepard
 Tag=Human_Female
 romancePawnTag=Human_Female_Naked
-+alternateTags=Human_Female_Naked
 gender=Female
 outfitSpecListPath=outfitSpecs.HMF_OutfitSpec
 helmetSpecListPath=OutfitSpecs.HMF_HelmetSpec
@@ -63,7 +60,6 @@ breatherSpecListPath=OutfitSpecs.HMF_BreatherSpec
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Kaidan]
 Tag=Hench_HumanMale
 romancePawnTag=Hench_HumanMale_nkd
-+alternateTags=Hench_HumanMale_nkd
 menuRootPath=amm_submenus.Kaidan.AppearanceSubmenu_Kaidan
 outfitSpecListPath=outfitSpecs.HMM_OutfitSpec
 helmetSpecListPath=OutfitSpecs.HMM_HelmetSpec
@@ -88,7 +84,6 @@ breatherSpecListPath=OutfitSpecs.HMF_BreatherSpec
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Liara]
 Tag=Hench_Asari
 romancePawnTag=hench_asari_nkd
-+alternateTags=hench_asari_nkd
 menuRootPath=amm_submenus.Liara.AppearanceSubmenu_Liara
 outfitSpecListPath=outfitSpecs.HMF_OutfitSpec
 helmetSpecListPath=OutfitSpecs.ASA_HelmetSpec

@@ -82,8 +82,8 @@ public function bool F2506(BioWorldInfo bioWorld, int Argument)
 
 	gv = bioWorld.GetGlobalVariables();
 
-	// Turn on customize romance appearance && have not already completed romance (!6800)
-	return gv.GetInt(1596) == 1 && gv.GetBool(6800) == FALSE;
+	// Turn on customize romance appearance && have not started Ilos (!3007)
+	return gv.GetInt(1596) == 1 && gv.GetBool(3007) == FALSE;
 }
 public function bool F2507(BioWorldInfo bioWorld, int Argument)
 {
@@ -92,9 +92,9 @@ public function bool F2507(BioWorldInfo bioWorld, int Argument)
 
 	gv = bioWorld.GetGlobalVariables();
 
-	// Turn on customize romance appearance && have not already completed romance
+	// Turn on customize romance appearance && have not started Ilos (!3007)
 	// TODO hide if romance active with Kaidan/Ashley?
-	return gv.GetInt(1596) == 1 && gv.GetBool(6800) == FALSE;
+	return gv.GetInt(1596) == 1 && gv.GetBool(3007) == FALSE;
 }
 public function bool F2508(BioWorldInfo bioWorld, int Argument)
 {
@@ -109,7 +109,7 @@ public function bool F2508(BioWorldInfo bioWorld, int Argument)
 	// pre recruitment customization enabled
 	return gv.GetInt(1596) == 1
 		// and have not already completed romance
-		&& !gv.GetBool(6800)
+		&& !gv.GetBool(3007)
 		// and player is female or SGR installed
 		&& (gv.GetBool(4639) || isSGRInstalled);
 }
@@ -127,7 +127,7 @@ public function bool F2509(BioWorldInfo bioWorld, int Argument)
 	// pre recruitment customization enabled
 	return gv.GetInt(1596) == 1
 		// and have not already completed romance
-		&& !gv.GetBool(6800)
+		&& !gv.GetBool(3007)
 		// and player is male or SGR installed
 		&& (!gv.GetBool(4639) || isSGRInstalled);
 }
