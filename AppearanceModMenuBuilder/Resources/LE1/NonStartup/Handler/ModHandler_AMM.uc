@@ -468,6 +468,9 @@ public function bool ShouldItemBeDisplayed(AppearanceItemData item, menuState st
 }
 private final function bool ShouldItemBeDisplayedBasedOnCharacter(AppearanceItemData item, menuState state)
 {
+	local string tempString;
+	local bool applicableCharacter;
+
     if (state.params != None)
     {
 		// show/hide based on gender (mostly obsolete now)
@@ -487,6 +490,21 @@ private final function bool ShouldItemBeDisplayedBasedOnCharacter(AppearanceItem
 		if (item.hideIfBreatherSuppressed && state.params.suppressBreatherMenu)
 		{
 			return false;
+		}
+		if (item.aApplicableCharacters.length > 0)
+		{
+			foreach item.aApplicableCharacters(tempString)
+			{
+				if (tempString ~= state.params.Tag)
+				{
+					applicableCharacter = true;
+					break;
+				}
+			}
+			if (!applicableCharacter)
+			{
+				return false;
+			}
 		}
     }
     return TRUE;
