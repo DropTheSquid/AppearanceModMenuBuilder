@@ -28,14 +28,6 @@ breatherSpecListPath=OutfitSpecs.HMM_BreatherSpec
 +AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1500), helmetAppearanceLookup=(plotIntId=1501), breatherAppearanceLookup=(plotIntId=1502), appearanceFlagsLookup=(plotIntId=1503))
 +AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1504), helmetAppearanceLookup=(plotIntId=1505), breatherAppearanceLookup=(plotIntId=1506), appearanceFlagsLookup=(plotIntId=1507))
 +AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1508), helmetAppearanceLookup=(plotIntId=1509), breatherAppearanceLookup=(plotIntId=1510), appearanceFlagsLookup=(plotIntId=1511), FrameworkFileName="BIONPC_Player_Romance_Male")
-; testing whether this works. Should not ship with this in
-; CharacterCreatorBodyAppearanceId=1
-; CharacterCreatorBodyAppearanceId_Soldier=2
-; CharacterCreatorBodyAppearanceId_Engineer=3
-; CharacterCreatorBodyAppearanceId_Adept=4
-; CharacterCreatorBodyAppearanceId_Vanguard=5
-; CharacterCreatorBodyAppearanceId_Sentinel=6
-; CharacterCreatorBodyAppearanceId_Infiltrator=7
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_FShep]
 menuRootPath=amm_submenus.FemaleShepard.AppearanceSubmenu_FemaleShepard
@@ -48,14 +40,6 @@ breatherSpecListPath=OutfitSpecs.HMF_BreatherSpec
 +AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1500), helmetAppearanceLookup=(plotIntId=1501), breatherAppearanceLookup=(plotIntId=1502), appearanceFlagsLookup=(plotIntId=1503))
 +AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1504), helmetAppearanceLookup=(plotIntId=1505), breatherAppearanceLookup=(plotIntId=1506), appearanceFlagsLookup=(plotIntId=1507))
 +AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1508), helmetAppearanceLookup=(plotIntId=1509), breatherAppearanceLookup=(plotIntId=1510), appearanceFlagsLookup=(plotIntId=1511), FrameworkFileName="BIONPC_Player_Romance_Female")
-; testing whether this works. Should not ship with this in
-; CharacterCreatorBodyAppearanceId=1
-; CharacterCreatorBodyAppearanceId_Soldier=2
-; CharacterCreatorBodyAppearanceId_Engineer=3
-; CharacterCreatorBodyAppearanceId_Adept=4
-; CharacterCreatorBodyAppearanceId_Vanguard=5
-; CharacterCreatorBodyAppearanceId_Sentinel=6
-; CharacterCreatorBodyAppearanceId_Infiltrator=7
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Kaidan]
 Tag=Hench_HumanMale
@@ -91,7 +75,6 @@ breatherSpecListPath=OutfitSpecs.HMF_BreatherSpec
 +AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1548), helmetAppearanceLookup=(plotIntId=1549), breatherAppearanceLookup=(plotIntId=1550), appearanceFlagsLookup=(plotIntId=1551), FrameworkFileName="BIONPC_Liara_Normandy")
 +AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1552), helmetAppearanceLookup=(plotIntId=1553), breatherAppearanceLookup=(plotIntId=1554), appearanceFlagsLookup=(plotIntId=1555))
 +AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1556), helmetAppearanceLookup=(plotIntId=1557), breatherAppearanceLookup=(plotIntId=1558), appearanceFlagsLookup=(plotIntId=1559), FrameworkFileName="BIONPC_Liara_Romance")
-LiaraWearsArmor=true
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Tali]
 Tag=hench_quarian

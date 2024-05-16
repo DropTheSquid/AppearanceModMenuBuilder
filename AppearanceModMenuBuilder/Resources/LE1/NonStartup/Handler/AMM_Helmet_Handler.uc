@@ -10,10 +10,8 @@ public function string GetHelmetButtonText(BioPawn target, string appearanceType
 	local bool HasDistinctFullHelmetAppearance;
 	local bool HasDistinctBreatherAppearance;
 
-	LogInternal("GetHelmetButtonText"@target);
 	if (!_outermenu.paramHandler.GetPawnParams(target, params))
 	{
-		LogInternal("couldn't get params");
 		return "";
 	}
 	params.SpecialHandling(target);
@@ -21,7 +19,6 @@ public function string GetHelmetButtonText(BioPawn target, string appearanceType
 		|| !GetAppearanceForHelmetType(target, params, eHelmetDisplayState.on, appearanceType, helmetAppearance)
 		|| !GetAppearanceForHelmetType(target, params, eHelmetDisplayState.full, appearanceType, fullHelmetAppearance))
 	{
-		LogInternal("couldn't get one or more helmet appearance types");
 		return "";
 	}
 	// check for differences between all of them
@@ -31,7 +28,6 @@ public function string GetHelmetButtonText(BioPawn target, string appearanceType
 	if (!HasDistinctHelmetAppearance && !HasDistinctFullHelmetAppearance)
 	{
 		// all are identical; we should not show this button
-		LogInternal("GetHelmetButtonText not showing because they are identical");
 		return "";
 	}
 	// if helmet differs from none, but full does not differ from helmet
@@ -40,13 +36,11 @@ public function string GetHelmetButtonText(BioPawn target, string appearanceType
 		|| HasDistinctBreatherAppearance && !HasDistinctFullHelmetAppearance)
 	{
 		// there are two states; have a toggle button
-		LogInternal("GetHelmetButtonText toggle");
 		// "Toggle Helmet"
 		return string($174544);
 	}
 	// the only remaining possibility is that all three are distinct
 	// "Cycle Helmet"
-	LogInternal("GetHelmetButtonText cycle");
 	return string($210210248);
 }
 

@@ -313,10 +313,8 @@ private function BioPawn GetUIWorldPawn()
 	local SeqVar_Object svo;
 
 	obj = FindObject("BIOG_UIWorld.TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_0", class'SeqVar_Object');
-	LogInternal("GetUIWorldPawn svo"@PathName(obj));
 	svo = SeqVar_Object(obj);
 	obj = svo.GetObjectValue();
-	LogInternal("GetUIWorldPawn val"@PathName(obj));
 	return BioPawn(obj);
 }
 
