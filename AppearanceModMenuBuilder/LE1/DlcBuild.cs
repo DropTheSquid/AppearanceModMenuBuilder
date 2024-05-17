@@ -35,6 +35,8 @@ namespace AppearanceModMenuBuilder.LE1
                 .AddTask(new BuildNor10_09_Files())
                 // add some new conditionals we need
                 .AddTask(new BuildPlotManagerFile())
+                // build some template files
+                .AddTask(new BuildTemplateFiles())
                 // output any config merge files we worked on
                 .AddTask(new OutputConfigMerge())
                 // compile tlks

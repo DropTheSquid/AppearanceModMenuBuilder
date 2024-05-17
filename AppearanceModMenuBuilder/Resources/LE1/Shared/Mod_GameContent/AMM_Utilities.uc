@@ -1,19 +1,5 @@
 class AMM_Utilities extends Object;
 
-struct PawnAppearanceIds
-{
-	// the id of the spec to use
-    var int bodyAppearanceId;
-    var int helmetAppearanceId;
-    var int breatherAppearanceId;
-	var AppearanceSettings m_appearanceSettings;
-    // various bools which can be encoded in an int for most characters
-    struct AppearanceSettings
-    {
-        var eHelmetDisplayState helmetDisplayState;
-    };
-};
-
 struct AppearanceMeshPaths
 {
 	var string MeshPath;
@@ -34,12 +20,23 @@ struct pawnAppearance
     var bool hideHead;
 };
 
-enum eHelmetDisplayState
+struct SpecLists
 {
-	off,
-	on,
-	full
+	var OutfitSpecListBase outfitSpecs;
+	var HelmetSpecListBase helmetSpecs;
+	var BreatherSpecListBase breatherSpecs;
 };
+
+public static function SpecLists GetSpecLists(BioPawn target, AMM_Pawn_Parameters params)
+{
+	local SpecLists lists;
+
+	lists.outfitSpecs = OutfitSpecListBase(params.GetOutfitSpecList(target));
+	lists.helmetSpecs = HelmetSpecListBase(params.GetOutfitSpecList(target));
+	lists.breatherSpecs = BreatherSpecListBase(params.GetOutfitSpecList(target));
+
+	return lists;
+}
 
 public static function BioPawnType GetPawnType(BioPawn targetPawn)
 {
@@ -67,23 +64,6 @@ public static function bool IsPawnArmorAppearanceOverridden(BioPawn targetPawn)
     // The second is overridden occasionally to put Shepard in casual clothes on the Normandy, as well as squadmates and Shep in Casual Hubs
     // If either is set to true, consider it overridden
     return pawnType.m_bIsArmorOverridden || targetPawn.m_oBehavior.m_bArmorOverridden;
-}
-
-public static function BioMorphFace GetMorphHead(BioPawn targetPawn)
-{
-    local BioMorphFace morphFace;
-    local BioPawnType pawnType;
-    
-    morphFace = targetPawn.m_oBehavior.m_oAppearanceType.m_oMorphFace;
-    if (morphFace == None)
-    {
-        pawnType = Class'AMM_Utilities'.static.GetPawnType(targetPawn);
-        if (pawnType != None)
-        {
-            morphFace = pawnType.m_oMorphFace;
-        }
-    }
-    return morphFace;
 }
 
 public static function UpdatePawnMaterialParameters(BioPawn targetPawn)
@@ -127,6 +107,24 @@ public static function UpdatePawnMaterialParameters(BioPawn targetPawn)
         ApplyHeadMaterialsToBody(targetPawn);
     }
 }
+
+public static function BioMorphFace GetMorphHead(BioPawn targetPawn)
+{
+    local BioMorphFace morphFace;
+    local BioPawnType pawnType;
+    
+    morphFace = targetPawn.m_oBehavior.m_oAppearanceType.m_oMorphFace;
+    if (morphFace == None)
+    {
+        pawnType = Class'AMM_Utilities'.static.GetPawnType(targetPawn);
+        if (pawnType != None)
+        {
+            morphFace = pawnType.m_oMorphFace;
+        }
+    }
+    return morphFace;
+}
+
 private static final function EnsureMICs(BioPawn targetPawn)
 {
     local SkeletalMeshComponent MeshCmpt;
@@ -390,56 +388,21 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
     local int i;
     local MaterialInstanceConstant MIC;
 
-	// LogInternal("running ReplaceMesh on pawn"@targetPawn@targetPawn.tag);
-	// LogInternal("current mesh"@PathName(smc.SkeletalMesh));
-	// LogInternal("Current materials"@smc.GetNumElements()@smc.Materials.Length);
-	// for (i = 0; i < smc.GetNumElements(); i++)
-	// {
-	// 	LogInternal("current material"@i@smc.GetMaterial(i).class@Pathname(smc.GetMaterial(i)));
-	// 	LogInternal("by direct access method"@smc.Materials[i]);
-	// 	LogInternal("base material?"@smc.GetBaseMaterial(i));
-	// 	MIC = MaterialInstanceConstant(smc.GetMaterial(i));
-	// 	if (MIC != None)
-	// 	{
-	// 		LogInternal("MIC parent material"@MIC.Parent.class@Pathname(MIC.Parent));
-	// 	}
-	// }
-	// LogInternal("before:");
-	// ProfileSMC(smc);
-    
-    // LogInternal("replacing mesh on SMC" @ smc @ PathName(smc.SkeletalMesh) @ "With new mesh" @ PathName(AppearanceMesh.Mesh));
 	if (smc == None)
 	{
 		return;
 	}
     smc.SetSkeletalMesh(AppearanceMesh.Mesh);
 
-	// LogInternal("intermediate materials"@smc.GetNumElements()@smc.Materials.Length);
-	// for (i = 0; i < smc.GetNumElements(); i++)
-	// {
-	// 	LogInternal("intermediate material"@i@smc.GetMaterial(i).class@Pathname(smc.GetMaterial(i)));
-	// 	LogInternal("by direct access method"@smc.Materials[i]);
-	// 	LogInternal("base material?"@smc.GetBaseMaterial(i));
-	// 	MIC = MaterialInstanceConstant(smc.GetMaterial(i));
-	// 	if (MIC != None)
-	// 	{
-	// 		LogInternal("MIC parent material"@MIC.Parent.class@Pathname(MIC.Parent));
-	// 	}
-	// }
-	// LogInternal("intermediate:");
-	// ProfileSMC(smc);
-
 	// smc.Materials.Length = AppearanceMesh.Materials.Length;
     for (i = 0; i < AppearanceMesh.Materials.Length; i++)
     {
-		// LogInternal("Setting material"@i@AppearanceMesh.Materials[i]);
 		// reuse existing MICs when possible; it makes the game much more stable. I am not sure why
 
 		// I need to do this entirely based around the methods I think. idk why, but that's the next thing to try
         MIC = MaterialInstanceConstant(smc.Materials[i]);
         if (MIC != None && MIC.outer == targetPawn)
         {
-			// LogInternal("reusing MIC");
 			MIC.ClearParameterValues();
             MIC.SetParent(AppearanceMesh.Materials[i]);
 			// trying to do this even though it should already be there
@@ -447,40 +410,12 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
         }
 		else
 		{
-			// LogInternal("creating new MIC");
 			// if they do not have a suitable MIC, make one and point it at the right parent.
 			MIC = new (targetPawn) Class'BioMaterialInstanceConstant';
 			MIC.SetParent(AppearanceMesh.Materials[i]);
 			smc.SetMaterial(i, MIC);
 		}
-
-		// old code that caused crashes:
-		// MIC = new (targetPawn) Class'BioMaterialInstanceConstant';
-        // MIC.SetParent(AppearanceMesh.Materials[i]);
-        // smc.SetMaterial(i, MIC);
-        // if (smc.m_aEffectsMaterialMICs[i] != None)
-        // {
-        //     smc.m_aEffectsMaterialMICs[i].SetParent(MIC);
-        // }
-        // if (markAsAMM)
-        // {
-        //     MIC.SetScalarParameterValue('AppliedByAMM', 1.0);
-        // }
-    }
-
-	// LogInternal("after:");
-	// ProfileSMC(smc);
-	// LogInternal("running forceUpdateComponents");
-}
-
-public static function bool IsFrameworkInstalled()
-{
-	return DynamicLoadObject("DLC_MOD_Framework_GlobalTlk.GlobalTlk_tlk", Class'Object') != None;
-}
-
-public static function bool DoesLevelExist(coerce string levelName)
-{
-	return DynamicLoadObject(string(levelName)$".TheWorld", class'World') != None;
+	}
 }
 
 public static function string GetArmorCode(EBioArmorType armorType)
@@ -586,69 +521,6 @@ public static function GetVanillaVisorMesh(BioPawnType pawnType, out AppearanceM
 	// I am going to pretend it only ever deals with a single spec with one material.
 	visorMesh.Materials[0] = visorMaterialSpecs[0];
 }
-
-public static function AppearanceSettings DecodeAppearanceSettings(int flags)
-{
-	local int helmetFlags;
-    local string comment;
-	local AppearanceSettings settings;
-    
-    // comment = "zero out all bits except the first two, then compare what is left
-    helmetFlags = flags & 3; // AKA 0011 in binary
-    switch (helmetFlags)
-    {
-		case 0:
-			settings.helmetDisplayState = eHelmetDisplayState.off;
-			break;
-        case 1:
-            settings.helmetDisplayState = eHelmetDisplayState.on;
-			break;
-        case 2:
-            settings.helmetDisplayState = eHelmetDisplayState.full;
-			break;
-		default:
-			LogInternal("Invalid helmet flag in appearance settings"@helmetFlags);
-			settings.helmetDisplayState = eHelmetDisplayState.off;
-			break;
-    }
-
-	// TODO decode more flags here later
-	return settings;
-}
-
-public static function int EncodeAppearanceSettings(AppearanceSettings settings)
-{
-	local int helmetFlags;
-	local string comment;
-
-	switch (settings.helmetDisplayState)
-	{
-		case eHelmetDisplayState.off:
-			helmetFlags = 0;
-			break;
-		case eHelmetDisplayState.on:
-			helmetFlags = 1;
-			break;
-		case eHelmetDisplayState.full:
-			helmetFlags = 2;
-			break;
-	}
-
-	// TODO encode more flags here later
-	return helmetFlags; // | otherFlags once there are others
-}
-
-// private static function bool IsInAMM()
-// {
-// 	local BioWorldInfo BWI;
-// 	local MassEffectGuiManager guiman;
-// 	local BioSFPanel panel;
-
-// 	BWI = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo());
-// 	guiman = MassEffectGuiManager(BWI.GetLocalPlayerController().GetScaleFormManager());
-// 	panel = guiman.GetPanelByTag('AMM');
-// 	return panel != None;
-// }
 
 public static function eHelmetDisplayState GetHelmetDisplayState(PawnAppearanceIds appearanceIds, BioPawn target)
 {

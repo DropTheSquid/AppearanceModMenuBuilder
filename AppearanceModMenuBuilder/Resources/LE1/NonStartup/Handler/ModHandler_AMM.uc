@@ -559,7 +559,7 @@ private final function bool ShouldItemBeDisplayedBasedOnPlot(AppearanceItemData 
             return FALSE;
         }
     }
-	if (item.requiresFramework && !class'AMM_Utilities'.static.IsFrameworkInstalled())
+	if (item.requiresFramework && !class'AMM_Common'.static.IsFrameworkInstalled())
 	{
 		return false;
 	}
@@ -985,11 +985,11 @@ private final function ApplyHelmetSetting(AppearanceItemData item, menuState sta
 		&& item.applyHelmetPreference != eMenuHelmetOverride.offOrFull)
     {
         // LogInternal("Trying to apply helmet visibility override" @ item.applyHelmetOverride @ flagsPlotId, );
-        appearanceSettings = class'Amm_Utilities'.static.DecodeAppearanceSettings(globalVars.GetInt(flagsPlotId));
+        appearanceSettings = class'AMM_Common'.static.DecodeAppearanceSettings(globalVars.GetInt(flagsPlotId));
         // LogInternal("Current flags" @ currentFlagsValue, );
 		// TODO this is a bit brittle; it relies on the values being the same, but offset by 1
 		appearanceSettings.helmetDisplayState = (item.applyHelmetPreference) - 1;
-        updatedFlags = class'Amm_Utilities'.static.EncodeAppearanceSettings(appearanceSettings);
+        updatedFlags = class'AMM_Common'.static.EncodeAppearanceSettings(appearanceSettings);
         // LogInternal("updated flags" @ updatedFlags, );
         globalVars.SetInt(flagsPlotId, updatedFlags);
 		isAppearanceDirty = TRUE;

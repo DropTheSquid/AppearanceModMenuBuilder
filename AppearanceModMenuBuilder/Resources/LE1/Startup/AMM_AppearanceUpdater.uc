@@ -25,7 +25,7 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 		LogInternal("target is in appearance type"@params.GetAppearanceType(target));
 		if (params.GetCurrentAppearanceIds(target, appearanceIds))
 		{
-			specLists = params.GetSpecLists(target);
+			specLists = class'AMM_Utilities'.static.GetSpecLists(target, params);
 			if (specLists.outfitSpecs == None)
 			{
 				return;
@@ -168,7 +168,7 @@ private function bool GetAppearanceForHelmetType(BioPawn Target, AMM_Pawn_Parame
 
 	if (params.GetCurrentAppearanceIds(target, appearanceIds))
 	{
-		specLists = params.GetSpecLists(target);
+		specLists = class'AMM_Utilities'.static.GetSpecLists(target, params);
 		if (specLists.outfitSpecs == None)
 		{
 			return false;
@@ -312,7 +312,7 @@ private function CommitHelmetPreference(BioPawn target, AMM_Pawn_Parameters para
 		flagsPlotInt = appearanceIdLookups.appearanceFlagsLookup.plotIntId;
 		if (flagsPlotInt != 0)
 		{
-			globalVars.SetInt(flagsPlotInt, class'AMM_Utilities'.static.EncodeAppearanceSettings(currentAppearance.m_appearanceSettings));
+			globalVars.SetInt(flagsPlotInt, class'AMM_Common'.static.EncodeAppearanceSettings(currentAppearance.m_appearanceSettings));
 		}
 	}
 }

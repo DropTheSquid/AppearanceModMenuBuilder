@@ -189,7 +189,7 @@ public function PawnLoadState LoadPawn(string tag, string appearanceType, option
 			return PawnLoadState.loading;
 		}
 		
-		if (!class'AMM_Utilities'.static.IsFrameworkInstalled() && avoidSlowdown)
+		if (!class'AMM_Common'.static.IsFrameworkInstalled() && avoidSlowdown)
 		{
 			// this is expected in this case; we do not pre spawn if the framework is not installed, so don't log a warning
 			return PawnLoadState.failed;

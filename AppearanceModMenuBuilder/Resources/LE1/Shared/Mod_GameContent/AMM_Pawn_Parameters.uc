@@ -16,33 +16,32 @@ struct AppearanceIdLookup
     var int plotIntId;
     var int defaultAppearanceId;
 };
-struct SpecLists
-{
-	var OutfitSpecListBase outfitSpecs;
-	var HelmetSpecListBase helmetSpecs;
-	var BreatherSpecListBase breatherSpecs;
-};
 
-// Variables
-var transient SpecLists __SpecLists;
-var transient bool __specListsInitialized;
 var config string outfitSpecListPath;
+var  Object _outfitSpecList;
 var config string helmetSpecListPath;
+var  Object _helmetSpecList;
 var config string breatherSpecListPath;
+var  Object _breatherSpecList;
 var config string Tag;
 var config array<string> alternateTags;
+// only relevant for the player
+// TODO get rid of this
 var config eGender gender;
+// when launching the menu for this pawn, what menu should it start in?
 var config string menuRootPath;
+// basically, what plot ints should it use to store
 var config array<AppearanceIdLookups> AppearanceIdLookupsList;
 // whether this pawn should ignore the game forcing a helmet. This mostly applies to Tali, since she always has a breather on anyway, and has no vanilla helmet anyway
 var config bool bIgnoreForcedHelmet;
 // set the max height of the camera in the menu, as this varies based on the height of the character
 var config float PreviewCameraMaxHeight;
+// allows you to supress the various menu for this character; this can be overridden by mods if you add helmets
 var config bool suppressHelmetMenu;
 var config bool suppressHatMenu;
 var config bool suppressBreatherMenu;
 
-// Functions
+// Returns true if a given pawn should be controlled by these params
 public function bool matchesPawn(BioPawn targetPawn)
 {
     local string altTag;
@@ -61,13 +60,18 @@ public function bool matchesPawn(BioPawn targetPawn)
     return FALSE;
 }
 
+// allows you to do some special processing to the pawn before their appearance is updated
 public function SpecialHandling(BioPawn targetPawn);
 
+// allows you to have more than one appearance type in an override of this
+// for example, squadmates have Casual, Combat, and sometimes Romance appearances
+// there are also special appearance types for the character creator
 public function string GetAppearanceType(BioPawn targetPawn)
 {
     return "";
 }
 
+// given an appearance type, return what outfit, helmet, and breather should be used, as well as any settings
 public function bool GetAppearanceIds(string appearanceType, out PawnAppearanceIds PawnAppearanceIds)
 {
 	local BioGlobalVariableTable globalVars;
@@ -82,10 +86,11 @@ public function bool GetAppearanceIds(string appearanceType, out PawnAppearanceI
     PawnAppearanceIds.bodyAppearanceId = GetAppearanceIdValue(lookups.bodyAppearanceLookup, globalVars);
     PawnAppearanceIds.helmetAppearanceId = GetAppearanceIdValue(lookups.helmetAppearanceLookup, globalVars);
     PawnAppearanceIds.breatherAppearanceId = GetAppearanceIdValue(lookups.breatherAppearanceLookup, globalVars);
-	PawnAppearanceIds.m_appearanceSettings = class'AMM_Utilities'.static.DecodeAppearanceSettings(GetAppearanceIdValue(lookups.appearanceFlagsLookup, globalVars));
+	PawnAppearanceIds.m_appearanceSettings = class'AMM_Common'.static.DecodeAppearanceSettings(GetAppearanceIdValue(lookups.appearanceFlagsLookup, globalVars));
 	return true;
 }
 
+// as above, but for the current appearance type
 public function bool GetCurrentAppearanceIds(BioPawn targetPawn, out PawnAppearanceIds PawnAppearanceIds)
 {
 	return GetAppearanceIds(GetAppearanceType(targetPawn), PawnAppearanceIds);
@@ -100,6 +105,7 @@ private final function int GetAppearanceIdValue(AppearanceIdLookup lookup, BioGl
     return lookup.defaultAppearanceId;
 }
 
+// given the appearance type, look up how to get the actual values
 public function bool GetAppearanceIdLookup(string appearanceType, out AppearanceIdLookups lookups)
 {
     local AppearanceIdLookups currentLookups;
@@ -115,62 +121,71 @@ public function bool GetAppearanceIdLookup(string appearanceType, out Appearance
     return FALSE;
 }
 
+// if the framework is installed and this pawn in frameworked, we prefer to stream them in if possible. THis returns the file to stream in
 public function bool GetFrameworkFileForAppearanceType(string appearanceType, out string frameworkFileName)
 {
 	local AppearanceIdLookups currentLookups;
 
-	if (class'AMM_Utilities'.static.IsFrameworkInstalled())
+	if (class'AMM_Common'.static.IsFrameworkInstalled())
 	{
 		foreach AppearanceIdLookupsList(currentLookups, )
 		{
 			if (currentLookups.appearanceType ~= appearanceType)
 			{
 				frameworkFileName = currentLookups.FrameworkFileName;
-				return class'AMM_Utilities'.static.DoesLevelExist(frameworkFileName);
+				return class'AMM_Common'.static.DoesLevelExist(frameworkFileName);
 			}
 		}
 	}
     return false;
 }
 
-public function SpecLists GetSpecLists(BioPawn target)
+// the spec lists are usually species+gender specific. Basically a body type.
+// this loads the outfit, helmet, and breathers for this pawn
+// returned as objects so that you can use this in a new file to add new pawn params without needing to clone half the code
+public function Object GetOutfitSpecList(BioPawn target)
 {
-	local Class<OutfitSpecListBase> outfitSpecListClass;
-	local Class<HelmetSpecListBase> helmetSpecListClass;
-	local Class<BreatherSpecListBase> breatherSpecListClass;
-    
-    if (!__specListsInitialized)
-    {
-        outfitSpecListClass = Class<OutfitSpecListBase>(DynamicLoadObject(outfitSpecListPath, Class'Class'));
+	local Class outfitSpecListClass;
+
+	if (_outfitSpecList == none)
+	{
+		outfitSpecListClass = Class<Object>(DynamicLoadObject(outfitSpecListPath, Class'Class'));
         if (outfitSpecListClass != None)
         {
-            __SpecLists.outfitSpecs = new outfitSpecListClass;
+            _outfitSpecList = new outfitSpecListClass;
         }
-		else
-		{
-			LogInternal("Warning: could not load outfit spec list"@outfitSpecListPath);
-		}
-		helmetSpecListClass = Class<HelmetSpecListBase>(DynamicLoadObject(helmetSpecListPath, Class'Class'));
+	}
+	return _outfitSpecList;
+}
+
+public function Object GetHelmetSpecList(BioPawn target)
+{
+	local Class helmetSpecListClass;
+
+	if (_helmetSpecList == none)
+	{
+		helmetSpecListClass = Class<Object>(DynamicLoadObject(helmetSpecListPath, Class'Class'));
         if (helmetSpecListClass != None)
         {
-            __SpecLists.helmetSpecs = new helmetSpecListClass;
+            _helmetSpecList = new helmetSpecListClass;
         }
-		else
-		{
-			LogInternal("Warning: could not load helmet spec list"@helmetSpecListPath);
-		}
-		breatherSpecListClass = Class<BreatherSpecListBase>(DynamicLoadObject(breatherSpecListPath, Class'Class'));
+	}
+	return _helmetSpecList;
+}
+
+public function Object GetBreatherSpecList(BioPawn target)
+{
+	local Class breatherSpecListClass;
+
+	if (_breatherSpecList == none)
+	{
+		breatherSpecListClass = Class<Object>(DynamicLoadObject(outfitSpecListPath, Class'Class'));
         if (breatherSpecListClass != None)
         {
-            __SpecLists.breatherSpecs = new breatherSpecListClass;
+            _breatherSpecList = new breatherSpecListClass;
         }
-		else
-		{
-			LogInternal("Warning: could not load breather spec list"@breatherSpecListPath);
-		}
-		__specListsInitialized = true;
-    }
-    return __SpecLists;
+	}
+	return _breatherSpecList;
 }
 
 // find an existing pawn, if possible

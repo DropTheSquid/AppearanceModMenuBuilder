@@ -45,7 +45,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             classes.AddRange([
                 GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AppearanceSubmenu.uc", ["Mod_GameContent"]),
-                GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AMM_Common_Types.uc", ["Mod_GameContent"]),
+                GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AMM_Common.uc", ["Mod_GameContent"]),
                 ]);
 
             var configMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-amm_Submenus.m3cd");

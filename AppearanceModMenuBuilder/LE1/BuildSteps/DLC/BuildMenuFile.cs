@@ -37,7 +37,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\CustomUIHandlerInterface.uc", ["Mod_GameContent"]),
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\NonStartup\Handler\ModMenuBase.uc", ["Handler"]),
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\NonStartup\Handler\ModHandler_AMM.uc", ["Handler"]),
-                LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AMM_Common_Types.uc", ["Mod_GameContent"]),
+                LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AMM_Common.uc", ["Mod_GameContent"]),
                 // needed by the AMM handler
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\NonStartup\Handler\AMM_Handler_Helper.uc", ["Handler"]),
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\NonStartup\Handler\AMM_Pawn_Handler.uc", ["Handler"]),

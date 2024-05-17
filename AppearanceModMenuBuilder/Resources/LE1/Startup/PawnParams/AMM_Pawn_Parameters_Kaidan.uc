@@ -12,7 +12,7 @@ public function SpecialHandling(BioPawn targetPawn)
 	// while his Normandy appearance is CTHb 1
 	// if the framework is not installed
 	// note that casual hubs also addresses this issue
-	if (!Class'AMM_Utilities'.static.IsFrameworkInstalled())
+	if (!Class'AMM_Common'.static.IsFrameworkInstalled())
 	{
 		// and this is a UI world pawn with armor overridden (casual preview)
 		if (string(targetPawn.GetPackageName()) ~= "BIOG_UIWORLD" && Class'AMM_Utilities'.static.IsPawnArmorAppearanceOverridden(targetPawn))

@@ -19,7 +19,7 @@ public function SpecialHandling(BioPawn targetPawn)
 	}
 
 	// Jenkins has a slew of issues if the framework is not installed
-	if (!Class'AMM_Utilities'.static.IsFrameworkInstalled())
+	if (!Class'AMM_Common'.static.IsFrameworkInstalled())
 	{
 		// if we are in the menu trying to customize Jenkins' casual appearance
 		// we are relying on the spawned in combat pawn

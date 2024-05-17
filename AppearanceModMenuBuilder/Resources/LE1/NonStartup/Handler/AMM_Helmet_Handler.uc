@@ -51,7 +51,7 @@ private function bool GetAppearanceForHelmetType(BioPawn Target, AMM_Pawn_Parame
 
 	if (params.GetAppearanceIds(appearanceType, appearanceIds))
 	{
-		specLists = params.GetSpecLists(target);
+		specLists = class'AMM_Utilities'.static.GetSpecLists(target, params);
 		if (specLists.outfitSpecs == None)
 		{
 			return false;
