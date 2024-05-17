@@ -32,8 +32,8 @@ public static function SpecLists GetSpecLists(BioPawn target, AMM_Pawn_Parameter
 	local SpecLists lists;
 
 	lists.outfitSpecs = OutfitSpecListBase(params.GetOutfitSpecList(target));
-	lists.helmetSpecs = HelmetSpecListBase(params.GetOutfitSpecList(target));
-	lists.breatherSpecs = BreatherSpecListBase(params.GetOutfitSpecList(target));
+	lists.helmetSpecs = HelmetSpecListBase(params.GetHelmetSpecList(target));
+	lists.breatherSpecs = BreatherSpecListBase(params.GetBreatherSpecList(target));
 
 	return lists;
 }

@@ -179,7 +179,7 @@ public function Object GetBreatherSpecList(BioPawn target)
 
 	if (_breatherSpecList == none)
 	{
-		breatherSpecListClass = Class<Object>(DynamicLoadObject(outfitSpecListPath, Class'Class'));
+		breatherSpecListClass = Class<Object>(DynamicLoadObject(breatherSpecListPath, Class'Class'));
         if (breatherSpecListClass != None)
         {
             _breatherSpecList = new breatherSpecListClass;
