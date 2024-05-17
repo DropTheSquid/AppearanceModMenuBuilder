@@ -71,7 +71,6 @@ var transient array<string> MenuParameters;
 var config string pawnTag;
 var config string pawnAppearanceType;
 // overrides the visibility of the helmet in this menu and submenus, such as for previewing
-// TODO implement this
 var config eMenuHelmetOverride menuHelmetOverride;
 var config bool preloadPawn;
 var config bool UseTitleForChildMenus;

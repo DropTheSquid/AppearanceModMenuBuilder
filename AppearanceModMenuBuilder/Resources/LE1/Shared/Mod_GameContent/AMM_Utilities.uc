@@ -13,12 +13,7 @@ struct PawnAppearanceIds
         var eHelmetDisplayState helmetDisplayState;
     };
 };
-enum eGender
-{
-    Either,
-    Male,
-    Female,
-};
+
 struct AppearanceMeshPaths
 {
 	var string MeshPath;
@@ -44,17 +39,6 @@ enum eHelmetDisplayState
 	off,
 	on,
 	full
-};
-
-enum eMenuHelmetOverride
-{
-    unchanged,
-    Off,
-    On,
-    Full,
-	onOrFull,
-	offOrOn,
-	offOrFull
 };
 
 public static function BioPawnType GetPawnType(BioPawn targetPawn)
