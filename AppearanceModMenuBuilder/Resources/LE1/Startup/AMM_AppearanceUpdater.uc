@@ -21,6 +21,10 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 	if (paramHandler.GetPawnParams(target, params))
 	{
 		params.SpecialHandling(target);
+		if (params.isPlayer)
+		{
+			ApplyPlayerAppearance(target);
+		}
 		LogInternal("appearance update for target"@PathName(target)@Target.Tag@Target.UniqueTag@"from source"@source);
 		LogInternal("target is in appearance type"@params.GetAppearanceType(target));
 		if (params.GetCurrentAppearanceIds(target, appearanceIds))
@@ -57,53 +61,54 @@ private function UpdateOuterWorldInfo()
     }
 }
 
+private static function BioWorldInfo GetOuterWorldInfo()
+{
+
+	local AMM_AppearanceUpdater instance;
+	local BioWorldInfo bwi;
+    local string path;
+
+	bwi = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo());
+    if (bwi.GetPackageName() == 'BIOG_UIWorld')
+    {
+        instance = GetDLCInstance();
+		path = AMM_AppearanceUpdater(instance).outerWorldInfoPath;
+		bwi = BioWorldInfo(FindObject(path, Class'BioWorldInfo'));
+		return bwi;
+    }
+	return bwi;
+}
+
 public static function bool IsInCharacterCreator(out BioSFHandler_NewCharacter ncHandler)
 {
 	local AMM_AppearanceUpdater_Base instance;
 	local BioWorldInfo BWI;
-    local string path;
 
-	if (GetInstance(instance))
+	BWI = GetOuterWorldInfo();
+	if (BWI != None)
 	{
-		path = AMM_AppearanceUpdater(instance).outerWorldInfoPath;
-		BWI = BioWorldInfo(FindObject(path, Class'BioWorldInfo'));
-		if (BWI != None)
-		{
-			ncHandler = BWI.m_UIWorld.m_oNCHandler;
-			return ncHandler != None;
-		}
-		return false;
+		ncHandler = BWI.m_UIWorld.m_oNCHandler;
+		return ncHandler != None;
 	}
 	return false;
 }
 
 public static function bool IsInAMM(out BioSFPanel panel)
 {
-	local AMM_AppearanceUpdater_Base instance;
 	local BioWorldInfo BWI;
-    local string path;
 	local MassEffectGuiManager guiman;
 
-	if (GetInstance(instance))
-	{
-		path = AMM_AppearanceUpdater(instance).outerWorldInfoPath;
-		BWI = BioWorldInfo(FindObject(path, Class'BioWorldInfo'));
-		guiman = MassEffectGuiManager(BWI.GetLocalPlayerController().GetScaleFormManager());
-		panel = guiman.GetPanelByTag('AMM');
-		return panel != None;
-	}
-	return false;
+	BWI = GetOuterWorldInfo();
+	guiman = MassEffectGuiManager(BWI.GetLocalPlayerController().GetScaleFormManager());
+	panel = guiman.GetPanelByTag('AMM');
+	return panel != None;
 }
 
 public static function bool GetPawnParams(BioPawn Target, out AMM_Pawn_Parameters params)
 {
 	local AMM_AppearanceUpdater_Base instance;
 
-	if (GetInstance(instance) && AMM_AppearanceUpdater(instance) != None)
-	{
-		return AMM_AppearanceUpdater(instance).paramHandler.GetPawnParams(target, params);
-	}
-	return false;
+	return GetDlcInstance().paramHandler.GetPawnParams(target, params);
 }
 
 public static function AMM_AppearanceUpdater GetDlcInstance()
@@ -366,6 +371,15 @@ public function UpdateHelmetPreference(BioPawn target, bool bPreferVisible, bool
 		appearanceIds.m_appearanceSettings.helmetDisplayState = eHelmetDisplayState.off;
 		CommitHelmetPreference(target, params, appearanceIds);
 	}
+}
+
+// this applies the player headmorph to pawns that do not already have it, such as the romance pawn
+public function ApplyPlayerAppearance(BioPawn target)
+{
+	local SFXSaveGame saveGame;
+
+	saveGame = class'SFXEngine'.static.GetEngine().CurrentSaveGame;
+	target.m_oBehavior.m_oAppearanceType.m_oMorphFace = saveGame.LoadMorphHead();
 }
 
 

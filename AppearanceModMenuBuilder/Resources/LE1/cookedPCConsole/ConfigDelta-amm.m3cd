@@ -27,7 +27,8 @@ helmetSpecListPath=OutfitSpecs.HMM_HelmetSpec
 breatherSpecListPath=OutfitSpecs.HMM_BreatherSpec
 +AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1500), helmetAppearanceLookup=(plotIntId=1501), breatherAppearanceLookup=(plotIntId=1502), appearanceFlagsLookup=(plotIntId=1503))
 +AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1504), helmetAppearanceLookup=(plotIntId=1505), breatherAppearanceLookup=(plotIntId=1506), appearanceFlagsLookup=(plotIntId=1507))
-+AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1508), helmetAppearanceLookup=(plotIntId=1509), breatherAppearanceLookup=(plotIntId=1510), appearanceFlagsLookup=(plotIntId=1511), FrameworkFileName="BIONPC_Player_Romance_Male")
++AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1508), helmetAppearanceLookup=(plotIntId=1509), breatherAppearanceLookup=(plotIntId=1510), appearanceFlagsLookup=(plotIntId=1511), FrameworkFileName="BIONPC_MaleShep_Romance")
+isPlayer=true
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_FShep]
 menuRootPath=amm_submenus.FemaleShepard.AppearanceSubmenu_FemaleShepard
@@ -39,7 +40,8 @@ helmetSpecListPath=OutfitSpecs.HMF_HelmetSpec
 breatherSpecListPath=OutfitSpecs.HMF_BreatherSpec
 +AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1500), helmetAppearanceLookup=(plotIntId=1501), breatherAppearanceLookup=(plotIntId=1502), appearanceFlagsLookup=(plotIntId=1503))
 +AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1504), helmetAppearanceLookup=(plotIntId=1505), breatherAppearanceLookup=(plotIntId=1506), appearanceFlagsLookup=(plotIntId=1507))
-+AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1508), helmetAppearanceLookup=(plotIntId=1509), breatherAppearanceLookup=(plotIntId=1510), appearanceFlagsLookup=(plotIntId=1511), FrameworkFileName="BIONPC_Player_Romance_Female")
++AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1508), helmetAppearanceLookup=(plotIntId=1509), breatherAppearanceLookup=(plotIntId=1510), appearanceFlagsLookup=(plotIntId=1511), FrameworkFileName="BIONPC_FemShep_Romance")
+isPlayer=true
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Kaidan]
 Tag=Hench_HumanMale

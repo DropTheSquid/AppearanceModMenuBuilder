@@ -51,6 +51,7 @@ protected function string ShouldShowHelmetButton(BioPawn Target)
 	// "Toggle Helmet"
     return string($174544);
 }
+
 public static function string ShouldShowHelmetButtonStatic(BioPawn Target)
 {
     local AMM_AppearanceUpdater_Base Instance;
@@ -61,11 +62,13 @@ public static function string ShouldShowHelmetButtonStatic(BioPawn Target)
     }
     return "";
 }
+
 public function HelmetButtonPressed(BioPawn Target)
 {
     Target.SetHeadGearVisiblePreference(!Target.GetHeadGearVisiblePreference());
     BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo()).m_UIWorld.UpdateHeadGearVisibility(Target);
 }
+
 public static function HelmetButtonPressedStatic(BioPawn Target)
 {
     local AMM_AppearanceUpdater_Base Instance;
@@ -75,11 +78,13 @@ public static function HelmetButtonPressedStatic(BioPawn Target)
         Instance.HelmetButtonPressed(Target);
     }
 }
+
 // called from ModifyPropertyPawn seq act when the helmet preference is updated or a helmet is forced on (but not when a full faceplate is forced on)
 public function UpdateHelmetPreference(BioPawn Target, bool bPreferVisible, bool bForce)
 {
 	// nothing to do here if the mod is not installed
 }
+
 public static function UpdateHelmetPreferenceStatic(BioPawn Target, bool bPreferVisible, bool bForce)
 {
     local AMM_AppearanceUpdater_Base Instance;
