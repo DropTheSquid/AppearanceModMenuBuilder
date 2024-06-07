@@ -322,7 +322,10 @@ private function BioPawn GetUIWorldPawn()
 private function bool LoadFrameworkFile(string tag, string appearanceType, string fileName)
 {
 	local StreamInRequest request;
+	local PawnId pawnId;
 	local int i;
+	local RealWorldPawnRecord newRecord;
+	local BioPawn pawn;
 
 	// LogInternal("LoadFrameworkFile"@tag@appearanceType@Filename);
 	// first, check if we already have a pending or in progress request for this
@@ -330,7 +333,31 @@ private function bool LoadFrameworkFile(string tag, string appearanceType, strin
 	{
 		// there is already a request in progress. See if it already has the requested tag and appearance type
 		// log("There is an in progress/finished request for framework file"@fileName);
-		// TODO support more than one?
+		
+		// if this exactly matches an already loaded one, let it keep loading or say it is done
+		foreach request.pawnIds(pawnId)
+		{
+			if (pawnId.tag ~= tag && pawnId.appearanceType ~= appearanceType)
+			{
+				return request.completed;
+			}
+		}
+
+		pawnId.Tag = tag;
+		pawnId.appearanceType = appearanceType;
+		request.pawnIds.AddItem(pawnId);
+
+		if (request.completed && FindStreamedInPawn(tag, fileName, pawn))
+		{
+			newRecord.Tag = tag;
+			newRecord.appearanceType = appearanceType;
+			newRecord.Pawn = pawn;
+			// don't destroy pawns that are streamed in
+			newRecord.shouldBeDestroyed = false;
+			pawnRecords.AddItem(newRecord);
+			return true;
+		}
+
 		return request.completed;
 	}
 	// log("Creating new streamInRequest for"@tag@appearanceType@fileName);
