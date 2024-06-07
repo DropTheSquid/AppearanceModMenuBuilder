@@ -25,6 +25,7 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 		{
 			ApplyPlayerAppearance(target);
 		}
+		RemoveAIControllerFromPreviews(target);
 		LogInternal("appearance update for target"@PathName(target)@Target.Tag@Target.UniqueTag@"from source"@source);
 		LogInternal("target is in appearance type"@params.GetAppearanceType(target));
 		if (params.GetCurrentAppearanceIds(target, appearanceIds))
@@ -61,9 +62,18 @@ private function UpdateOuterWorldInfo()
     }
 }
 
+private static final function RemoveAIControllerFromPreviews(BioPawn target)
+{
+	// ocasionally, an NPC has an AI controller that causes it to move, even in the UI world. It does not need that. 
+	// this removes it. 
+    if (target.GetPackageName() == 'BIOG_UIWorld' && target.Controller != None)
+    {
+        target.Controller.UnPossess();
+    }
+}
+
 private static function BioWorldInfo GetOuterWorldInfo()
 {
-
 	local AMM_AppearanceUpdater instance;
 	local BioWorldInfo bwi;
     local string path;
