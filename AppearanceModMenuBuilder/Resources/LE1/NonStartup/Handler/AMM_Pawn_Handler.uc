@@ -77,6 +77,7 @@ var transient array<StreamInRequest> streamingRequests;
 var transient array<PawnId> pawnsToPreload;
 var transient array<RealWorldPawnRecord> pawnRecords;
 var transient BioPawn _currentDisplayedPawn;
+var int maxParallelRequests;
 
 public function Cleanup()
 {
@@ -123,7 +124,7 @@ public function PreloadPawn(string tag, string appearanceType)
 {
 	local PawnId pawnToPreload;
 
-	// add it to a queue that will only load one at
+	// add it to a queue that will only load a few at a time
 	pawnToPreload.tag = tag;
 	pawnToPreload.appearanceType = appearanceType;
 	pawnsToPreload.AddItem(pawnToPreload);
@@ -433,7 +434,7 @@ public function Update(float fDeltaT)
 	local int i;
 	local BioPawn pawn;
 	local RealWorldPawnRecord newRecord;
-	local bool AreRequestsInProgress;
+	local int numRequestsInProgress;
 
 	foreach streamingRequests(currentRequest, i)
 	{
@@ -441,7 +442,7 @@ public function Update(float fDeltaT)
 		{
 			continue;
 		}
-		AreRequestsInProgress = true;
+		numRequestsInProgress++;
 		currentState = GetFileStreamingState(currentRequest.frameworkFileName, tempLevelStreaming);
 		if (currentRequest.desiredState == DesiredStreamingState.visible)
 		{
@@ -492,11 +493,11 @@ public function Update(float fDeltaT)
 			streamingRequests[i].completed = true;
 		}
 	}
-	// if there are no in progress requests, pull out a queued preload request
-	if (!AreRequestsInProgress && pawnsToPreload.Length > 0)
+	while (numRequestsInProgress < maxParallelRequests && pawnsToPreload.Length > 0)
 	{
 		LoadPawn(pawnsToPreload[0].tag, pawnsToPreload[0].appearanceType, true);
 		pawnsToPreload.Remove(0,1);
+		numRequestsInProgress++;
 	}
 }
 
@@ -571,4 +572,9 @@ private function HardUnload(coerce string fileName)
             return;
         }
     }
+}
+
+defaultproperties
+{
+	maxParallelRequests = 10;
 }
