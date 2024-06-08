@@ -244,7 +244,6 @@ public function RefreshMenu(optional bool firstEnter = FALSE)
     local bool IsInCharacterSelect;
     local menuState state;
     local AMM_AppearanceUpdater updaterInstance;
-    local bool WaitingForPawnToSpawn;
     
     currentMenu = GetCurrentSubmenu();
     // LogInternal("Refreshing menu" @ currentMenu);

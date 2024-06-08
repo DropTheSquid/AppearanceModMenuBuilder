@@ -4,6 +4,7 @@ class AMM_AppearanceUpdater extends AMM_AppearanceUpdater_Base
 var Pawn_Parameter_Handler paramHandler;
 var transient string outerWorldInfoPath;
 var transient int menuHelmetOverride;
+var transient name menuTagOverride;
 
 public function UpdatePawnAppearance(BioPawn target, string source)
 {
@@ -13,11 +14,17 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 	local pawnAppearance pawnAppearance;
 
 	UpdateOuterWorldInfo();
+	// this pawn is not yet fully initialized; ignore it
+	if (target.Tag == 'BioPawn')
+    {
+        return;
+    }
 	if (SFXPawn_Player(target) != None && source ~= "BioPawn.PostBeginPlay")
 	{
 		// skip this; it will sometimes do incorrect things before the pawn is fully initialized, and it will be called again from SpawnPlayer
 		return;
 	}
+	UpdatePreviewTags(target);
 	if (paramHandler.GetPawnParams(target, params))
 	{
 		params.SpecialHandling(target);
@@ -70,6 +77,24 @@ private static final function RemoveAIControllerFromPreviews(BioPawn target)
     {
         target.Controller.UnPossess();
     }
+}
+
+private function UpdatePreviewTags(BioPawn target)
+{
+	// UI world preview pawns don't carry over the tag from their original pawn, instead using the ActorType name as the tag
+	// this is usually bad and we want to fix it before we update the appearance
+	if (target.GetPackageName() == 'BIOG_UIWorld' && menuTagOverride != 'None')
+	{
+		LogInternal("UpdatePreviewTags"@target.Tag@menuTagOverride);
+		// do not overwrite these ones; it will destroy our info about the player's gender
+		if (target.tag == 'Human_Male' || target.tag == 'Human_Female')
+		{
+			menuTagOverride = 'None';
+			return;
+		}
+		target.tag = menuTagOverride;
+		menuTagOverride = 'None';
+	}
 }
 
 private static function BioWorldInfo GetOuterWorldInfo()

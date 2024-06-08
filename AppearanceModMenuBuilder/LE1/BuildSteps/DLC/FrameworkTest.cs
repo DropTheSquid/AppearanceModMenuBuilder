@@ -22,7 +22,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         public void RunModTask(ModBuilderContext context)
         {
             Directory.CreateDirectory(Path.Combine(context.CookedPCConsoleFolder, "FrameworkTest"));
-            ConfigMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-amm_FrameworkTest.m3cd");
+            ConfigMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-FrameworkTest.m3cd");
             foreach (var file in Directory.EnumerateFiles(@"C:\src\M3Mods\LE1\LE1 Framework\DLC_MOD_Framework\CookedPCConsole", "BIONPC_*", SearchOption.AllDirectories))
             {
                 CheckBioNPCFile(file, context);

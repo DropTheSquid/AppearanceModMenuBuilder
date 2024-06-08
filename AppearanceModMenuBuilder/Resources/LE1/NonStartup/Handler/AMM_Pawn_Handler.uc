@@ -77,8 +77,6 @@ var transient array<StreamInRequest> streamingRequests;
 var transient array<PawnId> pawnsToPreload;
 var transient array<RealWorldPawnRecord> pawnRecords;
 var transient BioPawn _currentDisplayedPawn;
-var transient BioPawn _UIWorldPawn;
-var transient string _previousUIWorldPawnPath;
 
 public function Cleanup()
 {
@@ -88,7 +86,6 @@ public function Cleanup()
 	// LogInternal("Doing a cleanup"@pawnRecords.Length@streamingRequests.Length);
 	if (_currentDisplayedPawn != None)
 	{
-		_UIWorldPawn = None;
 		BioWorldInfo(_outerMenu.oWorldInfo).m_UIWorld.DestroyPawn(_currentDisplayedPawn);
 	}
 	foreach pawnRecords(currentRecord)
@@ -228,6 +225,7 @@ public function bool DisplayPawn(string tag, string appearanceType)
 	local RealWorldPawnRecord currentRecord;
 	local BioWorldInfo oBWI;
 	local BioPawn newDisplayPawn;
+	local AMM_AppearanceUpdater updaterInstance;
 
 	foreach pawnRecords(currentRecord)
 	{
@@ -247,46 +245,19 @@ public function bool DisplayPawn(string tag, string appearanceType)
 	{
 		if (_currentDisplayedPawn != None)
 		{
-			_previousUIWorldPawnPath = PathName(_UIWorldPawn);
-			_UIWorldPawn = None;
 			oBWI.m_UIWorld.DestroyPawn(_currentDisplayedPawn);
 		}
 		_currentDisplayedPawn = newDisplayPawn;
 		if (_currentDisplayedPawn != None)
 		{
+			updaterInstance = class'AMM_AppearanceUpdater'.static.GetDlcInstance();
+			updaterInstance.menuTagOverride = _currentDisplayedPawn.tag;
 			oBWI.m_UIWorld.TriggerEvent('SetupInventory', _outerMenu.oWorldInfo);
 			oBWI.m_UIWorld.spawnPawn(_currentDisplayedPawn, 'InventorySpawnPoint', 'InventoryPawn');
 			return true;
 		}
 	}
 	return false;
-}
-
-private function UpdateUIWorldPawnTag()
-{
-	local SeqVar_Object obj;
-	local BioWorldInfo oBWI;
-
-	if (_currentDisplayedPawn != None && _UIWorldPawn == None)
-	{
-		obj = SeqVar_Object(FindObject("BIOG_UIWORLD.TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_0", class'Object'));
-		if (obj != None)
-		{
-			_UIWorldPawn = BioPawn(obj.ObjValue);
-			if (PathName(_UIWorldPawn) == _previousUIWorldPawnPath)
-			{
-				_UIWorldPawn = None;
-			}
-		}
-		// LogInternal("I am trying to get the UI World Pawn"@PathName(_UIWorldPawn));
-		if (_UIWorldPawn != None)
-		{
-			// LogInternal("setting tag to"@_currentDisplayedPawn.Tag);
-			_UIWorldPawn.Tag = _currentDisplayedPawn.Tag;
-			oBWI = BioWorldInfo(_outerMenu.oWorldInfo);
-			oBWI.m_UIWorld.TriggerEvent('re_AMM_update_Appearance', _outerMenu.oWorldInfo);
-		}
-	}
 }
 
 public function ForceAppearanceType(eArmorOverrideState state)
@@ -391,8 +362,6 @@ private function bool LoadFrameworkFile(string tag, string appearanceType, strin
 
 		return request.completed;
 	}
-	// log("Creating new streamInRequest for"@tag@appearanceType@fileName);
-	// TODO check for a queued one and move it into inProgress once that is supported
 	request.frameworkFileName = fileName;
 	request.pawnIds.Length = 1;
 	request.pawnIds[0].tag = tag;
@@ -466,7 +435,6 @@ public function Update(float fDeltaT)
 	local RealWorldPawnRecord newRecord;
 	local bool AreRequestsInProgress;
 
-	UpdateUIWorldPawnTag();
 	foreach streamingRequests(currentRequest, i)
 	{
 		if (currentRequest.completed)
