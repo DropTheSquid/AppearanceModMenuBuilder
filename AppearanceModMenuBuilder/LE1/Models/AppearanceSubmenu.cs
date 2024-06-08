@@ -86,6 +86,12 @@ namespace AppearanceModMenuBuilder.LE1.Models
             set => SetIntValue(nameof(SrTitle), value);
         }
 
+        public string? STitle
+        {
+            get => GetStringValue(nameof(STitle));
+            set => SetStringValue(nameof(STitle), value);
+        }
+
         public int? SrSubtitle
         {
             get => GetIntValue(nameof(SrSubtitle));

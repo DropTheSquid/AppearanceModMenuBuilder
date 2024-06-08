@@ -37,6 +37,8 @@ namespace AppearanceModMenuBuilder.LE1
                 .AddTask(new BuildPlotManagerFile())
                 // build some template files
                 .AddTask(new BuildTemplateFiles())
+                // doing some testing of the framework
+                .AddTask(new FrameworkTest())
                 // output any config merge files we worked on
                 .AddTask(new OutputConfigMerge())
                 // compile tlks

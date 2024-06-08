@@ -1,5 +1,4 @@
 ﻿using MassEffectModBuilder.Models;
-using static AppearanceModMenuBuilder.LE1.UScriptModels.AppearanceItemData;
 
 namespace AppearanceModMenuBuilder.LE1.UScriptModels
 {
@@ -18,9 +17,9 @@ namespace AppearanceModMenuBuilder.LE1.UScriptModels
             Off,
             On,
             Full,
-			onOrFull,
-			offOrOn,
-			offOrFull
+            onOrFull,
+            offOrOn,
+            offOrFull
         }
 
         public class PlotIntSetting : StructCoalesceValue
@@ -50,16 +49,10 @@ namespace AppearanceModMenuBuilder.LE1.UScriptModels
             set => SetInt(nameof(SrCenterText), value);
         }
 
-        public int? SrLeftText
+        public string? SCenterText
         {
-            get => GetInt(nameof(SrLeftText));
-            set => SetInt(nameof(SrLeftText), value);
-        }
-
-        public int? SrRightText
-        {
-            get => GetInt(nameof(SrRightText));
-            set => SetInt(nameof(SrRightText), value);
+            get => GetString(nameof(SCenterText));
+            set => SetString(nameof(SCenterText), value);
         }
 
         public string? SubMenuClassName
