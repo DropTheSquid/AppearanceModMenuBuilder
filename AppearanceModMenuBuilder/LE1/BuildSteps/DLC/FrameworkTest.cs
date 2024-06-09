@@ -21,6 +21,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
         public void RunModTask(ModBuilderContext context)
         {
+            // disabled because I do not need to run this every time
             return;
 
             Directory.CreateDirectory(Path.Combine(context.CookedPCConsoleFolder, "FrameworkTest"));
@@ -74,22 +75,16 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
         private static void CreatePawnInfrastructure(ExportEntry pawn, ModBuilderContext context)
         {
-            // TODO only add the second layer of menu for Saren Flyer. The rest don't need it
             var tag = pawn.GetProperty<NameProperty>("Tag").Value.ToString();
             var BioNPCName = pawn.FileRef.FileNameNoExtension;
             var uniqueName = $"{BioNPCName}_{tag}";
-            // the UI world pawn gets spawned with a tag matching that of the ActorType
-            // this does not always match the actual tag. Add this as an alt tag so we can match the preview pawn
-            // nope that means we can't tell them apart in the UI world, we need a better way of handling it
-            //var altTag = GetObjectProperty(GetObjectProperty(pawn, "m_oBehavior"), "m_oActorType").ObjectNameString;
 
             var pcc = MEPackageHandler.CreateAndOpenPackage(Path.Combine(context.CookedPCConsoleFolder, "FrameworkTest", $"AMM_{uniqueName}.pcc"), context.Game);
 
-            // need to add pawn Params, submenu classes
+            // need to add pawn Params, submenu class
             pcc.GetOrCreateObjectReferencer();
 
             var pawnParamsClass = new ClassToCompile($"AMM_Pawn_Parameters_{uniqueName}", $"Class AMM_Pawn_Parameters_{uniqueName} extends AMM_Pawn_Parameters config(Game); public function string GetAppearanceType(BioPawn targetPawn){{return \"Casual\";}}");
-            //var preloadSubmenu = new ClassToCompile($"AppearanceSubmenu_{uniqueName}_Preload", $"Class AppearanceSubmenu_{uniqueName}_Preload extends AppearanceSubmenu config(UI);");
             var normalSubmenu = new ClassToCompile($"AppearanceSubmenu_{uniqueName}", $"Class AppearanceSubmenu_{uniqueName} extends AppearanceSubmenu config(UI);");
 
             // add a few classes
@@ -99,22 +94,12 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AppearanceSubmenu.uc", ["Mod_GameContent"]),
                 GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AMM_Pawn_Parameters.uc", ["Mod_GameContent"]),
                 pawnParamsClass,
-                //preloadSubmenu,
                 normalSubmenu);
             classTask.RunModTask(context);
-
 
             // pawn params config
             var pawnParamsConfig = new ModConfigClass($"AMM_{uniqueName}.AMM_Pawn_Parameters_{uniqueName}", "BioGame.ini");
             pawnParamsConfig.SetStringValue("Tag", tag);
-            //if (altTag != tag)
-            //{
-            //    pawnParamsConfig.SetStringValue("alternateTags", altTag);
-            //}
-            // TODO maybe don't make everyone a human man
-            pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.HMM_OutfitSpec");
-            pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.HMM_HelmetSpec");
-            pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.HMM_BreatherSpec");
 
             StructCoalesceValue appearanceIdLookups = new();
             appearanceIdLookups.SetString("appearanceType", "Casual");
@@ -131,18 +116,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             var paramLoaderCoalescValue = new StructCoalesceValue() { { "parameterPath", new StringCoalesceValue($"AMM_{uniqueName}.AMM_Pawn_Parameters_{uniqueName}") } }.OutputValue();
             PawnParamHandlerConfig.AddEntry(new CoalesceProperty("pawnParamSpecs", new CoalesceValue(paramLoaderCoalescValue, CoalesceParseAction.AddUnique)));
 
-            // outer menu
-            //var preloadSubmenuConfig = new AppearanceSubmenu($"AMM_{uniqueName}.AppearanceSubmenu_{uniqueName}_Preload")
-            //{
-            //    PawnTag = "None",
-            //    STitle = $"{uniqueName} preload"
-            //};
-            //preloadSubmenuConfig.AddMenuEntry(new UScriptModels.AppearanceItemData()
-            //{
-            //    SCenterText = uniqueName,
-            //    SubMenuClassName = $"AMM_{uniqueName}.AppearanceSubmenu_{uniqueName}"
-            //});
-
             // inner menu
             var submenuConfig = new AppearanceSubmenu($"AMM_{uniqueName}.AppearanceSubmenu_{uniqueName}")
             {
@@ -153,18 +126,94 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 SrSubtitle = 210210256,
                 UseTitleForChildMenus = true
             };
-            submenuConfig.AddMenuEntry(new UScriptModels.AppearanceItemData()
-            {
-                InlineSubmenu = true,
-                // again, maybe don't make everyone a human dude
-                SubMenuClassName = "AMM_Submenus.HumanMale.AppearanceSubmenu_HumanMale_CasualOutfits"
-            });
 
             CharacterSelectSubmenuConfig.AddMenuEntry(new UScriptModels.AppearanceItemData()
             {
                 SCenterText = uniqueName,
                 SubMenuClassName = $"AMM_{uniqueName}.AppearanceSubmenu_{uniqueName}"
             });
+
+            string meshPath = (GetOptionalObjectProperty(GetOptionalObjectProperty(pawn, "Mesh"), "SkeletalMesh")?.InstancedFullPath ?? "").ToLower();
+            string headMeshPath = (GetOptionalObjectProperty(GetOptionalObjectProperty(pawn, "m_oHeadMesh"), "SkeletalMesh")?.InstancedFullPath ?? "").ToLower();
+
+            // assume anyone in a default cth outfit is casual, otherwise combat
+            var casual = meshPath.Contains("cth") || meshPath.Contains("nkd");
+
+            if (meshPath.Contains("hmf"))
+            {
+                if (headMeshPath.Contains("asa"))
+                {
+                    // asa stuff
+                    pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.ASA_OutfitSpec");
+                    pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.ASA_HelmetSpec");
+                    pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.ASA_BreatherSpec");
+                    submenuConfig.AddMenuEntry(new UScriptModels.AppearanceItemData()
+                    {
+                        InlineSubmenu = true,
+                        SubMenuClassName = casual ? "AMM_Submenus.Asari.AppearanceSubmenu_Asari_CasualOutfits" : "AMM_Submenus.Asari.AppearanceSubmenu_Asari_CombatOutfits"
+                    });
+                }
+                else
+                {
+                    // hmf stuff
+                    pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.HMF_OutfitSpec");
+                    pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.HMF_HelmetSpec");
+                    pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.HMF_BreatherSpec");
+                    submenuConfig.AddMenuEntry(new UScriptModels.AppearanceItemData()
+                    {
+                        InlineSubmenu = true,
+                        SubMenuClassName = casual ? "AMM_Submenus.HumanFemale.AppearanceSubmenu_HumanFemale_CasualOutfits" : "AMM_Submenus.HumanFemale.AppearanceSubmenu_HumanFemale_CombatOutfits"
+                    });
+                }
+            }
+            else if (meshPath.Contains("tur") || meshPath.Contains("Sar") || meshPath.Contains("cbt_end"))
+            {
+                // TUR stuff
+                pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.TUR_OutfitSpec");
+                pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.TUR_HelmetSpec");
+                pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.TUR_BreatherSpec");
+                submenuConfig.AddMenuEntry(new UScriptModels.AppearanceItemData()
+                {
+                    InlineSubmenu = true,
+                    SubMenuClassName = casual ? "AMM_Submenus.Turian.AppearanceSubmenu_Turian_CasualOutfits" : "AMM_Submenus.Turian.AppearanceSubmenu_Turian_CombatOutfits"
+                });
+            }
+            else if (meshPath.Contains("mrc"))
+            {
+                // asa stuff
+                pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.ASA_OutfitSpec");
+                pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.ASA_HelmetSpec");
+                pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.ASA_BreatherSpec");
+                submenuConfig.AddMenuEntry(new UScriptModels.AppearanceItemData()
+                {
+                    InlineSubmenu = true,
+                    SubMenuClassName = "AMM_Submenus.Asari.AppearanceSubmenu_Asari_CombatOutfits"
+                });
+            }
+            else if (meshPath.Contains("kro"))
+            {
+                // KRO stuff
+                pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.KRO_OutfitSpec");
+                pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.KRO_HelmetSpec");
+                pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.KRO_BreatherSpec");
+                submenuConfig.AddMenuEntry(new UScriptModels.AppearanceItemData()
+                {
+                    InlineSubmenu = true,
+                    SubMenuClassName = casual ? "AMM_Submenus.Krogan.AppearanceSubmenu_Krogan_CasualOutfits" : "AMM_Submenus.Krogan.AppearanceSubmenu_Krogan_CombatOutfits"
+                });
+            }
+            else
+            {
+                // default to hmm for anything else
+                pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.HMM_OutfitSpec");
+                pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.HMM_HelmetSpec");
+                pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.HMM_BreatherSpec");
+                submenuConfig.AddMenuEntry(new UScriptModels.AppearanceItemData()
+                {
+                    InlineSubmenu = true,
+                    SubMenuClassName = casual ? "AMM_Submenus.HumanMale.AppearanceSubmenu_HumanMale_CasualOutfits" : "AMM_Submenus.HumanMale.AppearanceSubmenu_HumanMale_CombatOutfits"
+                });
+            }
 
             //ConfigMergeFile.AddOrMergeClassConfig(preloadSubmenuConfig);
             ConfigMergeFile.AddOrMergeClassConfig(submenuConfig);
@@ -304,9 +353,9 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             return result;
         }
 
-        private static ExportEntry? GetOptionalObjectProperty(ExportEntry entry, string propName)
+        private static ExportEntry? GetOptionalObjectProperty(ExportEntry? entry, string propName)
         {
-            return (ExportEntry?)entry.GetProperty<ObjectProperty>(propName)?.ResolveToEntry(entry.FileRef);
+            return (ExportEntry?)entry?.GetProperty<ObjectProperty>(propName)?.ResolveToEntry(entry.FileRef);
         }
 
         private static int GetIntProp(ExportEntry entry, string propName)

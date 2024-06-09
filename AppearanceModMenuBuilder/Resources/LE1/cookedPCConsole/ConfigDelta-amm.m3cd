@@ -66,14 +66,16 @@ breatherSpecListPath=OutfitSpecs.HMF_BreatherSpec
 +AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1536), helmetAppearanceLookup=(plotIntId=1537), breatherAppearanceLookup=(plotIntId=1538), appearanceFlagsLookup=(plotIntId=1539), FrameworkFileName="BIONPC_Ashley_Normandy")
 +AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1540), helmetAppearanceLookup=(plotIntId=1541), breatherAppearanceLookup=(plotIntId=1542), appearanceFlagsLookup=(plotIntId=1543))
 +AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1544), helmetAppearanceLookup=(plotIntId=1545), breatherAppearanceLookup=(plotIntId=1546), appearanceFlagsLookup=(plotIntId=1547), FrameworkFileName="BIONPC_Ashley_Romance")
+BodyMaterialOverrideMIC=Amm_AshleyParams.AshleySkintone
+DoNotApplyGlobalParams=true
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Liara]
 Tag=Hench_Asari
 romancePawnTag=hench_asari_nkd
 menuRootPath=amm_submenus.Liara.AppearanceSubmenu_Liara
-outfitSpecListPath=outfitSpecs.HMF_OutfitSpec
+outfitSpecListPath=outfitSpecs.ASA_OutfitSpec
 helmetSpecListPath=OutfitSpecs.ASA_HelmetSpec
-breatherSpecListPath=OutfitSpecs.HMF_BreatherSpec
+breatherSpecListPath=OutfitSpecs.ASA_BreatherSpec
 +AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1548), helmetAppearanceLookup=(plotIntId=1549), breatherAppearanceLookup=(plotIntId=1550), appearanceFlagsLookup=(plotIntId=1551), FrameworkFileName="BIONPC_Liara_Normandy")
 +AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1552), helmetAppearanceLookup=(plotIntId=1553), breatherAppearanceLookup=(plotIntId=1554), appearanceFlagsLookup=(plotIntId=1555))
 +AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1556), helmetAppearanceLookup=(plotIntId=1557), breatherAppearanceLookup=(plotIntId=1558), appearanceFlagsLookup=(plotIntId=1559), FrameworkFileName="BIONPC_Liara_Romance")
