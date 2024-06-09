@@ -21,6 +21,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
         public void RunModTask(ModBuilderContext context)
         {
+            return;
+
             Directory.CreateDirectory(Path.Combine(context.CookedPCConsoleFolder, "FrameworkTest"));
             ConfigMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-FrameworkTest.m3cd");
             foreach (var file in Directory.EnumerateFiles(@"C:\src\M3Mods\LE1\LE1 Framework\DLC_MOD_Framework\CookedPCConsole", "BIONPC_*", SearchOption.AllDirectories))
@@ -41,7 +43,11 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 || filename.Contains("Wrex")
                 || filename.Contains("Liara")
                 || filename.Contains("Jenkins")
-                || filename.Contains("Shep_Romance"))
+                || filename.Contains("Shep_Romance")
+                // special case handling for his skin tone
+                || filename.Contains("Anderson")
+                // already handled in an example
+                || filename.Contains("Joker"))
             {
                 return;
             }
@@ -60,10 +66,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
         private static void HandleBioNPCPawn(ExportEntry pawn, ModBuilderContext context)
         {
-            if (CheckBioPawn(pawn))
-            {
+            //if (CheckBioPawn(pawn))
+            //{
                 CreatePawnInfrastructure(pawn, context);
-            }
+            //}
         }
 
         private static void CreatePawnInfrastructure(ExportEntry pawn, ModBuilderContext context)

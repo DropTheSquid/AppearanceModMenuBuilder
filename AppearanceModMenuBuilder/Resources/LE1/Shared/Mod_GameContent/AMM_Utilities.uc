@@ -326,6 +326,25 @@ public static function bool LoadMaterials(array<string> materialPaths, out array
     return TRUE;
 }
 
+public static function ApplyMaterialOverrides(SkeletalMeshComponent smc, MaterialInstanceConstant mic)
+{
+	local int i;
+	local int j;
+	local MaterialInstanceConstant targetMIC;
+
+	for (i = 0; i < smc.GetNumElements(); i++)
+	{
+		targetMIC = MaterialInstanceConstant(smc.GetBaseMaterial(i));
+		if (targetMIC != None)
+		{
+			for (j = 0; j < mic.VectorParameterValues.Length; j++)
+			{
+				targetMIC.SetVectorParameterValue(mic.VectorParameterValues[j].ParameterName, mic.VectorParameterValues[j].ParameterValue);
+			}
+		}
+	}
+}
+
 public static function ApplyPawnAppearance(BioPawn target, pawnAppearance appearance)
 {
 	replaceMesh(target, target.Mesh, appearance.bodyMesh);
@@ -374,9 +393,6 @@ public static function ApplyPawnAppearance(BioPawn target, pawnAppearance appear
     replaceMesh(target, target.m_oFacePlateMesh, appearance.BreatherMesh);
     target.m_oFacePlateMesh.SetHidden(appearance.BreatherMesh.Mesh == None);
 	target.m_oFacePlateMesh.CastShadow = appearance.BreatherMesh.Mesh != None;
-
-	// make sure that skintone matches and headmorph material overrides are applied to all materials
-	UpdatePawnMaterialParameters(target);
 
 	// This call is very important to prevent all kinds of weirdness
 	// for example bone melting and materials misbehaving, and possibly even crashing

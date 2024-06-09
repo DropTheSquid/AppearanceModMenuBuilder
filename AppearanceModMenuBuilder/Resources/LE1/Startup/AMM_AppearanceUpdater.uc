@@ -12,6 +12,7 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 	local PawnAppearanceIds appearanceIds;
 	local SpecLists specLists;
 	local pawnAppearance pawnAppearance;
+	local MaterialInstanceConstant mic;
 
 	UpdateOuterWorldInfo();
 	// this pawn is not yet fully initialized; ignore it
@@ -44,7 +45,19 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 			}
 			if (specLists.outfitSpecs.DelegateToOutfitSpecById(target, specLists, appearanceIds, pawnAppearance))
 			{
+				// CheckIfAppearanceDiffersFromDefaults(target, appearanceIds, pawnAppearance);
 				class'AMM_Utilities'.static.ApplyPawnAppearance(target, pawnAppearance);
+
+				// make sure that skintone matches and headmorph material overrides are applied to all materials
+				if (!params.DoNotApplyGlobalParams)
+				{
+					class'AMM_Utilities'.static.UpdatePawnMaterialParameters(target);
+				}
+				if (params.BodyMaterialOverrideMIC != "")
+				{
+					mic = MaterialInstanceConstant(DynamicLoadObject(params.BodyMaterialOverrideMIC, class'MaterialInstanceConstant'));
+					class'AMM_Utilities'.static.ApplyMaterialOverrides(target.Mesh, mic);
+				}
 			}
 		}
 		else
@@ -56,6 +69,73 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 	{
 		LogInternal("appearance update with no params for target"@PathName(target)@Target.Tag@Target.UniqueTag@"from source"@source);
 	}
+}
+
+private function CheckIfAppearanceDiffersFromDefaults(BioPawn target, PawnAppearanceIds appearanceIds, pawnAppearance appearance)
+{
+	local int i;
+	local MaterialInterface matInst;
+	local MaterialInstanceConstant mic;
+
+	if (appearanceIds.bodyAppearanceId == 0 && appearanceIds.helmetAppearanceId == 0 && appearanceIds.breatherAppearanceId == 0)
+	{
+		DoesMeshDiffer(target, appearance.bodyMesh, target.Mesh, "body");
+	}
+}
+
+private function bool DoesMeshDiffer(BioPawn target, AppearanceMesh appMesh, SkeletalMeshComponent smc, string type)
+{
+	local int i;
+	local MaterialInterface matInst;
+	local MaterialInstanceConstant mic;
+	local bool differs;
+	
+	if (PathName(appMesh.Mesh) != pathName(smc.SkeletalMesh))
+	{
+		LogInternal("WARNING:"@type@"Mesh Differs for target"@target.Tag);
+		LogInternal("Original"@PathName(smc.SkeletalMesh));
+		LogInternal("Expected"@PathName(appMesh.Mesh));
+		differs = true;
+	}
+
+	if (smc.GetNumElements() != appMesh.Materials.Length)
+	{
+		LogInternal("WARNING:"@type@"Materials Differ in length"@target.Tag);
+		for (i = 0; i < smc.GetNumElements(); i++)
+		{
+			matInst = smc.GetMaterial(i);
+			LogInternal("Original Mat"@i@PathName(matInst));
+			mic = MaterialInstanceConstant(matInst);
+			if (mic != None)
+			{
+				LogInternal("Original Mat"@i@"parent"@pathName(mic.Parent));
+			}
+		}
+		for (i = 0; i < appMesh.Materials.Length; i++)
+		{
+			LogInternal("Expected Mat"@i@PathName(appMesh.Materials[i]));
+		}
+		differs = true;
+	}
+	else
+	{
+		for (i = 0; i < appMesh.Materials.Length; i++)
+		{
+			matInst = smc.GetMaterial(i);
+			if (matInst.outer == smc.outer && MaterialInstanceConstant(matInst) != None)
+			{
+				matInst = MaterialInstanceConstant(matInst).Parent;
+			}
+			if (PathName(matInst) != PathName(appMesh.Materials[i]))
+			{
+				LogInternal("WARNING:"@type@"Material "@i@"Differs for pawn"@target.Tag);
+				LogInternal("Original Mat"@i@PathName(matInst));
+				LogInternal("Expected Mat"@i@PathName(appMesh.Materials[i]));
+				differs = true;
+			}
+		}
+	}
+	return differs;
 }
 
 private function UpdateOuterWorldInfo()

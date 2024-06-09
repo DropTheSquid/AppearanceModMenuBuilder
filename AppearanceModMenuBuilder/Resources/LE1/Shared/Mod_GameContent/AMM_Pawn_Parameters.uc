@@ -42,6 +42,8 @@ var config bool suppressHatMenu;
 var config bool suppressBreatherMenu;
 // tells the game to apply the player headmorph and customizations to this pawn. 
 var config bool isPlayer;
+var config string BodyMaterialOverrideMIC;
+var config bool DoNotApplyGlobalParams;
 
 // Returns true if a given pawn should be controlled by these params
 public function bool matchesPawn(BioPawn targetPawn)
