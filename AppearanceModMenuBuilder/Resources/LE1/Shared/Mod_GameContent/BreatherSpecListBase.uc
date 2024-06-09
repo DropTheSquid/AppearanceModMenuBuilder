@@ -83,7 +83,6 @@ public function bool GetBreatherSpecById(int Id, out BreatherSpecBase breatherSp
 public function bool GetBreatherSpecItemById(int Id, out BreatherSpecItem item)
 {
     local int index;
-    local string sComment;
     
     // Go from the end of the list to the start in order to find the highest mounted version in case of a conflict
     for (index = breatherSpecs.Length - 1; index >= 0; index--)

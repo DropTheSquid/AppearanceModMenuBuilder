@@ -17,8 +17,6 @@ enum eScrollWheelDir
 var float RStickDeadZone;
 
 // Functions
-// protected static function comment(string sComment);
-
 public function OnPanelAdded()
 {
     // comment("--------------------------ModMenuBase----------------------------------");

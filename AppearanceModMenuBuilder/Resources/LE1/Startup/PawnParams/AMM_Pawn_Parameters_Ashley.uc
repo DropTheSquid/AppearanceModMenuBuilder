@@ -4,7 +4,6 @@ Class AMM_Pawn_Parameters_Ashley extends AMM_Pawn_Parameters_Romanceable
 public function SpecialHandling(BioPawn targetPawn)
 {
     local BioPawnType pawnType;
-    local string sComment;
 
 	// this is a non-framework specific issue (EG there is no issue when framework is installed):
 	// if we are in the menu trying to customize Ashley's casual appearance

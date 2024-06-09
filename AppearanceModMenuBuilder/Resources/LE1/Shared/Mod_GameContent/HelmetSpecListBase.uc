@@ -88,7 +88,6 @@ public function bool GetHelmetSpecById(int Id, out HelmetSpecBase helmetSpec)
 public function bool GetHelmetSpecItemById(int Id, out HelmetSpecItem item)
 {
     local int index;
-    local string sComment;
     
     // Go from the end of the list to the start in order to find the highest mounted version in case of a conflict
     for (index = helmetSpecs.Length - 1; index >= 0; index--)
