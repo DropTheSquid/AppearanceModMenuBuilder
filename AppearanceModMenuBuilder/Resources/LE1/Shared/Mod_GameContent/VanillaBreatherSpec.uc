@@ -10,10 +10,6 @@ enum eVisorState
 public function bool LoadBreather(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds, out pawnAppearance appearance)
 {
 	local eVisorState visorState;
-	
-	// TODO take into account pawn props and whether they are actually forced to wear a helmet
-	// plus preferences set in the menu once that is implemented
-
 	GetVanillaBreatherMesh(class'AMM_Utilities'.static.GetPawnType(target), appearance.BreatherMesh, visorState);
 
 	if (visorState == eVisorState.Show)
@@ -48,7 +44,7 @@ private static function GetVanillaBreatherMesh(BioPawnType pawnType, out Appeara
 		return;
 	}
 
-	// TODO this is an array, I think there can theoretically be more than one breather spec, indexed by a property on the appearance settings
+	//  this is an array, I think there can theoretically be more than one breather spec, indexed by a property on the appearance settings
 	// but I have never seen it actually used, so I think I am going to ignore it.
 	breatherMesh.Mesh = breatherMeshSpecs[0].m_pMesh;
 	// there is a very weird thing in vanilla where the m_bHidesVisor on the breather spec

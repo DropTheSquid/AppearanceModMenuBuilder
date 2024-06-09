@@ -125,7 +125,9 @@ private static function bool GetHelmetMeshPaths(
     hideHair = modelSpec.m_bIsHairHidden;
     hideHead = modelSpec.m_bIsHeadHidden;
 	// and whether the visor should be suppressed
-    suppressVisor = modelSpec.m_bSuppressVisor;
+	// this is super stupid and mysterious but it is needed for Turian helmets to work right
+	suppressVisor = modelSpec.m_bSuppressVisor || pawnType.m_oAppearanceSettings.m_oBodySettings.m_oHeadGearSettings.m_visor.m_bIsHidden;
+
 	// and whether the faceplate/breather should be suppressed
     suppressBreather = modelSpec.m_bSuppressFacePlate;
 
