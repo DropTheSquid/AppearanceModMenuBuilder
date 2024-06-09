@@ -36,18 +36,20 @@ struct PawnAppearanceIds
     struct AppearanceSettings
     {
         var eHelmetDisplayState helmetDisplayState;
+		// for non squad characters, by default their helmet visibility will be locked to default
+		// if this is turned on, then it will respect the setting above
+		var bool bOverridedefaultHeadgearVisibility;
     };
 };
 
 public static function AppearanceSettings DecodeAppearanceSettings(int flags)
 {
-	local int helmetFlags;
-    local string comment;
+	local int helmetDisplayState;
 	local AppearanceSettings settings;
     
-    // comment = "zero out all bits except the first two, then compare what is left
-    helmetFlags = flags & 3; // AKA 0011 in binary
-    switch (helmetFlags)
+    // zero out all bits except the first two, then compare what is left
+    helmetDisplayState = flags & 3; // AKA 0011 in binary
+    switch (helmetDisplayState)
     {
 		case 0:
 			settings.helmetDisplayState = eHelmetDisplayState.off;
@@ -59,10 +61,13 @@ public static function AppearanceSettings DecodeAppearanceSettings(int flags)
             settings.helmetDisplayState = eHelmetDisplayState.full;
 			break;
 		default:
-			LogInternal("Invalid helmet flag in appearance settings"@helmetFlags);
+			LogInternal("Invalid helmet display state in appearance settings"@helmetDisplayState);
 			settings.helmetDisplayState = eHelmetDisplayState.off;
 			break;
     }
+
+	// if the 4 bit AKA 0100 is set, this is true
+	settings.bOverridedefaultHeadgearVisibility = (flags & 4) != 0;
 
 	// TODO decode more flags here later
 	return settings;
@@ -71,7 +76,7 @@ public static function AppearanceSettings DecodeAppearanceSettings(int flags)
 public static function int EncodeAppearanceSettings(AppearanceSettings settings)
 {
 	local int helmetFlags;
-	local string comment;
+	local int overrideHeadgearFlag;
 
 	switch (settings.helmetDisplayState)
 	{
@@ -86,8 +91,10 @@ public static function int EncodeAppearanceSettings(AppearanceSettings settings)
 			break;
 	}
 
+	overrideHeadgearFlag = settings.bOverridedefaultHeadgearVisibility ? 4 : 0;
+
 	// TODO encode more flags here later
-	return helmetFlags; // | otherFlags once there are others
+	return helmetFlags | overrideHeadgearFlag; // | otherFlags once there are others
 }
 
 public static function bool IsFrameworkInstalled()

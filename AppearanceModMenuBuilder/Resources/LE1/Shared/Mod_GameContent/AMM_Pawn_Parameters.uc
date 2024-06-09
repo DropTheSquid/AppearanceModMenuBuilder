@@ -26,7 +26,6 @@ var  Object _breatherSpecList;
 var config string Tag;
 var config array<string> alternateTags;
 // only relevant for the player
-// TODO get rid of this
 var config eGender gender;
 // when launching the menu for this pawn, what menu should it start in?
 var config string menuRootPath;
@@ -44,6 +43,18 @@ var config bool suppressBreatherMenu;
 var config bool isPlayer;
 var config string BodyMaterialOverrideMIC;
 var config bool DoNotApplyGlobalParams;
+// whether to give full helmet control by default. intended for squadmates, but also works for most NPCs
+var config bool GiveFullHelmetControl;
+// the default state of the helmet; has no effect if the above is set
+var config eHelmetDisplayState defaultHelmetState;
+// whether to allow the user to override the helmet
+// again, no effect if GiveFullHelmetControl is true
+var config bool canChangeHelmetState;
+// recommendation here:
+// if the pawn does not normally have a helmet and there is no good reason not to let them have one, just give full control, with default off (see most NPCs in armor)
+// similarly, if they have a helmet in vanilla but there is no reason you shouldn't be able to remove it, set the default and allow the user to change it, but don't give full control immediately.
+// this will be almost the same, except you will be able to restore it to default. is that even needed?
+// if they should not have a helmet (dubious) or they must have a helmet/breather (see corpses with no head under there) then set the default and don't let them change it
 
 // Returns true if a given pawn should be controlled by these params
 public function bool matchesPawn(BioPawn targetPawn)
@@ -211,4 +222,6 @@ defaultproperties
 	PreviewCameraMaxHeight = 87
 	// hide hats by default
 	suppressHatMenu=true
+	GiveFullHelmetControl=true
+	canChangeHelmetState=true
 }

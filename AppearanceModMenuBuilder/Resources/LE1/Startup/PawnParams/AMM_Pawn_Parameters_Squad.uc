@@ -85,8 +85,3 @@ public function bool spawnPawnIntoParty(string appearanceType, out BioPawn spawn
     spawnedPawn = gameInfo.SpawnHenchman(Name(Tag), BioWorldInfo.m_playerSquad.m_playerPawn, -60.0, -60.0, FALSE);
     return spawnedPawn != None;
 }
-
-//class default properties can be edited in the Properties tab for the class's Default__ object.
-defaultproperties
-{
-}

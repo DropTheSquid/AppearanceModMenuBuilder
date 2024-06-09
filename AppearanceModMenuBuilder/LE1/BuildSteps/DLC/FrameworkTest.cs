@@ -136,7 +136,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             string meshPath = (GetOptionalObjectProperty(GetOptionalObjectProperty(pawn, "Mesh"), "SkeletalMesh")?.InstancedFullPath ?? "").ToLower();
             string headMeshPath = (GetOptionalObjectProperty(GetOptionalObjectProperty(pawn, "m_oHeadMesh"), "SkeletalMesh")?.InstancedFullPath ?? "").ToLower();
 
-            // assume anyone in a default cth outfit is casual, otherwise combat
+            // assume anyone in a default cth or nkd outfit is casual, otherwise combat
             var casual = meshPath.Contains("cth") || meshPath.Contains("nkd");
 
             if (meshPath.Contains("hmf"))
@@ -169,6 +169,11 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             else if (meshPath.Contains("tur") || meshPath.Contains("Sar") || meshPath.Contains("cbt_end"))
             {
                 // TUR stuff
+                // Saren on his flyer should also be armor
+                if (meshPath.Contains("cbt_end"))
+                {
+                    casual = false;
+                }
                 pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.TUR_OutfitSpec");
                 pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.TUR_HelmetSpec");
                 pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.TUR_BreatherSpec");
@@ -178,6 +183,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     SubMenuClassName = casual ? "AMM_Submenus.Turian.AppearanceSubmenu_Turian_CasualOutfits" : "AMM_Submenus.Turian.AppearanceSubmenu_Turian_CombatOutfits"
                 });
             }
+            // Benezia gets asari combat outfits
             else if (meshPath.Contains("mrc"))
             {
                 // asa stuff
@@ -213,6 +219,34 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     InlineSubmenu = true,
                     SubMenuClassName = casual ? "AMM_Submenus.HumanMale.AppearanceSubmenu_HumanMale_CasualOutfits" : "AMM_Submenus.HumanMale.AppearanceSubmenu_HumanMale_CombatOutfits"
                 });
+            }
+
+            // these are the corpses on X57 that don't have heads under there
+            // set it to full with no way to change it
+            if (tag == "prc1_hmm_hymes" || tag == "prc1_hmm_mendel" || tag == "prc1_hmm_montoya" || tag == "prc1_hmm_slajs")
+            {
+                pawnParamsConfig.SetBoolValue("GiveFullHelmetControl", false);
+                pawnParamsConfig.SetBoolValue("canChangeHelmetState", false);
+                pawnParamsConfig.SetStringValue("defaultHelmetState", "full");
+            }
+
+            // others that default to on just for the aestetic
+            if (tag == "sta60_assassin" || tag == "sp120_toombs")
+            {
+                pawnParamsConfig.SetBoolValue("GiveFullHelmetControl", false);
+                pawnParamsConfig.SetStringValue("defaultHelmetState", "on");
+            }
+
+            // others that default to full
+            // Durand is on a planet with no atmosphere, but she does have a head
+            // same with Elanos Haliat
+            // Tonn Actus is just wearing full helmet inside because he wants to
+            // could include Duranr and Elanos in the must stay on camp
+            // it would be even better if it forced it on via sequence, but alas
+            if (tag == "UNC73_ELT_AllianceLieutenantDurand" || tag == "UNC53_Elanos" || tag == "NPCH_TonnActus")
+            {
+                pawnParamsConfig.SetBoolValue("GiveFullHelmetControl", false);
+                pawnParamsConfig.SetStringValue("defaultHelmetState", "full");
             }
 
             //ConfigMergeFile.AddOrMergeClassConfig(preloadSubmenuConfig);

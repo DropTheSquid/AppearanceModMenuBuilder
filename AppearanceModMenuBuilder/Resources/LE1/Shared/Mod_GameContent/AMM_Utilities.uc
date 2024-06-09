@@ -541,20 +541,36 @@ public static function eHelmetDisplayState GetHelmetDisplayState(PawnAppearanceI
 {
 	local BioPawnType pawnType;
 	local eHelmetDisplayState forceHelmetState;
+	local AMM_Pawn_Parameters params;
 
-	// if the game has an override to breather and we are not ignoring it, use a full breather
-	if (ShouldUseForcedBreather(target))
+	if (!class'AMM_AppearanceUpdater'.static.GetPawnParams(target, params))
 	{
-		return eHelmetDisplayState.full;
+		// this really shouldn't happen
+		LogInternal("Warning: a very unexpected thing happened");
+		return eHelmetDisplayState.off;
 	}
 
-	if (GetMenuHelmetOverride(target, appearanceIds.m_appearanceSettings.helmetDisplayState, forceHelmetState))
+	if (params.GiveFullHelmetControl || (appearanceIds.m_appearanceSettings.bOverridedefaultHeadgearVisibility && params.canChangeHelmetState))
 	{
-		return forceHelmetState;
-	}
+		// if the game has an override to breather and we are not ignoring it, use a full breather
+		if (ShouldUseForcedBreather(target, params))
+		{
+			return eHelmetDisplayState.full;
+		}
 
-	// else use what the player has requested
-	return appearanceIds.m_appearanceSettings.helmetDisplayState;
+		if (GetMenuHelmetOverride(target, appearanceIds.m_appearanceSettings.helmetDisplayState, forceHelmetState))
+		{
+			return forceHelmetState;
+		}
+
+		// else use what the player has requested
+		return appearanceIds.m_appearanceSettings.helmetDisplayState;
+	}
+	else
+	{
+		// use the default helmet state
+		return params.defaultHelmetState;
+	}
 }
 
 private static function bool GetMenuHelmetOverride(BioPawn target, eHelmetDisplayState desiredState, out eHelmetDisplayState result)
@@ -626,7 +642,7 @@ private static function bool GetMenuHelmetOverride(BioPawn target, eHelmetDispla
 	}
 }
 
-private static function bool ShouldUseForcedBreather(BioPawn target)
+private static function bool ShouldUseForcedBreather(BioPawn target, AMM_Pawn_Parameters params)
 {
 	local BioPawnType pawnType;
 	local BioInterface_Appearance_Pawn appearance;
@@ -634,7 +650,6 @@ private static function bool ShouldUseForcedBreather(BioPawn target)
 	local bool helmetVisible;
 	local bool faceplateVisible;
 	local BioGlobalVariableTable globalVars;
-	local AMM_Pawn_Parameters params;
 	local BioSFPanel panel;
 
 	// if this is a preview pawn in AMM, return false; we should ignore forced state there
@@ -643,7 +658,7 @@ private static function bool ShouldUseForcedBreather(BioPawn target)
 		return false;
 	}
 
-	if (class'AMM_AppearanceUpdater'.static.GetPawnParams(target, params) && params.bIgnoreForcedHelmet)
+	if (params.bIgnoreForcedHelmet)
 	{
 		return false;
 	}
@@ -668,3 +683,79 @@ private static function bool ShouldUseForcedBreather(BioPawn target)
 	// force the breather only if the helmet and faceplate have been forced into visibility
 	return helmetVisible && faceplateVisible;
 }
+
+// private static function eHelmetDisplayState GetVanillaHelmetState(BioPawn target)
+// {
+// 	local BioInterface_Appearance_Pawn appearance;
+//     local BioPawnType pawnType;
+//     local bool headgearVisibilityPreference;
+//     local bool isHeadgearPreferenceOverridden;
+// 	local bool helmetVisible;
+// 	local bool faceplateVisible;
+
+// 	pawnType = GetPawnType(target);
+// 	appearance = BioInterface_Appearance_Pawn(target.m_oBehavior.m_oAppearanceType);
+// 	isHeadgearPreferenceOverridden = !target.IsHeadGearVisiblePreferenceRelevant();
+
+// 	if (!isHeadgearPreferenceOverridden)
+// 	{
+// 		// general visibility not overridden
+// 		helmetVisible = appearance.m_headGearVisibilityOverride.m_a[2].m_bIsVisible;
+// 		if (!helmetVisible)
+// 		{
+// 			return eHelmetDisplayState.off;
+// 		}
+// 		faceplateVisible = appearance.m_headGearVisibilityOverride.m_a[1].m_bIsVisible;
+// 		return faceplateVisible ? eHelmetDisplayState.full : eHelmetDisplayState.on;
+// 	}
+// 	else
+// 	{
+// 		helmetVisible = appearance.m_headGearVisibilityRunTimeOverride.m_a[2].m_bIsVisible;
+// 		if (!helmetVisible)
+// 		{
+// 			return eHelmetDisplayState.off;
+// 		}
+// 		faceplateVisible = appearance.m_headGearVisibilityRunTimeOverride.m_a[1].m_bIsVisible;
+// 		return faceplateVisible ? eHelmetDisplayState.full : eHelmetDisplayState.on;
+// 	}
+// }
+
+
+// private final function bool GetHelmetParams(BioPawn targetPawn)
+// {
+//     local BioInterface_Appearance_Pawn appearance;
+//     local BioPawnType pawnType;
+//     local bool headgearVisibilityPreference;
+//     local bool isHeadgearPreferenceOverridden;
+
+// 	pawnType = GetPawnType(targetPawn);
+// 	appearance = BioInterface_Appearance_Pawn(targetPawn.m_oBehavior.m_oAppearanceType);
+// 	isHeadgearPreferenceOverridden = !targetPawn.IsHeadGearVisiblePreferenceRelevant();
+// 	// if headgear preference is not overridden
+// 	if (!isHeadgearPreferenceOverridden)
+// 	{
+// 		if (!appearance.m_headGearVisibilityOverride.m_a[2].m_bIsVisible)
+// 		{
+// 			helmetState.state = ehelmetState.off;
+// 			LogInfo("Helmet State not runtime overriden, but disabled on pawn");
+// 			return TRUE;
+// 		}
+// 		helmetState.state = appearance.m_bHeadGearVisiblePreference ? ehelmetState.on : ehelmetState.off;
+// 		LogInfo("Helmet State not overriden, preference is" @ (appearance.m_bHeadGearVisiblePreference ? "on" : "off"));
+// 		return TRUE;
+// 	}
+// 	else
+// 	{
+// 		if (appearance.m_headGearVisibilityRunTimeOverride.m_a[2].m_bIsVisible)
+// 		{
+// 			helmetState.state = appearance.m_headGearVisibilityRunTimeOverride.m_a[1].m_bIsVisible ? ehelmetState.full : ehelmetState.on;
+// 			LogInfo("Helmet State overriden, override is" @ (appearance.m_headGearVisibilityRunTimeOverride.m_a[1].m_bIsVisible ? "full" : "on"));
+// 			return TRUE;
+// 		}
+// 		helmetState.state = ehelmetState.off;
+// 		LogInfo("Helmet State overriden, override is off");
+// 		return TRUE;
+// 	}
+    
+//     return TRUE;
+// }
