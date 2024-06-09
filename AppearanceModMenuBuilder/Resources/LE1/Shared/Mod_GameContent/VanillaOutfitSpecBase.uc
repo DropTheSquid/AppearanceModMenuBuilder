@@ -32,7 +32,7 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
 	helmetDisplayState = class'AMM_Utilities'.static.GetHelmetDisplayState(appearanceIds, target);
 	if (helmetDisplayState != eHelmetDisplayState.off)
 	{
-		return specLists.helmetSpecs.DelegateToHelmetSpec(target, specLists, appearanceIds, appearance);
+		specLists.helmetSpecs.DelegateToHelmetSpec(target, specLists, appearanceIds, appearance);
 	}
 	return true;
 }
@@ -70,6 +70,11 @@ protected static function bool GetOutfitStrings(BioPawnType pawnType, int armorT
     // For example, LGTa
     meshCode = class'Amm_Utilities'.static.GetArmorCode(byte(armorType)) $ class'Amm_Utilities'.static.GetLetter(meshVariant);
     numMaterials = armor.Variations[meshVariant].MaterialsPerVariation;
+	// some outfits are set up wrong and say 0, noteably HMF LGTc
+	if (numMaterials < 1)
+	{
+		numMaterials = 1;
+	}
 	// eg LGTa.TUR_ARM_LGTa
 	sharedPrefix = meshCode $ "." $ prefix $ "_" $ meshCode;
 	// eg BIOG_TUR_ARM_LGT_R.LGTa.TUR_ARM_LGTa_MDL

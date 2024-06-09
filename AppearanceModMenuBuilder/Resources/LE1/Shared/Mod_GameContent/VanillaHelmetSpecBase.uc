@@ -61,7 +61,7 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 	// if the breather is not suppressed, delegate to the breather spec
 	if (!suppressBreather)
 	{
-		return specLists.breatherSpecs.DelegateToBreatherSpec(target, specLists, appearanceIds, appearance);
+		specLists.breatherSpecs.DelegateToBreatherSpec(target, specLists, appearanceIds, appearance);
 	}
 	
 	return true;

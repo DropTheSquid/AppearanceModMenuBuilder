@@ -410,7 +410,6 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
 	}
     smc.SetSkeletalMesh(AppearanceMesh.Mesh);
 
-	// smc.Materials.Length = AppearanceMesh.Materials.Length;
     for (i = 0; i < AppearanceMesh.Materials.Length; i++)
     {
 		// reuse existing MICs when possible; it makes the game much more stable. I am not sure why

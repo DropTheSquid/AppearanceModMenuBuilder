@@ -35,16 +35,6 @@ public function bool DelegateToHelmetSpec(BioPawn target, SpecLists specLists, o
 	}
 	return false;
 }
-// public function bool DelegateToHelmetSpecById(int id, BioPawn target)
-// {
-// 	local HelmetSpecBase deletageSpec;
-
-// 	if (GetHelmetSpecById(id, deletageSpec))
-// 	{
-// 		return deletageSpec.ApplyHelmet(target);
-// 	}
-// 	return false;
-// }
 
 public function bool GetHelmetSpecById(int Id, out HelmetSpecBase helmetSpec)
 {
@@ -56,7 +46,6 @@ public function bool GetHelmetSpecById(int Id, out HelmetSpecBase helmetSpec)
 	{
 		if (item.specPath != "")
 		{
-			// LogInternal("dynamic loading spec" @ item.specPath, );
 			helmetSpecClass = Class<HelmetSpecBase>(DynamicLoadObject(item.specPath, Class'Class', TRUE));
 			if (helmetSpecClass == None)
 			{
@@ -69,7 +58,6 @@ public function bool GetHelmetSpecById(int Id, out HelmetSpecBase helmetSpec)
 				return helmetSpec != None;
 			}
 			helmetSpec = new helmetSpecClass;
-			// LogInternal("helmet spec loaded" @ helmetSpec, );
 			if (helmetSpec == None)
 			{
 				LogInternal("Warning: Could not get helmet spec from class"@item.specPath);

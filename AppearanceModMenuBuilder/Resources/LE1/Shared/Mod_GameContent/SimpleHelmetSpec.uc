@@ -29,7 +29,7 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 	helmetDisplayState = class'AMM_Utilities'.static.GetHelmetDisplayState(appearanceIds, target);
 	if (!bSuppressBreather && helmetDisplayState == eHelmetDisplayState.full)
 	{
-		return specLists.breatherSpecs.DelegateToBreatherSpec(target, specLists, appearanceIds, appearance);
+		specLists.breatherSpecs.DelegateToBreatherSpec(target, specLists, appearanceIds, appearance);
 	}
 	return true;
 }

@@ -56,7 +56,6 @@ public function bool GetOutfitSpecById(int Id, out OutfitSpecBase OutfitSpec)
 	{
 		if (item.specPath != "")
 		{
-			// LogInternal("dynamic loading spec" @ item.specPath, );
 			outfitSpecClass = Class<OutfitSpecBase>(DynamicLoadObject(item.specPath, Class'Class', TRUE));
 			if (outfitSpecClass == None)
 			{
@@ -69,7 +68,6 @@ public function bool GetOutfitSpecById(int Id, out OutfitSpecBase OutfitSpec)
 				return OutfitSpec != None;
 			}
 			OutfitSpec = new outfitSpecClass;
-			// LogInternal("outfit spec loaded" @ OutfitSpec, );
 			if (outfitSpec == None)
 			{
 				LogInternal("Warning: Could not get outfit spec from class"@item.specPath);

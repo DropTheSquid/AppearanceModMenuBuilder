@@ -49,13 +49,12 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
 	// if a helmet is requested and it is not suppressed
 	if (helmetDisplayState != eHelmetDisplayState.off && !bSuppressHelmet)
 	{
-		return specLists.helmetSpecs.DelegateToHelmetSpec(target, specLists, appearanceIds, appearance);
+		specLists.helmetSpecs.DelegateToHelmetSpec(target, specLists, appearanceIds, appearance);
 	}
-
-	// if a helmet is requested and it is not suppressed
-	if (helmetDisplayState == eHelmetDisplayState.full && !bSuppressBreather)
+	// if a breather is requested and the helmet is suppressed but the breather is not
+	else if (helmetDisplayState == eHelmetDisplayState.full && bSuppressHelmet && !bSuppressBreather)
 	{
-		return specLists.breatherSpecs.DelegateToBreatherSpec(target, specLists, appearanceIds, appearance);
+		specLists.breatherSpecs.DelegateToBreatherSpec(target, specLists, appearanceIds, appearance);
 	}
 
 	return true;

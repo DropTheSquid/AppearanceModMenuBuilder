@@ -43,7 +43,6 @@ public function bool GetBreatherSpecById(int Id, out BreatherSpecBase breatherSp
 	{
 		if (item.specPath != "")
 		{
-			// LogInternal("dynamic loading spec" @ item.specPath, );
 			breatherSpecClass = Class<BreatherSpecBase>(DynamicLoadObject(item.specPath, Class'Class', TRUE));
 			if (breatherSpecClass == None)
 			{
@@ -56,7 +55,6 @@ public function bool GetBreatherSpecById(int Id, out BreatherSpecBase breatherSp
 				return breatherSpec != None;
 			}
 			breatherSpec = new breatherSpecClass;
-			// LogInternal("breather spec loaded" @ breatherSpec, );
 			if (breatherSpec == None)
 			{
 				LogInternal("Warning: Could not get breather spec from class"@item.specPath);
@@ -70,7 +68,6 @@ public function bool GetBreatherSpecById(int Id, out BreatherSpecBase breatherSp
 		simpleSpec.bSuppressVisor = item.suppressVisor;
 		simpleSpec.bHideHair = item.hideHair;
 		simpleSpec.bHideHead = item.hideHead;
-		// simpleSpec.breatherTypeOverride = item.BreatherSpec;
 		breatherSpec = simpleSpec;
 		if (breatherSpec == None)
 		{
