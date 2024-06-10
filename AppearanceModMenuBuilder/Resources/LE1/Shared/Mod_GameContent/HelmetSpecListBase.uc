@@ -15,6 +15,8 @@ struct HelmetSpecItem
     var bool suppressBreather;
     var bool hideHair;
     var bool hideHead;
+	var int fullHelmetSpecOverride;
+	var int breatherSpecOverride;
     // var int BreatherSpec;
     // var string comment;
 };
@@ -72,7 +74,8 @@ public function bool GetHelmetSpecById(int Id, out HelmetSpecBase helmetSpec)
 		simpleSpec.bSuppressBreather = item.suppressBreather;
 		simpleSpec.bHideHair = item.hideHair;
 		simpleSpec.bHideHead = item.hideHead;
-		// simpleSpec.breatherTypeOverride = item.BreatherSpec;
+		simpleSpec.helmetFullHelmetSpec = item.fullHelmetSpecOverride;
+		simpleSpec.breatherSpecOverride = item.breatherSpecOverride;
 		helmetSpec = simpleSpec;
 		if (helmetSpec == None)
 		{
