@@ -140,11 +140,22 @@ public function OnPanelAdded()
         RootSubmenuPath = params.menuRootPath;
     }
     SetRootSubmenu(RootSubmenuPath);
+	class'AMM_AppearanceUpdater'.static.GetDlcInstance().SetOnAppearanceUpdatedCallback(OnAppearanceUpdated);
     Super.OnPanelAdded();
+}
+
+public function OnAppearanceUpdated(BioPawn target, string source)
+{
+	RefreshHelmetButton();
 }
 
 public function Close()
 {
+	local AMM_AppearanceUpdater updaterInstance;
+
+	updaterInstance = class'AMM_AppearanceUpdater'.static.GetDlcInstance();
+	updaterInstance.menuHelmetOverride = int(eMenuHelmetOverride.unchanged);
+
     pawnHandler.Cleanup();
     cameraHandler.Cleanup();
 	helmetHandler.Cleanup();
@@ -159,6 +170,8 @@ public function Close()
     // updater.tempHelmetOverride = eMenuHelmetOverride.unchanged;
 	// restore whether it was paused
 	oWorldInfo.bPlayersOnly = GameWasPaused;
+
+	updaterInstance.SetOnAppearanceUpdatedCallback(None);
     Super.Close();
 }
 
@@ -320,7 +333,6 @@ private function TryDisplayPawn(string tag, string appearanceType)
 	local PawnLoadState state;
 
 	state = pawnHandler.LoadPawn(tag, appearanceType);
-	// Log("Setting up pawn");
 	if (state == PawnLoadState.Loaded)
 	{
 		// do not reset the camera if the pawn has not changed

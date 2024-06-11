@@ -6,6 +6,15 @@ var transient string outerWorldInfoPath;
 var transient int menuHelmetOverride;
 var transient name menuTagOverride;
 
+var transient delegate<onAppearanceUpdated> __onAppearanceUpdated__Delegate;
+
+public function SetOnAppearanceUpdatedCallback(delegate<onAppearanceUpdated> fn_onAppearanceUpdatedDelegate)
+{
+    __onAppearanceUpdated__Delegate = fn_onAppearanceUpdatedDelegate;
+}
+
+public delegate function onAppearanceUpdated(BioPawn target, string source);
+
 public function UpdatePawnAppearance(BioPawn target, string source)
 {
 	local AMM_Pawn_Parameters params;
@@ -63,6 +72,10 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 				{
 					class'AMM_Utilities'.static.UpdatePawnMaterialParameters(target);
 				}
+			}
+			if (__onAppearanceUpdated__Delegate != None)
+			{
+				__onAppearanceUpdated__Delegate(target, source);
 			}
 		}
 		else
@@ -170,7 +183,6 @@ private function UpdatePreviewTags(BioPawn target)
 	// this is usually bad and we want to fix it before we update the appearance
 	if (target.GetPackageName() == 'BIOG_UIWorld' && menuTagOverride != 'None')
 	{
-		LogInternal("UpdatePreviewTags"@target.Tag@menuTagOverride);
 		// do not overwrite these ones; it will destroy our info about the player's gender
 		if (target.tag == 'Human_Male' || target.tag == 'Human_Female')
 		{
