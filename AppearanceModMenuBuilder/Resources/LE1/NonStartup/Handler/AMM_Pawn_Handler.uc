@@ -216,7 +216,10 @@ public function bool IsPawnDisplayed(string tag)
 	{
 		if (currentRecord.tag ~= tag)
 		{
-			return currentRecord.pawn == _currentDisplayedPawn;
+			if (currentRecord.pawn == _currentDisplayedPawn)
+			{
+				return true;
+			}
 		}
 	}
 	return false;
