@@ -48,15 +48,20 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 				// CheckIfAppearanceDiffersFromDefaults(target, appearanceIds, pawnAppearance);
 				class'AMM_Utilities'.static.ApplyPawnAppearance(target, pawnAppearance);
 
-				// make sure that skintone matches and headmorph material overrides are applied to all materials
-				if (!params.DoNotApplyGlobalParams)
-				{
-					class'AMM_Utilities'.static.UpdatePawnMaterialParameters(target);
-				}
+				// if there is an override set, apply that
 				if (params.BodyMaterialOverrideMIC != "")
 				{
-					mic = MaterialInstanceConstant(DynamicLoadObject(params.BodyMaterialOverrideMIC, class'MaterialInstanceConstant'));
-					class'AMM_Utilities'.static.ApplyMaterialOverrides(target.Mesh, mic);
+					// unless you have opted out default outfits and this is one of those default outfits
+					if (!params.DoNotApplyBodyOverrideToDefaultOutfits || (appearanceIds.bodyAppearanceId != 0 && appearanceIds.bodyAppearanceId != -1))
+					{
+						mic = MaterialInstanceConstant(DynamicLoadObject(params.BodyMaterialOverrideMIC, class'MaterialInstanceConstant'));
+						class'AMM_Utilities'.static.ApplyMaterialOverrides(target.Mesh, mic);
+					}
+				}
+				// otherwise, copy stuff from the headmorph or head materials
+				else
+				{
+					class'AMM_Utilities'.static.UpdatePawnMaterialParameters(target);
 				}
 			}
 		}

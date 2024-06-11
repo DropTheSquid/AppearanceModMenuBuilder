@@ -332,6 +332,11 @@ public static function ApplyMaterialOverrides(SkeletalMeshComponent smc, Materia
 	local int j;
 	local MaterialInstanceConstant targetMIC;
 
+	if (mic == None)
+	{
+		return;
+	}
+
 	for (i = 0; i < smc.GetNumElements(); i++)
 	{
 		targetMIC = MaterialInstanceConstant(smc.GetBaseMaterial(i));

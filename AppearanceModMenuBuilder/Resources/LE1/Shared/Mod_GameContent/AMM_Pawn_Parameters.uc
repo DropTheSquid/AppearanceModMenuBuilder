@@ -39,10 +39,13 @@ var config float PreviewCameraMaxHeight;
 var config bool suppressHelmetMenu;
 var config bool suppressHatMenu;
 var config bool suppressBreatherMenu;
-// tells the game to apply the player headmorph and customizations to this pawn. 
+// tells the game to apply the player headmorph and customizations to this pawn.
 var config bool isPlayer;
+// a materialInstanceConstant whose params will be copied onto the body. Useful for skintone tinting with heads that don't tint the same as most materials
 var config string BodyMaterialOverrideMIC;
-var config bool DoNotApplyGlobalParams;
+// opts the default outfit out of using BodyMaterialOverrideMIC, if it already takes that into account. 
+var config bool DoNotApplyBodyOverrideToDefaultOutfits;
+
 // whether to give full helmet control by default. intended for squadmates, but also works for most NPCs
 var config bool GiveFullHelmetControl;
 // the default state of the helmet; has no effect if the above is set
