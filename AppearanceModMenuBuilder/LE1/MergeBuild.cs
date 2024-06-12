@@ -45,7 +45,9 @@ namespace AppearanceModMenuBuilder.LE1
                 .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "BioSFHandler_CharacterRecord.Update", @"Resources\LE1\SFXGame\BioSFHandler_CharacterRecord.Update.uc"))
                 .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "BioSFHandler_CharacterRecord.ChangeToCharacter", @"Resources\LE1\SFXGame\BioSFHandler_CharacterRecord.ChangeToCharacter.uc"))
                 // generate the actual json for the merge mod
-                .AddTask(new GenerateMergeJson());
+                .AddTask(new GenerateMergeJson())
+                // and finally, compile the merge mod
+                .AddTask(new CompileMergeMod(MergeModName, @"H:\MELE_Mods\tools\M3 v9\ME3TweaksModManager\ME3TweaksModManager.exe", "8.0"));
         }
     }
 }
