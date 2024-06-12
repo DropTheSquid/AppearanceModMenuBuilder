@@ -26,6 +26,12 @@ struct OutfitSpecItem
 	var int HelmetOnBodySpec;
 	// same as above, but allows a different outfit if the helmet is full with breather
 	var int HelmetFullBodySpec;
+	// allows you to set a helmet spec to be used by default if a full helmet is required
+	var int HelmetFullHelmetSpec;
+	// force a specific helmet, overriding other things, even user choice
+	var int forceHelmetSpec;
+	// force a specific breather mesh, used in helmet is suppressed, but not breather
+	var int breatherSpecOverride;
 };
 
 // Variables
@@ -84,6 +90,9 @@ public function bool GetOutfitSpecById(int Id, out OutfitSpecBase OutfitSpec)
 		simpleSpec.helmetTypeOverride = item.HelmetSpec;
 		simpleSpec.HelmetOnBodySpec = item.HelmetOnBodySpec;
 		simpleSpec.HelmetFullBodySPec = item.HelmetFullBodySpec;
+		simpleSpec.helmetFullHelmetSpec = item.helmetFullHelmetSpec;
+		simpleSpec.forceHelmetSpec = item.forceHelmetSpec;
+		simpleSpec.breatherSpecOverride = item.breatherSpecOverride;
 		// simpleSpec.breatherTypeOverride = item.BreatherSpec;
 		OutfitSpec = simpleSpec;
 		if (outfitSpec == None)

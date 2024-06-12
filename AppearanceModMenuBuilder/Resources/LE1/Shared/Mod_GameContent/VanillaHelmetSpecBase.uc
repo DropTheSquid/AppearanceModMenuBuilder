@@ -36,14 +36,14 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 		return false;
 	}
 
-	appearance.hideHair = appearance.hideHair || hideHair;
-	appearance.hideHead = appearance.hideHead || hideHead;
-
 	// load the helmet mesh
 	if (!class'AMM_Utilities'.static.LoadAppearanceMesh(helmetMeshPaths, appearance.HelmetMesh, true))
 	{
 		return false;
 	}
+
+	appearance.hideHair = appearance.hideHair || hideHair;
+	appearance.hideHead = appearance.hideHead || hideHead;
 
 	// if the visor is not suppressed, get the visor mesh
 	if (!suppressVisor)

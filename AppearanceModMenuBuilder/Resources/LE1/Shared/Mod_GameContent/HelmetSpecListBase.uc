@@ -17,19 +17,17 @@ struct HelmetSpecItem
     var bool hideHead;
 	var int fullHelmetSpecOverride;
 	var int breatherSpecOverride;
-    // var int BreatherSpec;
-    // var string comment;
 };
 
 var config array<HelmetSpecItem> helmetSpecs;
 
 public function bool DelegateToHelmetSpec(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds, out pawnAppearance appearance)
 {
-	local HelmetSpecBase deletageSpec;
+	local HelmetSpecBase delegateSpec;
 
-	if (GetHelmetSpecById(appearanceIds.helmetAppearanceId, deletageSpec))
+	if (GetHelmetSpecById(appearanceIds.helmetAppearanceId, delegateSpec))
 	{
-		if (deletageSpec.LoadHelmet(target, specLists, appearanceIds, appearance))
+		if (delegateSpec.LoadHelmet(target, specLists, appearanceIds, appearance))
 		{
 			return true;
 		}
