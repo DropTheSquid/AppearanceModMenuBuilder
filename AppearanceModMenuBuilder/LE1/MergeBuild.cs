@@ -47,7 +47,7 @@ namespace AppearanceModMenuBuilder.LE1
                 // generate the actual json for the merge mod
                 .AddTask(new GenerateMergeJson())
                 // and finally, compile the merge mod
-                .AddTask(new CompileMergeMod(MergeModName, @"H:\MELE_Mods\tools\M3 v9\ME3TweaksModManager\ME3TweaksModManager.exe", "8.0"));
+                .AddTask(new CompileMergeMod(MergeModName, FeatureLevel: "9.0"));
         }
     }
 }

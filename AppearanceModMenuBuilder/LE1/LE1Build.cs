@@ -11,7 +11,7 @@ namespace AppearanceModMenuBuilder.LE1
             {
                 Game = MEGame.LE1,
                 ModDLCName = "DLC_MOD_AMM",
-                ModOutputPathBase = @"C:\src\M3Mods\LE1\AppearanceModMenu",
+                ModOutputPathBase = @"C:\modding\general\ME3TweaksModManager\mods\LE1\AppearanceModMenu",
                 StartupName = "Startup_MOD_AMM.pcc"
             };
 

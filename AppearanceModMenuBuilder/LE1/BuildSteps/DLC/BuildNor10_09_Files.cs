@@ -35,6 +35,11 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             // now do the same with the Mello patched version
             var LE1WorkspaceRoot = Directory.GetParent(context.ModOutputPathBase)!.FullName;
+
+            if (!Directory.Exists(Path.Combine(LE1WorkspaceRoot, "ME¹LLO")))
+            {
+                throw new Exception("Mello does not appear to be present in the mod library. This is required to generate compatibility patches");
+            }
             var melloSourceFilePath = Path.Combine(LE1WorkspaceRoot, @"ME¹LLO\DLC_MOD_MELLO\CookedPCConsole\Main-Core\NOR\BIOA_NOR10_09ROM_LAY.pcc");
 
             Directory.CreateDirectory(Path.Combine(context.ModOutputPathBase, $@"Compat\Mello\NOR10_09"));
