@@ -1,8 +1,10 @@
 ﻿using LegendaryExplorerCore.Packages;
 using MassEffectModBuilder;
+using MassEffectModBuilder.DLCTasks;
 using MassEffectModBuilder.LEXHelpers;
 using MassEffectModBuilder.MergeTasks;
 using MassEffectModBuilder.UtilityTasks;
+using static MassEffectModBuilder.LEXHelpers.LooseClassCompile;
 
 namespace AppearanceModMenuBuilder.LE1
 {
@@ -14,19 +16,26 @@ namespace AppearanceModMenuBuilder.LE1
             return builder
                 // clear the merge mod directory
                 .AddTask(new CleanMergeModDirectory())
-                // compile the components for a merge mod
+                // TODO remove this now that it isn't actually used by the merge mod anymore
                 .AddTask(new AddNewClasses("SFXGame.pcc", MergeModName, LooseClassCompile.GetClassFromFile(@"Resources\LE1\SFXGame\AMM_AppearanceUpdater_Base.uc")) { SkipMergeMod = true })
+                // first, add an instance of the new class via assetUpdate (which will also add an empty stub if installing for the first time)
                 .AddTask(new CustomTask(context =>
                 {
-                    // custom task that adds an instance of AppearanceUpdater to the basegame; this can serve as the default instance and also let me check whether the basegame changes are in place
-                    // based on the presence of this. 
-                    var mergePkg = MEPackageHandler.OpenMEPackage(Path.Combine(context.MergeModsFolder, "SFXGameClasses.pcc"));
-                    ExportCreator.CreateExport(mergePkg, "AMM_AppearanceUpdater_Base", "AMM_AppearanceUpdater_Base", indexed: true);
-                    mergePkg.Save();
+                    // first, make an empty package
+                    using IMEPackage mergePackage = MEPackageHandler.CreateAndOpenPackage(Path.Combine(context.MergeModsFolder, "AMM_AppearanceUpdater_Base.pcc"), context.Game);
 
-                    var task = new UpdateAsset("SFXGame.pcc", MergeModName, "AMM_AppearanceUpdater_Base_0", "AMM_AppearanceUpdater_Base_0", mergePkg.FilePath, true);
+                    // add the empty stub class to the file
+                    new AddClassesToFile(context => mergePackage, new ClassToCompile("AMM_AppearanceUpdater_Base", "class AMM_AppearanceUpdater_Base;"))
+                        .RunModTask(context);
+
+                    ExportCreator.CreateExport(mergePackage, "AMM_AppearanceUpdater_Base", "AMM_AppearanceUpdater_Base", indexed: true);
+                    mergePackage.Save();
+
+                    var task = new UpdateAsset("SFXGame.pcc", MergeModName, "AMM_AppearanceUpdater_Base_0", "AMM_AppearanceUpdater_Base_0", mergePackage.FilePath, true);
                     task.RunModTask(context);
                 }))
+                // then update the class to have all the things it should
+                .AddTask(new AddOrUpdateClass("SFXGame.pcc", MergeModName, @"Resources\LE1\SFXGame\AMM_AppearanceUpdater_Base.uc"))
                 // add hook to cover most pawns who are not modified after loading in
                 .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "BioPawn.PostBeginPlay", @"Resources\LE1\SFXGame\BioPawn.PostBeginPlay.uc"))
                 // hook to cover player after they get more dynamically spawned in
