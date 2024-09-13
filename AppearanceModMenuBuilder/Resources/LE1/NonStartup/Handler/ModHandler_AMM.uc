@@ -113,9 +113,9 @@ public function OnPanelAdded()
     
 	// set up the background so it animates
     GetManager().SetupBackground();
-	// save whether it was paused, unpause it
+	// save whether it was paused, pause it either way
 	GameWasPaused = oWorldInfo.bPlayersOnly;
-	oWorldInfo.bPlayersOnly = false;
+	oWorldInfo.bPlayersOnly = true;
     // LogInternal("Panel added; launch param:" @ launchParam @ "launched in prologue?"@launchedInPrologue);
     pawnHandler = new (Self) Class'AMM_Pawn_Handler';
 	pawnHandler.Init(self);

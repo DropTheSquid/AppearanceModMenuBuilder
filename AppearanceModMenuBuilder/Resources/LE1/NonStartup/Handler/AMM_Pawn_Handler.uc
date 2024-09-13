@@ -60,6 +60,7 @@ struct StreamInRequest
 	var string frameworkLiveEventName;
 	var string frameworkPollEventName;
 	var bool pollSent;
+	var bool timeoutSet;
 	// what is the tag and appearance type of the pawn to look for in that file?
 	var array<PawnId> pawnIds;
 	// the original state of this framework file, so we can restore it when we are done
@@ -81,6 +82,8 @@ var transient array<PawnId> pawnsToPreload;
 var transient array<RealWorldPawnRecord> pawnRecords;
 var transient BioPawn _currentDisplayedPawn;
 var int maxParallelRequests;
+var transient float sequenceTimer;
+var config float SequenceTimeoutLimit;
 
 public function OnRemoteEvent(Name EventName)
 {
@@ -121,9 +124,44 @@ public function OnRemoteEvent(Name EventName)
 			{
 				LogInternal("got live event before level was visible? very strange");
 			}
+			break;
 		}
 	}
+	if (CanUnregisterEvent(EventName))
+	{
+		class'SeqEvent_RemoteEvent_AMM'.static.UnregisterRemoteEvent(EventName);
+	}
 }
+
+private function bool CanUnregisterEvent(Name EventName)
+{
+	local StreamInRequest currentRequest;
+	local int i;
+	local bool anyRequestOpen;
+	local bool specificRequestOpen;
+
+	foreach streamingRequests(currentRequest, i)
+	{
+		if (!currentRequest.completed)
+		{
+			anyRequestOpen = true;
+			if (currentRequest.FrameworkLiveEventName ~= string(EventName))
+			{
+				specificRequestOpen = true;
+				break;
+			}
+		}
+	}
+	if (!anyRequestOpen)
+	{
+		// re pause the game, remove the timeout
+		LogInternal("pausing due to all complete");
+		sequenceTimer = 0;
+		_outerMenu.oWorldInfo.bPlayersOnly = true;
+	}
+	return !specificRequestOpen;
+}
+
 public function Cleanup()
 {
 	local RealWorldPawnRecord currentRecord;
@@ -421,6 +459,8 @@ private function bool LoadFrameworkFile(string tag, string appearanceType, strin
 	request.originalState = GetFileStreamingState(fileName);
 	request.desiredState = DesiredStreamingState.visible;
 	request.completed = false;
+	request.pollSent = false;
+	request.timeoutSet = false;
 	streamingRequests.AddItem(request);
 	return false;
 }
@@ -487,6 +527,20 @@ public function Update(float fDeltaT)
 	local RealWorldPawnRecord newRecord;
 	local int numRequestsInProgress;
 
+	// LogInternal("update"@fDeltaT);
+	if (sequenceTimer > 0)
+	{
+		sequenceTimer -= fDeltaT;
+	}
+	if (sequenceTimer < 0)
+	{
+		sequenceTimer = 0;
+	}
+	if (sequenceTimer == 0 && !_outerMenu.oWorldInfo.bPlayersOnly)
+	{
+		LogInternal("pausing due to timeout");
+		_outerMenu.oWorldInfo.bPlayersOnly = true;
+	}
 	foreach streamingRequests(currentRequest, i)
 	{
 		if (currentRequest.completed)
@@ -500,17 +554,29 @@ public function Update(float fDeltaT)
 			switch (currentState)
 			{
 				case FrameworkStreamState.visible:
-					// now that the level is visible, we need to wait for the kismet to run. 
+					// LogInternal("streaming request for"@currentRequest.frameworkFileName@"is visible"@currentRequest.timeoutSet);
+					// add a timer here so that we pause even if the live event never fires
+					if (!streamingRequests[i].timeoutSet)
+					{
+						if (_outerMenu.oWorldInfo.bPlayersOnly)
+						{
+							LogInternal("unpausing to wait for live event"@currentRequest.frameworkLiveEventName);
+							_outerMenu.oWorldInfo.bPlayersOnly = false;
+						}
+						streamingRequests[i].timeoutSet = true;
+						sequenceTimer = SequenceTimeoutLimit;
+					}
+
+					// now that the level is visible, we need to wait for the kismet to run.
 					// if this file was already visible when we started, we need to start listening for the live event and send the poll event
 					if (currentRequest.originalState == FrameworkStreamState.visible && !currentRequest.pollSent)
 					{
-						LogInternal("starting to listen + firing poll event for already loaded file"@currentRequest.frameworkFileName);
+						// LogInternal("starting to listen + firing poll event for already loaded file"@currentRequest.frameworkFileName);
 						class'SeqEvent_RemoteEvent_AMM'.static.RegisterRemoteEvent(Name(currentRequest.frameworkLiveEventName));
 						_outerMenu.EmitRemoteEvent(currentRequest.frameworkPollEventName);
 						streamingRequests[i].pollSent = true;
 					}
-
-					// TODO also add a timer here so that we pause even if the live event never fires
+					
 					break;
 				case FrameworkStreamState.BecomingVisible:
 				case FrameworkStreamState.loading:
@@ -518,7 +584,7 @@ public function Update(float fDeltaT)
 					break;
 				case FrameworkStreamState.Loaded:
 					// at this point, start listening for the live event
-					LogInternal("starting to listen for loaded but not visible file"@currentRequest.frameworkFileName);
+					// LogInternal("starting to listen for loaded but not visible file"@currentRequest.frameworkFileName);
 					class'SeqEvent_RemoteEvent_AMM'.static.RegisterRemoteEvent(Name(currentRequest.frameworkLiveEventName));
 					// if it is properly loaded, now tell it to be visible. doing it this way will avoid blocking
 					SetLevelStreamingStatus(currentRequest.frameworkFileName, DesiredStreamingState.visible);
@@ -529,7 +595,6 @@ public function Update(float fDeltaT)
 					break;
 				case FrameworkStreamState.NotPresent:
 					// tell it to load in the background
-					// HardLoad(currentRequest.frameworkFileName);
 					SetLevelStreamingStatus(currentRequest.frameworkFileName, DesiredStreamingState.Loaded);
 					break;
 				default:
@@ -626,4 +691,6 @@ private function HardUnload(coerce string fileName)
 defaultproperties
 {
 	maxParallelRequests = 10;
+	// 1/2 second timeout by default
+	SequenceTimeoutLimit = 0.5;
 }

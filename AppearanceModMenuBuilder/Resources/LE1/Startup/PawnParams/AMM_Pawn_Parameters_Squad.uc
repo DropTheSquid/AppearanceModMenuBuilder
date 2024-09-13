@@ -15,7 +15,7 @@ public function bool GetExistingPawn(string appearanceType, out BioPawn existing
     local string tempString3;
 
     // if it is possible to stream in according to the config, do so
-    LogInternal("GetExistingPawn"@self@appearanceType);
+    // LogInternal("GetExistingPawn"@self@appearanceType);
     if (GetFrameworkFileForAppearanceType(appearanceType, tempString, tempString2, tempString3))
     {
         return false;
@@ -30,7 +30,7 @@ private final function bool GetPawnFromParty(string LookupTag, out BioPawn squad
     local MemberData tempsquadMember;
     local BioPawn Pawn;
     
-    LogInternal("getting from party");
+    // LogInternal("getting from party");
     BWI = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo());
     if (LookupTag ~= "Player" || LookupTag ~= "Human_Male" || LookupTag ~= "Human_Female")
     {
