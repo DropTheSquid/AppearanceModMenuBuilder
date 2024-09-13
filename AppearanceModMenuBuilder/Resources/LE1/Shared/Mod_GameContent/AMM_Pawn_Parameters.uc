@@ -10,6 +10,8 @@ struct AppearanceIdLookups
     var AppearanceIdLookup breatherAppearanceLookup;
     var AppearanceIdLookup appearanceFlagsLookup;
     var string FrameworkFileName;
+    var string FrameworkLiveEventName;
+    var string FrameworkPollEventName;
 };
 struct AppearanceIdLookup
 {
@@ -86,24 +88,24 @@ public function SpecialHandling(BioPawn targetPawn);
 // there are also special appearance types for the character creator
 public function string GetAppearanceType(BioPawn targetPawn)
 {
-    return "";
+	return "";
 }
 
 // given an appearance type, return what outfit, helmet, and breather should be used, as well as any settings
 public function bool GetAppearanceIds(string appearanceType, out PawnAppearanceIds PawnAppearanceIds)
 {
 	local BioGlobalVariableTable globalVars;
-    local AppearanceIdLookups lookups;
-    
-    globalVars = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo()).GetGlobalVariables();
-    if (!GetAppearanceIdLookup(appearanceType, lookups))
-    {
-        LogInternal("Warning: Could not get appearance ids for appearance type" @ appearanceType, );
-        return FALSE;
-    }
-    PawnAppearanceIds.bodyAppearanceId = GetAppearanceIdValue(lookups.bodyAppearanceLookup, globalVars);
-    PawnAppearanceIds.helmetAppearanceId = GetAppearanceIdValue(lookups.helmetAppearanceLookup, globalVars);
-    PawnAppearanceIds.breatherAppearanceId = GetAppearanceIdValue(lookups.breatherAppearanceLookup, globalVars);
+	local AppearanceIdLookups lookups;
+
+	globalVars = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo()).GetGlobalVariables();
+	if (!GetAppearanceIdLookup(appearanceType, lookups))
+	{
+		LogInternal("Warning: Could not get appearance ids for appearance type" @ appearanceType, );
+		return FALSE;
+	}
+	PawnAppearanceIds.bodyAppearanceId = GetAppearanceIdValue(lookups.bodyAppearanceLookup, globalVars);
+	PawnAppearanceIds.helmetAppearanceId = GetAppearanceIdValue(lookups.helmetAppearanceLookup, globalVars);
+	PawnAppearanceIds.breatherAppearanceId = GetAppearanceIdValue(lookups.breatherAppearanceLookup, globalVars);
 	PawnAppearanceIds.m_appearanceSettings = class'AMM_Common'.static.DecodeAppearanceSettings(GetAppearanceIdValue(lookups.appearanceFlagsLookup, globalVars));
 	return true;
 }
@@ -116,46 +118,52 @@ public function bool GetCurrentAppearanceIds(BioPawn targetPawn, out PawnAppeara
 
 private final function int GetAppearanceIdValue(AppearanceIdLookup lookup, BioGlobalVariableTable globalVars)
 {
-    if (lookup.plotIntId != 0)
-    {
-        return globalVars.GetInt(lookup.plotIntId);
-    }
-    return lookup.defaultAppearanceId;
+	if (lookup.plotIntId != 0)
+	{
+		return globalVars.GetInt(lookup.plotIntId);
+	}
+	return lookup.defaultAppearanceId;
 }
 
 // given the appearance type, look up how to get the actual values
 public function bool GetAppearanceIdLookup(string appearanceType, out AppearanceIdLookups lookups)
 {
-    local AppearanceIdLookups currentLookups;
-    
-    foreach AppearanceIdLookupsList(currentLookups, )
-    {
-        if (currentLookups.appearanceType ~= appearanceType)
-        {
-            lookups = currentLookups;
-            return TRUE;
-        }
-    }
-    return FALSE;
+	local AppearanceIdLookups currentLookups;
+
+	foreach AppearanceIdLookupsList(currentLookups, )
+	{
+		if (currentLookups.appearanceType ~= appearanceType)
+		{
+			lookups = currentLookups;
+			return TRUE;
+		}
+	}
+	return FALSE;
 }
 
 // if the framework is installed and this pawn in frameworked, we prefer to stream them in if possible. THis returns the file to stream in
-public function bool GetFrameworkFileForAppearanceType(string appearanceType, out string frameworkFileName)
+public function bool GetFrameworkFileForAppearanceType(string appearanceType, out string frameworkFileName, out string frameworkLiveEvent, out string frameworkPollEvent)
 {
 	local AppearanceIdLookups currentLookups;
 
 	if (class'AMM_Common'.static.IsFrameworkInstalled())
 	{
-		foreach AppearanceIdLookupsList(currentLookups, )
+		foreach AppearanceIdLookupsList(currentLookups)
 		{
 			if (currentLookups.appearanceType ~= appearanceType)
 			{
+				if (currentLookups.FrameworkFileName == "")
+				{
+					return false;
+				}
 				frameworkFileName = currentLookups.FrameworkFileName;
+				frameworkLiveEvent = currentLookups.FrameworkLiveEventName;
+				FrameworkPollEvent = currentLookups.FrameworkPollEventName;
 				return class'AMM_Common'.static.DoesLevelExist(frameworkFileName);
 			}
 		}
 	}
-    return false;
+	return false;
 }
 
 // the spec lists are usually species+gender specific. Basically a body type.
@@ -168,10 +176,10 @@ public function Object GetOutfitSpecList(BioPawn target)
 	if (_outfitSpecList == none)
 	{
 		outfitSpecListClass = Class<Object>(DynamicLoadObject(outfitSpecListPath, Class'Class'));
-        if (outfitSpecListClass != None)
-        {
-            _outfitSpecList = new outfitSpecListClass;
-        }
+		if (outfitSpecListClass != None)
+		{
+			_outfitSpecList = new outfitSpecListClass;
+		}
 	}
 	return _outfitSpecList;
 }
@@ -183,10 +191,10 @@ public function Object GetHelmetSpecList(BioPawn target)
 	if (_helmetSpecList == none)
 	{
 		helmetSpecListClass = Class<Object>(DynamicLoadObject(helmetSpecListPath, Class'Class'));
-        if (helmetSpecListClass != None)
-        {
-            _helmetSpecList = new helmetSpecListClass;
-        }
+		if (helmetSpecListClass != None)
+		{
+			_helmetSpecList = new helmetSpecListClass;
+		}
 	}
 	return _helmetSpecList;
 }
@@ -198,10 +206,10 @@ public function Object GetBreatherSpecList(BioPawn target)
 	if (_breatherSpecList == none)
 	{
 		breatherSpecListClass = Class<Object>(DynamicLoadObject(breatherSpecListPath, Class'Class'));
-        if (breatherSpecListClass != None)
-        {
-            _breatherSpecList = new breatherSpecListClass;
-        }
+		if (breatherSpecListClass != None)
+		{
+			_breatherSpecList = new breatherSpecListClass;
+		}
 	}
 	return _breatherSpecList;
 }

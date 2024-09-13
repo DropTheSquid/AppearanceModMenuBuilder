@@ -57,6 +57,9 @@ struct StreamInRequest
 {
 	// which file are we waiting for?
 	var string frameworkFileName;
+	var string frameworkLiveEventName;
+	var string frameworkPollEventName;
+	var bool pollSent;
 	// what is the tag and appearance type of the pawn to look for in that file?
 	var array<PawnId> pawnIds;
 	// the original state of this framework file, so we can restore it when we are done
@@ -79,6 +82,48 @@ var transient array<RealWorldPawnRecord> pawnRecords;
 var transient BioPawn _currentDisplayedPawn;
 var int maxParallelRequests;
 
+public function OnRemoteEvent(Name EventName)
+{
+	local StreamInRequest currentRequest;
+	local FrameworkStreamState currentState;
+	local LevelStreaming tempLevelStreaming;
+	local PawnId currentPawnId;
+	local int i;
+	local BioPawn pawn;
+	local RealWorldPawnRecord newRecord;
+
+	LogInternal("received remote event"@EventName);
+	foreach streamingRequests(currentRequest, i)
+	{
+		if (!currentRequest.completed && currentRequest.FrameworkLiveEventName ~= string(EventName))
+		{
+			currentState = GetFileStreamingState(currentRequest.frameworkFileName, tempLevelStreaming);
+			if (currentState == FrameworkStreamState.visible)
+			{
+				foreach currentRequest.PawnIds(currentPawnId)
+				{
+					if (FindStreamedInPawn(currentPawnId.tag, currentRequest.FrameworkFileName, pawn))
+					{
+						// LogInternal("Adding a new pawn to the thing"@currentPawnId.tag@currentPawnId.appearanceType@currentRequest.FrameworkFileName);
+						newRecord.Tag = currentPawnId.tag;
+						newRecord.appearanceType = currentPawnId.appearanceType;
+						newRecord.Pawn = pawn;
+						// don't destroy pawns that are streamed in
+						newRecord.shouldBeDestroyed = false;
+						pawnRecords.AddItem(newRecord);
+						_outerMenu.UpdateAsyncPawnLoadingState(currentPawnId.tag, currentPawnId.appearanceType, PawnLoadState.loaded);
+						streamingRequests[i].completed = true;
+						// TODO stop listening for this event here once we ensure no other request is also listening for it?
+					}
+				}
+			}
+			else
+			{
+				LogInternal("got live event before level was visible? very strange");
+			}
+		}
+	}
+}
 public function Cleanup()
 {
 	local RealWorldPawnRecord currentRecord;
@@ -140,14 +185,15 @@ public function PawnLoadState LoadPawn(string tag, string appearanceType, option
 	local AMM_Pawn_Parameters params;
 	local BioPawn pawn;
 	local string frameworkFileName;
+	local string frameworkLiveEvent;
+	local string frameworkPollEvent;
 
 	// first look to see if we already have a suitable pawn
 	foreach pawnRecords(currentRecord)
 	{
-		// LogInternal("checking if pawn is already loaded"@currentRecord.tag@currentRecord.appearanceType);
 		if (currentRecord.tag ~= tag && currentRecord.appearanceType == appearanceType)
 		{
-			// LogInternal("already loaded"@currentRecord.tag@currentRecord.appearanceType);
+			// LogInternal("already loaded"@currentRecord.tag@currentRecord.appearanceType@currentRecord.Pawn);
 			return PawnLoadState.Loaded;
 		}
 	}
@@ -180,9 +226,9 @@ public function PawnLoadState LoadPawn(string tag, string appearanceType, option
 			return PawnLoadState.Loaded;
 		}
 		// next try streaming the pawn in
-		if (params.GetFrameworkFileForAppearanceType(appearanceType, frameworkFileName))
+		if (params.GetFrameworkFileForAppearanceType(appearanceType, frameworkFileName, frameworkLiveEvent, frameworkPollEvent))
 		{
-			if (LoadFrameworkFile(tag, appearanceType, FrameworkFileName))
+			if (LoadFrameworkFile(tag, appearanceType, frameworkFileName, frameworkLiveEvent, frameworkPollEvent))
 			{
 				return PawnLoadState.loaded;
 			}
@@ -325,7 +371,7 @@ private function BioPawn GetUIWorldPawn()
 }
 
 // returns true if it is already loaded, false if it is happening asynchronously
-private function bool LoadFrameworkFile(string tag, string appearanceType, string fileName)
+private function bool LoadFrameworkFile(string tag, string appearanceType, string fileName, string liveEvent, string pollEvent)
 {
 	local StreamInRequest request;
 	local PawnId pawnId;
@@ -367,6 +413,8 @@ private function bool LoadFrameworkFile(string tag, string appearanceType, strin
 		return request.completed;
 	}
 	request.frameworkFileName = fileName;
+	request.frameworkLiveEventName = liveEvent;
+	request.FrameworkPollEventName = pollEvent;
 	request.pawnIds.Length = 1;
 	request.pawnIds[0].tag = tag;
 	request.pawnIds[0].appearanceType = appearanceType;
@@ -452,28 +500,26 @@ public function Update(float fDeltaT)
 			switch (currentState)
 			{
 				case FrameworkStreamState.visible:
-					// good news! this is now in the desired state
-					foreach currentRequest.PawnIds(currentPawnId)
+					// now that the level is visible, we need to wait for the kismet to run. 
+					// if this file was already visible when we started, we need to start listening for the live event and send the poll event
+					if (currentRequest.originalState == FrameworkStreamState.visible && !currentRequest.pollSent)
 					{
-						if (FindStreamedInPawn(currentPawnId.tag, currentRequest.FrameworkFileName, pawn))
-						{
-							// LogInternal("Adding a new pawn to the thing"@currentPawnId.tag@currentPawnId.appearanceType@currentRequest.FrameworkFileName);
-							newRecord.Tag = currentPawnId.tag;
-							newRecord.appearanceType = currentPawnId.appearanceType;
-							newRecord.Pawn = pawn;
-							// don't destroy pawns that are streamed in
-							newRecord.shouldBeDestroyed = false;
-							pawnRecords.AddItem(newRecord);
-							_outerMenu.UpdateAsyncPawnLoadingState(currentPawnId.tag, currentPawnId.appearanceType, PawnLoadState.loaded);
-							streamingRequests[i].completed = true;
-						}
+						LogInternal("starting to listen + firing poll event for already loaded file"@currentRequest.frameworkFileName);
+						class'SeqEvent_RemoteEvent_AMM'.static.RegisterRemoteEvent(Name(currentRequest.frameworkLiveEventName));
+						_outerMenu.EmitRemoteEvent(currentRequest.frameworkPollEventName);
+						streamingRequests[i].pollSent = true;
 					}
+
+					// TODO also add a timer here so that we pause even if the live event never fires
 					break;
 				case FrameworkStreamState.BecomingVisible:
 				case FrameworkStreamState.loading:
 					// keep waiting
 					break;
 				case FrameworkStreamState.Loaded:
+					// at this point, start listening for the live event
+					LogInternal("starting to listen for loaded but not visible file"@currentRequest.frameworkFileName);
+					class'SeqEvent_RemoteEvent_AMM'.static.RegisterRemoteEvent(Name(currentRequest.frameworkLiveEventName));
 					// if it is properly loaded, now tell it to be visible. doing it this way will avoid blocking
 					SetLevelStreamingStatus(currentRequest.frameworkFileName, DesiredStreamingState.visible);
 					break;

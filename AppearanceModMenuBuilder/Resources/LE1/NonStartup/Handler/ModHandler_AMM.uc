@@ -149,6 +149,11 @@ public function OnAppearanceUpdated(BioPawn target, string source)
 	RefreshHelmetButton();
 }
 
+public function OnRemoteEvent(name EventName)
+{
+    pawnHandler.OnRemoteEvent(EventName);
+}
+
 public function Close()
 {
 	local AMM_AppearanceUpdater updaterInstance;

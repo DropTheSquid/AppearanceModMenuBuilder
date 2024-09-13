@@ -11,16 +11,17 @@ public function string GetAppearanceType(BioPawn targetPawn)
 public function bool GetExistingPawn(string appearanceType, out BioPawn existingPawn)
 {
 	local string tempString;
-	// If appearanceType is combat, always pull from party.
-	// if appearance type is casual and framework is installed, return false (make them stream it in)
-	// if appearance type is romance, return false? or we could do a kind of force stream it in
-	if (appearanceType ~= "combat" 
-		|| (appearanceType ~= "casual" && !GetFrameworkFileForAppearanceType(appearanceType, tempString)))
-	{
-		// get pawn from party
-		return GetPawnFromParty(Tag, existingPawn);
-	}
-	return false;
+    local string tempString2;
+    local string tempString3;
+
+    // if it is possible to stream in according to the config, do so
+    LogInternal("GetExistingPawn"@self@appearanceType);
+    if (GetFrameworkFileForAppearanceType(appearanceType, tempString, tempString2, tempString3))
+    {
+        return false;
+    }
+    // else, grab them from the party
+    return GetPawnFromParty(Tag, existingPawn);
 }
 
 private final function bool GetPawnFromParty(string LookupTag, out BioPawn squadmate)
@@ -29,6 +30,7 @@ private final function bool GetPawnFromParty(string LookupTag, out BioPawn squad
     local MemberData tempsquadMember;
     local BioPawn Pawn;
     
+    LogInternal("getting from party");
     BWI = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo());
     if (LookupTag ~= "Player" || LookupTag ~= "Human_Male" || LookupTag ~= "Human_Female")
     {
@@ -53,19 +55,16 @@ private final function bool GetPawnFromParty(string LookupTag, out BioPawn squad
 public function bool SpawnPawn(string appearanceType, out BioPawn spawnedPawn)
 {
 	local string tempString;
+    local string tempString2;
+    local string tempString3;
 
-	// same as above:
-	// If appearanceType is combat, always pull from party.
-	// if appearance type is casual and framework is installed, return false (make them stream it in)
-	// if appearance type is romance, return false? or we could do a kind of force stream it in
-	if (appearanceType ~= "combat" 
-		|| (appearanceType ~= "casual" && !GetFrameworkFileForAppearanceType(appearanceType, tempString)))
-	{
-		// get pawn from party
-		return spawnPawnIntoParty(Tag, spawnedPawn);
-	}
-	
-	return false;
+    // if it is possible to stream in according to the config, do so
+    if (GetFrameworkFileForAppearanceType(appearanceType, tempString, tempString2, tempString3))
+    {
+        return false;
+    }
+    // else, add them to the party
+    return spawnPawnIntoParty(Tag, spawnedPawn);
 }
 public function bool spawnPawnIntoParty(string appearanceType, out BioPawn spawnedPawn)
 {
