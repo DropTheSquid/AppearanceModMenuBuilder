@@ -62,7 +62,6 @@ outfitSpecListPath=outfitSpecs.HMF_OutfitSpec
 helmetSpecListPath=OutfitSpecs.HMF_HelmetSpec
 breatherSpecListPath=OutfitSpecs.HMF_BreatherSpec
 +alternateTags=pro10_ash
-+alternateTags=hench_humanFemale_nkd
 +AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1536), helmetAppearanceLookup=(plotIntId=1537), breatherAppearanceLookup=(plotIntId=1538), appearanceFlagsLookup=(plotIntId=1539), FrameworkFileName="BIONPC_Ashley_Normandy", FrameworkLiveEventName="Live_NPC_Ashley", FrameworkPollEventName="Poll_NPC_Ashley")
 +AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1540), helmetAppearanceLookup=(plotIntId=1541), breatherAppearanceLookup=(plotIntId=1542), appearanceFlagsLookup=(plotIntId=1543))
 +AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1544), helmetAppearanceLookup=(plotIntId=1545), breatherAppearanceLookup=(plotIntId=1546), appearanceFlagsLookup=(plotIntId=1547), FrameworkFileName="BIONPC_Ashley_Romance", FrameworkLiveEventName="Live_NPC_Ashley_Romance", FrameworkPollEventName="Poll_NPC_Ashley_Romance")

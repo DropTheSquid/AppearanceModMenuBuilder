@@ -84,3 +84,9 @@ public function bool spawnPawnIntoParty(string appearanceType, out BioPawn spawn
     spawnedPawn = gameInfo.SpawnHenchman(Name(Tag), BioWorldInfo.m_playerSquad.m_playerPawn, -60.0, -60.0, FALSE);
     return spawnedPawn != None;
 }
+
+defaultproperties
+{
+	// false for squadmates, in general
+	requiresFramework=false
+}

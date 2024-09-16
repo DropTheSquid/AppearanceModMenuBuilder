@@ -55,6 +55,7 @@ var config eHelmetDisplayState defaultHelmetState;
 // whether to allow the user to override the helmet
 // again, no effect if GiveFullHelmetControl is true
 var config bool canChangeHelmetState;
+var config bool requiresFramework;
 // recommendation here:
 // if the pawn does not normally have a helmet and there is no good reason not to let them have one, just give full control, with default off (see most NPCs in armor)
 // similarly, if they have a helmet in vanilla but there is no reason you shouldn't be able to remove it, set the default and allow the user to change it, but don't give full control immediately.
@@ -65,6 +66,11 @@ var config bool canChangeHelmetState;
 public function bool matchesPawn(BioPawn targetPawn)
 {
     local string altTag;
+
+	if (requiresFramework && !class'AMM_Common'.static.IsFrameworkInstalled())
+	{
+		return false;
+	}
     
     if (string(targetPawn.Tag) ~= Tag)
     {
@@ -235,4 +241,6 @@ defaultproperties
 	suppressHatMenu=true
 	GiveFullHelmetControl=true
 	canChangeHelmetState=true
+	// this is true by default; for most pawns it will require the framework to support previewing them
+	requiresFramework=true
 }

@@ -29,6 +29,11 @@ public function UpdatePawnAppearance(BioPawn target, string source)
     {
         return;
     }
+	if (target.GetPackageName() == 'EntryMenu')
+	{
+		// no point in updating these ones
+		return;
+	}
 	if (SFXPawn_Player(target) != None && source ~= "BioPawn.PostBeginPlay")
 	{
 		// skip this; it will sometimes do incorrect things before the pawn is fully initialized, and it will be called again from SpawnPlayer
