@@ -83,7 +83,7 @@ var transient array<RealWorldPawnRecord> pawnRecords;
 var transient BioPawn _currentDisplayedPawn;
 var int maxParallelRequests;
 var transient float sequenceTimer;
-var config float SequenceTimeoutLimit;
+var float SequenceTimeoutLimit;
 
 public function OnRemoteEvent(Name EventName)
 {
@@ -140,6 +140,7 @@ private function bool CanUnregisterEvent(Name EventName)
 	local bool anyRequestOpen;
 	local bool specificRequestOpen;
 
+	// LogInternal("trying to unregister"@EventName);
 	foreach streamingRequests(currentRequest, i)
 	{
 		if (!currentRequest.completed)
@@ -159,6 +160,7 @@ private function bool CanUnregisterEvent(Name EventName)
 		sequenceTimer = 0;
 		_outerMenu.oWorldInfo.bPlayersOnly = true;
 	}
+	// LogInternal("trying to unregister"@EventName@!specificRequestOpen);
 	return !specificRequestOpen;
 }
 
@@ -433,6 +435,13 @@ private function bool LoadFrameworkFile(string tag, string appearanceType, strin
 			}
 		}
 
+		// reset these so it can try again if it timed out last time
+		if (!request.completed)
+		{
+			request.pollSent = false;
+			request.timeoutSet = false;
+		}
+
 		pawnId.Tag = tag;
 		pawnId.appearanceType = appearanceType;
 		request.pawnIds.AddItem(pawnId);
@@ -538,7 +547,16 @@ public function Update(float fDeltaT)
 	}
 	if (sequenceTimer == 0 && !_outerMenu.oWorldInfo.bPlayersOnly)
 	{
-		LogInternal("pausing due to timeout");
+		LogInternal("Warning: pausing due to framework handshake timeout");
+		LogInternal("open requests:");
+		foreach streamingRequests(currentRequest, i)
+		{
+			if (currentRequest.completed)
+			{
+				continue;
+			}
+			LogInternal("waiting on"@currentRequest.frameworkLiveEventName);
+		}
 		_outerMenu.oWorldInfo.bPlayersOnly = true;
 	}
 	foreach streamingRequests(currentRequest, i)
@@ -631,6 +649,7 @@ private function bool FindStreamedInPawn(string tag, string fileName, out BioPaw
 			}
 		}
 	}
+	LogInternal("could not find streamed in pawn"@tag@filename);
     return FALSE;
 }
 

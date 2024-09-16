@@ -18,7 +18,7 @@ public static function RegisterRemoteEvent(Name EventNameToListenFor)
 	local SeqEvent_RemoteEvent_AMM newSeqEvent;
 	local array<SequenceEvent> remoteEvents;
 	local SequenceEvent se;
-	local SeqEvent_RemoteEvent re;
+	local SeqEvent_RemoteEvent_AMM re;
 	local SeqEvent_RemoteEvent_AMM recyclableEvent;
 	
 	BWI = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo());

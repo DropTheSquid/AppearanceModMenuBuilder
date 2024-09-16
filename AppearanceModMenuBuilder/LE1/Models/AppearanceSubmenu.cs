@@ -115,5 +115,11 @@ namespace AppearanceModMenuBuilder.LE1.Models
             get => GetEnumValue<EMenuHelmetOverride>(nameof(MenuHelmetOverride));
             set => SetEnumValue(nameof(MenuHelmetOverride), value);
         }
+
+        public bool? PreloadPawn
+        {
+            get => GetBoolValue(nameof(PreloadPawn));
+            set => SetBoolValue(nameof(PreloadPawn), value);
+        }
     }
 }

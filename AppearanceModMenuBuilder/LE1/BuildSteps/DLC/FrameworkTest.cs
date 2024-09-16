@@ -24,9 +24,13 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // disabled because I do not need to run this every time
             return;
 
+            Console.WriteLine("generating framework test content");
+
             Directory.CreateDirectory(Path.Combine(context.CookedPCConsoleFolder, "FrameworkTest"));
             ConfigMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-FrameworkTest.m3cd");
-            foreach (var file in Directory.EnumerateFiles(@"C:\src\M3Mods\LE1\LE1 Framework\DLC_MOD_Framework\CookedPCConsole", "BIONPC_*", SearchOption.AllDirectories))
+            // TODO make this relative to output dir 
+            var frameworkLibraryDir = Path.Combine(Directory.GetParent(context.DLCBaseFolder).Parent.FullName, @"LE1 Framework\DLC_MOD_Framework\CookedPCConsole");
+            foreach (var file in Directory.EnumerateFiles(frameworkLibraryDir, "BIONPC_*", SearchOption.AllDirectories))
             {
                 CheckBioNPCFile(file, context);
             }
@@ -53,31 +57,60 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 return;
             }
 
+            if (filename.Contains("_LOC_"))
+            {
+                // no need to open the localization files, they don't have any pawns in them.
+                return;
+            }
+
+            Console.WriteLine("generating framework test content for " + filename);
+
             var pcc = MEPackageHandler.OpenMEPackage(filename);
 
+            ExportEntry? firstPawn = null;
+            List<string> altTags = [];
             // find all BioPawns (should usually only be one)
             foreach (var exp in pcc.Exports)
             {
                 if (exp.ClassName == "BioPawn" && exp.InstancedFullPath.StartsWith("TheWorld.PersistentLevel"))
                 {
-                    HandleBioNPCPawn(exp, context);
+                    firstPawn ??= exp;
+                    var tag = exp.GetProperty<NameProperty>("Tag")?.ToString();
+                    if (tag != null)
+                    {
+                        altTags.Add(tag);
+                    }
                 }
+            }
+
+            if (firstPawn != null)
+            {
+                HandleBioNPCPawn(firstPawn, context, altTags);
             }
         }
 
-        private static void HandleBioNPCPawn(ExportEntry pawn, ModBuilderContext context)
+        private static void HandleBioNPCPawn(ExportEntry pawn, ModBuilderContext context, IEnumerable<string> altTags)
         {
             //if (CheckBioPawn(pawn))
             //{
-                CreatePawnInfrastructure(pawn, context);
+                CreatePawnInfrastructure(pawn, context, altTags);
             //}
         }
 
-        private static void CreatePawnInfrastructure(ExportEntry pawn, ModBuilderContext context)
+        private static void CreatePawnInfrastructure(ExportEntry pawn, ModBuilderContext context, IEnumerable<string> altTags)
         {
-            var tag = pawn.GetProperty<NameProperty>("Tag").Value.ToString();
+            string tag;
+            // this one has two pawns in it, both without tags hardcoded. It assigns a tag to the correct one according to the mod setting for the appearance (from LE1CP)
+            if (pawn.FileRef.FileNameNoExtension == "BIONPC_SalarianCSec")
+            {
+                tag = "sta60_css_response";
+            }
+            else
+            {
+                tag = pawn.GetProperty<NameProperty>("Tag").ToString();
+            }
             var BioNPCName = pawn.FileRef.FileNameNoExtension;
-            var uniqueName = $"{BioNPCName}_{tag}";
+            var uniqueName = BioNPCName;
 
             var pcc = MEPackageHandler.CreateAndOpenPackage(Path.Combine(context.CookedPCConsoleFolder, "FrameworkTest", $"AMM_{uniqueName}.pcc"), context.Game);
 
@@ -104,11 +137,31 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             StructCoalesceValue appearanceIdLookups = new();
             appearanceIdLookups.SetString("appearanceType", "Casual");
             appearanceIdLookups.SetString("FrameworkFileName", pawn.FileRef.FileNameNoExtension);
+            var shortName = BioNPCName.Replace("BIO", "");
+            // a few have variants that use the same live/poll name
+            shortName = shortName switch
+            {
+                "NPC_Helena_Citadel" => "NPC_Helena",
+                "NPC_Chorban_Markets" => "NPC_Chorban",
+                "NPC_Sparatus_Holo" => "NPC_Sparatus",
+                "NPC_Valern_Holo" => "NPC_Valern",
+                "NPC_Tevos_Holo" => "NPC_Tevos",
+                _ => shortName
+            };
+            appearanceIdLookups.SetString("FrameworkLiveEventName", $"Live_{shortName}");
+            appearanceIdLookups.SetString("FrameworkPollEventName", $"Poll_{shortName}");
             appearanceIdLookups.SetStruct("bodyAppearanceLookup", new StructCoalesceValue { { "plotIntId", new IntCoalesceValue(currentPlotInt++) } });
             appearanceIdLookups.SetStruct("helmetAppearanceLookup", new StructCoalesceValue { { "plotIntId", new IntCoalesceValue(currentPlotInt++) } });
             appearanceIdLookups.SetStruct("breatherAppearanceLookup", new StructCoalesceValue { { "plotIntId", new IntCoalesceValue(currentPlotInt++) } });
             appearanceIdLookups.SetStruct("appearanceFlagsLookup", new StructCoalesceValue { { "plotIntId", new IntCoalesceValue(currentPlotInt++) } });
             pawnParamsConfig.SetStructValue("AppearanceIdLookupsList", appearanceIdLookups);
+            foreach (var altTag in altTags)
+            {
+                if (altTag != tag)
+                {
+                    pawnParamsConfig.AddArrayEntries("alternateTags", altTag);
+                }
+            }
 
             ConfigMergeFile.AddOrMergeClassConfig(pawnParamsConfig);
 
@@ -124,7 +177,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 ArmorOverride = "overridden",
                 STitle = uniqueName,
                 SrSubtitle = 210210256,
-                UseTitleForChildMenus = true
+                UseTitleForChildMenus = true,
+                PreloadPawn = false
             };
 
             CharacterSelectSubmenuConfig.AddMenuEntry(new UScriptModels.AppearanceItemData()
