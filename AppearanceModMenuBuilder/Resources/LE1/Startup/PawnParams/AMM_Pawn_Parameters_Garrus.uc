@@ -5,15 +5,17 @@ public function string GetAppearanceType(BioPawn targetPawn)
 {
 	// all Garrus appearances:
 	// pre recruitment in Med Clinic (sta60_Garrus)
-	// late recruitment in CSec TODO
+	// late pre recruitment in CSec TODO
 	// in party w/ or w/o casual hubs
 	// Virmire
+	// Normandy
 	// normandy debrief?
 
 	// pre recruitment tags:
 	// sta60_Garrus is med clinic recruitment (both cutscene and combat I think; need to confirm)
 	// he should be in Combat appearance, and he will join the party immediately after this
-    if (targetPawn.Tag == 'sta60_garrus')
+	// sta70_garrus is Garrus in Citadel tower before you talk to the council the first time
+    if (targetPawn.Tag == 'sta60_garrus' || targetPawn.Tag == 'sta70_garrus')
     {
         return "combat";
     }

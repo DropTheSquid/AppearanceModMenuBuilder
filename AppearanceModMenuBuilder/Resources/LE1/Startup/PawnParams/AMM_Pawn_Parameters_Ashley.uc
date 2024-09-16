@@ -34,16 +34,21 @@ public function SpecialHandling(BioPawn targetPawn)
 public function string GetAppearanceType(BioPawn targetPawn)
 {
 	// all Ashley appearances:
-	// pre recruitment (pro10_ash) needs to be overridden to combat
+	// pre recruitment (Eden Prime, tag is pro10_ash)
 	// in party w/ or w/o casual hubs
 	// Virmire Camp
-	// Nomrandy debrief?
-	
-	// TODO check how this interacts with framework
-	// pro10_ash is immediately pre recruitment. It has the armor override flag set to true, so it would normally be seen as casual
-    if (targetPawn.Tag == 'pro10_ash')
-    {
-        return "combat";
-    }
-    return Super(AMM_Pawn_Parameters_Romanceable).GetAppearanceType(targetPawn);
+	// Normandy
+
+	if (
+		// immediately pre recruitment (non framework)
+		targetPawn.Tag == 'pro10_ash'
+		// Virmire camp (non Framework)
+		|| targetPawn.GetPackageName() == 'BIOA_JUG20_08_DSG'
+		// pre recruitment/Virmire Camp (framework)
+		|| targetPawn.GetPackageName() == 'BIONPC_Ashley')
+	{
+		return "combat";
+	}
+
+	return Super(AMM_Pawn_Parameters_Romanceable).GetAppearanceType(targetPawn);
 }

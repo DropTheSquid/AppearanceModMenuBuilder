@@ -28,7 +28,7 @@ public function SpecialHandling(BioPawn targetPawn)
 
 public function string GetAppearanceType(BioPawn targetPawn)
 {
-	// by default, Liara is considered to be in casual appearance on Therum and Virmire comap, despite not having armor overridden. 
+	// by default, Liara is considered to be in casual appearance on Therum and Virmire comp, despite not having armor overridden
 	// this is true with the framework also
 	if (targetPawn.GetPackageName() == 'BIOA_LAV70_07_DSG'
 		|| targetPawn.GetPackageName() == 'BIOA_JUG20_08_DSG'

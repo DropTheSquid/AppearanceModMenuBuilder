@@ -98,6 +98,7 @@ suppressBreatherMenu=true
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Garrus]
 Tag=hench_turian
 +alternateTags=sta60_garrus
++alternateTags=sta70_garrus
 menuRootPath=amm_submenus.Garrus.AppearanceSubmenu_Garrus
 outfitSpecListPath=outfitSpecs.TUR_OutfitSpec
 helmetSpecListPath=OutfitSpecs.TUR_HelmetSpec
