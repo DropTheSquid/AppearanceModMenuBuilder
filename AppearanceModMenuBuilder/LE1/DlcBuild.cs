@@ -32,7 +32,7 @@ namespace AppearanceModMenuBuilder.LE1
                 // build UI world
                 .AddTask(new BuildUIWorldTask())
                 // build a few NOR files for the armor locker
-                .AddTask(new BuildNor10_09_Files())
+                //.AddTask(new BuildNor10_09_Files())
                 // add some new conditionals we need
                 .AddTask(new BuildPlotManagerFile())
                 // build some template files

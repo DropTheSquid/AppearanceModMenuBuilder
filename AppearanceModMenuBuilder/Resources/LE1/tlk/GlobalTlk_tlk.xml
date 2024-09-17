@@ -448,4 +448,9 @@ Romance</data>
 		<flags>1</flags>
 		<data>Squadmates Wear Equipped Armor disabled description</data>
 	</string>
+	<string>
+		<id>210210295</id>
+		<flags>1</flags>
+		<data>Equip Shepard</data>
+	</string>
 </tlkFile>
