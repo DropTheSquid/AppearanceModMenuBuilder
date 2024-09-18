@@ -11,6 +11,10 @@
     "LE1 full": {
       "commandName": "Project",
       "commandLineArgs": "LE1 full"
+    },
+    "LE1 quick": {
+      "commandName": "Project",
+      "commandLineArgs": "LE1 quick"
     }
   }
 }

@@ -1,5 +1,6 @@
 ﻿using LegendaryExplorerCore.Packages;
 using MassEffectModBuilder;
+using MassEffectModBuilder.M3Tasks;
 
 namespace AppearanceModMenuBuilder.LE1
 {
@@ -27,6 +28,11 @@ namespace AppearanceModMenuBuilder.LE1
                     LE1ModBuilder
                         .AddMergeTasks()
                         .AddDlcTasks();
+                    break;
+                case "quick":
+                    LE1ModBuilder
+                        .AddDlcTasks(skipNonEssential: true)
+                        .AddTask(new InstallModTask(false));
                     break;
                 case "":
                     throw new Exception($"you must specify the build mode in the second command line arg");

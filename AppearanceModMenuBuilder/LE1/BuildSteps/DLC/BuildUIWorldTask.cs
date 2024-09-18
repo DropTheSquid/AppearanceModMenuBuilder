@@ -13,32 +13,33 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         public void RunModTask(ModBuilderContext context)
         {
             Console.WriteLine("Building BIOG_UIWorld.pcc");
-            // I am getting the vanilla version of BIOG_UIWorld and copying it into my mod, then programatically modifying it
-            if (!PackageHelpers.TryGetHighestMountedOfficialFile(UIWorldFileName, context.Game, out var basegamePackagePath) || basegamePackagePath == null)
-            {
-                throw new Exception($"Could not find basegame file {UIWorldFileName}");
-            }
+
             var destinationPath = Path.Combine(context.CookedPCConsoleFolder, UIWorldFileName);
-            File.Copy(basegamePackagePath, destinationPath);
 
-            var basegamePcc = MEPackageHandler.OpenMEPackage(destinationPath);
-
-            BuildUIWorldFile(basegamePcc, context);
-
-            // now do the same with the Mello patched version
             var LE1WorkspaceRoot = Directory.GetParent(context.ModOutputPathBase)!.FullName;
 
-            if (!Directory.Exists(Path.Combine(LE1WorkspaceRoot, "ME¹LLO")))
+            string sourceFilePath;
+
+            // if Mello is present in the mod library, base my version on this file
+            if (Directory.Exists(Path.Combine(LE1WorkspaceRoot, "ME¹LLO")))
             {
-                throw new Exception("Mello does not appear to be present in the mod library. This is required to generate compatibility patches");
+                sourceFilePath = Path.Combine(LE1WorkspaceRoot, @"ME¹LLO\DLC_MOD_MELLO\CookedPCConsole\Main-Core\UIWorld\BIOG_UIWorld.pcc");
+            }
+            // otherwise, fall back to basegame version
+            else
+            {
+                Console.WriteLine("Warning: Mello does not seem to be in the mod library. falling back to basegame version of UIWorld.");
+                PackageHelpers.TryGetHighestMountedOfficialFile(UIWorldFileName, context.Game, out sourceFilePath);
             }
 
-            var melloSourceFilePath = Path.Combine(LE1WorkspaceRoot, @"ME¹LLO\DLC_MOD_MELLO\CookedPCConsole\Main-Core\UIWorld\BIOG_UIWorld.pcc");
+            if (string.IsNullOrWhiteSpace(sourceFilePath))
+            {
+                throw new Exception($"Could not find source file {UIWorldFileName}");
+            }
 
             Directory.CreateDirectory(Path.Combine(context.ModOutputPathBase, $@"Compat\Mello"));
-            destinationPath = Path.Combine(context.ModOutputPathBase, $@"Compat\Mello\{UIWorldFileName}");
 
-            File.Copy(melloSourceFilePath, destinationPath);
+            File.Copy(sourceFilePath, destinationPath);
 
             var melloCompatPcc = MEPackageHandler.OpenMEPackage(destinationPath);
 

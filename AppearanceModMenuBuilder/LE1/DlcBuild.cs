@@ -8,9 +8,9 @@ namespace AppearanceModMenuBuilder.LE1
 {
     internal static class DlcBuild
     {
-        public static ModBuilderWithCustomContext<LE1CustomContext> AddDlcTasks(this ModBuilderWithCustomContext<LE1CustomContext> builder)
+        public static ModBuilderWithCustomContext<LE1CustomContext> AddDlcTasks(this ModBuilderWithCustomContext<LE1CustomContext> builder, bool skipNonEssential = false)
         {
-            return builder
+            var intermediate = builder
                 // clean the DLC directory
                 .AddTask(new CleanDlcDirectory())
                 // copy the moddesc
@@ -34,16 +34,25 @@ namespace AppearanceModMenuBuilder.LE1
                 // build a few NOR files for the armor locker
                 //.AddTask(new BuildNor10_09_Files())
                 // add some new conditionals we need
-                .AddTask(new BuildPlotManagerFile())
-                // build some template files
-                .AddTask(new BuildTemplateFiles())
-                // doing some testing of the framework
-                .AddTask(new FrameworkTest())
+                .AddTask(new BuildPlotManagerFile());
+
+            if (!skipNonEssential)
+            {
+                intermediate = intermediate
+                    // build some template files
+                    .AddTask(new BuildTemplateFiles())
+                    // doing some testing of the framework
+                    .AddTask(new FrameworkTest());
+            }
+
+            intermediate
                 // output any config merge files we worked on
                 .AddTask(new OutputConfigMerge())
                 // compile tlks
                 .AddTask(new ImportGame1TlkLocaliazation(MELocalization.INT, @"Resources\LE1\tlk\GlobalTlk_tlk.xml"))
                 .AddTask(new OutputTlk());
+
+            return intermediate;
         }
     }
 }
