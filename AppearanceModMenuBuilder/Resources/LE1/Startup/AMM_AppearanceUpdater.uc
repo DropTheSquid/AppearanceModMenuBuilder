@@ -77,6 +77,8 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 				{
 					class'AMM_Utilities'.static.UpdatePawnMaterialParameters(target);
 				}
+				// update weapons positions on the sockets
+				ResetWeaponPositions(target, false);
 			}
 			if (__onAppearanceUpdated__Delegate != None)
 			{
@@ -94,71 +96,42 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 	}
 }
 
-private function CheckIfAppearanceDiffersFromDefaults(BioPawn target, PawnAppearanceIds appearanceIds, pawnAppearance appearance)
+public function ResetWeaponPositions(BioPawn target, bool weaponIsInLeftHand)
 {
-	local int i;
-	local MaterialInterface matInst;
-	local MaterialInstanceConstant mic;
+	local BioWeaponRanged currentWeapon;
 
-	if (appearanceIds.bodyAppearanceId == 0 && appearanceIds.helmetAppearanceId == 0 && appearanceIds.breatherAppearanceId == 0)
+	if (target != None && target.m_oBehavior != None && target.m_oBehavior.m_oEquipment != None)
 	{
-		DoesMeshDiffer(target, appearance.bodyMesh, target.Mesh, "body");
+		// pistol
+		ResetHolsteredWeaponPosition(target, 0, 'socket_05');
+		// shotgun
+		ResetHolsteredWeaponPosition(target, 1, 'socket_06');
+		// assault rifle
+		ResetHolsteredWeaponPosition(target, 2, 'socket_04');
+		// sniper rifle
+		ResetHolsteredWeaponPosition(target, 3, 'socket_03');
+		// and put the current weapon back in the correct hand
+		if (weaponIsInLeftHand)
+		{
+			target.MoveWeaponToLeftHand();
+		}
+		else
+		{
+			target.MoveWeaponToRightHand();
+		}
 	}
 }
 
-private function bool DoesMeshDiffer(BioPawn target, AppearanceMesh appMesh, SkeletalMeshComponent smc, string type)
+private function ResetHolsteredWeaponPosition(BioPawn target, int quickSlotIndex, name socket)
 {
-	local int i;
-	local MaterialInterface matInst;
-	local MaterialInstanceConstant mic;
-	local bool differs;
-	
-	if (PathName(appMesh.Mesh) != pathName(smc.SkeletalMesh))
-	{
-		LogInternal("WARNING:"@type@"Mesh Differs for target"@target.Tag);
-		LogInternal("Original"@PathName(smc.SkeletalMesh));
-		LogInternal("Expected"@PathName(appMesh.Mesh));
-		differs = true;
-	}
+	local BioWeaponRanged weap;
 
-	if (smc.GetNumElements() != appMesh.Materials.Length)
+    weap = BioWeaponRanged(target.m_oBehavior.m_oEquipment.m_QuickSlotArray[quickSlotIndex]);
+	if (weap != None)
 	{
-		LogInternal("WARNING:"@type@"Materials Differ in length"@target.Tag);
-		for (i = 0; i < smc.GetNumElements(); i++)
-		{
-			matInst = smc.GetMaterial(i);
-			LogInternal("Original Mat"@i@PathName(matInst));
-			mic = MaterialInstanceConstant(matInst);
-			if (mic != None)
-			{
-				LogInternal("Original Mat"@i@"parent"@pathName(mic.Parent));
-			}
-		}
-		for (i = 0; i < appMesh.Materials.Length; i++)
-		{
-			LogInternal("Expected Mat"@i@PathName(appMesh.Materials[i]));
-		}
-		differs = true;
+		weap.DetachFromPawn();
+		weap.AttachToMesh(target.Mesh, 'socket_05');
 	}
-	else
-	{
-		for (i = 0; i < appMesh.Materials.Length; i++)
-		{
-			matInst = smc.GetMaterial(i);
-			if (matInst.outer == smc.outer && MaterialInstanceConstant(matInst) != None)
-			{
-				matInst = MaterialInstanceConstant(matInst).Parent;
-			}
-			if (PathName(matInst) != PathName(appMesh.Materials[i]))
-			{
-				LogInternal("WARNING:"@type@"Material "@i@"Differs for pawn"@target.Tag);
-				LogInternal("Original Mat"@i@PathName(matInst));
-				LogInternal("Expected Mat"@i@PathName(appMesh.Materials[i]));
-				differs = true;
-			}
-		}
-	}
-	return differs;
 }
 
 private function UpdateOuterWorldInfo()
