@@ -22,6 +22,7 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 	local SpecLists specLists;
 	local pawnAppearance pawnAppearance;
 	local MaterialInstanceConstant mic;
+	local Array<AttachmentToTransfer> attachments;
 
 	UpdateOuterWorldInfo();
 	// this pawn is not yet fully initialized; ignore it
@@ -59,6 +60,7 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 			}
 			if (specLists.outfitSpecs.DelegateToOutfitSpecById(target, specLists, appearanceIds, pawnAppearance))
 			{
+				attachments = GetAttachmentsToTransfer(target);
 				// CheckIfAppearanceDiffersFromDefaults(target, appearanceIds, pawnAppearance);
 				class'AMM_Utilities'.static.ApplyPawnAppearance(target, pawnAppearance);
 
@@ -78,7 +80,10 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 					class'AMM_Utilities'.static.UpdatePawnMaterialParameters(target);
 				}
 				// update weapons positions on the sockets
-				ResetWeaponPositions(target, false);
+				ResetAttachmentPositions(target, Attachments);
+
+				// call this again for good measure
+				target.ForceUpdateComponents(FALSE, FALSE);
 			}
 			if (__onAppearanceUpdated__Delegate != None)
 			{
@@ -96,41 +101,75 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 	}
 }
 
-public function ResetWeaponPositions(BioPawn target, bool weaponIsInLeftHand)
+struct AttachmentToTransfer
 {
-	local BioWeaponRanged currentWeapon;
+	var ActorComponent attachedComp;
+	var Name socket;
+};
 
-	if (target != None && target.m_oBehavior != None && target.m_oBehavior.m_oEquipment != None)
+// run before replacing the mesh so we can tell what socket things are attached to
+private function Array<AttachmentToTransfer> GetAttachmentsToTransfer(BioPawn target)
+{
+	local Attachment attachment;
+	local int i;
+	local AttachmentToTransfer att;
+	local Array<AttachmentToTransfer> result;
+
+	foreach target.Mesh.Attachments(attachment, i)
 	{
-		// pistol
-		ResetHolsteredWeaponPosition(target, 0, 'socket_05');
-		// shotgun
-		ResetHolsteredWeaponPosition(target, 1, 'socket_06');
-		// assault rifle
-		ResetHolsteredWeaponPosition(target, 2, 'socket_04');
-		// sniper rifle
-		ResetHolsteredWeaponPosition(target, 3, 'socket_03');
-		// and put the current weapon back in the correct hand
-		if (weaponIsInLeftHand)
-		{
-			target.MoveWeaponToLeftHand();
-		}
-		else
-		{
-			target.MoveWeaponToRightHand();
-		}
+		att.attachedComp = Attachment.Component;
+		att.socket = GetSocketSkeletalMeshIsAttachedTo(target.Mesh, attachment);
+		result.AddItem(att);
 	}
+
+	return result;
 }
 
-private function ResetHolsteredWeaponPosition(BioPawn target, int quickSlotIndex, name socket)
+private function Name GetSocketSkeletalMeshIsAttachedTo(SkeletalMeshComponent baseSMC, Attachment attachment)
 {
-	local BioWeaponRanged weap;
+	local SkeletalMeshSocket socket;
 
-    weap = BioWeaponRanged(target.m_oBehavior.m_oEquipment.m_QuickSlotArray[quickSlotIndex]);
-	if (weap != None)
+	foreach baseSMC.SkeletalMesh.Sockets(socket)
 	{
-		weap.DetachFromPawn();
-		weap.AttachToMesh(target.Mesh, 'socket_05');
+		if (attachment.BoneName == socket.BoneName
+		&& attachment.RelativeLocation == socket.RelativeLocation
+		&& attachment.RelativeRotation == socket.RelativeRotation
+		&& attachment.RelativeScale == socket.RelativeScale)
+		{
+			return socket.SocketName;
+		}
+	}
+	return 'None';
+}
+
+// run after to reattach at the possibly updated location
+private function ResetAttachmentPositions(BioPawn target, Array<AttachmentToTransfer> attachments)
+{
+	local AttachmentToTransfer currentAttachment;
+	local BioWeapon weap;
+
+	foreach Attachments(currentAttachment)
+	{
+		if (currentAttachment.socket == 'None')
+		{
+			continue;
+		}
+		if (target.Mesh.GetSocketByName(currentAttachment.socket) != None)
+		{
+			weap = BioWeapon(currentAttachment.attachedComp.Owner);
+			// known way to deal with weapons
+			if (weap != None)
+			{
+				weap.DetachFromPawn();
+				weap.AttachToMesh(target.Mesh, currentAttachment.socket);
+			}
+			// fallback for other components
+			else
+			{
+				target.Mesh.DetachComponent(currentAttachment.attachedComp);
+				target.Mesh.AttachComponentToSocket(currentAttachment.attachedComp, currentAttachment.socket);
+			}
+		}
 	}
 }
 
