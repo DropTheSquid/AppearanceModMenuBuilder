@@ -110,7 +110,10 @@ private static final function MassEffectGuiManager GetManager()
 public function OnPanelAdded()
 {
     local AMM_Pawn_Parameters params;
-    
+
+    // store this so it definitely stays in memory
+    movieInfo = GFxMovieInfo(FindObject("GUI_MOD_AMM.ModMenu", class'GFxMovieInfo'));
+    LogInternal(movieInfo);
 	// set up the background so it animates
     GetManager().SetupBackground();
 	// save whether it was paused, pause it either way
@@ -707,6 +710,7 @@ public function ASLoadedEx()
     }
     ASSetBackButtonActive(TRUE);
     ASSetRightPaneVisibility(FALSE, FALSE);
+    ASSetHeaderVisibility(true);
     RefreshMenu(TRUE);
     Super.ASLoadedEx();
 }
@@ -1053,6 +1057,6 @@ defaultproperties
 	// "Open"
     srOpenSubmenu = $177824
 	srSelectCharacter = $210210217
-	movieInfo = GFXMovieInfo'Gui.ModMenu'
+	// movieInfo = GFXMovieInfo'Gui.ModMenu'
 	RStickDeadZone = 0.1
 }

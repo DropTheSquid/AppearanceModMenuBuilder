@@ -21,10 +21,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // make an object referencer (probably not strictly necessary? LE1 can dynamic load without this)
             ammPackageFile.GetOrCreateObjectReferencer();
 
-            // port the GUI into the file
-            var portGuiTask = new PortAssetsIntoFile(_ => ammPackageFile, @"Resources\LE1\NonStartup\GUI_MOD_AMM.pcc");
-            portGuiTask.RunModTask(context);
-
             var handlerPackageExport = ExportCreator.CreatePackageExport(ammPackageFile, "Handler");
             // remove the forced export flag on this package. We need it to be dynamic loadable, including this package name, so it needs to not be forced export
             handlerPackageExport.ExportFlags &= ~EExportFlags.ForcedExport;
