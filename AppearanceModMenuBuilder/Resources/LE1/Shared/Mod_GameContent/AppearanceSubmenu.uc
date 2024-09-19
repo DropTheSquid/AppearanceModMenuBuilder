@@ -97,6 +97,10 @@ public function bool OnAux2ButtonPressed(Object outerMenu, int selectionIndex)
 {
     return FALSE;
 }
+public function bool OnTopButtonPressed(Object outerMenu, int selectionIndex)
+{
+    return false;
+}
 public function bool OnBackButtonPressed(Object outerMenu)
 {
     return FALSE;

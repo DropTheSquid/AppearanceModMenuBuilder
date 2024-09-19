@@ -113,7 +113,6 @@ public function OnPanelAdded()
 
     // store this so it definitely stays in memory
     movieInfo = GFxMovieInfo(FindObject("GUI_MOD_AMM.ModMenu", class'GFxMovieInfo'));
-    LogInternal(movieInfo);
 	// set up the background so it animates
     GetManager().SetupBackground();
 	// save whether it was paused, pause it either way
@@ -281,12 +280,12 @@ public function RefreshMenu(optional bool firstEnter = FALSE)
             IsInCharacterSelect = PathName(currentMenu.Class) ~= Class'ModHandler_AMM'.default.RootSubmenuPath;
             if (IsInCharacterSelect)
             {
-                ASSetAux2ButtonActive(FALSE, FALSE);
+                ASSetTopButtonActive(FALSE);
             }
             else
             {
-                ASSetAux2ButtonActive(TRUE, FALSE);
-				ASSetAux2ButtonText(string(srSelectCharacter));
+                ASSetTopButtonActive(TRUE);
+				ASSetTopButtonText(string(srSelectCharacter));
             }
 			if (state.pawnTag ~= "None")
             {
@@ -921,12 +920,12 @@ public function AuxButtonPressedEx(int selectedIndex)
 	isAppearanceDirty = true;
 	RefreshMenu();
 }
-public function Aux2ButtonPressedEx(int selectedIndex)
+public function TopButtonPressedEx(int selectedIndex)
 {
     local AppearanceSubmenu currentSubmenu;
 
 	currentSubmenu = GetCurrentSubmenu();
-	if (!currentSubmenu.OnAux2ButtonPressed(Self, selectedIndex))
+	if (!currentSubmenu.OnTopButtonPressed(Self, selectedIndex))
 	{
 		SetRootSubmenu(Class'ModHandler_AMM'.default.RootSubmenuPath);
 		RefreshMenu(TRUE);

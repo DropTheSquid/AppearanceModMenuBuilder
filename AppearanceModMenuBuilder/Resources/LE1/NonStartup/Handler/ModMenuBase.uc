@@ -103,6 +103,9 @@ public function HandleInputEvent(BioGuiEvents Event, optional float fValue = 1.0
                 OnRStickY(0.0);
             }
             break;
+        case BioGuiEvents.BIOGUI_EVENT_BUTTON_BACK:
+            OnXboxBack();
+            break;
         default:
             Super(BioSFHandler).HandleInputEvent(Event, fValue);
     }
@@ -110,6 +113,15 @@ public function HandleInputEvent(BioGuiEvents Event, optional float fValue = 1.0
 public function OnRStickX(float val);
 
 public function OnRStickY(float val);
+
+public function OnXboxBack()
+{
+    if (oPanel.GetVariableBool("bTopButtonActive"))
+    {
+        // TODO I should get the selected index probably if I ever actually use this
+        TopButtonPressedEx(-1);
+    }
+}
 
 public function ASLoadedEx()
 {
@@ -142,6 +154,10 @@ public function Aux2ButtonPressedEx(int selectedIndex)
     // comment("This will get called from the GUI when you click the upper middle button or Y on a controller.");
     // comment("Override it to do something useful!");
 }
+public function TopButtonPressedEx(int selectedIndex)
+{
+    
+}
 public function ItemSelectedEx(int selectedIndex)
 {
     // comment("This will get called from the GUI when you highlight an item by single clicking on it or navigating to the item using a controller left stick, dpad, or the arrow keys.");
@@ -152,16 +168,6 @@ public function ItemDoubleClickedEx(int selectedIndex)
     // comment("This will get called from the GUI when you double click an item. By default it counts this as invoking the primary action on the item.");
     // comment("You probably don't need to touch this.");
     ActionButtonPressedEx(selectedIndex);
-}
-public function ItemHoverEx(int hoverIndex)
-{
-    // comment("This will get called when the mouse rolls over an item in the list");
-    // comment("You probably don't need to do anything with this.");
-}
-public function ItemUnoverEx(int hoverIndex)
-{
-    // comment("This will get called when the mouse rolls out of an item in the list");
-    // comment("You probably don't need to do anything with this.");
 }
 public function bool ItemActiveEx(int index)
 {
@@ -255,6 +261,17 @@ public function ASSetAux2ButtonText(string aux2ButtonText)
     Parameters.AddItem(Param);
     oPanel.InvokeMethodArgs("SetAux2ButtonText", Parameters);
 }
+public function ASSetTopButtonText(string topButtonText)
+{
+    local ASParams Param;
+    local array<ASParams> Parameters;
+    
+    // comment("Sets the text on the top/Select button");
+    Param.Type = ASParamTypes.ASParam_String;
+    Param.sVar = topButtonText;
+    Parameters.AddItem(Param);
+    oPanel.InvokeMethodArgs("SetTopButtonText", Parameters);
+}
 public function ASSetBackButtonText(string backButtonText)
 {
     local ASParams Param;
@@ -288,7 +305,7 @@ public function ASSetAuxButtonActive(bool active)
     Parameters.AddItem(Param);
     oPanel.InvokeMethodArgs("SetAuxButtonActive", Parameters);
 }
-public function ASSetAux2ButtonActive(bool active, bool useAlternatePosition)
+public function ASSetAux2ButtonActive(bool active)
 {
     local ASParams Param;
     local array<ASParams> Parameters;
@@ -297,9 +314,18 @@ public function ASSetAux2ButtonActive(bool active, bool useAlternatePosition)
     Param.Type = ASParamTypes.ASParam_Boolean;
     Param.bVar = active;
     Parameters.AddItem(Param);
-    Param.bVar = useAlternatePosition;
-    Parameters.AddItem(Param);
     oPanel.InvokeMethodArgs("SetAux2ButtonActive", Parameters);
+}
+public function ASSetTopButtonActive(bool active)
+{
+    local ASParams Param;
+    local array<ASParams> Parameters;
+    
+    // comment("sets whether the top/Select button is visible and active");
+    Param.Type = ASParamTypes.ASParam_Boolean;
+    Param.bVar = active;
+    Parameters.AddItem(Param);
+    oPanel.InvokeMethodArgs("SetTopButtonActive", Parameters);
 }
 public function ASSetBackButtonActive(bool active)
 {
