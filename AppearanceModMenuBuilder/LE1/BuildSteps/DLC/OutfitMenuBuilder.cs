@@ -346,14 +346,20 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // get the onyx, separate out the player specific parts
             var onyxIndex = armorSets.FindIndex(x => x.Label == "Manf_Aldrin_Armor_Onyx");
             var onyxArmor = armorSets[onyxIndex];
-            armorSets.Insert(onyxIndex, new VanillaArmorSet("AMM_N7_Onyx")
+            var N7Onyx = new VanillaArmorSet("AMM_N7_Onyx")
             {
                 SrManufacturerName = onyxArmor.SrManufacturerName,
                 // "N7 Onyx"
                 SrArmorName = 210210241,
-                MalePlayerVariant = onyxArmor.MalePlayerVariant,
-                FemalePlayerVariant = onyxArmor.FemalePlayerVariant
-            });
+                AnyPlayerVariant = onyxArmor.MalePlayerVariant,
+                AnyHumanVariant = onyxArmor.FemalePlayerVariant,
+            };
+            // show the player variants only for Shep and Anderson if the immersion breaking outfits setting is off/default
+            N7Onyx.AnyPlayerVariant.DisplayInt = new AppearanceItemData.PlotIntSetting(1598, 0);
+            N7Onyx.AnyPlayerVariant.ApplicableCharacters = ["Human_Female", "Human_Male", "sta20_captain"];
+            // show for everyone if the immersion breaking outfits setting is on
+            N7Onyx.AnyHumanVariant.DisplayInt = new AppearanceItemData.PlotIntSetting(1598, 1);
+            armorSets.Insert(onyxIndex, N7Onyx);
             onyxArmor.MalePlayerVariant = null;
             onyxArmor.FemalePlayerVariant = null;
 
@@ -523,7 +529,9 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                         return new AppearanceItemData()
                         {
                             SrCenterText = armorSet.SrArmorName,
-                            ApplyOutfitId = ammAppearanceId
+                            ApplyOutfitId = ammAppearanceId,
+                            DisplayInt = variant.DisplayInt,
+                            AApplicableCharacters = variant.ApplicableCharacters
                         };
                     }
                     else
@@ -533,7 +541,9 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                             // "<ArmorName> - <Weight>"
                             SrCenterText = 210210236,
                             ApplyOutfitId = ammAppearanceId,
-                            DisplayVars = [$"${armorSet.SrArmorName}", $"${GetArmorTypeStringRef(armorType)}"]
+                            DisplayVars = [$"${armorSet.SrArmorName}", $"${GetArmorTypeStringRef(armorType)}"],
+                            DisplayInt = variant.DisplayInt,
+                            AApplicableCharacters = variant.ApplicableCharacters
                         };
                     }
                 }

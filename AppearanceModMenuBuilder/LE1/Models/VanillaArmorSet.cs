@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using static AppearanceModMenuBuilder.LE1.Models.VanillaArmorSet.ArmorVariant;
 using static AppearanceModMenuBuilder.LE1.Models.VanillaMeshUtilities;
+using static AppearanceModMenuBuilder.LE1.UScriptModels.AppearanceItemData;
 
 namespace AppearanceModMenuBuilder.LE1.Models
 {
@@ -94,6 +95,10 @@ namespace AppearanceModMenuBuilder.LE1.Models
             public WeightVariant? HVY { get; set; }
 
             public WeightVariant? AllWeights { get; set; }
+
+            public PlotIntSetting? DisplayInt { get; set; }
+
+            public string[]? ApplicableCharacters { get; set; }
 
             public int? HelmetVariant { get; set; }
 

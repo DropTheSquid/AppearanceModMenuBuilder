@@ -145,5 +145,11 @@ namespace AppearanceModMenuBuilder.LE1.UScriptModels
             get => GetBool(nameof(HideIfHatsSuppressed));
             set => SetBool(nameof(HideIfHatsSuppressed), value);
         }
+
+        public string[]? AApplicableCharacters
+        {
+            get => GetStringArray(nameof(AApplicableCharacters));
+            set => SetStringArray(nameof(AApplicableCharacters), value);
+        }
     }
 }
