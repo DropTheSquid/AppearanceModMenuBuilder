@@ -5,6 +5,7 @@ var Pawn_Parameter_Handler paramHandler;
 var transient string outerWorldInfoPath;
 var transient int menuHelmetOverride;
 var transient name menuTagOverride;
+var config bool ExtraCharacterModulesPresent;
 
 var transient delegate<onAppearanceUpdated> __onAppearanceUpdated__Delegate;
 

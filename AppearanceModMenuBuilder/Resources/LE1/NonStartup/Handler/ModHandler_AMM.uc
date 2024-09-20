@@ -261,7 +261,7 @@ public event function Update(float fDeltaT)
 public function RefreshMenu(optional bool firstEnter = FALSE)
 {
     local AppearanceSubmenu currentMenu;
-    local bool IsInCharacterSelect;
+    local bool IsUnderCharacterSelect;
     local menuState state;
     local AMM_AppearanceUpdater updaterInstance;
     
@@ -277,15 +277,16 @@ public function RefreshMenu(optional bool firstEnter = FALSE)
         state = getMenuState();
         if (firstEnter)
         {
-            IsInCharacterSelect = PathName(currentMenu.Class) ~= Class'ModHandler_AMM'.default.RootSubmenuPath;
-            if (IsInCharacterSelect)
-            {
-                ASSetTopButtonActive(FALSE);
-            }
-            else
+            // whether the root menu is character select
+            IsUnderCharacterSelect = PathName(submenuStack[0].Class) ~= Class'ModHandler_AMM'.default.RootSubmenuPath;
+            if (!IsUnderCharacterSelect && ShouldShowSelectCharacter())
             {
                 ASSetTopButtonActive(TRUE);
 				ASSetTopButtonText(string(srSelectCharacter));
+            }
+            else
+            {
+                ASSetTopButtonActive(FALSE);
             }
 			if (state.pawnTag ~= "None")
             {
@@ -315,11 +316,41 @@ public function RefreshMenu(optional bool firstEnter = FALSE)
         RenderMenu(state);
     }
 }
+private function bool ShouldShowSelectCharacter()
+{
+    local BioGlobalVariableTable globalVars;
+    local AMM_AppearanceUpdater updater;
+
+    // if there are extra character menus installed, show the button
+    updater = class'AMM_AppearanceUpdater'.static.GetDlcInstance();
+    if (updater.ExtraCharacterModulesPresent && class'AMM_Common'.static.IsFrameworkInstalled())
+    {
+        return true;
+    }
+
+    globalVars = BioWorldInfo(oWorldInfo).GetGlobalVariables();
+
+    // get the setting for menu accessibility
+    if (globalVars.GetInt(1592) == 3)
+    {
+        // it is set to be always accessible
+        return true;
+    }
+
+    // get the setting for pre recruitment
+    if (globalVars.GetInt(1597) == 1)
+    {
+        return true;
+    }
+
+    // none of the conditions are met, don't show it
+    return false;
+}
 private function RefreshHelmetButton()
 {
 	local string helmetButtonText;
 	local menuState state;
-    
+
 	state = getMenuState();
 
 	helmetButtonText = pawnHandler.GetHelmetButtonText(state.appearanceTypeOverride);
