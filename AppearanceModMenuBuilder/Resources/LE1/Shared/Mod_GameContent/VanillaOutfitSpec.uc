@@ -10,7 +10,7 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
     }
     else
     {
-        delegateSpec = new Class'EquippedArmorOutfitSpec';
+        delegateSpec = new Class'NonOverriddenVanillaOutfitSpec';
     }
     return delegateSpec.LoadOutfit(target, specLists, appearanceIds, appearance);
 }

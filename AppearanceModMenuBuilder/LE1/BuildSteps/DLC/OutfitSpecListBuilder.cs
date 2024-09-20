@@ -102,9 +102,9 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             var specialSpecs = new List<SpecItemBase>
             {
                 // loads the default/casual look, even if they are in combat
-                //new LoadedSpecItem(-3, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
+                new LoadedSpecItem(-3, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
                 // loads the equipped armor look, even if they are out of combat/in a casual situation 
-                //new LoadedSpecItem(-2, "Mod_GameContent.EquippedArmorOutfitSpec"),
+                new LoadedSpecItem(-2, "Mod_GameContent.EquippedArmorOutfitSpec"),
                 // loads the vanilla appearance
                 new LoadedSpecItem(-1, "Mod_GameContent.VanillaOutfitSpec"),
                 new LoadedSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")

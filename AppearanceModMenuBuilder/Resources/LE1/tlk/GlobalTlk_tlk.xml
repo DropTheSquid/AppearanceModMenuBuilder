@@ -453,4 +453,9 @@ Romance</data>
 		<flags>1</flags>
 		<data>Equip Shepard</data>
 	</string>
+	<string>
+		<id>210210296</id>
+		<flags>1</flags>
+		<data>Equipped Armor</data>
+	</string>
 </tlkFile>

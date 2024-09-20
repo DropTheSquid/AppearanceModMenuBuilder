@@ -31,7 +31,7 @@ private final function bool GetPawnFromParty(string LookupTag, out BioPawn squad
     local BioPawn Pawn;
     
     // LogInternal("getting from party");
-    BWI = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo());
+    BWI = class'AMM_AppearanceUpdater'.static.GetOuterWorldInfo();
     if (LookupTag ~= "Player" || LookupTag ~= "Human_Male" || LookupTag ~= "Human_Female")
     {
         squadmate = BWI.m_playerSquad.m_playerPawn;

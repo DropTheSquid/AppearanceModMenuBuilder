@@ -15,6 +15,7 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
     {
         return FALSE;
     }
+	
 	if (!GetOutfitStrings(
 		class'AMM_Utilities'.static.GetPawnType(target),
 		armorType, meshVariant, materialVariant,

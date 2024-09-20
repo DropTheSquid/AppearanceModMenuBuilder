@@ -181,6 +181,15 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     ApplyOutfitId = -1,
                 });
 
+                menus.Armor.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "Equipped Armor"
+                    SrCenterText = 210210296,
+                    ApplyOutfitId = -2,
+                    // restrict this only to squad
+                    AApplicableCharacters = ["Human_Male", "Human_Female", "Hench_HumanMale", "Hench_HumanFemale", "Hench_Turian", "Hench_Quarian", "Hench_Turian", "Hench_Krogan", "Hench_Asari", "Hench_Jenkins"]
+                });
+
                 if (menus.NonArmor != null && menus.NonArmorHeadgear != null)
                 {
                     // "Armor"

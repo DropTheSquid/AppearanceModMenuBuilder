@@ -6,6 +6,7 @@ var transient string outerWorldInfoPath;
 var transient int menuHelmetOverride;
 var transient name menuTagOverride;
 var config bool ExtraCharacterModulesPresent;
+var transient bool InEquippedArmorLookup;
 
 var transient delegate<onAppearanceUpdated> __onAppearanceUpdated__Delegate;
 
@@ -212,7 +213,7 @@ private function UpdatePreviewTags(BioPawn target)
 	}
 }
 
-private static function BioWorldInfo GetOuterWorldInfo()
+public static function BioWorldInfo GetOuterWorldInfo()
 {
 	local AMM_AppearanceUpdater instance;
 	local BioWorldInfo bwi;
