@@ -37,13 +37,13 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 throw new Exception($"Could not find source file {UIWorldFileName}");
             }
 
-            Directory.CreateDirectory(Path.Combine(context.ModOutputPathBase, $@"Compat\Mello"));
+            //Directory.CreateDirectory(Path.Combine(context.ModOutputPathBase, $@"Compat\Mello"));
 
             File.Copy(sourceFilePath, destinationPath);
 
-            var melloCompatPcc = MEPackageHandler.OpenMEPackage(destinationPath);
+            var UIWorld_AMM_file = MEPackageHandler.OpenMEPackage(destinationPath);
 
-            BuildUIWorldFile(melloCompatPcc, context);
+            BuildUIWorldFile(UIWorld_AMM_file, context);
         }
 
         private static void BuildUIWorldFile(IMEPackage pcc, ModBuilderContext context)
