@@ -17,8 +17,6 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
 
 	updater = class'AMM_AppearanceUpdater'.static.GetDlcInstance();
 
-    delegateSpec = new Class'ArmorOverrideVanillaoutfitSpec';
-
     if (!class'AMM_AppearanceUpdater'.static.GetPawnParams(target, params))
 	{
         LogInternal("EquippedArmorOutfitSpec could not get params");

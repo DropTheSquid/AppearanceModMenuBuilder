@@ -50,5 +50,5 @@ srSubtitle=210210222
 +menuItems=(srLeftText=210210289, srRightText=200053, srDescriptionText=210210290, srDescriptionTitleText=210210289, srActionText=200009, DisplayInt=(Id=1600,Value=1), ApplySettingInts=((Id=1600,Value=0)), Images=())
 
 ; Squadmates wear equipped armor
-; +menuItems=(srLeftText=210210292, srRightText=200054, srDescriptionText=210210294, srDescriptionTitleText=210210292, srActionText=200008, DisplayInt=(Id=1601,Value=0), ApplySettingInts=((Id=1601,Value=1)), Images=())
-; +menuItems=(srLeftText=210210292, srRightText=200053, srDescriptionText=210210293, srDescriptionTitleText=210210292, srActionText=200009, DisplayInt=(Id=1601,Value=1), ApplySettingInts=((Id=1601,Value=0)), Images=())
++menuItems=(srLeftText=210210292, srRightText=200054, srDescriptionText=210210294, srDescriptionTitleText=210210292, srActionText=200008, DisplayInt=(Id=1601,Value=0), ApplySettingInts=((Id=1601,Value=1)), Images=())
++menuItems=(srLeftText=210210292, srRightText=200053, srDescriptionText=210210293, srDescriptionTitleText=210210292, srActionText=200009, DisplayInt=(Id=1601,Value=1), ApplySettingInts=((Id=1601,Value=0)), Images=())

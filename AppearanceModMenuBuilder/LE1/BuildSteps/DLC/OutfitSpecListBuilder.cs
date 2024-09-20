@@ -101,13 +101,15 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // Add the special case ones
             var specialSpecs = new List<SpecItemBase>
             {
+                 // loads the vanilla appearance, even if this is a squadmate with different equipped armor
+                new LoadedSpecItem(-4, "Mod_GameContent.VanillaOutfitSpec"),
                 // loads the default/casual look, even if they are in combat
                 new LoadedSpecItem(-3, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
-                // loads the equipped armor look, even if they are out of combat/in a casual situation 
+                // loads the equipped armor look, even if they are out of combat/in a casual situation
                 new LoadedSpecItem(-2, "Mod_GameContent.EquippedArmorOutfitSpec"),
-                // loads the vanilla appearance
-                new LoadedSpecItem(-1, "Mod_GameContent.VanillaOutfitSpec"),
-                new LoadedSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")
+                // loads the default appearance, which might go to equipped armor depending on mod settings
+                new LoadedSpecItem(-1, "Mod_GameContent.DefaultOutfitSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.DefaultOutfitSpec")
             };
             bodyConfig.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
 
@@ -554,13 +556,15 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // Add the special case ones
             var specialSpecs = new List<SpecItemBase>
             {
+                // loads the vanilla appearance, even if this is a squadmate with different equipped armor
+                new LoadedSpecItem(-4, "Mod_GameContent.VanillaOutfitSpec"),
                 // loads the default/casual look, even if they are in combat
                 new LoadedSpecItem(-3, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
-                // loads the equipped armor look, even if they are out of combat/in a casual situation 
+                // loads the equipped armor look, even if they are out of combat/in a casual situation
                 new LoadedSpecItem(-2, "Mod_GameContent.EquippedArmorOutfitSpec"),
-                // loads the vanilla appearance
-                new LoadedSpecItem(-1, "Mod_GameContent.VanillaOutfitSpec"),
-                new LoadedSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")
+                // loads the default appearance, which might go to equipped armor depending on mod settings
+                new LoadedSpecItem(-1, "Mod_GameContent.DefaultOutfitSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.DefaultOutfitSpec")
             };
             bodyConfig.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
 
@@ -870,13 +874,15 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // Add the special case ones
             var specialSpecs = new List<SpecItemBase>
             {
+                 // loads the vanilla appearance, even if this is a squadmate with different equipped armor
+                new LoadedSpecItem(-4, "Mod_GameContent.VanillaOutfitSpec"),
                 // loads the default/casual look, even if they are in combat
                 new LoadedSpecItem(-3, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
-                // loads the equipped armor look, even if they are out of combat/in a casual situation 
+                // loads the equipped armor look, even if they are out of combat/in a casual situation
                 new LoadedSpecItem(-2, "Mod_GameContent.EquippedArmorOutfitSpec"),
-                // loads the vanilla appearance
-                new LoadedSpecItem(-1, "Mod_GameContent.VanillaOutfitSpec"),
-                new LoadedSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")
+                // loads the default appearance, which might go to equipped armor depending on mod settings
+                new LoadedSpecItem(-1, "Mod_GameContent.DefaultOutfitSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.DefaultOutfitSpec")
             };
 
             bodyConfig.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
@@ -963,13 +969,15 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // Add the special case ones
             var specialSpecs = new List<SpecItemBase>
             {
+                 // loads the vanilla appearance, even if this is a squadmate with different equipped armor
+                new LoadedSpecItem(-4, "Mod_GameContent.VanillaOutfitSpec"),
                 // loads the default/casual look, even if they are in combat
                 new LoadedSpecItem(-3, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
-                // loads the equipped armor look, even if they are out of combat/in a casual situation 
+                // loads the equipped armor look, even if they are out of combat/in a casual situation
                 new LoadedSpecItem(-2, "Mod_GameContent.EquippedArmorOutfitSpec"),
-                // loads the vanilla appearance
-                new LoadedSpecItem(-1, "Mod_GameContent.VanillaOutfitSpec"),
-                new LoadedSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")
+                // loads the default appearance, which might go to equipped armor depending on mod settings
+                new LoadedSpecItem(-1, "Mod_GameContent.DefaultOutfitSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.DefaultOutfitSpec")
             };
 
             bodyConfig.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
@@ -1128,13 +1136,15 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // Add the special case ones
             var specialSpecs = new List<SpecItemBase>
             {
+                 // loads the vanilla appearance, even if this is a squadmate with different equipped armor
+                new LoadedSpecItem(-4, "Mod_GameContent.VanillaOutfitSpec"),
                 // loads the default/casual look, even if they are in combat
                 new LoadedSpecItem(-3, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
-                // loads the equipped armor look, even if they are out of combat/in a casual situation 
+                // loads the equipped armor look, even if they are out of combat/in a casual situation
                 new LoadedSpecItem(-2, "Mod_GameContent.EquippedArmorOutfitSpec"),
-                // loads the vanilla appearance
-                new LoadedSpecItem(-1, "Mod_GameContent.VanillaOutfitSpec"),
-                new LoadedSpecItem(0, "Mod_GameContent.VanillaOutfitSpec")
+                // loads the default appearance, which might go to equipped armor depending on mod settings
+                new LoadedSpecItem(-1, "Mod_GameContent.DefaultOutfitSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.DefaultOutfitSpec")
             };
 
             bodyConfig.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
