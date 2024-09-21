@@ -151,5 +151,11 @@ namespace AppearanceModMenuBuilder.LE1.UScriptModels
             get => GetStringArray(nameof(AApplicableCharacters));
             set => SetStringArray(nameof(AApplicableCharacters), value);
         }
+
+        public string[]? AApplicableAppearanceTypes
+        {
+            get => GetStringArray(nameof(AApplicableAppearanceTypes));
+            set => SetStringArray(nameof(AApplicableAppearanceTypes), value);
+        }
     }
 }

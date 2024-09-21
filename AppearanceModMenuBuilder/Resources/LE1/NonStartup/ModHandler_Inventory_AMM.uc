@@ -8,6 +8,12 @@ var GFxMovieInfo movieInfo;
 
 
 // Functions
+public function OnPanelAdded()
+{
+    // store this so it definitely stays in memory
+    movieInfo = GFxMovieInfo(FindObject("GUI_MOD_Inventory_AMM.PCInventory", class'GFxMovieInfo'));
+    Super.OnPanelAdded();
+}
 public function HandleEvent(byte nCommand, const out array<string> Parameters)
 {
 	// this is the event InitializeInventory, which is called at various points during the UI's operation
@@ -118,5 +124,5 @@ public function OnPanelRemoved()
 defaultproperties
 {
     srCustomizeAppearance = $210210211
-	movieInfo = GFXMovieInfo'GUI.PCInventory'
+	// movieInfo = GFXMovieInfo'GUI.PCInventory'
 }

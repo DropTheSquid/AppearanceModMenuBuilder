@@ -37,6 +37,7 @@ struct AppearanceItemData
     var float sortPriority;
     var eGender gender;
     var array<string> aApplicableCharacters;
+    var array<string> aApplicableAppearanceTypes;
     var int applyOutfitId;
     var string pawnOverride;
     var array<string> aMenuParameters;

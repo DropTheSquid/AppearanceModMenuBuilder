@@ -24,8 +24,7 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
 	}
 
     // if this is the player or not a squadmate or the target is currently in the party, defer to NonOverriddenVanillaOutfitSpec
-    if (updater.InEquippedArmorLookup
-        || AMM_Pawn_Parameters_Player(params) != None 
+    if (AMM_Pawn_Parameters_Player(params) != None 
         || AMM_Pawn_Parameters_Squad(params) == None 
         || AMM_Pawn_Parameters_Squad(params).GetPawnFromParty(params.Tag, partyMember) && partyMember == target)
     {
@@ -34,8 +33,6 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
         return delegateSpec.LoadOutfit(target, specLists, appearanceIds, appearance);
     }
 
-    // prevent reentrancy leading to an infinite loop
-    updater.InEquippedArmorLookup = true;
     // TODO grab this info from the save file squad record instead, look it up in the 2DA?
     // might perform better tbh
 
@@ -62,7 +59,6 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
         {
             partyMember.Destroy();
         }
-        updater.InEquippedArmorLookup = false;
         return FALSE;
     }
 	
@@ -75,7 +71,6 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
         {
             partyMember.Destroy();
         }
-        updater.InEquippedArmorLookup = false;
 		return false;
 	}
 
@@ -85,7 +80,6 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
         {
             partyMember.Destroy();
         }
-        updater.InEquippedArmorLookup = false;
 		return false;
 	}
 	
@@ -99,7 +93,6 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
     {
         partyMember.Destroy();
     }
-    updater.InEquippedArmorLookup = false;
 	return true;
 }
 
