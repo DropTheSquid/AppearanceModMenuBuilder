@@ -25,6 +25,7 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 	local pawnAppearance pawnAppearance;
 	local MaterialInstanceConstant mic;
 	local Array<AttachmentToTransfer> attachments;
+	local bool applyingVanillaOutfit;
 
 	UpdateOuterWorldInfo();
 	// this pawn is not yet fully initialized; ignore it
@@ -66,20 +67,19 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 				// CheckIfAppearanceDiffersFromDefaults(target, appearanceIds, pawnAppearance);
 				class'AMM_Utilities'.static.ApplyPawnAppearance(target, pawnAppearance);
 
+				// check for any of the "vanilla" outfit specs
+				applyingVanillaOutfit = appearanceIds.bodyAppearanceId <= 0 && appearanceIds.bodyAppearanceId >= -4;
+				class'AMM_Utilities'.static.UpdatePawnMaterialParameters(target, applyingVanillaOutfit);
+
 				// if there is an override set, apply that
 				if (params.BodyMaterialOverrideMIC != "")
 				{
 					// unless you have opted out default outfits and this is one of those default outfits
-					if (!params.DoNotApplyBodyOverrideToDefaultOutfits || (appearanceIds.bodyAppearanceId != 0 && appearanceIds.bodyAppearanceId != -1))
+					if (!(params.DoNotApplyBodyOverrideToDefaultOutfits && applyingVanillaOutfit))
 					{
 						mic = MaterialInstanceConstant(DynamicLoadObject(params.BodyMaterialOverrideMIC, class'MaterialInstanceConstant'));
 						class'AMM_Utilities'.static.ApplyMaterialOverrides(target.Mesh, mic);
 					}
-				}
-				// otherwise, copy stuff from the headmorph or head materials
-				else
-				{
-					class'AMM_Utilities'.static.UpdatePawnMaterialParameters(target);
 				}
 				// update weapons positions on the sockets
 				ResetAttachmentPositions(target, Attachments);

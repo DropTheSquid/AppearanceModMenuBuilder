@@ -66,7 +66,7 @@ public static function bool IsPawnArmorAppearanceOverridden(BioPawn targetPawn)
     return pawnType.m_bIsArmorOverridden || targetPawn.m_oBehavior.m_bArmorOverridden;
 }
 
-public static function UpdatePawnMaterialParameters(BioPawn targetPawn)
+public static function UpdatePawnMaterialParameters(BioPawn targetPawn, bool applyingDefaultOutfit)
 {
     local MaterialInterface Mat;
     local MaterialInstanceConstant MIC;
@@ -105,6 +105,44 @@ public static function UpdatePawnMaterialParameters(BioPawn targetPawn)
     else
     {
         ApplyHeadMaterialsToBody(targetPawn);
+    }
+    if (applyingDefaultOutfit)
+    {
+        ApplyBioMaterialOverride(targetPawn, GetPawnType(targetPawn).m_oMaterialOverrides);
+        ApplyBioMaterialOverride(targetPawn, BioInterface_Appearance_Pawn(targetPawn.m_oBehavior.m_oAppearanceType).m_pMaterialParameters);
+    }
+}
+
+public static function ApplyBioMaterialOverride(BioPawn target, BioMaterialOverride override)
+{
+    local VectorParameterValue vectorParam;
+    local ScalarParameterValue scalParam;
+    local TextureParameterValue texParam;
+    local ColorParameter colorParam;
+    local ScalarParameter scalParam2;
+    local TextureParameter texParam2;
+
+    LogInternal("applying override"@pathName(override));
+    if (override != None)
+    {
+        foreach override.m_aColorOverrides(colorParam, )
+        {
+            vectorParam.ParameterName = colorParam.nName;
+            vectorParam.ParameterValue = colorParam.cValue;
+            ApplyVectorParameterToAllMICs(vectorParam, target);
+        }
+        foreach override.m_aScalarOverrides(scalParam2, )
+        {
+            scalParam.ParameterName = scalParam2.nName;
+            scalParam.ParameterValue = scalParam2.sValue;
+            ApplyScalarParameterToAllMICs(scalParam, target);
+        }
+        foreach override.m_aTextureOverrides(texParam2, )
+        {
+            texParam.ParameterName = texParam2.nName;
+            texParam.ParameterValue = texParam2.m_pTexture;
+            ApplyTextureParameterToAllMICs(texParam, target);
+        }
     }
 }
 
@@ -214,7 +252,7 @@ private static final function ApplyVectorParameterToAllMICs(VectorParameterValue
     
     foreach targetPawn.ComponentList(Class'SkeletalMeshComponent', smc)
     {
-        if (smc != targetPawn.Mesh && FALSE)
+        if (smc == targetPawn.m_oHeadMesh)
         {
             continue;
         }
@@ -239,7 +277,7 @@ private static final function ApplyScalarParameterToAllMICs(ScalarParameterValue
     
     foreach targetPawn.ComponentList(Class'SkeletalMeshComponent', smc)
     {
-        if (smc != targetPawn.Mesh && FALSE)
+        if (smc == targetPawn.m_oHeadMesh)
         {
             continue;
         }
@@ -264,7 +302,7 @@ private static final function ApplyTextureParameterToAllMICs(TextureParameterVal
     
     foreach targetPawn.ComponentList(Class'SkeletalMeshComponent', smc)
     {
-        if (smc != targetPawn.Mesh && FALSE)
+        if (smc == targetPawn.m_oHeadMesh)
         {
             continue;
         }
@@ -346,6 +384,7 @@ public static function ApplyMaterialOverrides(SkeletalMeshComponent smc, Materia
 			{
 				targetMIC.SetVectorParameterValue(mic.VectorParameterValues[j].ParameterName, mic.VectorParameterValues[j].ParameterValue);
 			}
+            // TODO also apply scalar params from here?
 		}
 	}
 }
