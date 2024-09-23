@@ -96,33 +96,33 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             }
 
             // the code below detects unused appearances and when more than one set of armor uses the same appearance
-            CheckAppearances(HMFAppearances, "hmf");
-            CheckAppearances(HMMAppearances, "hmm");
-            // I am aware that Turian Guardian L/M duplicates appearance with Onyx (there is a Guardian H but not Onyx)
-            // I'm choosing to leave that in place, as it is not confusing
-            CheckAppearances(TURAppearances, "tur");
-            CheckAppearances(KROAppearances, "kro");
-            CheckAppearances(QRNAppearances, "qrn");
+            //CheckAppearances(HMFAppearances, "hmf");
+            //CheckAppearances(HMMAppearances, "hmm");
+            //// I am aware that Turian Guardian L/M duplicates appearance with Onyx (there is a Guardian H but not Onyx)
+            //// I'm choosing to leave that in place, as it is not confusing
+            //CheckAppearances(TURAppearances, "tur");
+            //CheckAppearances(KROAppearances, "kro");
+            //CheckAppearances(QRNAppearances, "qrn");
 
-            static void CheckAppearances(VanillaBodyAppearance[] appearances, string appearanceType)
-            {
-                foreach (var app in appearances)
-                {
-                    if (app.MenuEntries.IsEmpty())
-                    {
-                        Console.WriteLine($"warning: appearance {appearanceType} {app.AmmAppearanceId} {app.ArmorType} {app.ModelVariant} {app.MaterialVariant} is unused");
-                    }
-                    //checking for armors that use the same appearance as another armor
-                    if (app.MenuEntries.Count > 1)
-                    {
-                        Console.WriteLine($"warning: more than one armor is using the same appearance for appearance {appearanceType} {app.ArmorType} {app.ModelVariant} {app.MaterialVariant}");
-                        foreach (var entry in app.MenuEntries)
-                        {
-                            Console.WriteLine($"appearance: {entry.Label}");
-                        }
-                    }
-                }
-            }
+            //static void CheckAppearances(VanillaBodyAppearance[] appearances, string appearanceType)
+            //{
+            //    foreach (var app in appearances)
+            //    {
+            //        if (app.MenuEntries.IsEmpty())
+            //        {
+            //            Console.WriteLine($"warning: appearance {appearanceType} {app.AmmAppearanceId} {app.ArmorType} {app.ModelVariant} {app.MaterialVariant} is unused");
+            //        }
+            //        //checking for armors that use the same appearance as another armor
+            //        if (app.MenuEntries.Count > 1)
+            //        {
+            //            Console.WriteLine($"warning: more than one armor is using the same appearance for appearance {appearanceType} {app.ArmorType} {app.ModelVariant} {app.MaterialVariant}");
+            //            foreach (var entry in app.MenuEntries)
+            //            {
+            //                Console.WriteLine($"appearance: {entry.Label}");
+            //            }
+            //        }
+            //    }
+            //}
 
             // add all armors (including fake ones) by armor set to the menu
             AddMenuEntriesFromVanillaArmors(context, armorSets);
