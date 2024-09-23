@@ -21,6 +21,7 @@ public function SpecialHandling(BioPawn targetPawn)
 				BioInterface_Appearance_Pawn(targetPawn.m_oBehavior.m_oAppearanceType).m_oSettings.m_oBodySettings.m_eArmorType = EBioArmorType.ARMOR_TYPE_LIGHT;
 				BioInterface_Appearance_Pawn(targetPawn.m_oBehavior.m_oAppearanceType).m_oSettings.m_oBodySettings.m_nModelVariant = 0;
 				BioInterface_Appearance_Pawn(targetPawn.m_oBehavior.m_oAppearanceType).m_oSettings.m_oBodySettings.m_nMaterialConfig = 6;
+				// TODO set matching headgear settings?
 			}
 		}
 	}
@@ -28,7 +29,7 @@ public function SpecialHandling(BioPawn targetPawn)
 
 public function string GetAppearanceType(BioPawn targetPawn)
 {
-	// by default, Liara is considered to be in casual appearance on Therum and Virmire comp, despite not having armor overridden
+	// by default, Liara is considered to be in casual appearance on Therum and Virmire camp, despite not having armor overridden
 	// this is true with the framework also
 	if (targetPawn.GetPackageName() == 'BIOA_LAV70_07_DSG'
 		|| targetPawn.GetPackageName() == 'BIOA_JUG20_08_DSG'
