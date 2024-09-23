@@ -435,10 +435,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             // CTHf alt model (smaller chest, shoulders)
             cthfEndId = AddCustomOutfitSpecs(bodyConfig, cthfEndId, "BIOG_HMF_CTHf_AMM.CTHf.HMF_ARM_CTHf_ALT_MDL",
-                "BIOG_HMF_CTHf_AMM.CTHf.HMF_ARM_CTHf_MAT_1a",
-                "BIOG_HMF_CTHf_AMM.CTHf.HMF_ARM_CTHf_MAT_2a",
-                "BIOG_HMF_CTHf_AMM.CTHf.HMF_ARM_CTHf_MAT_3a",
-                "BIOG_HMF_CTHf_AMM.CTHf.HMF_ARM_CTHf_MAT_4a");
+                ["BIOG_HMF_CTHf_AMM.CTHf.HMF_ARM_CTHf_MAT_1a","BIOG_HMM_CTHf_AMM.CTHf.HMM_ARM_CTHf_MAT_1a"],
+                ["BIOG_HMF_CTHf_AMM.CTHf.HMF_ARM_CTHf_MAT_2a","BIOG_HMM_CTHf_AMM.CTHf.HMM_ARM_CTHf_MAT_2a"],
+                ["BIOG_HMF_CTHf_AMM.CTHf.HMF_ARM_CTHf_MAT_3a","BIOG_HMM_CTHf_AMM.CTHf.HMM_ARM_CTHf_MAT_3a"],
+                ["BIOG_HMF_CTHf_AMM.CTHf.HMF_ARM_CTHf_MAT_4a","BIOG_HMM_CTHf_AMM.CTHf.HMM_ARM_CTHf_MAT_4a"]);
 
             // CTHf menu
             AddMenuEntries(speciesMenus.CasualOutfitMenus[6], ctheEndId, cthfEndId - ctheEndId);
@@ -1219,6 +1219,28 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             for (int i = 0; i < materialPaths.Length; i++)
             {
                 specs[i] = new SimpleOutfitSpecItem(startingId + i, meshPath, [materialPaths[i]])
+                {
+                    HelmetSpec = -2
+                };
+            }
+
+            specListConfig.AddArrayEntries("outfitSpecs", specs.Select(x => x.OutputValue()));
+
+            // the starting id for the next set
+            return startingId + specs.Length;
+        }
+
+        private static int AddCustomOutfitSpecs(
+           ModConfigClass specListConfig,
+           int startingId,
+           string meshPath,
+           params string[][] materialPaths
+           )
+        {
+            SimpleOutfitSpecItem[] specs = new SimpleOutfitSpecItem[materialPaths.Length];
+            for (int i = 0; i < materialPaths.Length; i++)
+            {
+                specs[i] = new SimpleOutfitSpecItem(startingId + i, meshPath, materialPaths[i])
                 {
                     HelmetSpec = -2
                 };
