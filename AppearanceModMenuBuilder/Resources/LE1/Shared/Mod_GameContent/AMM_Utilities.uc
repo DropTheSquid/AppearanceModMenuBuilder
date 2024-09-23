@@ -68,52 +68,76 @@ public static function bool IsPawnArmorAppearanceOverridden(BioPawn targetPawn)
 
 public static function UpdatePawnMaterialParameters(BioPawn targetPawn, bool applyingDefaultOutfit)
 {
-    local MaterialInterface Mat;
-    local MaterialInstanceConstant MIC;
-    local VectorParameterValue vectorParam;
-    local ScalarParameterValue scalParam;
-    local TextureParameterValue texParam;
-    local int i;
-    local ColorParameter colorParam;
-    local ScalarParameter scalParam2;
-    local TextureParameter texParam2;
+
     local BioMorphFace morphFace;
     
+    // LogInternal("UpdatePawnMaterialParameters"@PathName(TargetPawn)@targetPawn.Tag);
+    // GetCurrentSkinTone(targetPawn.Mesh);
+
     EnsureMICs(targetPawn);
-    morphFace = GetMorphHead(targetPawn);
-    if (morphFace != None)
-    {
-        foreach morphFace.m_oMaterialOverrides.m_aColorOverrides(colorParam, )
-        {
-            vectorParam.ParameterName = colorParam.nName;
-            vectorParam.ParameterValue = colorParam.cValue;
-            ApplyVectorParameterToAllMICs(vectorParam, targetPawn);
-        }
-        foreach morphFace.m_oMaterialOverrides.m_aScalarOverrides(scalParam2, )
-        {
-            scalParam.ParameterName = scalParam2.nName;
-            scalParam.ParameterValue = scalParam2.sValue;
-            ApplyScalarParameterToAllMICs(scalParam, targetPawn);
-        }
-        foreach morphFace.m_oMaterialOverrides.m_aTextureOverrides(texParam2, )
-        {
-            texParam.ParameterName = texParam2.nName;
-            texParam.ParameterValue = texParam2.m_pTexture;
-            ApplyTextureParameterToAllMICs(texParam, targetPawn);
-        }
-    }
-    else
-    {
-        ApplyHeadMaterialsToBody(targetPawn);
-    }
-    if (applyingDefaultOutfit)
-    {
-        ApplyBioMaterialOverride(targetPawn, GetPawnType(targetPawn).m_oMaterialOverrides);
-        ApplyBioMaterialOverride(targetPawn, BioInterface_Appearance_Pawn(targetPawn.m_oBehavior.m_oAppearanceType).m_pMaterialParameters);
-    }
+    // the order of application matters a lot here:
+    // first, we copy the head materials (skin only) to the body, ensuring that the body skin kinda matches the head even if the others don't have anything to copy over
+    ApplyHeadMaterialsToBody(targetPawn);
+    // next, we apply the BioMaterialOverrides. If this is a default outfit, we apply all of them. 
+    // if it is any other outfit, we only apply the skin params
+    ApplyBioMaterialOverride(targetPawn, GetPawnType(targetPawn).m_oMaterialOverrides, !applyingDefaultOutfit);
+    ApplyBioMaterialOverride(targetPawn, BioInterface_Appearance_Pawn(targetPawn.m_oBehavior.m_oAppearanceType).m_pMaterialParameters, !applyingDefaultOutfit);
+    // finally, if there is a morph head, we apply those params. For this one, we want skin params only unless if it the default outfit
+    ApplyMorphHeadParamsToPawn(targetPawn, GetMorphHead(targetPawn), !applyingDefaultOutfit);
 }
 
-public static function ApplyBioMaterialOverride(BioPawn target, BioMaterialOverride override)
+// private static function GetCurrentSkinTone(SkeletalMeshComponent SMC)
+// {
+//     local LinearColor skinTone;
+//     local int i;
+//     local int j;
+//     local MaterialInstanceConstant MIC;
+//     local VectorParameterValue vect;
+
+//     // LogInternal("GetMaterial"@SMC.GetMaterial(0));
+//     // LogInternal("Material[0]"@SMC.Materials[0]);
+//     // LogInternal("GetBaseMaterial(0)"@SMC.GetBaseMaterial(0));
+
+//     if (SMC.GetMaterial(0).GetVectorParameterValue('SkinTone', skinTone))
+//     {
+//         LogInternal("current skinTone GetMaterial(0) GetVectorParameterValue"@skinTone.R@skintone.G@skintone.B);
+//     }
+//     // if (SMC.Materials[0].GetVectorParameterValue('SkinTone', skinTone))
+//     // {
+//     //     LogInternal("current skinTone Materials[0] GetVectorParameterValue"@skinTone.R@skintone.G@skintone.B);
+//     // }
+//     //  if (SMC.GetBaseMaterial(0).GetVectorParameterValue('SkinTone', skinTone))
+//     // {
+//     //     LogInternal("current skinTone GetBaseMaterial(0) GetVectorParameterValue"@skinTone.R@skintone.G@skintone.B);
+//     // }
+
+//     LogInternal("Looking for value");
+//     MIC = MaterialInstanceConstant(SMC.GetMaterial(i));
+//     while (MIC != None)
+//     {
+//         LogInternal("looking at MIC"@PathName(MIC));
+//         for (j = 0; j < MIC.VectorParameterValues.Length; j++)
+//         {
+//             vect = MIC.VectorParameterValues[j];
+//             if (vect.ParameterName == 'SkinTone')
+//             {
+//                 skinTone = vect.ParameterValue;
+//                 LogInternal("current skinTone GetMaterial(0) Nested Loop"@skinTone.R@skintone.G@skintone.B);
+//                 return;
+//             }
+//         }
+//         MIC = MaterialInstanceConstant(MIC.Parent);
+//     }
+//     // for (i = 0; i < SMC.GetNumElements(); i++)
+//     // {
+//     //     MIC = MaterialInstanceConstant(SMC.GetMaterial(i));
+//     //     LogInternal("Looking for value");
+        
+//     // }
+//     LogInternal("failed to get param directly on SMC material");
+// }
+
+public static function ApplyBioMaterialOverride(BioPawn target, BioMaterialOverride override, bool skinParamsOnly)
 {
     local VectorParameterValue vectorParam;
     local ScalarParameterValue scalParam;
@@ -122,26 +146,34 @@ public static function ApplyBioMaterialOverride(BioPawn target, BioMaterialOverr
     local ScalarParameter scalParam2;
     local TextureParameter texParam2;
 
-    LogInternal("applying override"@pathName(override));
+    // LogInternal("Applying BioMaterialOverride"@PathName(override)@skinParamsOnly);
     if (override != None)
     {
         foreach override.m_aColorOverrides(colorParam, )
         {
+            if (skinParamsOnly && vectorParam.ParameterName != 'skinTone' && vectorParam.ParameterName != 'SkinLightScattering')
+            {
+                continue;
+            }
             vectorParam.ParameterName = colorParam.nName;
             vectorParam.ParameterValue = colorParam.cValue;
+            // LogInternal("Setting"@vectorParam.ParameterName@"from mat override"@vectorParam.ParameterValue.R@vectorParam.ParameterValue.G@vectorParam.ParameterValue.B);
             ApplyVectorParameterToAllMICs(vectorParam, target);
         }
-        foreach override.m_aScalarOverrides(scalParam2, )
+        if (!skinParamsOnly)
         {
-            scalParam.ParameterName = scalParam2.nName;
-            scalParam.ParameterValue = scalParam2.sValue;
-            ApplyScalarParameterToAllMICs(scalParam, target);
-        }
-        foreach override.m_aTextureOverrides(texParam2, )
-        {
-            texParam.ParameterName = texParam2.nName;
-            texParam.ParameterValue = texParam2.m_pTexture;
-            ApplyTextureParameterToAllMICs(texParam, target);
+            foreach override.m_aScalarOverrides(scalParam2, )
+            {
+                scalParam.ParameterName = scalParam2.nName;
+                scalParam.ParameterValue = scalParam2.sValue;
+                ApplyScalarParameterToAllMICs(scalParam, target);
+            }
+            foreach override.m_aTextureOverrides(texParam2, )
+            {
+                texParam.ParameterName = texParam2.nName;
+                texParam.ParameterValue = texParam2.m_pTexture;
+                ApplyTextureParameterToAllMICs(texParam, target);
+            }
         }
     }
 }
@@ -151,16 +183,36 @@ public static function BioMorphFace GetMorphHead(BioPawn targetPawn)
     local BioMorphFace morphFace;
     local BioPawnType pawnType;
     
+    // LogInternal("trying to get morphHead for target"@PathName(targetPawn)@targetPawn.Tag);
     morphFace = targetPawn.m_oBehavior.m_oAppearanceType.m_oMorphFace;
+    // LogInternal("targetPawn.m_oBehavior.m_oAppearanceType.m_oMorphFace"@PathName(targetPawn.m_oBehavior.m_oAppearanceType.m_oMorphFace));
     if (morphFace == None)
     {
         pawnType = Class'AMM_Utilities'.static.GetPawnType(targetPawn);
+        // LogInternal("PawnType"@PathName(pawnType));
         if (pawnType != None)
         {
             morphFace = pawnType.m_oMorphFace;
+            // LogInternal("pawnType morphHead"@PathName(morphFace));
         }
     }
     return morphFace;
+}
+
+public static function ApplyMorphHeadParamsToPawn(BioPawn targetPawn, BioMorphFace morphHead, bool skinParamsOnly)
+{
+    local VectorParameterValue vectorParam;
+    local ScalarParameterValue scalParam;
+    local TextureParameterValue texParam;
+    local int i;
+    local ColorParameter colorParam;
+    local ScalarParameter scalParam2;
+    local TextureParameter texParam2;
+
+    if (morphHead != None)
+    {
+        ApplyBioMaterialOverride(targetPawn, morphHead.m_oMaterialOverrides, skinParamsOnly);
+    }
 }
 
 private static final function EnsureMICs(BioPawn targetPawn)
@@ -233,12 +285,14 @@ private static final function ApplyHeadMaterialsToBody(BioPawn targetPawn)
     }
     if (skinToneSet)
     {
+        // LogInternal("Setting skintone from head mats"@skinTone.R@skintone.G@skintone.B);
         vect.ParameterName = 'skinTone';
         vect.ParameterValue = skinTone;
         ApplyVectorParameterToAllMICs(vect, targetPawn);
     }
     if (skinLightScatteringSet)
     {
+        // LogInternal("Setting SkinLightScattering from head mats"@SkinLightScattering.R@SkinLightScattering.G@SkinLightScattering.B);
         vect.ParameterName = 'SkinLightScattering';
         vect.ParameterValue = SkinLightScattering;
         ApplyVectorParameterToAllMICs(vect, targetPawn);
