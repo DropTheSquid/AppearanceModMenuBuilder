@@ -5,6 +5,7 @@ var Pawn_Parameter_Handler paramHandler;
 var transient string outerWorldInfoPath;
 var transient int menuHelmetOverride;
 var transient name menuTagOverride;
+var transient name menuFrameworkFileOverride;
 var config bool ExtraCharacterModulesPresent;
 var transient bool InEquippedArmorLookup;
 
@@ -69,9 +70,10 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 
 				// check for any of the "vanilla" outfit specs
 				applyingVanillaOutfit = appearanceIds.bodyAppearanceId <= 0 && appearanceIds.bodyAppearanceId >= -4;
+				// apply material overrides from BioMaterialOverrides and headmoprhs
 				class'AMM_Utilities'.static.UpdatePawnMaterialParameters(target, applyingVanillaOutfit);
 
-				// if there is an override set, apply that
+				// if there is an override set in AMM, apply that
 				if (params.BodyMaterialOverrideMIC != "")
 				{
 					// unless you have opted out default outfits and this is one of those default outfits
@@ -209,7 +211,9 @@ private function UpdatePreviewTags(BioPawn target)
 			return;
 		}
 		target.tag = menuTagOverride;
+		target.UniqueTag = menuFrameworkFileOverride;
 		menuTagOverride = 'None';
+		menuFrameworkFileOverride = 'None';
 	}
 }
 

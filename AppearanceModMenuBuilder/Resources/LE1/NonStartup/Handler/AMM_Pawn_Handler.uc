@@ -342,6 +342,7 @@ public function bool DisplayPawn(string tag, string appearanceType)
 		{
 			updaterInstance = class'AMM_AppearanceUpdater'.static.GetDlcInstance();
 			updaterInstance.menuTagOverride = _currentDisplayedPawn.tag;
+			updaterInstance.menuFrameworkFileOverride = _currentDisplayedPawn.GetPackageName();
 			oBWI.m_UIWorld.TriggerEvent('SetupInventory', _outerMenu.oWorldInfo);
 			oBWI.m_UIWorld.spawnPawn(_currentDisplayedPawn, 'InventorySpawnPoint', 'InventoryPawn');
 			return true;

@@ -13,6 +13,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 {
     public class FrameworkTest : IModBuilderTask
     {
+        private static bool IndividualPawns = false;
         private static int currentPlotInt = 1700;
         private static ModConfigMergeFile ConfigMergeFile;
 
@@ -34,6 +35,9 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             {
                 CheckBioNPCFile(file, context);
             }
+
+            // sort the entries to make it easier to find them
+            CharacterSelectSubmenuConfig["menuItems"] = new CoalesceProperty("menuItems", [.. CharacterSelectSubmenuConfig["menuItems"].OrderBy(x => x.Value)]);
             ConfigMergeFile.AddOrMergeClassConfig(PawnParamHandlerConfig);
             ConfigMergeFile.AddOrMergeClassConfig(CharacterSelectSubmenuConfig);
         }
@@ -67,14 +71,15 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             var pcc = MEPackageHandler.OpenMEPackage(filename);
 
-            ExportEntry? firstPawn = null;
+            List<ExportEntry> pawns = [];
             List<string> altTags = [];
             // find all BioPawns (should usually only be one)
             foreach (var exp in pcc.Exports)
             {
                 if (exp.ClassName == "BioPawn" && exp.InstancedFullPath.StartsWith("TheWorld.PersistentLevel"))
                 {
-                    firstPawn ??= exp;
+                    pawns.Add(exp);
+                    //firstPawn ??= exp;
                     var tag = exp.GetProperty<NameProperty>("Tag")?.ToString();
                     if (tag != null)
                     {
@@ -83,84 +88,73 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 }
             }
 
-            if (firstPawn != null)
+            if (!IndividualPawns || pawns.Count == 1)
             {
-                HandleBioNPCPawn(firstPawn, context, altTags);
+                HandleBioNPCPawn(pawns.FirstOrDefault(), context, altTags, false);
+            }
+            else
+            {
+                foreach (var exp in pawns)
+                {
+                    var tag = exp.GetProperty<NameProperty>("Tag")?.ToString();
+                    HandleBioNPCPawn(exp, context, [tag], true);
+                }
             }
         }
 
-        private static void HandleBioNPCPawn(ExportEntry pawn, ModBuilderContext context, IEnumerable<string> altTags)
+        private static void HandleBioNPCPawn(ExportEntry? pawn, ModBuilderContext context, IEnumerable<string> altTags, bool separateFile)
         {
+            if (pawn == null)
+            {
+                return;
+            }
             //if (CheckBioPawn(pawn))
             //{
-                CreatePawnInfrastructure(pawn, context, altTags);
+                CreatePawnInfrastructure(pawn, context, altTags, separateFile);
             //}
         }
 
-        private static void CreatePawnInfrastructure(ExportEntry pawn, ModBuilderContext context, IEnumerable<string> altTags)
+        private static void CreatePawnInfrastructure(ExportEntry pawn, ModBuilderContext context, IEnumerable<string> altTags, bool separateFile)
         {
+            var BioNPCName = pawn.FileRef.FileNameNoExtension;
+            string uniqueName = BioNPCName;
+
+            if (separateFile)
+            {
+                uniqueName = BioNPCName + "_" + pawn.GetProperty<NameProperty>("Tag")?.ToString();
+            }
+
             string tag;
             // this one has two pawns in it, both without tags hardcoded. It assigns a tag to the correct one according to the mod setting for the appearance (from LE1CP)
             if (pawn.FileRef.FileNameNoExtension == "BIONPC_SalarianCSec")
             {
                 tag = "sta60_css_response";
+                // TODO handle this one better
+                if (pawn.ObjectName.Number == 5)
+                {
+                    return;
+                }
             }
             else
             {
                 tag = pawn.GetProperty<NameProperty>("Tag").ToString();
             }
-            var BioNPCName = pawn.FileRef.FileNameNoExtension;
-            var uniqueName = BioNPCName;
 
             var pcc = MEPackageHandler.CreateAndOpenPackage(Path.Combine(context.CookedPCConsoleFolder, "FrameworkTest", $"AMM_{uniqueName}.pcc"), context.Game);
 
             // need to add pawn Params, submenu class
             pcc.GetOrCreateObjectReferencer();
 
-            var pawnParamsClass = new ClassToCompile($"AMM_Pawn_Parameters_{uniqueName}", $"Class AMM_Pawn_Parameters_{uniqueName} extends AMM_Pawn_Parameters config(Game); public function string GetAppearanceType(BioPawn targetPawn){{return \"Casual\";}}");
-            var normalSubmenu = new ClassToCompile($"AppearanceSubmenu_{uniqueName}", $"Class AppearanceSubmenu_{uniqueName} extends AppearanceSubmenu config(UI);");
-
-            // add a few classes
-            var classTask = new AddClassesToFile(
-                _ => pcc,
-                GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AMM_Common.uc", ["Mod_GameContent"]),
-                GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AppearanceSubmenu.uc", ["Mod_GameContent"]),
-                GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AMM_Pawn_Parameters.uc", ["Mod_GameContent"]),
-                pawnParamsClass,
-                normalSubmenu);
-            classTask.RunModTask(context);
-
             // pawn params config
             var pawnParamsConfig = new ModConfigClass($"AMM_{uniqueName}.AMM_Pawn_Parameters_{uniqueName}", "BioGame.ini");
-            pawnParamsConfig.SetStringValue("Tag", tag);
+            pawnParamsConfig.SetStringValue("Tag", uniqueName);
 
-            StructCoalesceValue appearanceIdLookups = new();
-            appearanceIdLookups.SetString("appearanceType", "Casual");
-            appearanceIdLookups.SetString("FrameworkFileName", pawn.FileRef.FileNameNoExtension);
-            var shortName = BioNPCName.Replace("BIO", "");
-            // a few have variants that use the same live/poll name
-            shortName = shortName switch
-            {
-                "NPC_Helena_Citadel" => "NPC_Helena",
-                "NPC_Chorban_Markets" => "NPC_Chorban",
-                "NPC_Sparatus_Holo" => "NPC_Sparatus",
-                "NPC_Valern_Holo" => "NPC_Valern",
-                "NPC_Tevos_Holo" => "NPC_Tevos",
-                _ => shortName
-            };
-            appearanceIdLookups.SetString("FrameworkLiveEventName", $"Live_{shortName}");
-            appearanceIdLookups.SetString("FrameworkPollEventName", $"Poll_{shortName}");
-            appearanceIdLookups.SetStruct("bodyAppearanceLookup", new StructCoalesceValue { { "plotIntId", new IntCoalesceValue(currentPlotInt++) } });
-            appearanceIdLookups.SetStruct("helmetAppearanceLookup", new StructCoalesceValue { { "plotIntId", new IntCoalesceValue(currentPlotInt++) } });
-            appearanceIdLookups.SetStruct("breatherAppearanceLookup", new StructCoalesceValue { { "plotIntId", new IntCoalesceValue(currentPlotInt++) } });
-            appearanceIdLookups.SetStruct("appearanceFlagsLookup", new StructCoalesceValue { { "plotIntId", new IntCoalesceValue(currentPlotInt++) } });
-            pawnParamsConfig.SetStructValue("AppearanceIdLookupsList", appearanceIdLookups);
             foreach (var altTag in altTags)
             {
-                if (altTag != tag)
-                {
+                //if (altTag != tag)
+                //{
                     pawnParamsConfig.AddArrayEntries("alternateTags", altTag);
-                }
+                //}
             }
 
             ConfigMergeFile.AddOrMergeClassConfig(pawnParamsConfig);
@@ -172,8 +166,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // inner menu
             var submenuConfig = new AppearanceSubmenu($"AMM_{uniqueName}.AppearanceSubmenu_{uniqueName}")
             {
-                PawnTag = tag,
-                PawnAppearanceType = "casual",
+                PawnTag = uniqueName,
                 ArmorOverride = "overridden",
                 STitle = uniqueName,
                 SrSubtitle = 210210256,
@@ -303,12 +296,54 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 pawnParamsConfig.SetStringValue("defaultHelmetState", "full");
             }
 
-            //ConfigMergeFile.AddOrMergeClassConfig(preloadSubmenuConfig);
+            StructCoalesceValue appearanceIdLookups = new();
+            appearanceIdLookups.SetString("appearanceType", casual ? "casual" : "combat");
+            appearanceIdLookups.SetString("FrameworkFileName", pawn.FileRef.FileNameNoExtension);
+            var shortName = BioNPCName.Replace("BIO", "");
+            // a few have variants that use the same live/poll name
+            shortName = shortName switch
+            {
+                "NPC_Helena_Citadel" => "NPC_Helena",
+                "NPC_Chorban_Markets" => "NPC_Chorban",
+                "NPC_Sparatus_Holo" => "NPC_Sparatus",
+                "NPC_Valern_Holo" => "NPC_Valern",
+                "NPC_Tevos_Holo" => "NPC_Tevos",
+                _ => shortName
+            };
+            appearanceIdLookups.SetString("FrameworkLiveEventName", $"Live_{shortName}");
+            appearanceIdLookups.SetString("FrameworkPollEventName", $"Poll_{shortName}");
+            appearanceIdLookups.SetStruct("bodyAppearanceLookup", new StructCoalesceValue { { "plotIntId", new IntCoalesceValue(currentPlotInt++) } });
+            appearanceIdLookups.SetStruct("helmetAppearanceLookup", new StructCoalesceValue { { "plotIntId", new IntCoalesceValue(currentPlotInt++) } });
+            appearanceIdLookups.SetStruct("breatherAppearanceLookup", new StructCoalesceValue { { "plotIntId", new IntCoalesceValue(currentPlotInt++) } });
+            appearanceIdLookups.SetStruct("appearanceFlagsLookup", new StructCoalesceValue { { "plotIntId", new IntCoalesceValue(currentPlotInt++) } });
+            pawnParamsConfig.SetStructValue("AppearanceIdLookupsList", appearanceIdLookups);
+
+            var pawnParamsClass = new ClassToCompile($"AMM_Pawn_Parameters_{uniqueName}", $"Class AMM_Pawn_Parameters_{uniqueName} extends AMM_Pawn_Parameters config(Game); public function string GetAppearanceType(BioPawn targetPawn){{return \"{(casual ? "casual" : "combat")}\";}}");
+            var normalSubmenu = new ClassToCompile($"AppearanceSubmenu_{uniqueName}", $"Class AppearanceSubmenu_{uniqueName} extends AppearanceSubmenu config(UI);");
+
+            // add a few classes
+            var classTask = new AddClassesToFile(
+                _ => pcc,
+                GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AMM_Common.uc", ["Mod_GameContent"]),
+                GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AppearanceSubmenu.uc", ["Mod_GameContent"]),
+                GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AMM_Pawn_Parameters.uc", ["Mod_GameContent"]),
+                pawnParamsClass,
+                normalSubmenu);
+            classTask.RunModTask(context);
+
+            submenuConfig.PawnAppearanceType = casual ? "casual" : "combat";
+
             ConfigMergeFile.AddOrMergeClassConfig(submenuConfig);
         }
 
         private static bool CheckBioPawn(ExportEntry pawn)
         {
+            // things I need to check for any possibly fix:
+            // body/helmet meshes are not what is pointed to by the params
+            // material parents are not what is pointed to by params
+            // there are extra material params that affect the armor on the pawn
+
+
             var tag = pawn.GetProperty<NameProperty>("Tag");
             if (tag != null)
             {

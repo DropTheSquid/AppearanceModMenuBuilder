@@ -67,23 +67,55 @@ public function bool matchesPawn(BioPawn targetPawn)
 {
     local string altTag;
 
-	if (requiresFramework && !class'AMM_Common'.static.IsFrameworkInstalled())
+	if (requiresFramework)
 	{
-		return false;
+		if (!class'AMM_Common'.static.IsFrameworkInstalled())
+		{
+			return false;
+		}
+		return FrameworkMatch(targetPawn);
 	}
-    
-    if (string(targetPawn.Tag) ~= Tag)
-    {
-        return TRUE;
-    }
-    foreach alternateTags(altTag, )
-    {
-        if (string(targetPawn.Tag) ~= altTag)
-        {
-            return TRUE;
-        }
-    }
-    return FALSE;
+
+	return TagMatch(targetPawn);
+}
+
+private function bool FrameworkMatch(BioPawn targetPawn)
+{
+	local AppearanceIdLookups currentLookup;
+	local string frameworkFileName;
+
+	frameworkFileName = string(targetPawn.GetPackageName());
+	if (frameworkFileName ~= "BIOG_UIWORLD")
+	{
+		frameworkFileName = string(targetPawn.UniqueTag);
+	}
+
+	foreach AppearanceIdLookupsList(currentLookup)
+	{
+		if (currentLookup.FrameworkFileName ~= frameworkFileName && TagMatch(TargetPawn))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+private function bool TagMatch(BioPawn targetPawn)
+{
+	local string altTag;
+
+	if (string(targetPawn.Tag) ~= Tag)
+	{
+		return TRUE;
+	}
+	foreach alternateTags(altTag)
+	{
+		if (string(targetPawn.Tag) ~= altTag)
+		{
+			return TRUE;
+		}
+	}
+	return FALSE;
 }
 
 // allows you to do some special processing to the pawn before their appearance is updated
