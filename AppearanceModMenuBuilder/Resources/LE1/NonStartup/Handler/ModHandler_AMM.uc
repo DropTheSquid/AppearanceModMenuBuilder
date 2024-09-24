@@ -551,12 +551,23 @@ private final function bool ShouldItemBeDisplayedBasedOnCharacter(AppearanceItem
 					applicableCharacter = true;
 					break;
 				}
-                // alternatively, if it starts with a !, specifically do not show it if this tag matches
-                if (tempString ~= ("!"$state.params.Tag))
-                {
-                    applicableCharacter = false;
+			}
+			if (!applicableCharacter)
+			{
+				return false;
+			}
+		}
+        if (item.aNotApplicableCharacters.length > 0)
+		{
+            applicableCharacter = true;
+            // if this tag is any of the not applicable characters, do not show it
+			foreach item.aNotApplicableCharacters(tempString)
+			{
+				if (tempString ~= state.params.Tag)
+				{
+					applicableCharacter = false;
 					break;
-                }
+				}
 			}
 			if (!applicableCharacter)
 			{
@@ -572,11 +583,22 @@ private final function bool ShouldItemBeDisplayedBasedOnCharacter(AppearanceItem
 					applicableAppearanceType = true;
 					break;
 				}
-                if (tempString ~= ("!"$state.appearanceTypeOverride))
-                {
-                    applicableAppearanceType = false;
-                    break;
-                }
+			}
+			if (!applicableAppearanceType)
+			{
+				return false;
+			}
+        }
+        if (item.aNotApplicableAppearanceTypes.length > 0)
+        {
+            applicableAppearanceType = true;
+			foreach item.aNotApplicableAppearanceTypes(tempString)
+			{
+				if (tempString ~= state.appearanceTypeOverride)
+				{
+					applicableAppearanceType = false;
+					break;
+				}
 			}
 			if (!applicableAppearanceType)
 			{

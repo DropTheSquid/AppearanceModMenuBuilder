@@ -38,6 +38,8 @@ struct AppearanceItemData
     var eGender gender;
     var array<string> aApplicableCharacters;
     var array<string> aApplicableAppearanceTypes;
+    var array<string> aNotApplicableCharacters;
+    var array<string> aNotApplicableAppearanceTypes;
     var int applyOutfitId;
     var string pawnOverride;
     var array<string> aMenuParameters;

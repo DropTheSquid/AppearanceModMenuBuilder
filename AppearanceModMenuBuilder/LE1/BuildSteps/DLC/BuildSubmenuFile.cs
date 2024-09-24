@@ -167,31 +167,26 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_Headgear_NonArmor", [bodyType, "NonArmor"]));
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_Breather", [bodyType]));
 
+                // there should always be a default outfit option as long as this is not a combat appearance
                 menus.NonArmor?.AddMenuEntry(new AppearanceItemData()
                 {
                     // "Default outfit"
                     SrCenterText = 210210283,
                     ApplyOutfitId = -1,
-                    // only for the casual and romance submenus
-                    AApplicableAppearanceTypes = ["Casual", "Romance"]
+                    // for any appearance type besides combat
+                    ANotApplicableAppearanceTypes = ["Combat"]
                 });
 
-                // for anyone who is not squad, add a default outfit entry
+                // for anyone who is not squad, add a default outfit entry for combat
                 menus.Armor.AddMenuEntry(new AppearanceItemData()
                 {
                     // "Default outfit"
                     SrCenterText = 210210283,
                     ApplyOutfitId = -1,
                     // anyone but squadmates
-                    AApplicableCharacters = ["!Human_Male", "!Human_Female", "!Hench_HumanMale", "!Hench_HumanFemale", "!Hench_Turian", "!Hench_Quarian", "!Hench_Turian", "!Hench_Krogan", "!Hench_Asari", "!Hench_Jenkins"],
-                });
-                menus.NonArmor?.AddMenuEntry(new AppearanceItemData()
-                {
-                    // "Default outfit"
-                    SrCenterText = 210210283,
-                    ApplyOutfitId = -1,
-                    // anyone but squadmates
-                    AApplicableCharacters = ["!Human_Male", "!Human_Female", "!Hench_HumanMale", "!Hench_HumanFemale", "!Hench_Turian", "!Hench_Quarian", "!Hench_Turian", "!Hench_Krogan", "!Hench_Asari", "!Hench_Jenkins"],
+                    ANotApplicableCharacters = ["Human_Male", "Human_Female", "Hench_HumanMale", "Hench_HumanFemale", "Hench_Turian", "Hench_Quarian", "Hench_Turian", "Hench_Krogan", "Hench_Asari", "Hench_Jenkins"],
+                    // only for the combat submenu
+                    AApplicableAppearanceTypes = ["Combat"]
                 });
 
                 // for squadmates under the combat appearance type, show either "Default Outfit" or "Equipped Armor"
@@ -236,12 +231,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     SrCenterText = 210210296,
                     // force equipped armor
                     ApplyOutfitId = -2,
-                    // also apply equipped helmet?
-                    //ApplyHelmetId = -3,
                     // restrict this to entire squad
                     AApplicableCharacters = ["Human_Male", "Human_Female", "Hench_HumanMale", "Hench_HumanFemale", "Hench_Turian", "Hench_Quarian", "Hench_Turian", "Hench_Krogan", "Hench_Asari", "Hench_Jenkins"],
                     // only for the casual and romance submenus
-                    AApplicableAppearanceTypes = ["Casual", "Romance"]
+                    ANotApplicableAppearanceTypes = ["Combat"]
                 });
 
                 if (menus.NonArmor != null && menus.NonArmorHeadgear != null)
@@ -306,7 +299,9 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     SrCenterText = 210210284,
                     ApplyHelmetId = -1,
                     // anyone but squadmates
-                    AApplicableCharacters = ["!Human_Male", "!Human_Female", "!Hench_HumanMale", "!Hench_HumanFemale", "!Hench_Turian", "!Hench_Quarian", "!Hench_Turian", "!Hench_Krogan", "!Hench_Asari", "!Hench_Jenkins"],
+                    ANotApplicableCharacters = ["Human_Male", "Human_Female", "Hench_HumanMale", "Hench_HumanFemale", "Hench_Turian", "Hench_Quarian", "Hench_Turian", "Hench_Krogan", "Hench_Asari", "Hench_Jenkins"],
+                    // only for the combat submenu
+                    AApplicableAppearanceTypes = ["Combat"]
                 });
 
                 // for squadmates under the combat appearance type, show either "Default Outfit" or "Equipped Armor"
@@ -354,7 +349,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     // restrict this to entire squad
                     AApplicableCharacters = ["Human_Male", "Human_Female", "Hench_HumanMale", "Hench_HumanFemale", "Hench_Turian", "Hench_Quarian", "Hench_Turian", "Hench_Krogan", "Hench_Asari", "Hench_Jenkins"],
                     // only for the casual and romance submenus
-                    AApplicableAppearanceTypes = ["Casual", "Romance"]
+                    ANotApplicableAppearanceTypes = ["Combat"]
                 });
 
                 menus.ArmorHeadgear.AddMenuEntry(menus.Breather.GetEntryPoint(210210244, hideIfBreatherSuppressed: true));
