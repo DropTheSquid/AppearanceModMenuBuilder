@@ -8,6 +8,8 @@ var transient name menuTagOverride;
 var transient name menuFrameworkFileOverride;
 var config bool ExtraCharacterModulesPresent;
 var transient bool InEquippedArmorLookup;
+// disabled as I do not currently need this
+// var transient array<string> handledPawns;
 
 var transient delegate<onAppearanceUpdated> __onAppearanceUpdated__Delegate;
 
@@ -44,6 +46,10 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 		// skip this; it will sometimes do incorrect things before the pawn is fully initialized, and it will be called again from SpawnPlayer
 		return;
 	}
+	// if (target.GetPackageName() != 'BIOG_UIWorld')
+	// {
+	// 	handledPawns.AddItem(PathName(target));
+	// }
 	UpdatePreviewTags(target);
 	if (paramHandler.GetPawnParams(target, params))
 	{
