@@ -13,7 +13,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 {
     public class FrameworkTest : IModBuilderTask
     {
-        private static bool IndividualPawns = true;
+        private static bool IndividualPawns = false;
         private static int currentPlotInt = 1700;
         private static ModConfigMergeFile ConfigMergeFile;
 
@@ -23,7 +23,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         public void RunModTask(ModBuilderContext context)
         {
             // disabled because I do not need to run this every time
-            //return;
+            return;
 
             Console.WriteLine("generating framework test content");
 
@@ -254,6 +254,18 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 {
                     InlineSubmenu = true,
                     SubMenuClassName = casual ? "AMM_Submenus.Krogan.AppearanceSubmenu_Krogan_CasualOutfits" : "AMM_Submenus.Krogan.AppearanceSubmenu_Krogan_CombatOutfits"
+                });
+            }
+            else if (meshPath.Contains("sal"))
+            {
+                // sal stuff
+                pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.SAL_OutfitSpec");
+                pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.SAL_HelmetSpec");
+                pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.SAL_BreatherSpec");
+                submenuConfig.AddMenuEntry(new UScriptModels.AppearanceItemData()
+                {
+                    InlineSubmenu = true,
+                    SubMenuClassName = casual ? "AMM_Submenus.Salarian.AppearanceSubmenu_Salarian_CasualOutfits" : "AMM_Submenus.Salarian.AppearanceSubmenu_Salarian_CombatOutfits"
                 });
             }
             else

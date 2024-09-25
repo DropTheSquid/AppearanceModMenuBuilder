@@ -15,6 +15,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         private SpeciesOutfitMenus asariOutfitMenus;
         private SpeciesOutfitMenus turianOutfitMenus;
         private SpeciesOutfitMenus kroganOutfitMenus;
+        private SpeciesOutfitMenus salarianOutfitMenus;
 
         public enum OutfitType
         {
@@ -39,7 +40,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             var submenuConfigMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-amm_Submenus.m3cd");
 
-            (humanFemaleOutfitMenus, humanMaleOutfitMenus, asariOutfitMenus, turianOutfitMenus, _, kroganOutfitMenus) = InitCommonMenus(submenuConfigMergeFile);
+            (humanFemaleOutfitMenus, humanMaleOutfitMenus, asariOutfitMenus, turianOutfitMenus, _, kroganOutfitMenus, salarianOutfitMenus) = InitCommonMenus(submenuConfigMergeFile);
 
             GenerateHMFSpecs();
             GenerateASASpecs();
@@ -47,8 +48,9 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             GenerateTURSpecs();
             GenerateKROSpecs();
             GenerateQRNSpecs();
+            GenerateSALSpecs();
             // TODO other ones to possibly add:
-            // Female Turian, Volus, Salarian, Elcor, Hanar, male Quarian, Vorcha, Drell, Batarian
+            // Female Turian, Volus, Elcor, Hanar, male Quarian, Vorcha, Drell, Batarian
 
             var compileClassesTask = new AddClassesToFile(_ => startup, classes);
             compileClassesTask.RunModTask(context);
@@ -1163,6 +1165,167 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             configs.Add(breatherConfig);
         }
 
+        private void GenerateSALSpecs()
+        {
+            /*
+             * Salarian vanilla helmets have no separate visor or breather, and they hide the whole head similar to krogan
+             */
+            const string bodyType = "SAL";
+
+            // add the source code needed
+            AddSpecListClasses(bodyType);
+
+            // now generate the configs
+            var bodyConfig = GetOutfitListConfig(bodyType);
+            var helmetConfig = GetHelmetListConfig(bodyType);
+            var breatherConfig = GetBreatherListConfig(bodyType);
+
+            // Add the special case ones
+            var specialSpecs = new List<SpecItemBase>
+            {
+                 // loads the vanilla appearance, even if this is a squadmate with different equipped armor
+                new LoadedSpecItem(-4, "Mod_GameContent.VanillaOutfitSpec"),
+                // loads the default/casual look, even if they are in combat
+                new LoadedSpecItem(-3, "Mod_GameContent.ArmorOverrideVanillaOutfitSpec"),
+                // loads the equipped armor look, even if they are out of combat/in a casual situation
+                new LoadedSpecItem(-2, "Mod_GameContent.EquippedArmorOutfitSpec"),
+                // loads the default appearance, which might go to equipped armor depending on mod settings
+                new LoadedSpecItem(-1, "Mod_GameContent.DefaultOutfitSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.DefaultOutfitSpec")
+            };
+
+            bodyConfig.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
+
+            specialSpecs =
+            [
+                 // loads the equipped armor look, even if they are in casual mode or outside of the squad
+                new LoadedSpecItem(-3, "Mod_GameContent.EquippedArmorHelmetSpec"),
+                // force there to be no helmet
+                new LoadedSpecItem(-2, "Mod_GameContent.NoHelmetSpec"),
+                // loads the vanilla appearance, unless overridden by the outfit spec
+                new LoadedSpecItem(-1, "Mod_GameContent.DefaultHelmetSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.DefaultHelmetSpec")
+            ];
+            helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs.Select(x => x.OutputValue()));
+
+            specialSpecs = [
+                new LoadedSpecItem(-2, "Mod_GameContent.NoBreatherSpec"),
+                new LoadedSpecItem(-1, "Mod_GameContent.VanillaBreatherSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.VanillaBreatherSpec")
+            ];
+            breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs.Select(x => x.OutputValue()));
+
+            // using the names of vanilla files they never shipped, but would have existed in a non stripped game
+            // this allows vanilla outfits to dynamic load and I can also add extras from other games
+            const string salArmorFileName = "BIOG_SAL_ARM_LGT_R";
+            const string salHelmetFileName = "BIOG_SAL_HGR_LGT_R";
+
+            // add all vanilla armor variants into positive IDs less than 100
+            // salarians only have LGTa, and only 4 material variants
+            AddVanillaOutfitSpecs(bodyConfig, 1, salArmorFileName, OutfitType.LGT, 0, bodyType, 4, 1, true);
+            AddVanillaHelmetSpecs(helmetConfig, 1, salHelmetFileName, OutfitType.LGT, 0, bodyType, 4, 1, suppressBreather: true, hideHead: true);
+
+            AddMenuEntries(salarianOutfitMenus.Armor, 1, 4);
+            AddHelmetMenuEntries(salarianOutfitMenus.ArmorHeadgear, 1, 4);
+
+
+            var cthaEndId = AddCustomOutfitSpecs(bodyConfig, 100, "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MDL",
+                "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MAT_1a",
+                "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MAT_2a",
+                "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MAT_3a",
+                "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MAT_1b",
+                "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MAT_1c",
+                "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MAT_1d",
+                "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MAT_1e",
+                "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MAT_1f",
+                "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MAT_1g",
+                "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MAT_1h",
+                "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MAT_1i",
+                "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MAT_1j",
+                "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MAT_1k",
+                "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MAT_1l",
+                "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MAT_1m",
+                "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MAT_1n",
+                "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MAT_2b",
+                "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MAT_2c",
+                "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MAT_3b",
+                "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MAT_3c",
+                "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MAT_3d",
+                "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MAT_3e",
+                "BIOG_SAL_ARM_CTH_R.CTHa.SAL_ARM_CTHa_MAT_3f");
+
+            // CTHa menu
+            AddMenuEntries(salarianOutfitMenus.CasualOutfitMenus[0], 100, cthaEndId - 100);
+
+            var cthbEndId = AddCustomOutfitSpecs(bodyConfig, cthaEndId, "BIOG_SAL_ARM_CTH_R.CTHb.SAL_ARM_CTHb_MDL",
+                "BIOG_SAL_ARM_CTH_R.CTHb.SAL_ARM_CTHb_MAT_1a",
+                "BIOG_SAL_ARM_CTH_R.CTHb.SAL_ARM_CTHb_MAT_2a",
+                "BIOG_SAL_ARM_CTH_R.CTHb.SAL_ARM_CTHb_MAT_3a",
+                "BIOG_SAL_ARM_CTH_R.CTHb.SAL_ARM_CTHb_MAT_2b",
+                "BIOG_SAL_ARM_CTH_R.CTHb.SAL_ARM_CTHb_MAT_1b",
+                "BIOG_SAL_ARM_CTH_R.CTHb.SAL_ARM_CTHb_MAT_1c",
+                "BIOG_SAL_ARM_CTH_R.CTHb.SAL_ARM_CTHb_MAT_1d",
+                "BIOG_SAL_ARM_CTH_R.CTHb.SAL_ARM_CTHb_MAT_1e");
+
+            // CTHb menu
+            AddMenuEntries(salarianOutfitMenus.CasualOutfitMenus[1], cthaEndId, cthbEndId - cthaEndId);
+
+            var cthcEndId = AddCustomOutfitSpecs(bodyConfig, cthbEndId, "BIOG_SAL_ARM_CTH_R.CTHc.SAL_ARM_CTHc_MDL",
+                "BIOG_SAL_ARM_CTH_R.CTHc.SAL_ARM_CTHc_MAT_1a",
+                "BIOG_SAL_ARM_CTH_R.CTHc.SAL_ARM_CTHc_MAT_2a",
+                "BIOG_SAL_ARM_CTH_R.CTHc.SAL_ARM_CTHc_MAT_3a",
+                "BIOG_SAL_ARM_CTH_R.CTHc.SAL_ARM_CTHc_MAT_1b",
+                "BIOG_SAL_ARM_CTH_R.CTHc.SAL_ARM_CTHc_MAT_1c",
+                "BIOG_SAL_ARM_CTH_R.CTHc.SAL_ARM_CTHc_MAT_1d",
+                "BIOG_SAL_ARM_CTH_R.CTHc.SAL_ARM_CTHc_MAT_1e",
+                "BIOG_SAL_ARM_CTH_R.CTHc.SAL_ARM_CTHc_MAT_1f",
+                "BIOG_SAL_ARM_CTH_R.CTHc.SAL_ARM_CTHc_MAT_1g",
+                "BIOG_SAL_ARM_CTH_R.CTHc.SAL_ARM_CTHc_MAT_1h",
+                "BIOG_SAL_ARM_CTH_R.CTHc.SAL_ARM_CTHc_MAT_1i",
+                "BIOG_SAL_ARM_CTH_R.CTHc.SAL_ARM_CTHc_MAT_1j",
+                "BIOG_SAL_ARM_CTH_R.CTHc.SAL_ARM_CTHc_MAT_2b",
+                "BIOG_SAL_ARM_CTH_R.CTHc.SAL_ARM_CTHc_MAT_2c",
+                "BIOG_SAL_ARM_CTH_R.CTHc.SAL_ARM_CTHc_MAT_2d",
+                "BIOG_SAL_ARM_CTH_R.CTHc.SAL_ARM_CTHc_MAT_2e",
+                "BIOG_SAL_ARM_CTH_R.CTHc.SAL_ARM_CTHc_MAT_3b",
+                "BIOG_SAL_ARM_CTH_R.CTHc.SAL_ARM_CTHc_MAT_3c",
+                "BIOG_SAL_ARM_CTH_R.CTHc.SAL_ARM_CTHc_MAT_3d");
+
+            // CTHc menu
+            AddMenuEntries(salarianOutfitMenus.CasualOutfitMenus[2], cthbEndId, cthcEndId - cthbEndId);
+
+            var cthdEndId = AddCustomOutfitSpecs(bodyConfig, cthcEndId, "BIOG_SAL_ARM_CTH_R.CTHd.SAL_ARM_CTHd_MDL",
+                "BIOG_SAL_ARM_CTH_R.CTHd.SAL_ARM_CTHd_MAT_1a",
+                "BIOG_SAL_ARM_CTH_R.CTHd.SAL_ARM_CTHd_MAT_2a",
+                "BIOG_SAL_ARM_CTH_R.CTHd.SAL_ARM_CTHd_MAT_3a",
+                "BIOG_SAL_ARM_CTH_R.CTHd.SAL_ARM_CTHd_MAT_4a",
+                "BIOG_SAL_ARM_CTH_R.CTHd.SAL_ARM_CTHd_MAT_5a",
+                "BIOG_SAL_ARM_CTH_R.CTHd.SAL_ARM_CTHd_MAT_1b",
+                "BIOG_SAL_ARM_CTH_R.CTHd.SAL_ARM_CTHd_MAT_1c",
+                "BIOG_SAL_ARM_CTH_R.CTHd.SAL_ARM_CTHd_MAT_1d",
+                "BIOG_SAL_ARM_CTH_R.CTHd.SAL_ARM_CTHd_MAT_1e",
+                "BIOG_SAL_ARM_CTH_R.CTHd.SAL_ARM_CTHd_MAT_1f");
+
+            // CTHd menu
+            AddMenuEntries(salarianOutfitMenus.CasualOutfitMenus[3], cthcEndId, cthdEndId - cthcEndId);
+
+            var ctheEndId = AddCustomOutfitSpecs(bodyConfig, cthdEndId, "BIOG_SAL_ARM_CTH_R.CTHe.SAL_ARM_CTHe_MDL",
+                "BIOG_SAL_ARM_CTH_R.CTHe.SAL_ARM_CTHe_MAT_1a",
+                "BIOG_SAL_ARM_CTH_R.CTHe.SAL_ARM_CTHe_MAT_2a",
+                "BIOG_SAL_ARM_CTH_R.CTHe.SAL_ARM_CTHe_MAT_3a",
+                "BIOG_SAL_ARM_CTH_R.CTHe.SAL_ARM_CTHe_MAT_4a",
+                "BIOG_SAL_ARM_CTH_R.CTHe.SAL_ARM_CTHe_MAT_5a",
+                "BIOG_SAL_ARM_CTH_R.CTHe.SAL_ARM_CTHe_MAT_6a",
+                "BIOG_SAL_ARM_CTH_R.CTHe.SAL_ARM_CTHe_MAT_7a",
+                "BIOG_SAL_ARM_CTH_R.CTHe.SAL_ARM_CTHe_MAT_8a");
+
+            // CTHe menu
+            AddMenuEntries(salarianOutfitMenus.CasualOutfitMenus[4], cthdEndId, ctheEndId - cthdEndId);
+
+            configs.Add(bodyConfig);
+            configs.Add(helmetConfig);
+            configs.Add(breatherConfig);
+        }
 
         private static void AddVanillaOutfitSpecs(
             ModConfigClass configToAddTo,
@@ -1313,6 +1476,20 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     // "Style <0>"
                     SrCenterText = 210210235,
                     ApplyOutfitId = startingId + i,
+                    DisplayVars = [(i + 1).ToString()]
+                });
+            }
+        }
+
+        private static void AddHelmetMenuEntries(AppearanceSubmenu submenu, int startingId, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                submenu.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "Style <0>"
+                    SrCenterText = 210210235,
+                    ApplyHelmetId = startingId + i,
                     DisplayVars = [(i + 1).ToString()]
                 });
             }

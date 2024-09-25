@@ -32,6 +32,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         public SpeciesOutfitMenus TurianOutfitMenus;
         public SpeciesOutfitMenus KroganOutfitMenus;
         public SpeciesOutfitMenus QuarianOutfitMenus;
+        public SpeciesOutfitMenus SalarianOutfitMenus;
 
         public void RunModTask(ModBuilderContext context)
         {
@@ -85,7 +86,15 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             classTask.RunModTask(context);
         }
 
-        public static (SpeciesOutfitMenus humanFemale, SpeciesOutfitMenus humanMale, SpeciesOutfitMenus asari, SpeciesOutfitMenus turian, SpeciesOutfitMenus quarian, SpeciesOutfitMenus krogan) InitCommonMenus(ModConfigMergeFile configMergeFile)
+        public static
+            (SpeciesOutfitMenus humanFemale,
+            SpeciesOutfitMenus humanMale,
+            SpeciesOutfitMenus asari,
+            SpeciesOutfitMenus turian,
+            SpeciesOutfitMenus quarian,
+            SpeciesOutfitMenus krogan,
+            SpeciesOutfitMenus salarian
+            ) InitCommonMenus(ModConfigMergeFile configMergeFile)
         {
             SpeciesOutfitMenus GetOrCreateMenus(string bodyType, bool skipNonArmor = false)
             {
@@ -145,13 +154,22 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 // CTHa, to be inlined
                 AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.Krogan.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}Krogan_NonArmorOutfits_CTHa", configMergeFile),
                 ];
+            // make menus for Salarians
+            var salarian = GetOrCreateMenus("Salarian");
+            salarian.CasualOutfitMenus = [
+                AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.Salarian.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}Salarian_NonArmorOutfits_CTHa", configMergeFile),
+                AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.Salarian.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}Salarian_NonArmorOutfits_CTHb", configMergeFile),
+                AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.Salarian.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}Salarian_NonArmorOutfits_CTHc", configMergeFile),
+                AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.Salarian.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}Salarian_NonArmorOutfits_CTHd", configMergeFile),
+                AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.Salarian.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}Salarian_NonArmorOutfits_CTHe", configMergeFile),
+                ];
 
-            return (humanFemale, humanMale, asari, turian, quarian, krogan);
+            return (humanFemale, humanMale, asari, turian, quarian, krogan, salarian);
         }
 
         private void MakeCommonSubmenus(IMEPackage submenuPackageFile, ModConfigMergeFile configMergeFile)
         {
-            (HumanFemaleOutfitMenus, HumanMaleOutfitMenus, AsariOutfitMenus, TurianOutfitMenus, QuarianOutfitMenus, KroganOutfitMenus) = InitCommonMenus(configMergeFile);
+            (HumanFemaleOutfitMenus, HumanMaleOutfitMenus, AsariOutfitMenus, TurianOutfitMenus, QuarianOutfitMenus, KroganOutfitMenus, SalarianOutfitMenus) = InitCommonMenus(configMergeFile);
             void SetupMenu(string bodyType, SpeciesOutfitMenus menus)
             {
                 var packageExp = ExportCreator.CreatePackageExport(submenuPackageFile, bodyType);
@@ -353,6 +371,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     // only for the casual and romance submenus
                     ANotApplicableAppearanceTypes = ["Combat"]
                 });
+                // TODO also add a default helmet if the above is showing so they can go back to none/matching their armor
 
                 menus.ArmorHeadgear.AddMenuEntry(menus.Breather.GetEntryPoint(210210244, hideIfBreatherSuppressed: true));
 
@@ -366,6 +385,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     ApplyBreatherId = -1
                 });
 
+                // TODO enable this if force helmet is ignored
                 //menus.Breather.AddMenuEntry(new AppearanceItemData()
                 //{
                 //    // "None"
@@ -379,6 +399,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             SetupMenu("Turian", TurianOutfitMenus);
             SetupMenu("Quarian", QuarianOutfitMenus);
             SetupMenu("Krogan", KroganOutfitMenus);
+            SetupMenu("Salarian", SalarianOutfitMenus);
 
             void hmfAsaCommon(string bodyType, SpeciesOutfitMenus menus)
             {
@@ -493,10 +514,42 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 TurianOutfitMenus.CasualOutfitMenus[2].SrSubtitle = 210210269;
                 TurianOutfitMenus.NonArmor!.AddMenuEntry(TurianOutfitMenus.CasualOutfitMenus[2].GetEntryPoint(210210269));
             }
+            void salCasualMenus()
+            {
+                // the five Salarian menus
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"Salarian_NonArmorOutfits_CTHa", ["Salarian", "NonArmor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"Salarian_NonArmorOutfits_CTHb", ["Salarian", "NonArmor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"Salarian_NonArmorOutfits_CTHc", ["Salarian", "NonArmor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"Salarian_NonArmorOutfits_CTHd", ["Salarian", "NonArmor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"Salarian_NonArmorOutfits_CTHe", ["Salarian", "NonArmor"]));
+
+                // "Civilian Outfit 1"
+                SalarianOutfitMenus.CasualOutfitMenus[0].SrSubtitle = 210210267;
+                SalarianOutfitMenus.NonArmor!.AddMenuEntry(SalarianOutfitMenus.CasualOutfitMenus[0].GetEntryPoint(210210267));
+
+                // "Civilian Outfit 2"
+                SalarianOutfitMenus.CasualOutfitMenus[1].SrSubtitle = 210210268;
+                SalarianOutfitMenus.NonArmor!.AddMenuEntry(SalarianOutfitMenus.CasualOutfitMenus[1].GetEntryPoint(210210268));
+
+                // "Civilian Outfit 3"
+                SalarianOutfitMenus.CasualOutfitMenus[2].SrSubtitle = 210210269;
+                SalarianOutfitMenus.NonArmor!.AddMenuEntry(SalarianOutfitMenus.CasualOutfitMenus[2].GetEntryPoint(210210269));
+
+                // "Civilian Outfit 4"
+                SalarianOutfitMenus.CasualOutfitMenus[4].SrSubtitle = 210210270;
+                SalarianOutfitMenus.NonArmor!.AddMenuEntry(SalarianOutfitMenus.CasualOutfitMenus[4].GetEntryPoint(210210270));
+
+                // "Cloak"
+                SalarianOutfitMenus.CasualOutfitMenus[3].SrSubtitle = 210210298;
+                SalarianOutfitMenus.NonArmor!.AddMenuEntry(SalarianOutfitMenus.CasualOutfitMenus[3].GetEntryPoint(210210298));
+
+               
+            }
             hmfAsaCommon("HumanFemale", HumanFemaleOutfitMenus);
             hmfAsaCommon("Asari", AsariOutfitMenus);
             hmmCasualMenus("HumanMale", HumanMaleOutfitMenus);
             turCasualMenus();
+            salCasualMenus();
             // the single krogan menu, which is inline and therefore doesn't need subtitle set
             classes.Add(SquadMemberSubmenus.GetSubmenuClass($"Krogan_NonArmorOutfits_CTHa", ["Krogan", "NonArmor"]));
             KroganOutfitMenus.NonArmor!.AddMenuEntry(KroganOutfitMenus.CasualOutfitMenus[0].GetInlineEntryPoint());

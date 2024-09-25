@@ -394,7 +394,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         {
             var configMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-amm_Submenus.m3cd");
 
-            var (humanFemaleOutfitMenus, humanMaleOutfitMenus, asariOutfitMenus, turianOutfitMenus, _, _) = InitCommonMenus(configMergeFile);
+            var (humanFemaleOutfitMenus, humanMaleOutfitMenus, asariOutfitMenus, turianOutfitMenus, _, _, _) = InitCommonMenus(configMergeFile);
 
             // hmf breathers
             humanFemaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
@@ -495,7 +495,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         {
             var configMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-amm_Submenus.m3cd");
 
-            var (humanFemaleOutfitMenus, humanMaleOutfitMenus, asariOutfitMenus, turianOutfitMenus, quarianOutfitMenus, kroganOutfitMenus) = InitCommonMenus(configMergeFile);
+            var (humanFemaleOutfitMenus, humanMaleOutfitMenus, asariOutfitMenus, turianOutfitMenus, quarianOutfitMenus, kroganOutfitMenus, _) = InitCommonMenus(configMergeFile);
 
             foreach (var item in armorSets)
             {

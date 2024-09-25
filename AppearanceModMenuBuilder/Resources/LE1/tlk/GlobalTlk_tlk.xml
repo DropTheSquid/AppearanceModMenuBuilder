@@ -463,4 +463,9 @@ Romance</data>
 		<flags>1</flags>
 		<data>Equipped Helmet</data>
 	</string>
+	<string>
+		<id>210210298</id>
+		<flags>1</flags>
+		<data>Cloak</data>
+	</string>
 </tlkFile>
