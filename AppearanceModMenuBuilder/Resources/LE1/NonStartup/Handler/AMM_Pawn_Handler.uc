@@ -116,7 +116,6 @@ public function OnRemoteEvent(Name EventName)
 						pawnRecords.AddItem(newRecord);
 						_outerMenu.UpdateAsyncPawnLoadingState(currentPawnId.tag, currentPawnId.appearanceType, PawnLoadState.loaded);
 						streamingRequests[i].completed = true;
-						// TODO stop listening for this event here once we ensure no other request is also listening for it?
 					}
 				}
 			}
