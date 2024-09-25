@@ -3,23 +3,19 @@ Class EquippedArmorHelmetSpec extends NonOverriddenVanillaHelmetSpec;
 public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds, out pawnAppearance appearance)
 {
 	local AMM_Pawn_Parameters params;
-    local BioWorldInfo BWI;
-    local AMM_AppearanceUpdater updater;
     local BioPawn partyMember;
-    local bool destroyAfter;
+    local BioPawnType pawnType;
     local HelmetSpecBase delegateSpec;
     local int armorType;
     local int meshVariant;
     local int materialVariant;
 	local eHelmetDisplayState helmetDisplayState;
     local AppearanceMeshPaths helmetMeshPaths;
-	local array<string> meshMaterialPaths;
 	local bool suppressVisor;
 	local bool suppressBreather;
 	local bool hideHair;
 	local bool hideHead;
 
-	updater = class'AMM_AppearanceUpdater'.static.GetDlcInstance();
 
     if (!class'AMM_AppearanceUpdater'.static.GetPawnParams(target, params))
 	{
@@ -43,31 +39,25 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
     // get a squad copy of this pawn either from the party or create them temporarily
     if (AMM_Pawn_Parameters_Squad(params).GetPawnFromParty(params.Tag, partyMember))
     {
-        LogInternal("ArmorOverrideVanillaHelmetSpec got pawn from party"@PathName(partyMember));
-        destroyAfter = false;
+        pawnType = class'AMM_Utilities'.static.GetPawnType(partyMember);
+        // do the expected GetVariant stuff, but on the partyMember rather than the target
+        if (!GetVariant(partyMember, armorType, meshVariant, materialVariant))
+        {
+            return FALSE;
+        }
     }
     else
     {
-        LogInternal("ArmorOverrideVanillaHelmetSpec trying to spawn a copy of them");
-        BWI = class'AMM_AppearanceUpdater'.static.GetOuterWorldInfo();
-        // spawn a copy of this pawn, grab their outfit info
-        partyMember = BioSPGame(BWI.Game).SpawnHenchman(Name(params.Tag), BWI.m_playerSquad.m_playerPawn, 100, 100, true);
-        LogInternal("ArmorOverrideVanillaHelmetSpec spawned"@PathName(partyMember));
-        destroyAfter = true;
-    }
-
-    // do the expected GetVariant stuff, but on the partyMember rather than the target
-    if (!GetVariant(partyMember, armorType, meshVariant, materialVariant))
-    {
-        if (destroyAfter)
+        // LogInternal("loading equipment for helmet spec"@params.tag);
+        if (!class'AMM_Utilities'.static.LoadEquipmentOnly(params.Tag, pawnType, armorType, meshVariant, materialVariant))
         {
-            partyMember.Destroy();
+            return false;
         }
-        return FALSE;
+        // LogInternal("loaded and got"@armorType@meshVariant@materialVariant);
     }
 
     if (!GetHelmetMeshPaths(
-        class'AMM_Utilities'.static.GetPawnType(partyMember),
+        pawnType,
         armorType,
         meshVariant,
         materialVariant,
@@ -78,20 +68,12 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
         suppressBreather
     ))
     {
-        if (destroyAfter)
-        {
-            partyMember.Destroy();
-        }
         return false;
     }
 
     // load the helmet mesh
     if (!class'AMM_Utilities'.static.LoadAppearanceMesh(helmetMeshPaths, appearance.HelmetMesh, true))
     {
-        if (destroyAfter)
-        {
-            partyMember.Destroy();
-        }
         return false;
     }
 
@@ -117,9 +99,5 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 		specLists.breatherSpecs.DelegateToBreatherSpec(target, specLists, appearanceIds, appearance);
 	}
 	
-    if (destroyAfter)
-    {
-        partyMember.Destroy();
-    }
 	return true;
 }

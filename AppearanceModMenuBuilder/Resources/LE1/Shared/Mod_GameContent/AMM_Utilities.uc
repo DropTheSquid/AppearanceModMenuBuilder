@@ -86,6 +86,230 @@ public static function UpdatePawnMaterialParameters(BioPawn targetPawn, bool app
     ApplyMorphHeadParamsToPawn(targetPawn, GetMorphHead(targetPawn), !applyingDefaultOutfit);
 }
 
+public static function bool LoadEquipmentOnly(string tag, out BioPawnType pawnType, out int armorType, out int meshVariant, out int materialVariant)
+{
+    if (!GetActorType(tag, pawnType))
+    {
+        LogInternal("could not get actor type for"@tag);
+        return false;
+    }
+
+    if (!LoadEquipmentFromSaveRecord(tag, ArmorType, meshVariant, materialVariant))
+    {
+        LogInternal("failed to load equipment");
+        return false;
+    }
+    return true;
+}
+
+public static function bool GetActorType(string tag, out BioPawnType actorType)
+{
+    local Bio2DA characters2DA;
+    local array<name> rowNames;
+    local int i;
+    local string actorTypePath;
+
+    characters2DA = Bio2DA(FindObject("BIOG_2DA_Characters_X.Characters_Character", class'Bio2DA'));
+    if (characters2DA == None)
+    {
+        LogInternal("failed to load the characters 2DA");
+        return false;
+    }
+    rowNames = characters2DA.GetRowNames();
+    i = rowNames.Find(name(tag));
+    if (i == -1)
+    {
+        LogInternal("failed to find a row named"@tag);
+        return false;
+    }
+    if (!characters2DA.GetStringEntryIN(i, 'ActorType', actorTypePath))
+    {
+        LogInternal("failed to find a column value"@tag);
+        return false;
+    }
+
+    actorType = BioPawnType(DynamicLoadObject(actorTypePath, class'BioPawnType'));
+    if (actorType == None)
+    {
+        LogInternal("failed to load actorType");
+    }
+
+    return actorType != None;
+}
+
+public static function bool LoadEquipmentFromSaveRecord(coerce name tag, out int armorType, out int meshVariant, out int materialVariant)
+{
+    local BioWorldInfo BWI;
+    local SFXSaveGame SaveGame;
+    local int i;
+    local HenchmanSaveRecord Record;
+    local int manufacturerId;
+    local int itemId;
+    local byte sophistication;
+
+    BWI = class'AMM_AppearanceUpdater'.static.GetOuterWorldInfo();
+    if (BWI.CurrentGame != None)
+    {
+        SaveGame = BWI.CurrentGame.GetME2SaveGame();
+    }
+    if (SaveGame == None || !SaveGame.bIsValid)
+    {
+        LogInternal("could not get save game"@SaveGame);
+        return FALSE;
+    }
+    
+    for (i = 0; i < SaveGame.HenchmanRecords.Length; i++)
+    {
+        if (SaveGame.HenchmanRecords[i].Tag == Tag)
+        {
+            Record = SaveGame.HenchmanRecords[i];
+            // EBioEquipmentSlot.EQUIPMENT_SLOT_ARMOR value is 1, hardcode that if needed
+            manufacturerId = record.Equipment[int(EBioEquipmentSlot.EQUIPMENT_SLOT_ARMOR)].Manufacturer;
+            itemId = record.Equipment[int(EBioEquipmentSlot.EQUIPMENT_SLOT_ARMOR)].ItemId;
+            sophistication = record.Equipment[int(EBioEquipmentSlot.EQUIPMENT_SLOT_ARMOR)].sophistication;
+            if (!LoadEquipmentAndGetAttributes(tag, ItemId, manufacturerID, sophistication, armorType, meshVariant, materialVariant))
+            {
+                LogInternal("failed to load equipment");
+                return false;
+            }
+            return TRUE;
+        }
+    }
+    LogInternal("did not find squad record");
+    return FALSE;
+}
+
+public static function bool LoadEquipmentAndGetAttributes(name tag, int itemId, int manufacturerId, byte sophistication, out int armorType, out int meshVariant, out int materialVariant)
+{
+    local string squadMateGPL;
+    local Bio2DANumberedRows items2DA;
+    local BioItem item;
+    local BioItemArmor armor;
+    local BioMaterialOverride matOverrides;
+    local BioAppearanceItemSophisticated sophisticatedAppearance;
+    local int i;
+    local int j;
+    local BioAppearanceItemSophisticatedVariant currentVariant;
+    local BioGamePropertyContainer props;
+    local BioGameProperty prop;
+    local BioGameEffect effect;
+    local BioGameEffectAttributeInt intEffect;
+    local BioGameEffectAttributeFloat floatEffect;
+    local BioGameEffectAddItemProperty propEffect;
+    local BioGameEffectAttribute attributeEffect;
+
+    squadMateGPL = GetGamePropertyLabel(tag, itemId, armorType);
+    // items2DA = Bio2DANumberedRows(FindObject("BIOG_2DA_Equipment_X.Items_ItemEffectLevels", class'Bio2DANumberedRows'));
+    if (squadMateGPL == "")
+    {
+        LogInternal("could not get squadmate GPL");
+        return false;
+    }
+
+    armor = BioItemArmor(Class'BioItemImporter'.static.LoadGameItem(itemId, sophistication, 'None', class'AMM_AppearanceUpdater'.static.GetDlcInstance(), ManufacturerID));
+    if (armor != None)
+    {
+        props = armor.m_oGameProperties;
+        for (i = 0; i < props.m_aGameProperties.Length; i++)
+        {
+            prop = props.m_aGameProperties[i];
+            // we really only care about the property that is relevant to this squadmate
+            if (prop.m_nmGamePropertyName == name(squadMateGPL))
+            {
+                for (j = 0; j < prop.m_aGameEffects.Length; j++)
+                {
+                    intEffect = BioGameEffectAttributeInt(prop.m_aGameEffects[j]);
+                    if (intEffect == None)
+                    {
+                        continue;
+                    }
+                    if (intEffect.m_attributeName == 'm_modelVariant')
+                    {
+                        meshVariant = intEffect.m_value;
+                    }
+                    if (intEffect.m_attributeName == 'm_materialConfig')
+                    {
+                        materialVariant = intEffect.m_value;
+                    }
+                }
+            }
+            // or if it is an appearance override. those matter
+            if (prop.m_nmGamePropertyName == 'GP_Manf_Armor_AppearanceOverride')
+            {
+                for (j = 0; j < prop.m_aGameEffects.Length; j++)
+                {
+                    intEffect = BioGameEffectAttributeInt(prop.m_aGameEffects[j]);
+                    if (intEffect == None)
+                    {
+                        continue;
+                    }
+                    if (intEffect.m_nmGameEffectName == 'GE_Armor_AppearanceOverride')
+                    {
+                        ArmorType = intEffect.m_value;
+                        break;
+                    }
+                }
+            }
+            // TODO handle GP_HelmetAppr_PlayerFemale type properties
+        }
+    }
+    return true;
+}
+
+public static function string GetGamePropertyLabel(name tag, int itemId, out int armorWeight)
+{
+    switch (tag)
+    {
+        // TODO handle player here? we should not ever end up here so not a big deal
+        case 'hench_humanFemale':
+            return "GP_ArmorAppr_HenchFemale"$GetArmorWeight(itemId, armorWeight);
+        case 'hench_humanMale':
+            return "GP_ArmorAppr_HenchMale"$GetArmorWeight(itemId, armorWeight);
+        case 'hench_Quarian':
+            armorWeight = 2;
+            return "GP_ArmorAppr_HenchQuarianL";
+        case 'hench_Turian':
+            return "GP_ArmorAppr_HenchTurian"$GetArmorWeight(itemId, armorWeight);
+        case 'hench_Krogan':
+            return "GP_ArmorAppr_HenchKrogan"$GetArmorWeight(itemId, armorWeight);
+        case 'hench_Asari':
+            return "GP_ArmorAppr_HenchAsari"$GetArmorWeight(itemId, armorWeight);
+        default:
+            return "";
+
+    }
+}
+
+public static function string GetArmorWeight(int itemId, out int armorWeight)
+{
+    switch (itemId)
+    {
+        // HumanL
+        case 287:
+        // QuarianL
+        case 290:
+        // TurianL
+        case 288:
+            armorWeight = 2;
+            return "L";
+        // HumanM
+        case 249:
+        // TurianM
+        case 284:
+        // KroganM
+        case 285:
+            armorWeight = 3;
+            return "M";
+        // HumanH
+        case 291:
+        // KroganH
+        case 293:
+        default:
+            armorWeight = 4;
+            return "H";
+    }
+}
+
 // private static function GetCurrentSkinTone(SkeletalMeshComponent SMC)
 // {
 //     local LinearColor skinTone;
