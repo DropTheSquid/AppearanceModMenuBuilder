@@ -285,14 +285,16 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 menus.ArmorHeadgear.SrSubtitle = 210210237;
                 menus.ArmorHeadgear.MenuHelmetOverride = AppearanceItemData.EMenuHelmetOverride.onOrFull;
 
-                //menus.ArmorHeadgear.AddMenuEntry(new AppearanceItemData()
-                //{
-                //    // "None"
-                //    //    SrCenterText = 174743,
-                //    ApplyHelmetId = -2
-                //});
+                menus.ArmorHeadgear.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "None"
+                    SrCenterText = 174743,
+                    ApplyHelmetId = -2,
+                    // show only if Ignore Forced Helmets is on
+                    DisplayInt = new(1593, 1)
+                });
 
-                // for anyone who is not squad, add a default outfit entry
+                // for anyone who is not squad, add a default helmet entry
                 menus.ArmorHeadgear.AddMenuEntry(new AppearanceItemData()
                 {
                     // "Default Helmet"
