@@ -13,7 +13,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 {
     public class FrameworkTest : IModBuilderTask
     {
-        private static bool IndividualPawns = false;
+        private static bool IndividualPawns = true;
         private static int currentPlotInt = 1700;
         private static ModConfigMergeFile ConfigMergeFile;
 
@@ -23,7 +23,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         public void RunModTask(ModBuilderContext context)
         {
             // disabled because I do not need to run this every time
-            return;
+            //return;
 
             Console.WriteLine("generating framework test content");
 
@@ -129,6 +129,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             if (pawn.FileRef.FileNameNoExtension == "BIONPC_SalarianCSec")
             {
                 tag = "sta60_css_response";
+                altTags = ["sta60_css_response", .. altTags];
                 // TODO handle this one better
                 if (pawn.ObjectName.Number == 5)
                 {
@@ -299,19 +300,22 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             StructCoalesceValue appearanceIdLookups = new();
             appearanceIdLookups.SetString("appearanceType", casual ? "casual" : "combat");
             appearanceIdLookups.SetString("FrameworkFileName", pawn.FileRef.FileNameNoExtension);
-            var shortName = BioNPCName.Replace("BIO", "");
+            var shortName = BioNPCName.Replace("BIONPC_", "");
             // a few have variants that use the same live/poll name
             shortName = shortName switch
             {
-                "NPC_Helena_Citadel" => "NPC_Helena",
-                "NPC_Chorban_Markets" => "NPC_Chorban",
-                "NPC_Sparatus_Holo" => "NPC_Sparatus",
-                "NPC_Valern_Holo" => "NPC_Valern",
-                "NPC_Tevos_Holo" => "NPC_Tevos",
+                "Helena_Citadel" => "Helena",
+                "Chorban_Markets" => "Chorban",
+                "Sparatus_Holo" => "Sparatus",
+                "Valern_Holo" => "Valern",
+                "Tevos_Holo" => "Tevos",
+                "Emily_Tower" => "Emily",
+                "Jenna_Flux" => "Jenna",
+                "Chellick_Casual" => "Chellick",
                 _ => shortName
             };
-            appearanceIdLookups.SetString("FrameworkLiveEventName", $"Live_{shortName}");
-            appearanceIdLookups.SetString("FrameworkPollEventName", $"Poll_{shortName}");
+            appearanceIdLookups.SetString("FrameworkLiveEventName", $"Live_NPC_{shortName}");
+            appearanceIdLookups.SetString("FrameworkPollEventName", $"Poll_NPC_{shortName}");
             appearanceIdLookups.SetStruct("bodyAppearanceLookup", new StructCoalesceValue { { "plotIntId", new IntCoalesceValue(currentPlotInt++) } });
             appearanceIdLookups.SetStruct("helmetAppearanceLookup", new StructCoalesceValue { { "plotIntId", new IntCoalesceValue(currentPlotInt++) } });
             appearanceIdLookups.SetStruct("breatherAppearanceLookup", new StructCoalesceValue { { "plotIntId", new IntCoalesceValue(currentPlotInt++) } });
