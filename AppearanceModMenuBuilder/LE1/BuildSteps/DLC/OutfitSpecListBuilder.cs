@@ -214,6 +214,27 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // needed to clone this as there was no ASA HVYb mesh or material. mesh cloned from HVYa, material cloned from HMF HVYb mat
             AddVanillaHelmetSpecs(helmetConfig, 61, helmetFileName, OutfitType.HVY, 1, helmetType, 1, 1, visorMesh, hideHair: true);
 
+            // manually add OT material params colossus that has the red stripe instead of solid grey like it is in LE
+            var colossus_lgt = new SimpleHelmetSpecItem(62, $"{helmetFileName}.LGTa.{helmetType}_HGR_LGTa_MDL", ["BIOG_HMM_HGR_AMM.Alt.Colossus_Classic"], visorMesh)
+            {
+                HideHair = true,
+            };
+            helmetConfig.AddArrayEntries("helmetSpecs", colossus_lgt.OutputValue());
+
+            // manually add OT material params colossus that has the red stripe instead of solid grey like it is in LE
+            var colossus_med = new SimpleHelmetSpecItem(63, $"{helmetFileName}.MEDa.{helmetType}_HGR_MEDa_MDL", ["BIOG_HMM_HGR_AMM.Alt.Colossus_Classic"], visorMesh)
+            {
+                HideHair = true,
+            };
+            helmetConfig.AddArrayEntries("helmetSpecs", colossus_med.OutputValue());
+
+            // manually add OT material params colossus that has the red stripe instead of solid grey like it is in LE
+            var colossus_hvy = new SimpleHelmetSpecItem(64, $"{helmetFileName}.HVYa.{helmetType}_HGR_HVYa_MDL", ["BIOG_HMM_HGR_AMM.Alt.Colossus_Classic"], visorMesh)
+            {
+                HideHair = true,
+            };
+            helmetConfig.AddArrayEntries("helmetSpecs", colossus_hvy.OutputValue());
+
             // add entries for the non armor outfits
             // NKDa (naked human/Avina)
             int miscEndId = 100;
@@ -648,6 +669,27 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // HVYb: Shep's N7 Onyx armor
             AddVanillaOutfitSpecs(bodyConfig, 61, hmmArmorFileName, OutfitType.HVY, 1, bodyType, 1, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 61, hmmHelmetFileName, OutfitType.HVY, 1, bodyType, 1, 1, visorMesh, hideHair: true);
+
+            // manually add OT material params colossus that has the red stripe instead of solid grey like it is in LE
+            var colossus_lgt = new SimpleHelmetSpecItem(62, $"{hmmHelmetFileName}.LGTa.{bodyType}_HGR_LGTa_MDL", ["BIOG_HMM_HGR_AMM.Alt.Colossus_Classic"], visorMesh)
+            {
+                HideHair = true,
+            };
+            helmetConfig.AddArrayEntries("helmetSpecs", colossus_lgt.OutputValue());
+
+            // manually add OT material params colossus that has the red stripe instead of solid grey like it is in LE
+            var colossus_med = new SimpleHelmetSpecItem(63, $"{hmmHelmetFileName}.MEDa.{bodyType}_HGR_MEDa_MDL", ["BIOG_HMM_HGR_AMM.Alt.Colossus_Classic"], visorMesh)
+            {
+                HideHair = true,
+            };
+            helmetConfig.AddArrayEntries("helmetSpecs", colossus_med.OutputValue());
+
+            // manually add OT material params colossus that has the red stripe instead of solid grey like it is in LE
+            var colossus_hvy = new SimpleHelmetSpecItem(64, $"{hmmHelmetFileName}.HVYa.{bodyType}_HGR_HVYa_MDL", ["BIOG_HMM_HGR_AMM.Alt.Colossus_Classic"], visorMesh)
+            {
+                HideHair = true,
+            };
+            helmetConfig.AddArrayEntries("helmetSpecs", colossus_hvy.OutputValue());
 
             // add all the non armor outfits for male humans to the menu
             // NKDa (naked human/VI)

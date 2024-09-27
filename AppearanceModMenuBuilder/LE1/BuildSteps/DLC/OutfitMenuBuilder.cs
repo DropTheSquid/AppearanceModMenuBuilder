@@ -499,25 +499,26 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             foreach (var item in armorSets)
             {
-                AddArmorToMenu(humanMaleOutfitMenus, item, item.MalePlayerVariant);
-                AddArmorToMenu(humanFemaleOutfitMenus, item, item.FemalePlayerVariant);
-                AddArmorToMenu(humanMaleOutfitMenus, item, item.HumanMaleHenchVariant);
-                AddArmorToMenu(humanFemaleOutfitMenus, item, item.HumanFemaleHenchVariant);
-                AddArmorToMenu(humanFemaleOutfitMenus, item, item.AnyHumanVariant);
-                AddArmorToMenu(humanFemaleOutfitMenus, item, item.AnyPlayerVariant);
-                AddArmorToMenu(humanMaleOutfitMenus, item, item.AnyHumanVariant);
-                AddArmorToMenu(humanMaleOutfitMenus, item, item.AnyPlayerVariant);
-                AddArmorToMenu(asariOutfitMenus, item, item.FemalePlayerVariant);
-                AddArmorToMenu(asariOutfitMenus, item, item.HumanFemaleHenchVariant);
-                AddArmorToMenu(asariOutfitMenus, item, item.AnyHumanVariant);
-                AddArmorToMenu(asariOutfitMenus, item, item.AnyPlayerVariant);
+                AddArmorToMenu(humanMaleOutfitMenus, item, item.MalePlayerVariant, humanoid: true);
+                AddArmorToMenu(humanFemaleOutfitMenus, item, item.FemalePlayerVariant, humanoid: true);
+                AddArmorToMenu(humanMaleOutfitMenus, item, item.HumanMaleHenchVariant, humanoid: true);
+                AddArmorToMenu(humanFemaleOutfitMenus, item, item.HumanFemaleHenchVariant, humanoid: true);
+                AddArmorToMenu(humanFemaleOutfitMenus, item, item.AnyHumanVariant, humanoid: true);
+                AddArmorToMenu(humanFemaleOutfitMenus, item, item.AnyPlayerVariant, humanoid: true);
+                AddArmorToMenu(humanMaleOutfitMenus, item, item.AnyHumanVariant, humanoid: true);
+                AddArmorToMenu(humanMaleOutfitMenus, item, item.AnyPlayerVariant, humanoid: true);
+                AddArmorToMenu(asariOutfitMenus, item, item.FemalePlayerVariant, humanoid: true);
+                AddArmorToMenu(asariOutfitMenus, item, item.HumanFemaleHenchVariant, humanoid: true);
+                AddArmorToMenu(asariOutfitMenus, item, item.AnyHumanVariant, humanoid: true);
+                AddArmorToMenu(asariOutfitMenus, item, item.AnyPlayerVariant, humanoid: true);
                 AddArmorToMenu(kroganOutfitMenus, item, item.KroganVariant);
                 AddArmorToMenu(turianOutfitMenus, item, item.TurianVariant);
                 AddArmorToMenu(quarianOutfitMenus, item, item.QuarianVariant, skipHelmets: true);
             }
 
-            void AddArmorToMenu(SpeciesOutfitMenus submenu, VanillaArmorSet armorSet, ArmorVariant? variant, bool skipHelmets = false)
+            void AddArmorToMenu(SpeciesOutfitMenus submenu, VanillaArmorSet armorSet, ArmorVariant? variant, bool skipHelmets = false, bool humanoid = false)
             {
+                const int srColossusClassic = 210210299;
                 if (variant == null)
                 {
                     return;
@@ -554,7 +555,9 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                         return new AppearanceItemData()
                         {
                             SrCenterText = armorSet.SrArmorName,
-                            ApplyHelmetId = ammAppearanceId
+                            ApplyHelmetId = ammAppearanceId,
+                            DisplayInt = variant.DisplayInt,
+                            AApplicableCharacters = variant.ApplicableCharacters
                         };
                     }
                     else
@@ -564,7 +567,9 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                             // "<ArmorName> - <Weight>"
                             SrCenterText = 210210236,
                             ApplyHelmetId = ammAppearanceId,
-                            DisplayVars = [$"${armorSet.SrArmorName}", $"${GetArmorTypeStringRef(armorType)}"]
+                            DisplayVars = [$"${armorSet.SrArmorName}", $"${GetArmorTypeStringRef(armorType)}"],
+                            DisplayInt = variant.DisplayInt,
+                            AApplicableCharacters = variant.ApplicableCharacters
                         };
                     }
                 }
@@ -578,6 +583,18 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                         submenu.ArmorHeadgear.AddMenuEntry(
                             GetHelmetMenuEntry(EArmorType.LGT, variant.LGT.AmmAppearanceId)
                         );
+                        if (armorSet.Label == "Manf_Kassa_Armor_Colossus" && humanoid)
+                        {
+                            submenu.ArmorHeadgear.AddMenuEntry(
+                                new AppearanceItemData()
+                                {
+                                    // "<ArmorName> - <Weight>"
+                                    SrCenterText = 210210236,
+                                    ApplyHelmetId = 62,
+                                    DisplayVars = [$"${srColossusClassic}", $"${GetArmorTypeStringRef(EArmorType.LGT)}"]
+                                }
+                            );
+                        }
                     }
                 }
                 if (variant.MED != null)
@@ -590,6 +607,18 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                         submenu.ArmorHeadgear.AddMenuEntry(
                             GetHelmetMenuEntry(EArmorType.MED, variant.MED.AmmAppearanceId)
                         );
+                        if (armorSet.Label == "Manf_Kassa_Armor_Colossus" && humanoid)
+                        {
+                            submenu.ArmorHeadgear.AddMenuEntry(
+                                new AppearanceItemData()
+                                {
+                                    // "<ArmorName> - <Weight>"
+                                    SrCenterText = 210210236,
+                                    ApplyHelmetId = 63,
+                                    DisplayVars = [$"${srColossusClassic}", $"${GetArmorTypeStringRef(EArmorType.MED)}"]
+                                }
+                            );
+                        }
                     }
                 }
                 if (variant.HVY != null)
@@ -602,6 +631,18 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                         submenu.ArmorHeadgear.AddMenuEntry(
                             GetHelmetMenuEntry(EArmorType.HVY, variant.HVY.AmmAppearanceId)
                         );
+                        if (armorSet.Label == "Manf_Kassa_Armor_Colossus" && humanoid)
+                        {
+                            submenu.ArmorHeadgear.AddMenuEntry(
+                                new AppearanceItemData()
+                                {
+                                    // "<ArmorName> - <Weight>"
+                                    SrCenterText = 210210236,
+                                    ApplyHelmetId = 64,
+                                    DisplayVars = [$"${srColossusClassic}", $"${GetArmorTypeStringRef(EArmorType.HVY)}"]
+                                }
+                            );
+                        }
                     }
                 }
                 if (variant.AllWeights != null)

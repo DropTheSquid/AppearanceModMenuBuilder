@@ -468,4 +468,10 @@ Romance</data>
 		<flags>1</flags>
 		<data>Cloak</data>
 	</string>
+	<!-- used to denote a few helmets with materials ported from OT -->
+	<string>
+		<id>210210299</id>
+		<flags>1</flags>
+		<data>Colossus Classis</data>
+	</string>
 </tlkFile>
