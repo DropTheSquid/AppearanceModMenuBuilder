@@ -234,6 +234,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // Benezia gets asari combat outfits
             else if (meshPath.Contains("mrc"))
             {
+                casual = false;
                 // asa stuff
                 pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.ASA_OutfitSpec");
                 pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.ASA_HelmetSpec");
