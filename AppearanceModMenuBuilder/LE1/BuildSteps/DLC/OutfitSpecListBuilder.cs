@@ -186,8 +186,13 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // Note that this one needed to be manually corrected to use a clone of the HMF LGTb material to look correct
             // LGTc; This is the Asari Commando armor, normally not ever used by player characters; only used by NPC Asari
             AddVanillaOutfitSpecs(bodyConfig, 18, armorFileName, OutfitType.LGT, 2, bodyType, 1, 1, true);
-            // note that this needed to be manually created for HMF; mesh is a clone of LGTa, material is a clone of ASA LGTc
-            AddVanillaHelmetSpecs(helmetConfig, 18, helmetFileName, OutfitType.LGT, 2, helmetType, 1, 1, visorMesh, hideHair: true);
+
+            // manually add the no tubes helmet version for LGTc, as there is no place for the tubes to connect
+            var lgtc = new SimpleHelmetSpecItem(18, $"{helmetFileName}.LGTc.{helmetType}_HGR_LGTc_NoTubes_MDL", [$"{helmetFileName}.LGTc.{helmetType}_HGR_LGTc_MAT_1a"], visorMesh)
+            {
+                HideHair = true,
+            };
+            helmetConfig.AddArrayEntries("helmetSpecs", lgtc.OutputValue());
 
             // MEDa variants; Most Medium armor appearances fall under this
             AddVanillaOutfitSpecs(bodyConfig, 19, armorFileName, OutfitType.MED, 0, bodyType, 16, 1, true);
