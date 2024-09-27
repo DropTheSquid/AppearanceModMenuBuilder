@@ -429,23 +429,23 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 menus.CasualOutfitMenus[8].SrSubtitle = 210210258;
                 menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[8].GetEntryPoint(210210258));
                 
-                // "Civilian Outfit 1"
-                menus.CasualOutfitMenus[5].SrSubtitle = 210210267;
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[5].GetEntryPoint(210210267));
+                // "Colonist Outfit"
+                menus.CasualOutfitMenus[5].SrSubtitle = 210210300;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[5].GetEntryPoint(210210300));
 
-                // "Civilian Outfit 2"
-                menus.CasualOutfitMenus[6].SrSubtitle = 210210268;
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[6].GetEntryPoint(210210268));
+                // "Miner Jumpsuit"
+                menus.CasualOutfitMenus[6].SrSubtitle = 210210301;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[6].GetEntryPoint(210210301));
 
-                // "Dress 1"
+                // "Expensive Dress"
                 menus.CasualOutfitMenus[3].SrSubtitle = 210210264;
                 menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[3].GetEntryPoint(210210264));
 
-                // "Dress 2"
+                // "Trendy Dress"
                 menus.CasualOutfitMenus[4].SrSubtitle = 210210265;
                 menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[4].GetEntryPoint(210210265));
 
-                // "Dress 3"
+                // "Sexy Dress"
                 menus.CasualOutfitMenus[7].SrSubtitle = 210210266;
                 menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[7].GetEntryPoint(210210266));
             }
@@ -477,20 +477,22 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 menus.CasualOutfitMenus[8].SrSubtitle = 210210258;
                 menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[8].GetEntryPoint(210210258));
 
-                // "Civilian Outfit 1"
-                menus.CasualOutfitMenus[5].SrSubtitle = 210210267;
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[5].GetEntryPoint(210210267));
+                // "Colonist Outfit"
+                menus.CasualOutfitMenus[5].SrSubtitle = 210210300;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[5].GetEntryPoint(210210300));
 
-                // "Civilian Outfit 2"
-                menus.CasualOutfitMenus[6].SrSubtitle = 210210268;
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[6].GetEntryPoint(210210268));
+                // "Miner Jumpsuit"
+                menus.CasualOutfitMenus[6].SrSubtitle = 210210301;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[6].GetEntryPoint(210210301));
 
-                // "Civilian Outfit 3"
-                menus.CasualOutfitMenus[4].SrSubtitle = 210210269;
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[4].GetEntryPoint(210210269));
-                // "Civilian Outfit 4"
-                menus.CasualOutfitMenus[7].SrSubtitle = 210210270;
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[7].GetEntryPoint(210210270));
+                // "Rebust Outfit"
+                menus.CasualOutfitMenus[4].SrSubtitle = 210210302;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[4].GetEntryPoint(210210302));
+
+                // "Puffy Vest Outfit"
+                menus.CasualOutfitMenus[7].SrSubtitle = 210210303;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[7].GetEntryPoint(210210303));
+
                 // "Suit"
                 menus.CasualOutfitMenus[3].SrSubtitle = 210210263;
                 menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[3].GetEntryPoint(210210263));

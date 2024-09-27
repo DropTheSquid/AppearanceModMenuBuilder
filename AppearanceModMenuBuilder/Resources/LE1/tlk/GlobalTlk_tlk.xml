@@ -296,17 +296,17 @@ Romance</data>
 	<string>
 		<id>210210264</id>
 		<flags>1</flags>
-		<data>Dress 1</data>
+		<data>Expensive Dress</data>
 	</string>
 	<string>
 		<id>210210265</id>
 		<flags>1</flags>
-		<data>Dress 2</data>
+		<data>Trendy Dress</data>
 	</string>
 	<string>
 		<id>210210266</id>
 		<flags>1</flags>
-		<data>Dress 3</data>
+		<data>Sexy Dress</data>
 	</string>
 	<string>
 		<id>210210267</id>
@@ -473,5 +473,25 @@ Romance</data>
 		<id>210210299</id>
 		<flags>1</flags>
 		<data>Colossus Classis</data>
+	</string>
+	<string>
+		<id>210210300</id>
+		<flags>1</flags>
+		<data>Colonist Outfit</data>
+	</string>
+	<string>
+		<id>210210301</id>
+		<flags>1</flags>
+		<data>Miner Jumpsuit</data>
+	</string>
+	<string>
+		<id>210210302</id>
+		<flags>1</flags>
+		<data>Robust Outfit</data>
+	</string>
+	<string>
+		<id>210210303</id>
+		<flags>1</flags>
+		<data>Puffy Vest Outfit</data>
 	</string>
 </tlkFile>
