@@ -13,7 +13,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 {
     public class FrameworkTest : IModBuilderTask
     {
-        private static bool IndividualPawns = false;
+        private static bool IndividualPawns = true;
         private static int currentPlotInt = 1700;
         private static ModConfigMergeFile ConfigMergeFile;
 
@@ -23,7 +23,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         public void RunModTask(ModBuilderContext context)
         {
             // disabled because I do not need to run this every time
-            return;
+            //return;
 
             Console.WriteLine("generating framework test content");
 
@@ -80,7 +80,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 {
                     pawns.Add(exp);
                     //firstPawn ??= exp;
-                    var tag = exp.GetProperty<NameProperty>("Tag")?.ToString();
+                    var tag = GetPawnTag(exp);
                     if (tag != null)
                     {
                         altTags.Add(tag);
@@ -88,7 +88,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 }
             }
 
-            if (!IndividualPawns || pawns.Count == 1)
+            if (!IndividualPawns || pawns.Count == 1 || pcc.FileNameNoExtension == "BIONPC_SalarianCSec")
             {
                 HandleBioNPCPawn(pawns.FirstOrDefault(), context, altTags, false);
             }
@@ -96,10 +96,20 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             {
                 foreach (var exp in pawns)
                 {
-                    var tag = exp.GetProperty<NameProperty>("Tag")?.ToString();
+                    var tag = GetPawnTag(exp);
                     HandleBioNPCPawn(exp, context, [tag], true);
                 }
             }
+        }
+
+        private static string? GetPawnTag(ExportEntry? pawnExport)
+        {
+            var tag = pawnExport.GetProperty<NameProperty>("Tag")?.ToString();
+            if (tag == "" || tag == "None" || tag == null)
+            {
+                return pawnExport.GetProperty<NameProperty>("UniqueTag")?.ToString();
+            }
+            return tag;
         }
 
         private static void HandleBioNPCPawn(ExportEntry? pawn, ModBuilderContext context, IEnumerable<string> altTags, bool separateFile)
@@ -121,7 +131,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             if (separateFile)
             {
-                uniqueName = BioNPCName + "_" + pawn.GetProperty<NameProperty>("Tag")?.ToString();
+                uniqueName = BioNPCName + "_" + GetPawnTag(pawn);
             }
 
             string tag;
@@ -130,15 +140,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             {
                 tag = "sta60_css_response";
                 altTags = ["sta60_css_response", .. altTags];
-                // TODO handle this one better
-                if (pawn.ObjectName.Number == 5)
-                {
-                    return;
-                }
             }
             else
             {
-                tag = pawn.GetProperty<NameProperty>("Tag").ToString();
+                tag = GetPawnTag(pawn);
             }
 
             var pcc = MEPackageHandler.CreateAndOpenPackage(Path.Combine(context.CookedPCConsoleFolder, "FrameworkTest", $"AMM_{uniqueName}.pcc"), context.Game);
