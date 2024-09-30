@@ -103,14 +103,25 @@ private function bool FrameworkMatch(BioPawn targetPawn)
 private function bool TagMatch(BioPawn targetPawn)
 {
 	local string altTag;
+	local string pawnTag;
 
-	if (string(targetPawn.Tag) ~= Tag)
+	// we very occasionally need to fall back on unique tag if tag is blank
+	pawnTag = string(targetPawn.Tag);
+	if (pawnTag ~= "None" || pawnTag == "")
+	{
+		pawnTag = string(targetPawn.uniqueTag);
+	}
+	if (pawnTag ~= "None" || pawnTag == "")
+	{
+		return false;
+	}
+	if (pawnTag ~= Tag)
 	{
 		return TRUE;
 	}
 	foreach alternateTags(altTag)
 	{
-		if (string(targetPawn.Tag) ~= altTag)
+		if (pawnTag ~= altTag)
 		{
 			return TRUE;
 		}

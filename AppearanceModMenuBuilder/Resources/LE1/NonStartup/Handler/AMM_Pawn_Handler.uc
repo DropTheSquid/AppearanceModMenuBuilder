@@ -315,6 +315,7 @@ public function bool DisplayPawn(string tag, string appearanceType)
 	local BioWorldInfo oBWI;
 	local BioPawn newDisplayPawn;
 	local AMM_AppearanceUpdater updaterInstance;
+	local name currentPawnTag;
 
 	foreach pawnRecords(currentRecord)
 	{
@@ -340,7 +341,12 @@ public function bool DisplayPawn(string tag, string appearanceType)
 		if (_currentDisplayedPawn != None)
 		{
 			updaterInstance = class'AMM_AppearanceUpdater'.static.GetDlcInstance();
-			updaterInstance.menuTagOverride = _currentDisplayedPawn.tag;
+			currentPawnTag = _currentDisplayedPawn.tag;
+			if (currentPawnTag == 'None')
+			{
+				currentPawnTag = _currentDisplayedPawn.UniqueTag;
+			}
+			updaterInstance.menuTagOverride = currentPawnTag;
 			updaterInstance.menuFrameworkFileOverride = _currentDisplayedPawn.GetPackageName();
 			oBWI.m_UIWorld.TriggerEvent('SetupInventory', _outerMenu.oWorldInfo);
 			oBWI.m_UIWorld.spawnPawn(_currentDisplayedPawn, 'InventorySpawnPoint', 'InventoryPawn');
