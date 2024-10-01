@@ -55,9 +55,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             var newExport = ExportCreator.CreateExport(startup, "AMM_AppearanceUpdater", "AMM_AppearanceUpdater", indexed: true);
             startup.GetOrCreateObjectReferencer().AddToObjectReferencer(newExport);
             startup.Save();
-
-            // populate the outfit/headgear spec lists
-            (new OutfitSpecListBuilder()).RunModTask(context);
         }
     }
 }

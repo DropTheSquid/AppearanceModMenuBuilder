@@ -27,6 +27,8 @@ namespace AppearanceModMenuBuilder.LE1
                 .AddTask(new BuildSubmenuFile())
                 // actually populate the outfit menus
                 .AddTask(new OutfitMenuBuilder())
+                // populate the outfit/headgear spec lists
+                .AddTask(new OutfitSpecListBuilder())
                 // build the inventory file
                 .AddTask(new BuildInventoryHandlerTask())
                 // build UI world
