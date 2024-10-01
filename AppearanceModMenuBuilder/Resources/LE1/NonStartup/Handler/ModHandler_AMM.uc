@@ -437,7 +437,8 @@ public function RenderMenu(menuState state)
 			GetString(item.sLeftText, item.srLeftText),
 			GetString(item.sCenterText, item.srCenterText),
 			GetString(item.sRightText, item.srRightText),
-			item.disabled ? 1 : 0,
+            // if currently applied, green. otherwise, blue or grey depending on disabled
+			item.currentlyApplied ? 2 : (item.disabled ? 1 : 0),
 			GetSubmenuFromItem(item) != None);
     }
     ASSetSelectedIndex(currentSubmenu.selectedIndex);
@@ -705,6 +706,161 @@ public function bool ShouldItemBeEnabled(AppearanceItemData item)
     }
     return TRUE;
 }
+private function bool IsItemCurrentlyApplied(AppearanceItemData item, menuState state)
+{
+    local bool plotVarsEffect;
+    local bool appearanceIdsEffect;
+    local bool plotVars;
+    local bool appearanceIds;
+
+    // if this is a submenu entry point, don't count it as currently applied
+    if (item.submenuInstance != None)
+    {
+        // TODO investigate going through the submenu items and seeing if any are applied, but we would need to also check whether they should even be visible and this could get expensive. 
+        // if this matches the pawn and appearance type of the current menu (or doesn't change it)
+        // if ((item.submenuInstance.pawnTag == "" || item.submenuInstance.pawnTag == state.pawnTag)
+        //     && (item.submenuInstance.pawnAppearanceType == "" || item.submenuInstance.pawnAppearanceType == state.appearanceTypeOverride))
+        //     {
+        //         // item.submenuInstance
+        //     }
+        return false;
+    }
+
+    plotVars = IsItemCurrentlyAppliedBasedOnPlotVars(item, plotVarsEffect);
+    // if there is no plot vars effect or it appears to be applied based on plot vars, check appearance id effects
+    if (!plotVarsEffect || plotVars)
+    {
+        appearanceIds = IsItemCurrentlyAppliedBasedOnAppearanceIds(item, state, appearanceIdsEffect);
+    }
+    // TODO check on face code stuff when that is a thing
+    // it is only currently applied if all relevant stuff matches what is currently applied
+
+    // if this item seems to have no effect, do not count it as currently applied
+    if (!plotVarsEffect && !appearanceIdsEffect)
+    {
+        return false;
+    }
+    // otherwise, return true only if every factor with an effect matches
+    return (!plotVarsEffect || plotVars) && (!appearanceIdsEffect || appearanceIds);
+}
+private function bool IsItemCurrentlyAppliedBasedOnPlotVars(AppearanceItemData item, out bool hasAnEffect)
+{
+    local int boolId;
+    local bool boolValue;
+    local PlotIntSetting plotInt;
+    local BioWorldInfo BWI;
+    local BioGlobalVariableTable globalVars;
+    local int plotIntValue;
+    
+    BWI = BioWorldInfo(oWorldInfo);
+    globalVars = BWI.GetGlobalVariables();
+
+    // check that all the bools match what would be applied
+    foreach item.ApplySettingBools(boolId)
+    {
+        if (boolId > 0)
+        {
+            hasAnEffect = true;
+            boolValue = globalVars.GetBool(boolId);
+            if (!boolValue)
+            {
+                return false;
+            }
+        }
+        else if (boolId < 0)
+        {
+            hasAnEffect = true;
+            boolValue = globalVars.GetBool(-boolId);
+            if (boolValue)
+            {
+                return false;
+            }
+        }
+    }
+
+    foreach item.ApplySettingInts(plotInt)
+    {
+        if (plotInt.Id > 0)
+        {
+            hasAnEffect = true;
+            plotIntValue = globalVars.GetInt(plotInt.Id);
+            if (plotIntValue != plotInt.Value)
+            {
+                return false;
+            }
+        }
+    }
+    // either it matches, or it has no effect
+    return true;
+}
+private function bool IsItemCurrentlyAppliedBasedOnAppearanceIds(AppearanceItemData item, menuState state, out bool hasAnEffect)
+{
+    local BioWorldInfo BWI;
+    local BioGlobalVariableTable globalVars;
+    local int currentPlotIntValue;
+    local AppearanceSettings appearanceSettings;
+
+    BWI = BioWorldInfo(oWorldInfo);
+    globalVars = BWI.GetGlobalVariables();
+
+    // first, check if this item touches outfit and there is a valid place to check for that
+    if (item.applyOutfitId != 0 && state.AppearanceIdLookups.bodyAppearanceLookup.plotIntId != 0)
+    {
+        hasAnEffect = true;
+        currentPlotIntValue = globalVars.GetInt(state.AppearanceIdLookups.bodyAppearanceLookup.plotIntId);
+        // account for 0 and -1 meaning the same thing
+        if (currentPlotIntValue == 0)
+        {
+            currentPlotIntValue = -1;
+        }
+        if (item.applyOutfitId != currentPlotIntValue)
+        {
+            // if we don't match on anything, short circuit out
+            return false;
+        }
+    }
+    if (item.applyHelmetId != 0 && state.AppearanceIdLookups.helmetAppearanceLookup.plotIntId != 0)
+    {
+        hasAnEffect = true;
+        currentPlotIntValue = globalVars.GetInt(state.AppearanceIdLookups.helmetAppearanceLookup.plotIntId);
+        // account for 0 and -1 meaning the same thing
+        if (currentPlotIntValue == 0)
+        {
+            currentPlotIntValue = -1;
+        }
+        if (item.applyHelmetId != currentPlotIntValue)
+        {
+            // if we don't match on anything, short circuit out
+            return false;
+        }
+    }
+    if (item.applyBreatherId != 0 && state.AppearanceIdLookups.breatherAppearanceLookup.plotIntId != 0)
+    {
+        hasAnEffect = true;
+        currentPlotIntValue = globalVars.GetInt(state.AppearanceIdLookups.breatherAppearanceLookup.plotIntId);
+        // account for 0 and -1 meaning the same thing
+        if (currentPlotIntValue == 0)
+        {
+            currentPlotIntValue = -1;
+        }
+        if (item.applyBreatherId != currentPlotIntValue)
+        {
+            // if we don't match on anything, short circuit out
+            return false;
+        }
+    }
+    if (item.applyHelmetPreference != eMenuHelmetOverride.unchanged && state.AppearanceIdLookups.appearanceFlagsLookup.plotIntId != 0)
+    {
+        hasAnEffect = true;
+        appearanceSettings = class'AMM_Common'.static.DecodeAppearanceSettings(globalVars.GetInt(state.AppearanceIdLookups.appearanceFlagsLookup.plotIntId));
+        if (appearanceSettings.helmetDisplayState != (item.applyHelmetPreference) - 1)
+        {
+            return false;
+        }
+    }
+    // everything matches, or it has no effect
+    return true;
+}
 public function AddItemForDisplay(AppearanceItemData item, AppearanceSubmenu currentSubmenu, menuState state)
 {
     if (!ShouldItemBeDisplayed(item, state))
@@ -713,6 +869,7 @@ public function AddItemForDisplay(AppearanceItemData item, AppearanceSubmenu cur
     }
     item.disabled = !ShouldItemBeEnabled(item);
     item.submenuInstance = GetSubmenuFromItem(item);
+    item.currentlyApplied = IsItemCurrentlyApplied(item, state);
 	// preload the pawn for this submenu, if applicable
 	if (item.submenuInstance != None && !item.inlineSubmenu && item.submenuInstance.PreloadPawn)
 	{
@@ -766,7 +923,7 @@ public function AppearanceSubmenu GetSubmenuFromItem(AppearanceItemData item)
     }
     if (item.SubMenuClassName != "")
     {
-        return LoadSubmenu(item.SubMenuClassName);
+        return LoadSubmenu(item.SubMenuClassName, self);
     }
     return None;
 }
@@ -907,6 +1064,7 @@ public function UpdateAllActorAppearances()
 {
     local Actor tempActor;
 
+    // TODO filter this down to only pawns that could have been affected
     foreach BioWorldInfo(oWorldInfo).AllActors(Class'Actor', tempActor, )
     {
         if (BioPawn(tempActor) != None)

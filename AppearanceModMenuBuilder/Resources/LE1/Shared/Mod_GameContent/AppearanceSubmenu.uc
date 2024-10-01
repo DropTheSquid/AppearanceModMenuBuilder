@@ -51,6 +51,7 @@ struct AppearanceItemData
 	var bool hideIfHeadgearSuppressed;
 	var bool hideIfBreatherSuppressed;
 	var bool hideIfHatsSuppressed;
+    var bool currentlyApplied;
 };
 enum eArmorOverrideState
 {
