@@ -31,6 +31,10 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 	local bool applyingVanillaOutfit;
 
 	UpdateOuterWorldInfo();
+	if (Target == None)
+	{
+		return;
+	}
 	// this pawn is not yet fully initialized; ignore it
 	if (target.Tag == 'BioPawn')
     {

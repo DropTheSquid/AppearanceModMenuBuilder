@@ -104,19 +104,23 @@ public function bool OnAMMClose(BioSFHandler self)
 public function OnPanelRemoved()
 {
     local int I;
-    local int squadSize;
-    local BioPlayerSquad oSquad;
-    local BioPawn squadmate;
-    local Actor tempActor;
-    
-	// trigger an appearance update on all real world pawns that might have been affected by things in this menu
-    foreach BioWorldInfo(oWorldInfo).AllActors(Class'Actor', tempActor, )
+    local BioPawn squadPawn;
+
+    // if there is an override pawn, only update them
+    if (oOverrideDisplayCharacter != None)
     {
-        if (BioPawn(tempActor) != None)
+        Class'AMM_AppearanceUpdater_Base'.static.UpdatePawnAppearanceStatic(oOverrideDisplayCharacter, "Inventory OnPanelRemoved");
+    }
+    else
+    {
+        // otherwise do the whole squad
+        for (I = 0; I < 3; I++)
         {
-			Class'AMM_AppearanceUpdater_Base'.static.UpdatePawnAppearanceStatic(BioPawn(tempActor), "Inventory OnPanelRemoved");
+            SquadPawn = BioPawn(BioWorldInfo(oWorldInfo).m_playerSquad.GetMember(I));
+            Class'AMM_AppearanceUpdater_Base'.static.UpdatePawnAppearanceStatic(SquadPawn, "Inventory OnPanelRemoved");
         }
     }
+
     Super(BioSFHandler_Inventory).OnPanelRemoved();
 }
 
