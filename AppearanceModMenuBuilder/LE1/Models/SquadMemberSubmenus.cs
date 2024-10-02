@@ -64,9 +64,8 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 PawnTag = PawnTag,
                 PawnAppearanceType = "casual",
                 ArmorOverride = "overridden",
-                SrTitle = SquadMemberNameStringref,
-                // "Choose an outfit type"
-                SrSubtitle = 210210213,
+                SrTitleWithComment = (SquadMemberNameStringref, "the squadmember's name"),
+                SrSubtitleWithComment = (210210213, "Choose an outfit type"),
                 // we want the character name to carry through to child menus
                 UseTitleForChildMenus = true,
                 Comment = "Do not add items directly to this menu; add them to the species specific outfit menus instead"
@@ -79,11 +78,9 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 PawnTag = PawnTag,
                 PawnAppearanceType = "casual",
                 ArmorOverride = "overridden",
-                // Character name, newline, Casual
-                SrTitle = 210210253,
+                SrTitleWithComment = (210210253, "Character name, newline, Casual"),
                 UseTitleForChildMenus = true,
-                // "Choose an outfit"
-                SrSubtitle = 210210256,
+                SrSubtitleWithComment = (210210256, "Choose an outfit"),
                 Comment = "Do not add items directly to this menu; add them to the species specific outfit menus instead"
             };
 
@@ -97,11 +94,9 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 PawnTag = PawnTag,
                 PawnAppearanceType = "combat",
                 ArmorOverride = "equipped",
-                // Character name, newline, Combat
-                SrTitle = 210210254,
+                SrTitleWithComment = (210210254, "Character name, newline, Combat"),
                 UseTitleForChildMenus = true,
-                // "Choose an outfit"
-                SrSubtitle = 210210256,
+                SrSubtitleWithComment = (210210256, "Choose an outfit"),
                 Comment = "Do not add items directly to this menu; add them to the species specific outfit menus instead"
             };
 
@@ -139,11 +134,9 @@ namespace AppearanceModMenuBuilder.LE1.Models
                     PawnTag = PawnTag,
                     PawnAppearanceType = "combat",
                     ArmorOverride = "equipped",
-                    // Tali's name stringref
-                    SrTitle = SquadMemberNameStringref,
+                    SrTitleWithComment = (SquadMemberNameStringref, "the squadmember's name"),
                     UseTitleForChildMenus = true,
-                    // "Choose an outfit"
-                    SrSubtitle = 210210256,
+                    SrSubtitleWithComment = (210210256, "Choose an outfit"),
                     Comment = "Do not add items directly to this menu; add them to the species specific outfit menus instead"
                 };
 
@@ -204,11 +197,9 @@ namespace AppearanceModMenuBuilder.LE1.Models
                     PawnTag = PawnTag,
                     PawnAppearanceType = "romance",
                     ArmorOverride = "overridden",
-                    // Character name, newline, Romance
-                    SrTitle = 210210255,
+                    SrTitleWithComment = (210210255, "Character name, newline, Romance"),
                     UseTitleForChildMenus = true,
-                    // "Choose an outfit"
-                    SrSubtitle = 210210256,
+                    SrSubtitleWithComment = (210210256, "Choose an outfit"),
                     Comment = "Do not add items directly to this menu; add them to the species specific outfit menus instead"
                 };
                 // add this menu into the root character menu

@@ -65,7 +65,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
         public string? PawnTag
         {
             get => GetStringValue(nameof(PawnTag));
-            set => SetStringValue(nameof(PawnTag), value, "test overall property comment");
+            set => SetStringValue(nameof(PawnTag), value);
         }
 
         public string? PawnAppearanceType
@@ -80,6 +80,11 @@ namespace AppearanceModMenuBuilder.LE1.Models
             set => SetStringValue(nameof(ArmorOverride), value);
         }
 
+        public (int stringref, string comment) SrTitleWithComment
+        {
+            set => SetIntValue(nameof(SrTitle), value.stringref, value.comment);
+        }
+
         public int? SrTitle
         {
             get => GetIntValue(nameof(SrTitle));
@@ -90,6 +95,11 @@ namespace AppearanceModMenuBuilder.LE1.Models
         {
             get => GetStringValue(nameof(STitle));
             set => SetStringValue(nameof(STitle), value);
+        }
+
+        public (int stringref, string comment) SrSubtitleWithComment
+        {
+            set => SetIntValue(nameof(SrSubtitle), value.stringref, value.comment);
         }
 
         public int? SrSubtitle

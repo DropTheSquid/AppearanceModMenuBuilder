@@ -54,8 +54,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             var characterSelectMenu = new AppearanceSubmenu("AMM_Submenus.AppearanceSubmenu_CharacterSelect")
             {
                 PawnTag = "None",
-                // "Select a character"
-                SrTitle = 210210217
+                SrTitleWithComment = (210210217, "Select a character")
             };
 
             configMergeFile.AddOrMergeClassConfig(characterSelectMenu);
@@ -187,7 +186,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 // there should always be a default outfit option at the top and root of the casual menu
                 menus.Casual.AddMenuEntry(new AppearanceItemData()
                 {
-                    // "Default outfit"
+                    Comment = "\"Default outfit\" always present in casual menu",
                     SrCenterText = 210210283,
                     ApplyOutfitId = -1,
                 });
@@ -238,7 +237,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     ApplyOutfitId = -1,
                     // anyone but squadmates
                     ANotApplicableCharacters = squad,
-                    Comment = "Default outfit entry for anyone not in the squad"
+                    Comment = "\"Default outfit\" for anyone not in the squad"
                 });
                 
                 if (henches != null)
@@ -252,7 +251,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                         DisplayInt = new(1601, 0),
                         // only for henches
                         AApplicableCharacters = henches,
-                        Comment = "Default outfit entry for henchmen when the setting to have them wear their equipped armor is off"
+                        Comment = "\"Default outfit\" entry for henchmen when the setting to have them wear their equipped armor is off"
                     });
                     menus.Combat.AddMenuEntry(new AppearanceItemData()
                     {
@@ -262,7 +261,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                         DisplayInt = new(1601, 1),
                         // only for henches
                         AApplicableCharacters = henches,
-                        Comment = "Equipped Armor entry for henchmen when the setting to have them wear their equipped armor is on"
+                        Comment = "\"Equipped Armor\" entry for henchmen when the setting to have them wear their equipped armor is on"
                     });
                 }
                 if (player != null)
@@ -275,7 +274,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                         ApplyOutfitId = -1,
                         // only for shep
                         AApplicableCharacters = player,
-                        Comment = "Shepard always gets an 'Equipped Armor' entry"
+                        Comment = "Shepard always gets an \"Equipped Armor\" entry"
                     });
                 }
 
@@ -292,7 +291,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                         AApplicableCharacters = squad,
                         // only for the casual and romance submenus
                         ANotApplicableAppearanceTypes = ["Combat"],
-                        Comment = "Equipped Armor entry for the whole squad within the armor menu in any appearance type besides combat"
+                        Comment = "\"Equipped Armor\" entry for the whole squad within the armor menu in any appearance type besides combat"
                     });
                 }
 
