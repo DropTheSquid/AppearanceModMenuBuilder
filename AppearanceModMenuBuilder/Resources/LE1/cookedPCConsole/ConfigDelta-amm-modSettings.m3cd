@@ -41,9 +41,13 @@ srSubtitle=210210222
 +menuItems=(srLeftText=210210277, srRightText=200054, srDescriptionText=210210279, srDescriptionTitleText=210210277, srActionText=200008, DisplayInt=(Id=1598,Value=0), ApplySettingInts=((Id=1598,Value=1)), Images=())
 +menuItems=(srLeftText=210210277, srRightText=200053, srDescriptionText=210210278, srDescriptionTitleText=210210277, srActionText=200009, DisplayInt=(Id=1598,Value=1), ApplySettingInts=((Id=1598,Value=0)), Images=())
 
-; Liara wears armor in the field
-+menuItems=(srLeftText=210210286, srRightText=200054, srDescriptionText=210210288, srDescriptionTitleText=210210286, srActionText=200008, DisplayInt=(Id=1599,Value=0), ApplySettingInts=((Id=1599,Value=1)), Images=())
-+menuItems=(srLeftText=210210286, srRightText=200053, srDescriptionText=210210287, srDescriptionTitleText=210210286, srActionText=200009, DisplayInt=(Id=1599,Value=1), ApplySettingInts=((Id=1599,Value=0)), Images=())
+; Liara wears armor on Recruitment mission
++menuItems=(srLeftText=210210286, srRightText=200054, srDescriptionText=210210288, srDescriptionTitleText=210210286, srActionText=200008, DisplayConditional=2512, DisplayInt=(Id=1599,Value=0), ApplySettingInts=((Id=1599,Value=1)), Images=())
++menuItems=(srLeftText=210210286, srRightText=200053, srDescriptionText=210210287, srDescriptionTitleText=210210286, srActionText=200009, DisplayConditional=2512, DisplayInt=(Id=1599,Value=1), ApplySettingInts=((Id=1599,Value=0)), Images=())
+
+; Liara wears armor on Virmire
++menuItems=(srLeftText=210210304, srRightText=200054, srDescriptionText=210210306, srDescriptionTitleText=210210304, srActionText=200008, DisplayConditional=2513, DisplayInt=(Id=1602,Value=0), ApplySettingInts=((Id=1602,Value=1)), Images=())
++menuItems=(srLeftText=210210304, srRightText=200053, srDescriptionText=210210305, srDescriptionTitleText=210210304, srActionText=200009, DisplayConditional=2513, DisplayInt=(Id=1602,Value=1), ApplySettingInts=((Id=1602,Value=0)), Images=())
 
 ; Tali always in combat appearance
 +menuItems=(srLeftText=210210289, srRightText=200054, srDescriptionText=210210291, srDescriptionTitleText=210210289, srActionText=200008, DisplayInt=(Id=1600,Value=0), ApplySettingInts=((Id=1600,Value=1)), Images=())

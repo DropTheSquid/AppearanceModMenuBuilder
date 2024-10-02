@@ -1,52 +1,115 @@
 Class AMM_Pawn_Parameters_Liara extends AMM_Pawn_Parameters_Romanceable
 	config(Game);
 
-public function SpecialHandling(BioPawn targetPawn)
+// These are intended to be set by mods that alter Liara such that she appears in armor on her recruitment mission and/or Virmire
+// setting this to true indicates to AMM to treat this appearance as a combat appearance (thus using the combat appearance override if one is picked)
+// and also to disable the setting that would let users force Liara into armor in these appearances so it won't override your appearance
+var config bool LiaraWearsArmorOnTherum;
+var config bool LiaraWearsArmorOnVirmire;
+
+public function OutfitSpecBase GetOverrideDefaultSpec(BioPawn targetPawn)
 {
-	local BioPawnType pawnType;
+	local VanillaOutfitByIdSpec delegateSpec;
 
-	// if we have configured Liara to wear armor on Therum and Virmire, update her pawn settings to reflect this
-	if (LiaraWearsArmor())
+	if (IsOnTherum(TargetPawn) && ForceLiaraToWearArmorOnTherum()
+		|| IsOnVirmire(TargetPawn) && ForceLiaraToWearArmorOnVirmire())
 	{
-		if (targetPawn.GetPackageName() == 'BIOA_LAV70_07_DSG'
-			|| targetPawn.GetPackageName() == 'BIOA_JUG20_08_DSG'
-			|| targetPawn.GetPackageName() == 'BIONPC_Liara')
-		{
-			pawnType = Class'AMM_Utilities'.static.GetPawnType(targetPawn);
-
-			if (pawnType.m_oAppearanceSettings.m_oBodySettings.m_eArmorType == EBioArmorType.ARMOR_TYPE_CLOTHING
-				&& pawnType.m_oAppearanceSettings.m_oBodySettings.m_nModelVariant == 7
-				&& pawnType.m_oAppearanceSettings.m_oBodySettings.m_nMaterialConfig == 4)
-			{
-				BioInterface_Appearance_Pawn(targetPawn.m_oBehavior.m_oAppearanceType).m_oSettings.m_oBodySettings.m_eArmorType = EBioArmorType.ARMOR_TYPE_LIGHT;
-				BioInterface_Appearance_Pawn(targetPawn.m_oBehavior.m_oAppearanceType).m_oSettings.m_oBodySettings.m_nModelVariant = 0;
-				BioInterface_Appearance_Pawn(targetPawn.m_oBehavior.m_oAppearanceType).m_oSettings.m_oBodySettings.m_nMaterialConfig = 6;
-				// TODO set matching headgear settings?
-			}
-		}
+		// if we are forcing Liara into armor, delegate to a spec for her default armor appearance (Gladiator Light)
+		delegateSpec = new class'VanillaOutfitByIdSpec';
+		delegateSpec.armorType = EBioArmorType.ARMOR_TYPE_LIGHT;
+		delegateSpec.meshVariant = 0;
+		delegateSpec.materialVariant = 6;
+		return delegateSpec;
 	}
+
+	// otherwise, let it behave as normal
+
+	return None;
 }
 
 public function string GetAppearanceType(BioPawn targetPawn)
 {
-	// by default, Liara is considered to be in casual appearance on Therum and Virmire camp, despite not having armor overridden
-	// this is true with the framework also
-	if (targetPawn.GetPackageName() == 'BIOA_LAV70_07_DSG'
-		|| targetPawn.GetPackageName() == 'BIOA_JUG20_08_DSG'
-		|| targetPawn.GetPackageName() == 'BIONPC_Liara')
+	if (IsOnTherum(targetPawn))
 	{
-		return LiaraWearsArmor() ? "combat" : "casual";
+		if (LiaraWearsArmorOnTherum || ForceLiaraToWearArmorOnTherum())
+		{
+			return "combat";
+		}
+		return "casual";
+	}
+
+	if (IsOnVirmire(targetPawn))
+	{
+		if (LiaraWearsArmorOnVirmire || ForceLiaraToWearArmorOnVirmire())
+		{
+			return "combat";
+		}
+		return "casual";
 	}
 
 	return Super(AMM_Pawn_Parameters_Romanceable).GetAppearanceType(targetPawn);
 }
 
-private function bool LiaraWearsArmor()
+private function bool IsOnTherum(BioPawn target)
+{
+	local BioWorldInfo BWI;
+
+    BWI = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo());
+	if (target.GetPackageName() == 'BIOA_LAV70_07_DSG'
+		|| (target.GetPackageName() == 'BIONPC_Liara' && InStr(PathName(BWI), "LAV") != -1))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+private function bool IsOnVirmire(BioPawn target)
+{
+	local BioWorldInfo BWI;
+
+    BWI = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo());
+	if (target.GetPackageName() == 'BIOA_JUG20_08_DSG'
+		|| (target.GetPackageName() == 'BIONPC_Liara' && InStr(PathName(BWI), "JUG") != -1))
+	{
+		return true;
+	}
+
+	return false;
+}
+
+private function bool ForceLiaraToWearArmorOnTherum()
 {
 	local BioWorldInfo BWI;
     local BioGlobalVariableTable globalVars;
 
+	// ignore this setting if the bool is set
+	if (LiaraWearsArmorOnTherum)
+	{
+		return false;
+	}
+
     BWI = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo());
     globalVars = BWI.GetGlobalVariables();
     return globalVars.GetInt(1599) != 0;
+}
+
+private function bool ForceLiaraToWearArmorOnVirmire()
+{
+	local BioWorldInfo BWI;
+    local BioGlobalVariableTable globalVars;
+
+	// ignore this setting if the bool is set
+	if (LiaraWearsArmorOnVirmire)
+	{
+		return false;
+	}
+
+    BWI = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo());
+    globalVars = BWI.GetGlobalVariables();
+    return globalVars.GetInt(1602) != 0;
+}
+
+defaultproperties
+{
 }

@@ -145,6 +145,11 @@ public function string GetMenuRootPath()
 	return menuRootPath;
 }
 
+public function OutfitSpecBase GetOverrideDefaultSpec(BioPawn target)
+{
+	return None;
+}
+
 // given an appearance type, return what outfit, helmet, and breather should be used, as well as any settings
 public function bool GetAppearanceIds(string appearanceType, out PawnAppearanceIds PawnAppearanceIds)
 {

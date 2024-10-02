@@ -406,17 +406,17 @@ Romance</data>
 	<string>
 		<id>210210286</id>
 		<flags>1</flags>
-		<data>Liara Wears Armor In The Field</data>
+		<data>Force Liara to wear armor for her recruitment mission</data>
 	</string>
 	<string>
 		<id>210210287</id>
 		<flags>1</flags>
-		<data>Liara Wears Armor In The Field enabled description</data>
+		<data>Force Liara to wear armor for her recruitment mission enabled description</data>
 	</string>
 	<string>
 		<id>210210288</id>
 		<flags>1</flags>
-		<data>Liara Wears Armor In The Field disabled description</data>
+		<data>Force Liara to wear armor for her recruitment mission disabled description</data>
 	</string>
 	<string>
 		<id>210210289</id>
@@ -493,5 +493,20 @@ Romance</data>
 		<id>210210303</id>
 		<flags>1</flags>
 		<data>Puffy Vest Outfit</data>
+	</string>
+	<string>
+		<id>210210304</id>
+		<flags>1</flags>
+		<data>Force Liara to wear armor on Virmire</data>
+	</string>
+	<string>
+		<id>210210305</id>
+		<flags>1</flags>
+		<data>Force Liara to wear armor on Virmire enabled description</data>
+	</string>
+	<string>
+		<id>210210306</id>
+		<flags>1</flags>
+		<data>Force Liara to wear armor on Virmire disabled description</data>
 	</string>
 </tlkFile>

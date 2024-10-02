@@ -139,22 +139,38 @@ public function bool F2510(BioWorldInfo bioWorld, int Argument)
 	gv = bioWorld.GetGlobalVariables();
 
 	// "Casual"
-	// Liara recruited || Liara wears armor
+	// Liara recruited || Liara wears armor on Therum
 	// (3943) || [1599]
-	return gv.GetBool(3943) || gv.GetInt(1599) == 1;
+	return gv.GetBool(3943) || (gv.GetInt(1599) == 1 || class'AMM_Pawn_Parameters_Liara'.default.LiaraWearsArmorOnTherum);
 }
 
 public function bool F2511(BioWorldInfo bioWorld, int Argument)
 {
-	// used to determine visibility of Liara's pre recruitment menu casual entrance
+	// used to determine visibility of Liara's pre recruitment menu combat entrance
 	local BioGlobalVariableTable gv;
 
 	gv = bioWorld.GetGlobalVariables();
 
 	// "Combat"
-	// !(!Liara recruited && Liara wears armor) AKA Liara Recruited || !Liara Wears Armor
+	// !(!Liara recruited && Liara wears armor on Therum) AKA Liara Recruited || !Liara Wears Armor
 	// (3943) || ![1599]
-	return gv.GetBool(3943) || gv.GetInt(1599) != 1;
+	return gv.GetBool(3943) || !(gv.GetInt(1599) == 1 || class'AMM_Pawn_Parameters_Liara'.default.LiaraWearsArmorOnTherum);
+}
+
+public function bool F2512(BioWorldInfo bioWorld, int Argument)
+{
+	// used to determine the visiblity of the setting for forcing Liara to wear armor on Therum
+
+	// true if this config setting is not true
+	return !class'AMM_Pawn_Parameters_Liara'.default.LiaraWearsArmorOnTherum;
+}
+
+public function bool F2513(BioWorldInfo bioWorld, int Argument)
+{
+	// used to determine the visiblity of the setting for forcing Liara to wear armor on Virmire
+
+	// true if this config setting is not true
+	return !class'AMM_Pawn_Parameters_Liara'.default.LiaraWearsArmorOnVirmire;
 }
 
 

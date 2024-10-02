@@ -34,8 +34,14 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
     }
     else
     {
-        // otherwise, defer to vanilla behavior
-        delegateSpec = new Class'VanillaOutfitSpec';
+        // check if they have an override spec set
+        delegateSpec = params.GetOverrideDefaultSpec(target);
+
+        if (delegateSpec == None)
+        {
+            // otherwise, defer to vanilla behavior
+            delegateSpec = new Class'VanillaOutfitSpec';
+        }
     }
     return delegateSpec.LoadOutfit(target, specLists, appearanceIds, appearance);
 }
