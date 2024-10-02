@@ -118,6 +118,12 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(srCombatOrPreRecruitAppearance, displayBool: -3943, displayInt: (1599, 1)));
                 // the one that just says "Combat" appears with the inverse of that logic, which is in a conditional
                 rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(srCombatAppearance, displayConditional: 2511));
+
+                // Add Liara into the character select menu
+                var entryPoint = rootCharacterMenu.GetEntryPoint(SquadMemberNameStringref);
+                entryPoint.DisplayConditional = DisplayConditional;
+                entryPoint.DisplayBool = DisplayBool;
+                CharacterSelect.AddMenuEntry(entryPoint);
             }
             else if (TaliSpecialHandling)
             {
