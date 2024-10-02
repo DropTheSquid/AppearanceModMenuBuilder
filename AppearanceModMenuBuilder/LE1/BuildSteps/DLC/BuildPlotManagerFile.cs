@@ -14,7 +14,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // add a few classes
             var classTask = new AddClassesToFile(
                 _ => context.GetStartupFile()!,
-                // the handler inheritance tree
+                // BioAutoCOnditionals class
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\BioAutoConditionals.uc", []));
             classTask.RunModTask(context);
         }

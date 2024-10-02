@@ -137,15 +137,11 @@ public static function bool GetActorType(string tag, out BioPawnType actorType)
     return actorType != None;
 }
 
-public static function bool LoadEquipmentFromSaveRecord(coerce name tag, out int armorType, out int meshVariant, out int materialVariant)
+public static function bool GetHenchRecord(coerce name tag, out HenchmanSaveRecord record)
 {
     local BioWorldInfo BWI;
     local SFXSaveGame SaveGame;
     local int i;
-    local HenchmanSaveRecord Record;
-    local int manufacturerId;
-    local int itemId;
-    local byte sophistication;
 
     BWI = class'AMM_AppearanceUpdater'.static.GetOuterWorldInfo();
     if (BWI.CurrentGame != None)
@@ -157,26 +153,60 @@ public static function bool LoadEquipmentFromSaveRecord(coerce name tag, out int
         LogInternal("could not get save game"@SaveGame);
         return FALSE;
     }
-    
     for (i = 0; i < SaveGame.HenchmanRecords.Length; i++)
     {
         if (SaveGame.HenchmanRecords[i].Tag == Tag)
         {
             Record = SaveGame.HenchmanRecords[i];
-            // EBioEquipmentSlot.EQUIPMENT_SLOT_ARMOR value is 1, hardcode that if needed
-            manufacturerId = record.Equipment[int(EBioEquipmentSlot.EQUIPMENT_SLOT_ARMOR)].Manufacturer;
-            itemId = record.Equipment[int(EBioEquipmentSlot.EQUIPMENT_SLOT_ARMOR)].ItemId;
-            sophistication = record.Equipment[int(EBioEquipmentSlot.EQUIPMENT_SLOT_ARMOR)].sophistication;
-            if (!LoadEquipmentAndGetAttributes(tag, ItemId, manufacturerID, sophistication, armorType, meshVariant, materialVariant))
-            {
-                LogInternal("failed to load equipment");
-                return false;
-            }
             return TRUE;
         }
     }
-    LogInternal("did not find squad record");
+
     return FALSE;
+}
+
+public static function bool EnsureHenchRecordExists(coerce name tag, out HenchmanSaveRecord record)
+{
+    local BioWorldInfo BWI;
+    local BioPawn spawnedPawn;
+    local BioSPGame gameInfo;
+
+    if (GetHenchRecord(tag, record))
+    {
+        return true;
+    }
+
+    // no record found; make one instead
+    BWI = class'AMM_AppearanceUpdater'.static.GetOuterWorldInfo();
+    gameInfo = BioSPGame(BWI.Game);
+    spawnedPawn = gameInfo.SpawnHenchman(Name(Tag), BWI.m_playerSquad.m_playerPawn, -60000.0, -60000.0, FALSE);
+    spawnedPawn.Destroy();
+
+    return GetHenchRecord(tag, record);
+}
+
+public static function bool LoadEquipmentFromSaveRecord(coerce name tag, out int armorType, out int meshVariant, out int materialVariant)
+{
+    local HenchmanSaveRecord Record;
+    local int manufacturerId;
+    local int itemId;
+    local byte sophistication;
+
+    if (!EnsureHenchRecordExists(tag, record))
+    {
+        return false;
+    }
+
+    // EBioEquipmentSlot.EQUIPMENT_SLOT_ARMOR value is 1, hardcode that if needed
+    manufacturerId = record.Equipment[int(EBioEquipmentSlot.EQUIPMENT_SLOT_ARMOR)].Manufacturer;
+    itemId = record.Equipment[int(EBioEquipmentSlot.EQUIPMENT_SLOT_ARMOR)].ItemId;
+    sophistication = record.Equipment[int(EBioEquipmentSlot.EQUIPMENT_SLOT_ARMOR)].sophistication;
+    if (!LoadEquipmentAndGetAttributes(tag, ItemId, manufacturerID, sophistication, armorType, meshVariant, materialVariant))
+    {
+        LogInternal("failed to load equipment");
+        return false;
+    }
+    return TRUE;
 }
 
 public static function bool LoadEquipmentAndGetAttributes(name tag, int itemId, int manufacturerId, byte sophistication, out int armorType, out int meshVariant, out int materialVariant)

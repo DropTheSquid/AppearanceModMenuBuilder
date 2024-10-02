@@ -68,15 +68,7 @@ public function bool SpawnPawn(string appearanceType, out BioPawn spawnedPawn)
 }
 public function bool spawnPawnIntoParty(string appearanceType, out BioPawn spawnedPawn)
 {
-    local BioPawn BioPawn;
     local BioWorldInfo BioWorldInfo;
-    local int characterID;
-    local string TheActorType;
-    local BioAiController henchAI;
-    local BioPlayerSquad henchSquad;
-    local Vector SpawnPoint;
-    local Rotator SpawnRotation;
-    local int nIsHeadGearVisible;
     local BioSPGame gameInfo;
     
     BioWorldInfo = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo());
