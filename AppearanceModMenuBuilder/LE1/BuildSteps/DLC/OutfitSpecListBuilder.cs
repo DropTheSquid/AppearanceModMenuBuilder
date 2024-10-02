@@ -113,7 +113,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 new LoadedSpecItem(-1, "Mod_GameContent.DefaultOutfitSpec"),
                 new LoadedSpecItem(0, "Mod_GameContent.DefaultOutfitSpec")
             };
-            bodyConfig.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
+            bodyConfig.AddArrayEntries("outfitSpecs", specialSpecs);
 
             specialSpecs =
             [
@@ -125,7 +125,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 new LoadedSpecItem(-1, "Mod_GameContent.DefaultHelmetSpec"),
                 new LoadedSpecItem(0, "Mod_GameContent.DefaultHelmetSpec")
             ];
-            helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs.Select(x => x.OutputValue()));
+            helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs);
 
 
             /*
@@ -170,7 +170,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 new LoadedSpecItem(-1, "Mod_GameContent.VanillaBreatherSpec"),
                 new LoadedSpecItem(0, "Mod_GameContent.VanillaBreatherSpec")
             ];
-            breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs.Select(x => x.OutputValue()));
+            breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs);
 
             string armorFileName = $"BIOG_{bodyType}_ARM_AMM";
             string helmetFileName = $"BIOG_{helmetType}_HGR_AMM";
@@ -192,7 +192,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             {
                 HideHair = true,
             };
-            helmetConfig.AddArrayEntries("helmetSpecs", lgtc.OutputValue());
+            helmetConfig.AddArrayEntries("helmetSpecs", lgtc);
 
             // MEDa variants; Most Medium armor appearances fall under this
             AddVanillaOutfitSpecs(bodyConfig, 19, armorFileName, OutfitType.MED, 0, bodyType, 16, 1, true);
@@ -219,21 +219,21 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             {
                 HideHair = true,
             };
-            helmetConfig.AddArrayEntries("helmetSpecs", colossus_lgt.OutputValue());
+            helmetConfig.AddArrayEntries("helmetSpecs", colossus_lgt);
 
             // manually add OT material params colossus that has the red stripe instead of solid grey like it is in LE
             var colossus_med = new SimpleHelmetSpecItem(63, $"{helmetFileName}.MEDa.{helmetType}_HGR_MEDa_MDL", ["BIOG_HMM_HGR_AMM.Alt.Colossus_Classic"], visorMesh)
             {
                 HideHair = true,
             };
-            helmetConfig.AddArrayEntries("helmetSpecs", colossus_med.OutputValue());
+            helmetConfig.AddArrayEntries("helmetSpecs", colossus_med);
 
             // manually add OT material params colossus that has the red stripe instead of solid grey like it is in LE
             var colossus_hvy = new SimpleHelmetSpecItem(64, $"{helmetFileName}.HVYa.{helmetType}_HGR_HVYa_MDL", ["BIOG_HMM_HGR_AMM.Alt.Colossus_Classic"], visorMesh)
             {
                 HideHair = true,
             };
-            helmetConfig.AddArrayEntries("helmetSpecs", colossus_hvy.OutputValue());
+            helmetConfig.AddArrayEntries("helmetSpecs", colossus_hvy);
 
             // add entries for the non armor outfits
             // NKDa (naked human/Avina)
@@ -590,7 +590,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 new LoadedSpecItem(-1, "Mod_GameContent.DefaultOutfitSpec"),
                 new LoadedSpecItem(0, "Mod_GameContent.DefaultOutfitSpec")
             };
-            bodyConfig.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
+            bodyConfig.AddArrayEntries("outfitSpecs", specialSpecs);
 
             specialSpecs =
             [
@@ -602,7 +602,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 new LoadedSpecItem(-1, "Mod_GameContent.DefaultHelmetSpec"),
                 new LoadedSpecItem(0, "Mod_GameContent.DefaultHelmetSpec")
             ];
-            helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs.Select(x => x.OutputValue()));
+            helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs);
 
             specialSpecs = [
                 //; -10 and on are breathers not matched to a specific outfit, which is the vanilla player and squadmate behavior
@@ -631,7 +631,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 new LoadedSpecItem(0, "Mod_GameContent.VanillaBreatherSpec")
             ];
 
-            breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs.Select(x => x.OutputValue()));
+            breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs);
 
             const string hmmArmorFileName = "BIOG_HMM_ARM_AMM";
             const string hmmHelmetFileName = "BIOG_HMM_HGR_AMM";
@@ -675,21 +675,21 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             {
                 HideHair = true,
             };
-            helmetConfig.AddArrayEntries("helmetSpecs", colossus_lgt.OutputValue());
+            helmetConfig.AddArrayEntries("helmetSpecs", colossus_lgt);
 
             // manually add OT material params colossus that has the red stripe instead of solid grey like it is in LE
             var colossus_med = new SimpleHelmetSpecItem(63, $"{hmmHelmetFileName}.MEDa.{bodyType}_HGR_MEDa_MDL", ["BIOG_HMM_HGR_AMM.Alt.Colossus_Classic"], visorMesh)
             {
                 HideHair = true,
             };
-            helmetConfig.AddArrayEntries("helmetSpecs", colossus_med.OutputValue());
+            helmetConfig.AddArrayEntries("helmetSpecs", colossus_med);
 
             // manually add OT material params colossus that has the red stripe instead of solid grey like it is in LE
             var colossus_hvy = new SimpleHelmetSpecItem(64, $"{hmmHelmetFileName}.HVYa.{bodyType}_HGR_HVYa_MDL", ["BIOG_HMM_HGR_AMM.Alt.Colossus_Classic"], visorMesh)
             {
                 HideHair = true,
             };
-            helmetConfig.AddArrayEntries("helmetSpecs", colossus_hvy.OutputValue());
+            helmetConfig.AddArrayEntries("helmetSpecs", colossus_hvy);
 
             // add all the non armor outfits for male humans to the menu
             // NKDa (naked human/VI)
@@ -926,7 +926,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 new LoadedSpecItem(0, "Mod_GameContent.DefaultOutfitSpec")
             };
 
-            bodyConfig.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
+            bodyConfig.AddArrayEntries("outfitSpecs", specialSpecs);
 
             specialSpecs =
             [
@@ -938,14 +938,14 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 new LoadedSpecItem(-1, "Mod_GameContent.DefaultHelmetSpec"),
                 new LoadedSpecItem(0, "Mod_GameContent.DefaultHelmetSpec")
             ];
-            helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs.Select(x => x.OutputValue()));
+            helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs);
 
             specialSpecs = [
                 new LoadedSpecItem(-2, "Mod_GameContent.NoBreatherSpec"),
                 new LoadedSpecItem(-1, "Mod_GameContent.VanillaBreatherSpec"),
                 new LoadedSpecItem(0, "Mod_GameContent.VanillaBreatherSpec")
             ];
-            breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs.Select(x => x.OutputValue()));
+            breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs);
 
             const string kroArmorFileName = "BIOG_KRO_ARM_AMM";
             const string kroHelmetFileName = "BIOG_KRO_HGR_AMM";
@@ -1017,7 +1017,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 new LoadedSpecItem(0, "Mod_GameContent.DefaultOutfitSpec")
             };
 
-            bodyConfig.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
+            bodyConfig.AddArrayEntries("outfitSpecs", specialSpecs);
 
             specialSpecs =
             [
@@ -1029,7 +1029,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 new LoadedSpecItem(-1, "Mod_GameContent.DefaultHelmetSpec"),
                 new LoadedSpecItem(0, "Mod_GameContent.DefaultHelmetSpec")
             ];
-            helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs.Select(x => x.OutputValue()));
+            helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs);
 
             specialSpecs = [
                 // the default breather/visor combo for LGT and HVY (MED suppresses it, as the helmet covers the head)
@@ -1042,7 +1042,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 new LoadedSpecItem(-1, "Mod_GameContent.VanillaBreatherSpec"),
                 new LoadedSpecItem(0, "Mod_GameContent.VanillaBreatherSpec")
             ];
-            breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs.Select(x => x.OutputValue()));
+            breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs);
 
             const string turArmorFileName = "BIOG_TUR_ARM_AMM";
             const string turHeadgearFileName = "BIOG_TUR_HGR_AMM";
@@ -1180,7 +1180,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 new LoadedSpecItem(0, "Mod_GameContent.DefaultOutfitSpec")
             };
 
-            bodyConfig.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
+            bodyConfig.AddArrayEntries("outfitSpecs", specialSpecs);
 
             specialSpecs =
             [
@@ -1192,14 +1192,14 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 new LoadedSpecItem(-1, "Mod_GameContent.DefaultHelmetSpec"),
                 new LoadedSpecItem(0, "Mod_GameContent.DefaultHelmetSpec")
             ];
-            helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs.Select(x => x.OutputValue()));
+            helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs);
 
             specialSpecs = [
                 new LoadedSpecItem(-2, "Mod_GameContent.NoBreatherSpec"),
                 new LoadedSpecItem(-1, "Mod_GameContent.VanillaBreatherSpec"),
                 new LoadedSpecItem(0, "Mod_GameContent.VanillaBreatherSpec")
             ];
-            breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs.Select(x => x.OutputValue()));
+            breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs);
 
             const string qrnArmorFileName = "BIOG_QRN_ARM_AMM";
 
@@ -1241,7 +1241,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 new LoadedSpecItem(0, "Mod_GameContent.DefaultOutfitSpec")
             };
 
-            bodyConfig.AddArrayEntries("outfitSpecs", specialSpecs.Select(x => x.OutputValue()));
+            bodyConfig.AddArrayEntries("outfitSpecs", specialSpecs);
 
             specialSpecs =
             [
@@ -1253,14 +1253,14 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 new LoadedSpecItem(-1, "Mod_GameContent.DefaultHelmetSpec"),
                 new LoadedSpecItem(0, "Mod_GameContent.DefaultHelmetSpec")
             ];
-            helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs.Select(x => x.OutputValue()));
+            helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs);
 
             specialSpecs = [
                 new LoadedSpecItem(-2, "Mod_GameContent.NoBreatherSpec"),
                 new LoadedSpecItem(-1, "Mod_GameContent.VanillaBreatherSpec"),
                 new LoadedSpecItem(0, "Mod_GameContent.VanillaBreatherSpec")
             ];
-            breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs.Select(x => x.OutputValue()));
+            breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs);
 
             // using the names of vanilla files they never shipped, but would have existed in a non stripped game
             // this allows vanilla outfits to dynamic load and I can also add extras from other games
@@ -1415,7 +1415,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             }
 
-            configToAddTo.AddArrayEntries("outfitSpecs", specs.Select(x => x.OutputValue()));
+            configToAddTo.AddArrayEntries("outfitSpecs", specs);
         }
 
         private static int AddCustomOutfitSpecs(
@@ -1434,7 +1434,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 };
             }
 
-            specListConfig.AddArrayEntries("outfitSpecs", specs.Select(x => x.OutputValue()));
+            specListConfig.AddArrayEntries("outfitSpecs", specs);
 
             // the starting id for the next set
             return startingId + specs.Length;
@@ -1456,7 +1456,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 };
             }
 
-            specListConfig.AddArrayEntries("outfitSpecs", specs.Select(x => x.OutputValue()));
+            specListConfig.AddArrayEntries("outfitSpecs", specs);
 
             // the starting id for the next set
             return startingId + specs.Length;
@@ -1511,7 +1511,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 };
             }
 
-            configToAddTo.AddArrayEntries("helmetSpecs", specs.Select(x => x.OutputValue()));
+            configToAddTo.AddArrayEntries("helmetSpecs", specs);
         }
 
         private static void AddMenuEntries(AppearanceSubmenu submenu, int startingId, int count)

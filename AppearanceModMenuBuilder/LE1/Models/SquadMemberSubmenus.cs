@@ -6,7 +6,7 @@ using static MassEffectModBuilder.LEXHelpers.LooseClassCompile;
 
 namespace AppearanceModMenuBuilder.LE1.Models
 {
-    public record class SquadMemberSubmenus(string SquadMemberName, int SquadMemberNameStringref, string PawnTag, SpeciesOutfitMenus OutfitSubmenus)
+    public record class SquadMemberSubmenus(string SquadMemberName, int SquadMemberNameStringref, string PawnTag, SpeciesOutfitMenus OutfitSubmenus, AppearanceSubmenu CharacterSelect)
     {
         private const string SubmenuClassTemplate = "Class {0} extends AppearanceSubmenu config(UI);";
         public const string AppearanceSubmenuClassPrefix = "AppearanceSubmenu_";
@@ -69,6 +69,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 SrSubtitle = 210210213,
                 // we want the character name to carry through to child menus
                 UseTitleForChildMenus = true,
+                Comment = "Do not add items directly to this menu; add them to the species specific outfit menus instead"
             };
             _submenus.Add(rootCharacterMenu);
             _classes.Add(GetSubmenuClass(SquadMemberName, [SquadMemberName]));
@@ -83,6 +84,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 UseTitleForChildMenus = true,
                 // "Choose an outfit"
                 SrSubtitle = 210210256,
+                Comment = "Do not add items directly to this menu; add them to the species specific outfit menus instead"
             };
 
             // add the appropriate submenu into this one
@@ -100,6 +102,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 UseTitleForChildMenus = true,
                 // "Choose an outfit"
                 SrSubtitle = 210210256,
+                Comment = "Do not add items directly to this menu; add them to the species specific outfit menus instead"
             };
 
             if (LiaraSpecialHandling)
@@ -123,8 +126,40 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 // one of these two will show up based on whether Tali has been recruited yet
                 rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(srCombatOrPreRecruitAppearance, displayBool: -3944, displayInt: (-1600, 1)));
                 rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(srCombatAppearance, displayBool: 3944, displayInt: (-1600, 1)));
-                // and another inline entry point to Tali's combat menu if the setting is on
-                rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(0, displayInt: (1600, 1), inline: true));
+
+                // add a single appearance type menu in addition to combat and casual
+                var singleAppearanceMenu = new AppearanceSubmenu($"{ClassPath}_Combined")
+                {
+                    PawnTag = PawnTag,
+                    PawnAppearanceType = "combat",
+                    ArmorOverride = "equipped",
+                    // Tali's name stringref
+                    SrTitle = SquadMemberNameStringref,
+                    UseTitleForChildMenus = true,
+                    // "Choose an outfit"
+                    SrSubtitle = 210210256,
+                    Comment = "Do not add items directly to this menu; add them to the species specific outfit menus instead"
+                };
+
+                singleAppearanceMenu.AddMenuEntry(OutfitSubmenus.Combat.GetInlineEntryPoint());
+                _submenus.Add(singleAppearanceMenu);
+                _classes.Add(GetSubmenuClass($"{SquadMemberName}_Combined", [SquadMemberName]));
+
+                // add Tali into the character select menu, with one of two entry points showing up based on the single appearance setting
+                var regularEntryPoint = rootCharacterMenu.GetEntryPoint(SquadMemberNameStringref);
+                regularEntryPoint.DisplayConditional = DisplayConditional;
+                regularEntryPoint.DisplayBool = DisplayBool;
+                regularEntryPoint.DisplayInt = new(-1600, 1);
+                regularEntryPoint.Comment = "Entry point to Tali's 'Choose Casual or Combat Appearance' menu if the setting to use a single appearance type for her is off";
+
+                var singleAppearanceEntryPoint = singleAppearanceMenu.GetEntryPoint(SquadMemberNameStringref);
+                singleAppearanceEntryPoint.DisplayConditional = DisplayConditional;
+                singleAppearanceEntryPoint.DisplayBool = DisplayBool;
+                singleAppearanceEntryPoint.DisplayInt = new(1600, 1);
+                singleAppearanceEntryPoint.Comment = "Entry point to Tali's 'Choose an outfit' menu if the setting to use a single appearance type for her is on";
+
+                CharacterSelect.AddMenuEntry(regularEntryPoint);
+                CharacterSelect.AddMenuEntry(singleAppearanceEntryPoint);
             }
             else
             {
@@ -141,6 +176,12 @@ namespace AppearanceModMenuBuilder.LE1.Models
                     // add this menu into the root character menu
                     rootCharacterMenu.AddMenuEntry(combatMenu.GetEntryPoint(srCombatAppearance));
                 }
+
+                // add this character into the character select menu
+                var entryPoint = rootCharacterMenu.GetEntryPoint(SquadMemberNameStringref);
+                entryPoint.DisplayConditional = DisplayConditional;
+                entryPoint.DisplayBool = DisplayBool;
+                CharacterSelect.AddMenuEntry(entryPoint);
             }
 
             // add the appropriate submenu into this one
@@ -162,6 +203,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
                     UseTitleForChildMenus = true,
                     // "Choose an outfit"
                     SrSubtitle = 210210256,
+                    Comment = "Do not add items directly to this menu; add them to the species specific outfit menus instead"
                 };
                 // add this menu into the root character menu
                 rootCharacterMenu.AddMenuEntry(romanceMenu.GetEntryPoint(srRomanceAppearance, requiresFramework: true, displayConditional: RomanceConditional.Value));
@@ -171,21 +213,6 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 _classes.Add(GetSubmenuClass($"{SquadMemberName}_Romance", [SquadMemberName]));
             }
             initCompleted = true;
-        }
-
-        public AppearanceItemData GetMenuEntryPoint()
-        {
-            if (!initCompleted)
-            {
-                Init();
-            }
-            var rootMenu = Submenus.First();
-            var entryPoint = rootMenu.GetEntryPoint(SquadMemberNameStringref);
-
-            entryPoint.DisplayConditional = DisplayConditional;
-            entryPoint.DisplayBool = DisplayBool;
-
-            return entryPoint;
         }
 
         public void ModifyPackage(IMEPackage package)

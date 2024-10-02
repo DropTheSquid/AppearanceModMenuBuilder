@@ -396,7 +396,7 @@ Romance</data>
 	<string>
 		<id>210210284</id>
 		<flags>1</flags>
-		<data>Default Helmet</data>
+		<data>Default Helmet Matching Outfit</data>
 	</string>
 	<string>
 		<id>210210285</id>
@@ -472,7 +472,7 @@ Romance</data>
 	<string>
 		<id>210210299</id>
 		<flags>1</flags>
-		<data>Colossus Classis</data>
+		<data>Colossus Classic</data>
 	</string>
 	<string>
 		<id>210210300</id>

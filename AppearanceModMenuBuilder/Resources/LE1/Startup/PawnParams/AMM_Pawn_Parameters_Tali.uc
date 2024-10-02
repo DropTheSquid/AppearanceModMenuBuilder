@@ -43,3 +43,20 @@ public function string GetAppearanceType(BioPawn targetPawn)
 	// otherwise, go with the normal system of relying on the armor override to account for in party with/without casual hubs
     return Super(AMM_Pawn_Parameters_Squad).GetAppearanceType(targetPawn);
 }
+
+public function string GetMenuRootPath()
+{
+	local BioWorldInfo BWI;
+    local BioGlobalVariableTable globalVars;
+
+	// check if we have the setting to always show Tali in her combat appearance regardless of the situation
+    BWI = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo());
+    globalVars = BWI.GetGlobalVariables();
+    if (globalVars.GetInt(1600) != 0)
+	{
+		return "AMM_Submenus.Tali.AppearanceSubmenu_Tali_Combined";
+	}
+
+	return Super.GetMenuRootPath();
+}
+

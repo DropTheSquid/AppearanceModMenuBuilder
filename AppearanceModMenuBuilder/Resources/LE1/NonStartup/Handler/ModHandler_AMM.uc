@@ -139,7 +139,7 @@ public function OnPanelAdded()
 	// finally, check if it is a pawn tag and look up the root menu from there
     else if (paramHandler.GetPawnParamsByTag(launchParam, params))
     {
-        RootSubmenuPath = params.menuRootPath;
+        RootSubmenuPath = params.GetMenuRootPath();
     }
     SetRootSubmenu(RootSubmenuPath);
 	class'AMM_AppearanceUpdater'.static.GetDlcInstance().SetOnAppearanceUpdatedCallback(OnAppearanceUpdated);

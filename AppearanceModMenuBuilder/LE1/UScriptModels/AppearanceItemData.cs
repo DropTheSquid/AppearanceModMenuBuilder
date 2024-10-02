@@ -55,6 +55,30 @@ namespace AppearanceModMenuBuilder.LE1.UScriptModels
             set => SetString(nameof(SCenterText), value);
         }
 
+        public int? SrLeftText
+        {
+            get => GetInt(nameof(SrLeftText));
+            set => SetInt(nameof(SrLeftText), value);
+        }
+
+        public string? SLeftText
+        {
+            get => GetString(nameof(SLeftText));
+            set => SetString(nameof(SLeftText), value);
+        }
+
+        public int? SrRightText
+        {
+            get => GetInt(nameof(SrRightText));
+            set => SetInt(nameof(SrRightText), value);
+        }
+
+        public string? SRightText
+        {
+            get => GetString(nameof(SRightText));
+            set => SetString(nameof(SRightText), value);
+        }
+
         public string? SubMenuClassName
         {
             get => GetString(nameof(SubMenuClassName));

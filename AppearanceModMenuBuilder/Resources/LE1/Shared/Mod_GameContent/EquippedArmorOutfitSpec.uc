@@ -3,7 +3,6 @@ Class EquippedArmorOutfitSpec extends NonOverriddenVanillaOutfitSpec;
 public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds, out pawnAppearance appearance)
 {
     local AMM_Pawn_Parameters params;
-    local BioWorldInfo BWI;
     local BioPawn partyMember;
     local OutfitSpecBase delegateSpec;
     local int armorType;
@@ -11,7 +10,6 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
     local int materialVariant;
 	local AppearanceMeshPaths meshPaths;
 	local array<string> meshMaterialPaths;
-	local eHelmetDisplayState helmetDisplayState;
     local BIoPawnType pawnType;
 
 	// updater = class'AMM_AppearanceUpdater'.static.GetDlcInstance();
@@ -64,16 +62,12 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
 		return false;
 	}
 	
-	// get whether we should display the helmet based on a variety of factors
-	helmetDisplayState = class'AMM_Utilities'.static.GetHelmetDisplayState(appearanceIds, target);
-	if (helmetDisplayState != eHelmetDisplayState.off)
-	{
-        if (appearanceIds.helmetAppearanceId == 0 || appearanceIds.helmetAppearanceId == -1)
-        {
-            appearanceIds.helmetAppearanceId = -3;
-        }
-		specLists.helmetSpecs.DelegateToHelmetSpec(target, specLists, appearanceIds, appearance);
-	}
+    if (appearanceIds.helmetAppearanceId == 0 || appearanceIds.helmetAppearanceId == -1)
+    {
+        appearanceIds.helmetAppearanceId = -3;
+    }
+    specLists.helmetSpecs.DelegateToHelmetSpec(target, specLists, appearanceIds, appearance);
+
 	return true;
 }
 

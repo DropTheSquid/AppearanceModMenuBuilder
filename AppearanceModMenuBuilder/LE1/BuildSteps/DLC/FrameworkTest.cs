@@ -155,19 +155,17 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             var pawnParamsConfig = new ModConfigClass($"AMM_{uniqueName}.AMM_Pawn_Parameters_{uniqueName}", "BioGame.ini");
             pawnParamsConfig.SetStringValue("Tag", uniqueName);
 
-            foreach (var altTag in altTags)
-            {
-                //if (altTag != tag)
-                //{
-                    pawnParamsConfig.AddArrayEntries("alternateTags", altTag);
-                //}
-            }
+            pawnParamsConfig.AddArrayEntries("alternateTags", altTags);
 
             ConfigMergeFile.AddOrMergeClassConfig(pawnParamsConfig);
 
             // add the pawn params into the master list
             var paramLoaderCoalescValue = new StructCoalesceValue() { { "parameterPath", new StringCoalesceValue($"AMM_{uniqueName}.AMM_Pawn_Parameters_{uniqueName}") } }.OutputValue();
             PawnParamHandlerConfig.AddEntry(new CoalesceProperty("pawnParamSpecs", new CoalesceValue(paramLoaderCoalescValue, CoalesceParseAction.AddUnique)));
+
+            //var paramLoader = new StructCoalesceValue();
+            //paramLoader.SetString("parameterPath", $"AMM_{uniqueName}.AMM_Pawn_Parameters_{uniqueName}");
+            //PawnParamHandlerConfig.AddEntry(new CoalesceProperty("pawnParamSpecs", ((ModBuilderCoalesceValue)paramLoader).ToCoalesceValue()));
 
             // inner menu
             var submenuConfig = new AppearanceSubmenu($"AMM_{uniqueName}.AppearanceSubmenu_{uniqueName}")

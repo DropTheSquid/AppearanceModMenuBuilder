@@ -64,14 +64,13 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             MakeCommonSubmenus(submenuPackageFile, configMergeFile);
 
-            var squadMembers = MakeSquadmateSubmenus();
+            var squadMembers = MakeSquadmateSubmenus(characterSelectMenu);
 
             // go through each and add the relevant entries
             foreach (var member in squadMembers)
             {
                 member.ModifyPackage(submenuPackageFile);
                 classes.AddRange(member.Classes);
-                characterSelectMenu.AddMenuEntry(member.GetMenuEntryPoint());
                 foreach (var config in member.Submenus)
                 {
                     configMergeFile.AddOrMergeClassConfig(config);
@@ -185,75 +184,117 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_Headgear_NonArmor", [bodyType, "NonArmor"]));
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_Breather", [bodyType]));
 
-                // there should always be a default outfit option as long as this is not a combat appearance
-                menus.NonArmor?.AddMenuEntry(new AppearanceItemData()
+                // there should always be a default outfit option at the top and root of the casual menu
+                menus.Casual.AddMenuEntry(new AppearanceItemData()
                 {
                     // "Default outfit"
                     SrCenterText = 210210283,
                     ApplyOutfitId = -1,
-                    // for any appearance type besides combat
-                    ANotApplicableAppearanceTypes = ["Combat"]
                 });
 
+                string[]? player = null;
+                string[]? henches = null;
+                string[]? squad = null;
+
+                switch (bodyType)
+                {
+                    case "HumanFemale":
+                        henches = ["Hench_HumanFemale"];
+                        player = ["Human_Female"];
+                        squad = [..henches, ..player];
+                        break;
+                    case "HumanMale":
+                        henches = ["Hench_HumanMale", "Hench_Jenkins"];
+                        player = ["Human_Male"];
+                        squad = [.. henches, .. player];
+                        break;
+                    case "Asari":
+                        henches = ["Hench_Asari"];
+                        squad = henches;
+                        break;
+                    case "Turian":
+                        henches = ["Hench_Turian"];
+                        squad = henches;
+                        break;
+                    case "Quarian":
+                        henches = ["Hench_Quarian"];
+                        squad = henches;
+                        break;
+                    case "Krogan":
+                        henches = ["Hench_Krogan"];
+                        squad = henches;
+                        break;
+                    case "Salarian":
+                        break;
+                    default:
+                        throw new Exception("unknown body type bodyType");
+                }
+
                 // for anyone who is not squad, add a default outfit entry for combat
-                menus.Armor.AddMenuEntry(new AppearanceItemData()
+                menus.Combat.AddMenuEntry(new AppearanceItemData()
                 {
                     // "Default outfit"
                     SrCenterText = 210210283,
                     ApplyOutfitId = -1,
                     // anyone but squadmates
-                    ANotApplicableCharacters = ["Human_Male", "Human_Female", "Hench_HumanMale", "Hench_HumanFemale", "Hench_Turian", "Hench_Quarian", "Hench_Turian", "Hench_Krogan", "Hench_Asari", "Hench_Jenkins"],
-                    // only for the combat submenu
-                    AApplicableAppearanceTypes = ["Combat"]
+                    ANotApplicableCharacters = squad,
+                    Comment = "Default outfit entry for anyone not in the squad"
                 });
+                
+                if (henches != null)
+                {
+                    // for non shep squad, show either "Default Outfit" or "Equipped Armor" depending on the setting
+                    menus.Combat.AddMenuEntry(new AppearanceItemData()
+                    {
+                        // "Default outfit"
+                        SrCenterText = 210210283,
+                        ApplyOutfitId = -1,
+                        DisplayInt = new(1601, 0),
+                        // only for henches
+                        AApplicableCharacters = henches,
+                        Comment = "Default outfit entry for henchmen when the setting to have them wear their equipped armor is off"
+                    });
+                    menus.Combat.AddMenuEntry(new AppearanceItemData()
+                    {
+                        // "Equipped Armor"
+                        SrCenterText = 210210296,
+                        ApplyOutfitId = -1,
+                        DisplayInt = new(1601, 1),
+                        // only for henches
+                        AApplicableCharacters = henches,
+                        Comment = "Equipped Armor entry for henchmen when the setting to have them wear their equipped armor is on"
+                    });
+                }
+                if (player != null)
+                {
+                    // for Shep, always show Equipped Armor
+                    menus.Combat.AddMenuEntry(new AppearanceItemData()
+                    {
+                        // "Equipped Armor"
+                        SrCenterText = 210210296,
+                        ApplyOutfitId = -1,
+                        // only for shep
+                        AApplicableCharacters = player,
+                        Comment = "Shepard always gets an 'Equipped Armor' entry"
+                    });
+                }
 
-                // for squadmates under the combat appearance type, show either "Default Outfit" or "Equipped Armor"
-                menus.Armor.AddMenuEntry(new AppearanceItemData()
+                if (squad != null)
                 {
-                    // "Default outfit"
-                    SrCenterText = 210210283,
-                    ApplyOutfitId = -1,
-                    DisplayInt = new(1601, 0),
-                    // only for non shep squadmates
-                    AApplicableCharacters = ["Hench_HumanMale", "Hench_HumanFemale", "Hench_Turian", "Hench_Quarian", "Hench_Turian", "Hench_Krogan", "Hench_Asari", "Hench_Jenkins"],
-                    // only for the combat submenu
-                    AApplicableAppearanceTypes = ["Combat"]
-                });
-                menus.Armor.AddMenuEntry(new AppearanceItemData()
-                {
-                    // "Equipped Armor"
-                    SrCenterText = 210210296,
-                    ApplyOutfitId = -1,
-                    DisplayInt = new(1601, 1),
-                    // only for non shep squadmates
-                    AApplicableCharacters = ["Hench_HumanMale", "Hench_HumanFemale", "Hench_Turian", "Hench_Quarian", "Hench_Turian", "Hench_Krogan", "Hench_Asari", "Hench_Jenkins"],
-                    // only for the combat submenu
-                    AApplicableAppearanceTypes = ["Combat"]
-                });
-                // for shep under combat menu, always show equipped armor
-                menus.Armor.AddMenuEntry(new AppearanceItemData()
-                {
-                    // "Equipped Armor"
-                    SrCenterText = 210210296,
-                    ApplyOutfitId = -1,
-                    // only for shep
-                    AApplicableCharacters = ["Human_Male", "Human_Female"],
-                    // only for the combat submenu
-                    AApplicableAppearanceTypes = ["Combat"]
-                });
-
-                // for whole squad, when accessing armor menu under casual, add Equipped Armor option that forces equipped armor
-                menus.Armor.AddMenuEntry(new AppearanceItemData()
-                {
-                    // "Equipped Armor"
-                    SrCenterText = 210210296,
-                    // force equipped armor
-                    ApplyOutfitId = -2,
-                    // restrict this to entire squad
-                    AApplicableCharacters = ["Human_Male", "Human_Female", "Hench_HumanMale", "Hench_HumanFemale", "Hench_Turian", "Hench_Quarian", "Hench_Turian", "Hench_Krogan", "Hench_Asari", "Hench_Jenkins"],
-                    // only for the casual and romance submenus
-                    ANotApplicableAppearanceTypes = ["Combat"]
-                });
+                    // for whole squad, when accessing armor menu under casual, add Equipped Armor option that forces equipped armor
+                    menus.Armor.AddMenuEntry(new AppearanceItemData()
+                    {
+                        // "Equipped Armor"
+                        SrCenterText = 210210296,
+                        // force equipped armor
+                        ApplyOutfitId = -2,
+                        // restrict this to entire squad
+                        AApplicableCharacters = squad,
+                        // only for the casual and romance submenus
+                        ANotApplicableAppearanceTypes = ["Combat"],
+                        Comment = "Equipped Armor entry for the whole squad within the armor menu in any appearance type besides combat"
+                    });
+                }
 
                 if (menus.NonArmor != null && menus.NonArmorHeadgear != null)
                 {
@@ -309,54 +350,17 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     SrCenterText = 174743,
                     ApplyHelmetId = -2,
                     // show only if Ignore Forced Helmets is on
-                    DisplayInt = new(1593, 1)
+                    DisplayInt = new(1593, 1),
+                    Comment = "Forced no helmet option, only visible if ignore forced helmets is off"
                 });
 
-                // for anyone who is not squad, add a default helmet entry
+                // always add an entry to reset to the default helmet that matches the outfit
                 menus.ArmorHeadgear.AddMenuEntry(new AppearanceItemData()
                 {
-                    // "Default Helmet"
+                    // "Default Helmet Matching outfit"
                     SrCenterText = 210210284,
                     ApplyHelmetId = -1,
-                    // anyone but squadmates
-                    ANotApplicableCharacters = ["Human_Male", "Human_Female", "Hench_HumanMale", "Hench_HumanFemale", "Hench_Turian", "Hench_Quarian", "Hench_Turian", "Hench_Krogan", "Hench_Asari", "Hench_Jenkins"],
-                    // only for the combat submenu
-                    AApplicableAppearanceTypes = ["Combat"]
-                });
-
-                // for squadmates under the combat appearance type, show either "Default Outfit" or "Equipped Armor"
-                menus.ArmorHeadgear.AddMenuEntry(new AppearanceItemData()
-                {
-                    // "Default Helmet"
-                    SrCenterText = 210210284,
-                    ApplyHelmetId = -1,
-                    DisplayInt = new(1601, 0),
-                    // only for non shep squadmates
-                    AApplicableCharacters = ["Hench_HumanMale", "Hench_HumanFemale", "Hench_Turian", "Hench_Quarian", "Hench_Turian", "Hench_Krogan", "Hench_Asari", "Hench_Jenkins"],
-                    // only for the combat submenu
-                    AApplicableAppearanceTypes = ["Combat"]
-                });
-                menus.ArmorHeadgear.AddMenuEntry(new AppearanceItemData()
-                {
-                    // "Equipped Helmet"
-                    SrCenterText = 210210297,
-                    ApplyHelmetId = -1,
-                    DisplayInt = new(1601, 1),
-                    // only for non shep squadmates
-                    AApplicableCharacters = ["Hench_HumanMale", "Hench_HumanFemale", "Hench_Turian", "Hench_Quarian", "Hench_Turian", "Hench_Krogan", "Hench_Asari", "Hench_Jenkins"],
-                    // only for the combat submenu
-                    AApplicableAppearanceTypes = ["Combat"]
-                });
-                // for shep under combat menu, always show equipped armor
-                menus.ArmorHeadgear.AddMenuEntry(new AppearanceItemData()
-                {
-                    // "Equipped Helmet"
-                    SrCenterText = 210210297,
-                    ApplyHelmetId = -1,
-                    // only for shep
-                    AApplicableCharacters = ["Human_Male", "Human_Female"],
-                    // only for the combat submenu
-                    AApplicableAppearanceTypes = ["Combat"]
+                    Comment = "always present Default Helmet option"
                 });
 
                 // for whole squad, when accessing armor menu under casual, add Equipped Armor option that forces equipped armor
@@ -367,31 +371,36 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     // force equipped helmet
                     ApplyHelmetId = -3,
                     // restrict this to entire squad
-                    AApplicableCharacters = ["Human_Male", "Human_Female", "Hench_HumanMale", "Hench_HumanFemale", "Hench_Turian", "Hench_Quarian", "Hench_Turian", "Hench_Krogan", "Hench_Asari", "Hench_Jenkins"],
+                    AApplicableCharacters = squad,
                     // only for the casual and romance submenus
-                    ANotApplicableAppearanceTypes = ["Combat"]
+                    ANotApplicableAppearanceTypes = ["Combat"],
+                    Comment = "Equipped Armor helmet entry for the whole squad within the helmet menu in any appearance type besides combat"
                 });
-                // TODO also add a default helmet if the above is showing so they can go back to none/matching their armor
 
                 menus.ArmorHeadgear.AddMenuEntry(menus.Breather.GetEntryPoint(210210244, hideIfBreatherSuppressed: true));
 
                 // "Breather"
                 menus.Breather.SrSubtitle = 210210244;
                 menus.Breather.MenuHelmetOverride = AppearanceItemData.EMenuHelmetOverride.Full;
+
+                menus.Breather.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "None"
+                    SrCenterText = 174743,
+                    ApplyBreatherId = -2,
+                    // show only if Ignore Forced Helmets is on
+                    DisplayInt = new(1593, 1),
+                    Comment = "Forced no breather entry, only visible if ignore forced helmets is on"
+                });
+
                 menus.Breather.AddMenuEntry(new AppearanceItemData()
                 {
                     // "Default Breather"
                     SrCenterText = 210210285,
-                    ApplyBreatherId = -1
+                    ApplyBreatherId = -1,
+                    Comment = "Always present default breather option"
                 });
 
-                // TODO enable this if force helmet is ignored
-                //menus.Breather.AddMenuEntry(new AppearanceItemData()
-                //{
-                //    // "None"
-                //    SrCenterText = 174743,
-                //    ApplyBreatherId = -2
-                //});
             }
             SetupMenu("HumanFemale", HumanFemaleOutfitMenus);
             SetupMenu("HumanMale", HumanMaleOutfitMenus);
@@ -557,59 +566,59 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             KroganOutfitMenus.NonArmor!.AddMenuEntry(KroganOutfitMenus.CasualOutfitMenus[0].GetInlineEntryPoint());
         }
 
-        private List<SquadMemberSubmenus> MakeSquadmateSubmenus()
+        private List<SquadMemberSubmenus> MakeSquadmateSubmenus(AppearanceSubmenu characterSelect)
         {
             List<SquadMemberSubmenus> squadMembers = [];
 
-            squadMembers.Add(new SquadMemberSubmenus("FemaleShepard", 210210218, "Player", HumanFemaleOutfitMenus)
+            squadMembers.Add(new SquadMemberSubmenus("FemaleShepard", 210210218, "Player", HumanFemaleOutfitMenus, characterSelect)
             {
                 RomanceConditional = 2506,
                 // true only if player is female
                 DisplayConditional = 144
             });
-            squadMembers.Add(new SquadMemberSubmenus("MaleShepard", 210210218, "Player", HumanMaleOutfitMenus)
+            squadMembers.Add(new SquadMemberSubmenus("MaleShepard", 210210218, "Player", HumanMaleOutfitMenus, characterSelect)
             {
                 RomanceConditional = 2506,
                 // true only if player is male
                 DisplayConditional = 143
             });
-            squadMembers.Add(new SquadMemberSubmenus("Kaidan", 166121, "Hench_HumanMale", HumanMaleOutfitMenus)
+            squadMembers.Add(new SquadMemberSubmenus("Kaidan", 166121, "Hench_HumanMale", HumanMaleOutfitMenus, characterSelect)
             {
                 RomanceConditional = 2508,
                 // True as long as Kaidan is alive
                 DisplayConditional = 2500
             });
-            squadMembers.Add(new SquadMemberSubmenus("Ashley", 163457, "Hench_HumanFemale", HumanFemaleOutfitMenus)
+            squadMembers.Add(new SquadMemberSubmenus("Ashley", 163457, "Hench_HumanFemale", HumanFemaleOutfitMenus, characterSelect)
             {
                 RomanceConditional = 2509,
                 // true as long as Ashley is alive and (in party or pre recruitment enabled)
                 DisplayConditional = 2501,
                 RecruitedBool = 3940
             });
-            squadMembers.Add(new SquadMemberSubmenus("Liara", 172365, "Hench_Asari", AsariOutfitMenus)
+            squadMembers.Add(new SquadMemberSubmenus("Liara", 172365, "Hench_Asari", AsariOutfitMenus, characterSelect)
             {
                 RomanceConditional = 2507,
                 // True as long as pre recruitment is enabled or Liara is in party
                 DisplayConditional = 2505,
                 LiaraSpecialHandling = true
             });
-            squadMembers.Add(new SquadMemberSubmenus("Garrus", 125308, "Hench_Turian", TurianOutfitMenus)
+            squadMembers.Add(new SquadMemberSubmenus("Garrus", 125308, "Hench_Turian", TurianOutfitMenus, characterSelect)
             {
                 // true as long as Garrus is recruited or (pre recruitment enabled && haven't missed the chance to recruit)
                 DisplayConditional = 2503,
                 RecruitedBool = 3941
             });
-            squadMembers.Add(new SquadMemberSubmenus("Wrex", 125307, "Hench_Krogan", KroganOutfitMenus)
+            squadMembers.Add(new SquadMemberSubmenus("Wrex", 125307, "Hench_Krogan", KroganOutfitMenus, characterSelect)
             {
                 DisplayConditional = 2502,
                 RecruitedBool = 3942
             });
-            squadMembers.Add(new SquadMemberSubmenus("Tali", 146007, "Hench_Quarian", QuarianOutfitMenus)
+            squadMembers.Add(new SquadMemberSubmenus("Tali", 146007, "Hench_Quarian", QuarianOutfitMenus, characterSelect)
             {
                 DisplayConditional = 2504,
                 TaliSpecialHandling = true
             });
-            squadMembers.Add(new SquadMemberSubmenus("Jenkins", 163868, "Hench_Jenkins", HumanMaleOutfitMenus)
+            squadMembers.Add(new SquadMemberSubmenus("Jenkins", 163868, "Hench_Jenkins", HumanMaleOutfitMenus, characterSelect)
             {
                 // this bool will be set to true once Jenkins dies, which will block the menu from showing him from that point forward
                 DisplayBool = -3551

@@ -140,6 +140,11 @@ public function string GetAppearanceType(BioPawn targetPawn)
 	return "";
 }
 
+public function string GetMenuRootPath()
+{
+	return menuRootPath;
+}
+
 // given an appearance type, return what outfit, helmet, and breather should be used, as well as any settings
 public function bool GetAppearanceIds(string appearanceType, out PawnAppearanceIds PawnAppearanceIds)
 {

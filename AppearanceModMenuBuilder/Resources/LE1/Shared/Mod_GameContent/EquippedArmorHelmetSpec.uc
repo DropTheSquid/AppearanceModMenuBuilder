@@ -33,8 +33,6 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
         return delegateSpec.LoadHelmet(target, specLists, appearanceIds, appearance);
     }
 
-    // TODO grab this info from the save file squad record instead, look it up in the 2DA?
-    // might perform better tbh
 
     // get a squad copy of this pawn either from the party or create them temporarily
     if (AMM_Pawn_Parameters_Squad(params).GetPawnFromParty(params.Tag, partyMember))

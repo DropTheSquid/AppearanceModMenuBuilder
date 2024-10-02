@@ -22,7 +22,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
 
         public void AddMenuEntry(AppearanceItemData item)
         {
-            AddArrayEntries("menuItems", item.OutputValue());
+            AddArrayEntries("menuItems", item);
         }
 
         public AppearanceItemData GetEntryPoint(
@@ -65,7 +65,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
         public string? PawnTag
         {
             get => GetStringValue(nameof(PawnTag));
-            set => SetStringValue(nameof(PawnTag), value);
+            set => SetStringValue(nameof(PawnTag), value, "test overall property comment");
         }
 
         public string? PawnAppearanceType
