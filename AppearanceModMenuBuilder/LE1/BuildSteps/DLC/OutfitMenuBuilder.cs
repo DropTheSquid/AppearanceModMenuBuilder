@@ -408,7 +408,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 // "Ashley"
                 SrCenterText = 168842,
                 ApplyBreatherId = -13,
-                // TODO port to male
             });
             humanFemaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
             {
@@ -437,7 +436,12 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 SrCenterText = 125303,
                 ApplyBreatherId = -11
             });
-
+            humanMaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
+            {
+                // "Ashley"
+                SrCenterText = 168842,
+                ApplyBreatherId = -13,
+            });
             humanMaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
             {
                 // "Kaidan"
