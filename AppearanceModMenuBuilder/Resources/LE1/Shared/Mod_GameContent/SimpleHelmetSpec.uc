@@ -17,11 +17,11 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 
 	helmetDisplayState = class'AMM_Utilities'.static.GetHelmetDisplayState(appearanceIds, target);
 
-	LogInternal("doing the helmet spec"@helmetDisplayState@helmetFullHelmetSpec@breatherSpecOverride);
+	// LogInternal("doing the helmet spec"@helmetDisplayState@helmetFullHelmetSpec@breatherSpecOverride);
 	// if they should have a full helmet and this is set to redirect to another helmet in that case, do that. 
 	if (helmetDisplayState == eHelmetDisplayState.full && helmetFullHelmetSpec != 0)
 	{
-		LogInternal("delegating to helmet spec"@helmetFullHelmetSpec);
+		// LogInternal("delegating to helmet spec"@helmetFullHelmetSpec);
 		appearanceIds.helmetAppearanceId = helmetFullHelmetSpec;
 		return specLists.helmetSpecs.DelegateToHelmetSpec(target, specLists, appearanceIds, appearance);
 	}

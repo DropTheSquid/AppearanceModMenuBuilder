@@ -11,8 +11,7 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
 	local AppearanceMeshPaths meshPaths;
 	local array<string> meshMaterialPaths;
     local BIoPawnType pawnType;
-
-	// updater = class'AMM_AppearanceUpdater'.static.GetDlcInstance();
+    local eHelmetDisplayState helmetDisplayState;
 
     if (!class'AMM_AppearanceUpdater'.static.GetPawnParams(target, params))
 	{
@@ -26,6 +25,13 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
         || AMM_Pawn_Parameters_Squad(params).GetPawnFromParty(params.Tag, partyMember) && partyMember == target)
     {
         // LogInternal("EquippedArmorOutfitSpec delegating to NonOverriddenVanillaOutfitSpec");
+        // LogInternal("helmetAppearanceId"@appearanceIds.helmetAppearanceId);
+        // this is important to ensure the equipped helmet is used unless overridden even for player and in party squadmates
+        if (appearanceIds.helmetAppearanceId == 0 || appearanceIds.helmetAppearanceId == -1)
+        {
+            // LogInternal("replacing it with -3 (equipped armor helmet)");
+            appearanceIds.helmetAppearanceId = -3;
+        }
         delegateSpec = new Class'NonOverriddenVanillaOutfitSpec';
         return delegateSpec.LoadOutfit(target, specLists, appearanceIds, appearance);
     }
@@ -61,12 +67,25 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
 	{
 		return false;
 	}
-	
-    if (appearanceIds.helmetAppearanceId == 0 || appearanceIds.helmetAppearanceId == -1)
+
+    // get whether we should display the helmet based on a variety of factors
+	helmetDisplayState = class'AMM_Utilities'.static.GetHelmetDisplayState(appearanceIds, target);
+
+    // this is important to ensure we don't add a helmet if the preference is to not have one
+    if (helmetDisplayState != eHelmetDisplayState.off)
     {
-        appearanceIds.helmetAppearanceId = -3;
+        // this ensures the equipped helmet is used unless overridden
+        if (appearanceIds.helmetAppearanceId == 0 || appearanceIds.helmetAppearanceId == -1)
+        {
+            // LogInternal("replacing it with -3 (equipped armor helmet)");
+            appearanceIds.helmetAppearanceId = -3;
+        }
+        if (!specLists.helmetSpecs.DelegateToHelmetSpec(target, specLists, appearanceIds, appearance))
+        {
+            LogInternal("failed to apply helmet spec");
+            return false;
+        }
     }
-    specLists.helmetSpecs.DelegateToHelmetSpec(target, specLists, appearanceIds, appearance);
 
 	return true;
 }
