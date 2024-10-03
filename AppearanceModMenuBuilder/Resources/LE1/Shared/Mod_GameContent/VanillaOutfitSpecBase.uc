@@ -8,6 +8,7 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
 	local AppearanceMeshPaths meshPaths;
 	local array<string> meshMaterialPaths;
 	local eHelmetDisplayState helmetDisplayState;
+	local HelmetSpecBase delegateSpec;
 
 	// this is for equipping their vanilla outfit
 	// we will determine what outfit it should be based on the pawn's settings and then apply it
@@ -33,7 +34,14 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
 	helmetDisplayState = class'AMM_Utilities'.static.GetHelmetDisplayState(appearanceIds, target);
 	if (helmetDisplayState != eHelmetDisplayState.off)
 	{
-		specLists.helmetSpecs.DelegateToHelmetSpec(target, specLists, appearanceIds, appearance);
+		if ((appearanceIds.helmetAppearanceId == 0 || appearanceIds.helmetAppearanceId == -1) && GetDefaultOverrideHelmetSpec(target, delegateSpec))
+		{
+			delegateSpec.LoadHelmet(target, specLists, appearanceIds, appearance);
+		}
+		else
+		{
+			specLists.helmetSpecs.DelegateToHelmetSpec(target, specLists, appearanceIds, appearance);
+		}
 	}
 	return true;
 }
@@ -89,3 +97,7 @@ protected static function bool GetOutfitStrings(BioPawnType pawnType, int armorT
     return TRUE;
 }
 
+protected function bool GetDefaultOverrideHelmetSpec(BioPawn target, out HelmetSpecBase helmetSpec)
+{
+	return false;
+}

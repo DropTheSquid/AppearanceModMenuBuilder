@@ -11,3 +11,15 @@ protected function bool GetVariant(BioPawn targetPawn, out int iArmorType, out i
     iMaterialVariant = materialVariant;
     return TRUE;
 }
+
+protected function bool GetDefaultOverrideHelmetSpec(BioPawn target, out HelmetSpecBase helmetSpec)
+{
+    local VanillaHelmetByIdSpec delegateSpec;
+
+	delegateSpec = new class'VanillaHelmetByIdSpec';
+    delegateSpec.armorType = armorType;
+    delegateSpec.meshVariant = meshVariant;
+    delegateSpec.materialVariant = materialVariant;
+    helmetSpec = delegateSpec;
+    return true;
+}
