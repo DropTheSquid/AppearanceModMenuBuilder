@@ -16,7 +16,7 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 	local bool hideHair;
 	local bool hideHead;
 
-
+    // LogInternal("EquippedArmorHelmetSpec"@target.tag);
     if (!class'AMM_AppearanceUpdater'.static.GetPawnParams(target, params))
 	{
         LogInternal("EquippedArmorHelmetSpec could not get params");
@@ -28,15 +28,15 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
         || AMM_Pawn_Parameters_Squad(params) == None 
         || AMM_Pawn_Parameters_Squad(params).GetPawnFromParty(params.Tag, partyMember) && partyMember == target)
     {
-        LogInternal("EquippedArmorHelmetSpec delegating to NonOverriddenVanillaHelmetSpec");
+        // LogInternal("EquippedArmorHelmetSpec delegating to NonOverriddenVanillaHelmetSpec");
         delegateSpec = new Class'NonOverriddenVanillaHelmetSpec';
         return delegateSpec.LoadHelmet(target, specLists, appearanceIds, appearance);
     }
 
-
     // get a squad copy of this pawn either from the party or create them temporarily
     if (AMM_Pawn_Parameters_Squad(params).GetPawnFromParty(params.Tag, partyMember))
     {
+        // LogInternal("EquippedArmorHelmetSpec"@"using pawn from party");
         pawnType = class'AMM_Utilities'.static.GetPawnType(partyMember);
         // do the expected GetVariant stuff, but on the partyMember rather than the target
         if (!GetVariant(partyMember, armorType, meshVariant, materialVariant))
@@ -81,7 +81,7 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 	// if the visor is not suppressed, get the visor mesh
 	if (!suppressVisor)
 	{
-		class'AMM_Utilities'.static.GetVanillaVisorMesh(class'AMM_Utilities'.static.GetPawnType(partyMember), appearance.VisorMesh);
+		class'AMM_Utilities'.static.GetVanillaVisorMesh(pawnType, appearance.VisorMesh);
 	}
 
 	// check whether we should display a breather
@@ -94,7 +94,11 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 	// if the breather is not suppressed, delegate to the breather spec
 	if (!suppressBreather)
 	{
-		specLists.breatherSpecs.DelegateToBreatherSpec(target, specLists, appearanceIds, appearance);
+		if (!specLists.breatherSpecs.DelegateToBreatherSpec(target, specLists, appearanceIds, appearance))
+        {
+            LogInternal("failed to apply breather spec");
+            return false;
+        }
 	}
 	
 	return true;
