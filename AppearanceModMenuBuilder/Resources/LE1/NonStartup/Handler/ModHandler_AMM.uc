@@ -712,17 +712,28 @@ private function bool IsItemCurrentlyApplied(AppearanceItemData item, menuState 
     local bool appearanceIdsEffect;
     local bool plotVars;
     local bool appearanceIds;
+    local AppearanceItemData submenuItem;
 
     // if this is a submenu entry point, don't count it as currently applied
     if (item.submenuInstance != None)
     {
-        // TODO investigate going through the submenu items and seeing if any are applied, but we would need to also check whether they should even be visible and this could get expensive. 
-        // if this matches the pawn and appearance type of the current menu (or doesn't change it)
-        // if ((item.submenuInstance.pawnTag == "" || item.submenuInstance.pawnTag == state.pawnTag)
-        //     && (item.submenuInstance.pawnAppearanceType == "" || item.submenuInstance.pawnAppearanceType == state.appearanceTypeOverride))
-        //     {
-        //         // item.submenuInstance
-        //     }
+        // if this menu is not marked as a "do not check" (basically, indicating that it tracks a different single applied than the parent is likely to)
+        // and this matches the pawn and appearance type of the current menu (or doesn't change it)
+        if (!item.submenuInstance.DoNotCheckAppliedInSubmenu 
+            && (item.submenuInstance.pawnTag == "" || item.submenuInstance.pawnTag == state.pawnTag)
+            && (item.submenuInstance.pawnAppearanceType == "" || item.submenuInstance.pawnAppearanceType == state.appearanceTypeOverride))
+        {
+            foreach item.submenuInstance.MenuItems(submenuItem)
+            {
+                if (ShouldItemBeDisplayed(submenuItem, state))
+                {
+                    if (IsItemCurrentlyApplied(submenuItem, state))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
 

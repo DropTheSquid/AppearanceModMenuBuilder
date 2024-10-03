@@ -131,5 +131,11 @@ namespace AppearanceModMenuBuilder.LE1.Models
             get => GetBoolValue(nameof(PreloadPawn));
             set => SetBoolValue(nameof(PreloadPawn), value);
         }
+
+        public bool? DoNotCheckAppliedInSubmenu
+        {
+            get => GetBoolValue(nameof(DoNotCheckAppliedInSubmenu));
+            set => SetBoolValue(nameof(DoNotCheckAppliedInSubmenu), value);
+        }
     }
 }

@@ -96,7 +96,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         {
             SpeciesOutfitMenus GetOrCreateMenus(string bodyType, bool skipNonArmor = false)
             {
-                return new SpeciesOutfitMenus
+                var menus =  new SpeciesOutfitMenus
                 {
                     Casual = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_CasualOutfits", configMergeFile),
                     Combat = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_CombatOutfits", configMergeFile),
@@ -106,6 +106,16 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     NonArmorHeadgear = skipNonArmor ? null : AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_Headgear_NonArmor", configMergeFile),
                     Breather = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_Breather", configMergeFile)
                 };
+
+                // do not check applied through these submenus
+                menus.ArmorHeadgear.DoNotCheckAppliedInSubmenu = true;
+                if (menus.NonArmorHeadgear != null)
+                {
+                    menus.NonArmorHeadgear.DoNotCheckAppliedInSubmenu = true;
+                }
+                menus.Breather.DoNotCheckAppliedInSubmenu = true;
+
+                return menus;
             }
             void AddHumanIshMenus(ref SpeciesOutfitMenus menus, string bodyType)
             {

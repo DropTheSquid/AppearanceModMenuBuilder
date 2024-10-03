@@ -81,6 +81,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 SrTitleWithComment = (210210253, "Character name, newline, Casual"),
                 UseTitleForChildMenus = true,
                 SrSubtitleWithComment = (210210256, "Choose an outfit"),
+                DoNotCheckAppliedInSubmenu = true,
                 Comment = "Do not add items directly to this menu; add them to the species specific outfit menus instead"
             };
 
@@ -97,6 +98,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 SrTitleWithComment = (210210254, "Character name, newline, Combat"),
                 UseTitleForChildMenus = true,
                 SrSubtitleWithComment = (210210256, "Choose an outfit"),
+                DoNotCheckAppliedInSubmenu = true,
                 Comment = "Do not add items directly to this menu; add them to the species specific outfit menus instead"
             };
 
@@ -200,6 +202,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
                     SrTitleWithComment = (210210255, "Character name, newline, Romance"),
                     UseTitleForChildMenus = true,
                     SrSubtitleWithComment = (210210256, "Choose an outfit"),
+                    DoNotCheckAppliedInSubmenu = true,
                     Comment = "Do not add items directly to this menu; add them to the species specific outfit menus instead"
                 };
                 // add this menu into the root character menu
