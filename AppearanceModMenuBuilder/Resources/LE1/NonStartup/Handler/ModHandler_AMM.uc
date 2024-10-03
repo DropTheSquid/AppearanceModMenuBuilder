@@ -725,6 +725,7 @@ private function bool IsItemCurrentlyApplied(AppearanceItemData item, menuState 
         {
             foreach item.submenuInstance.MenuItems(submenuItem)
             {
+                submenuItem.submenuInstance = GetSubmenuFromItem(submenuItem);
                 if (ShouldItemBeDisplayed(submenuItem, state))
                 {
                     if (IsItemCurrentlyApplied(submenuItem, state))
