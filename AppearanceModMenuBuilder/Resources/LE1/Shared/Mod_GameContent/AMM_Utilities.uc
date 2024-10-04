@@ -948,8 +948,8 @@ private static function bool GetMenuHelmetOverride(BioPawn target, eHelmetDispla
 
 	switch (menuOverride)
 	{
-		// it is forced to a specific state
 		case eMenuHelmetOverride.off:
+            // it is forced to a specific state
 			result = eHelmetDisplayState.off;
 			return true;
 		case eMenuHelmetOverride.on:
