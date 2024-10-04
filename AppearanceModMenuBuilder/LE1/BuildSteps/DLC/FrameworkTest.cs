@@ -23,7 +23,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
         public void RunModTask(ModBuilderContext context)
         {
             // disabled because I do not need to run this every time
-            //return;
+            return;
 
             Console.WriteLine("generating framework test content");
 
