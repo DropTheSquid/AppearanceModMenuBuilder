@@ -145,7 +145,7 @@ public function string GetMenuRootPath()
 	return menuRootPath;
 }
 
-public function OutfitSpecBase GetOverrideDefaultSpec(BioPawn target)
+public function Object GetOverrideDefaultSpec(BioPawn target)
 {
 	return None;
 }
