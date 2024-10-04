@@ -414,7 +414,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 // "Liara"
                 SrCenterText = 149285,
                 ApplyBreatherId = -12,
-                // TODO port to male
             });
             humanFemaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
             {
@@ -435,6 +434,12 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 // "Shepard"
                 SrCenterText = 125303,
                 ApplyBreatherId = -11
+            });
+            humanMaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
+            {
+                // "Liara"
+                SrCenterText = 149285,
+                ApplyBreatherId = -12,
             });
             humanMaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
             {
