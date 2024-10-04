@@ -461,6 +461,11 @@ public function SetCustomTokens(AppearanceItemData item)
     {
         SetCustomToken(tokenIndex, GetDisplayVar(tempString));
     }
+    // go through it twice so earlier tokens can reference later ones if needed
+    foreach item.displayVars(tempString, tokenIndex)
+    {
+        SetCustomToken(tokenIndex, GetDisplayVar(tempString));
+    }
 }
 public function sortDisplayItems()
 {

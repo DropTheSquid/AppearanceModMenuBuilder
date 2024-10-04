@@ -396,101 +396,50 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             var (humanFemaleOutfitMenus, humanMaleOutfitMenus, asariOutfitMenus, turianOutfitMenus, _, _, _) = InitCommonMenus(configMergeFile);
 
-            // hmf breathers
-            humanFemaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
+            static void HumanIshCommonBreathers(SpeciesOutfitMenus menu)
             {
-                // "Shepard"
-                SrCenterText = 125303,
-                ApplyBreatherId = -11
-            });
-            humanFemaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
-            {
-                // "Ashley"
-                SrCenterText = 168842,
-                ApplyBreatherId = -13,
-            });
-            humanFemaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
-            {
-                // "Liara"
-                SrCenterText = 149285,
-                ApplyBreatherId = -12,
-            });
-            humanFemaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
-            {
-                // "Kaidan"
-                SrCenterText = 151316,
-                ApplyBreatherId = -14,
-            });
-            humanFemaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
-            {
-                // "NPC"
-                SrCenterText = 210210245,
-                ApplyBreatherId = -15,
-            });
-
-            // hmm breathers
-            humanMaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
-            {
-                // "Shepard"
-                SrCenterText = 125303,
-                ApplyBreatherId = -11
-            });
-            humanMaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
-            {
-                // "Liara"
-                SrCenterText = 149285,
-                ApplyBreatherId = -12,
-            });
-            humanMaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
-            {
-                // "Ashley"
-                SrCenterText = 168842,
-                ApplyBreatherId = -13,
-            });
-            humanMaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
-            {
-                // "Kaidan"
-                SrCenterText = 151316,
-                ApplyBreatherId = -14,
-            });
-            humanMaleOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
-            {
-                // "NPC"
-                SrCenterText = 210210245,
-                ApplyBreatherId = -15,
-            });
-
-            // asa breathers
-            asariOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
-            {
-                // "Shepard"
-                SrCenterText = 125303,
-                ApplyBreatherId = -11
-            });
-            asariOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
-            {
-                // "Ashley"
-                SrCenterText = 168842,
-                ApplyBreatherId = -13,
-            });
-            asariOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
-            {
-                // "Liara"
-                SrCenterText = 149285,
-                ApplyBreatherId = -12,
-            });
-            asariOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
-            {
-                // "Kaidan"
-                SrCenterText = 151316,
-                ApplyBreatherId = -14,
-            });
-            asariOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
-            {
-                // "NPC"
-                SrCenterText = 210210245,
-                ApplyBreatherId = -15,
-            });
+                menu.Breather.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "Shepard"
+                    SrCenterText = 125303,
+                    ApplyBreatherId = -11
+                });
+                menu.Breather.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "Ashley"
+                    SrCenterText = 168842,
+                    ApplyBreatherId = -13,
+                });
+                menu.Breather.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "Liara"
+                    SrCenterText = 149285,
+                    ApplyBreatherId = -12,
+                });
+                menu.Breather.AddMenuEntry(new AppearanceItemData()
+                {
+                    // will resolve to "Liara - Light Variant"
+                    SrCenterText = 210210307,
+                    ApplyBreatherId = -16,
+                    DisplayVars = ["$149285"]
+                });
+                menu.Breather.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "Kaidan"
+                    SrCenterText = 151316,
+                    ApplyBreatherId = -14,
+                });
+                menu.Breather.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "NPC"
+                    SrCenterText = 210210245,
+                    ApplyBreatherId = -15,
+                });
+            }
+            // common breathers for human/Asari bodytypes
+            HumanIshCommonBreathers(humanFemaleOutfitMenus);
+            HumanIshCommonBreathers(humanMaleOutfitMenus);
+            HumanIshCommonBreathers(asariOutfitMenus);
 
             // default Turian LGT and HVY breather
             turianOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
@@ -592,18 +541,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                         submenu.ArmorHeadgear.AddMenuEntry(
                             GetHelmetMenuEntry(EArmorType.LGT, variant.LGT.AmmAppearanceId)
                         );
-                        if (armorSet.Label == "Manf_Kassa_Armor_Colossus" && humanoid)
-                        {
-                            submenu.ArmorHeadgear.AddMenuEntry(
-                                new AppearanceItemData()
-                                {
-                                    // "<ArmorName> - <Weight>"
-                                    SrCenterText = 210210236,
-                                    ApplyHelmetId = 62,
-                                    DisplayVars = [$"${srColossusClassic}", $"${GetArmorTypeStringRef(EArmorType.LGT)}"]
-                                }
-                            );
-                        }
                     }
                 }
                 if (variant.MED != null)
@@ -616,18 +553,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                         submenu.ArmorHeadgear.AddMenuEntry(
                             GetHelmetMenuEntry(EArmorType.MED, variant.MED.AmmAppearanceId)
                         );
-                        if (armorSet.Label == "Manf_Kassa_Armor_Colossus" && humanoid)
-                        {
-                            submenu.ArmorHeadgear.AddMenuEntry(
-                                new AppearanceItemData()
-                                {
-                                    // "<ArmorName> - <Weight>"
-                                    SrCenterText = 210210236,
-                                    ApplyHelmetId = 63,
-                                    DisplayVars = [$"${srColossusClassic}", $"${GetArmorTypeStringRef(EArmorType.MED)}"]
-                                }
-                            );
-                        }
                     }
                 }
                 if (variant.HVY != null)
@@ -640,18 +565,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                         submenu.ArmorHeadgear.AddMenuEntry(
                             GetHelmetMenuEntry(EArmorType.HVY, variant.HVY.AmmAppearanceId)
                         );
-                        if (armorSet.Label == "Manf_Kassa_Armor_Colossus" && humanoid)
-                        {
-                            submenu.ArmorHeadgear.AddMenuEntry(
-                                new AppearanceItemData()
-                                {
-                                    // "<ArmorName> - <Weight>"
-                                    SrCenterText = 210210236,
-                                    ApplyHelmetId = 64,
-                                    DisplayVars = [$"${srColossusClassic}", $"${GetArmorTypeStringRef(EArmorType.HVY)}"]
-                                }
-                            );
-                        }
                     }
                 }
                 if (variant.AllWeights != null)
@@ -665,6 +578,68 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                             GetHelmetMenuEntry(EArmorType.All, variant.AllWeights.AmmAppearanceId)
                         );
                     }
+                }
+                // add colossus classic entries
+                if (armorSet.Label == "Manf_Kassa_Armor_Colossus" && humanoid)
+                {
+                    if (!skipHelmets)
+                    {
+                        submenu.ArmorHeadgear.AddMenuEntry(
+                            new AppearanceItemData()
+                            {
+                                // "<ArmorName> - Classic - <Weight>"
+                                SrCenterText = 210210236,
+                                ApplyHelmetId = 62,
+                                DisplayVars = [$"${srColossusClassic}", $"${GetArmorTypeStringRef(EArmorType.LGT)}", $"${armorSet.SrArmorName}"]
+                            }
+                        );
+                        submenu.ArmorHeadgear.AddMenuEntry(
+                            new AppearanceItemData()
+                            {
+                                // "<ArmorName> - Classic - <Weight>"
+                                SrCenterText = 210210236,
+                                ApplyHelmetId = 63,
+                                DisplayVars = [$"${srColossusClassic}", $"${GetArmorTypeStringRef(EArmorType.MED)}", $"${armorSet.SrArmorName}"]
+                            }
+                        );
+                        submenu.ArmorHeadgear.AddMenuEntry(
+                            new AppearanceItemData()
+                            {
+                                // "<ArmorName> - Classic - <Weight>"
+                                SrCenterText = 210210236,
+                                ApplyHelmetId = 64,
+                                DisplayVars = [$"${srColossusClassic}", $"${GetArmorTypeStringRef(EArmorType.HVY)}", $"${armorSet.SrArmorName}"]
+                            }
+                        );
+                    }
+                    submenu.Armor.AddMenuEntry(
+                        new AppearanceItemData()
+                        {
+                            // "<ArmorName> - Classic - <Weight>"
+                            SrCenterText = 210210236,
+                            ApplyOutfitId = 62,
+                            DisplayVars = [$"${srColossusClassic}", $"${GetArmorTypeStringRef(EArmorType.LGT)}", $"${armorSet.SrArmorName}"]
+                        }
+                    );
+                    submenu.Armor.AddMenuEntry(
+                        new AppearanceItemData()
+                        {
+                            // "<ArmorName> - Classic - <Weight>"
+                            SrCenterText = 210210236,
+                            ApplyOutfitId = 63,
+                            DisplayVars = [$"${srColossusClassic}", $"${GetArmorTypeStringRef(EArmorType.MED)}", $"${armorSet.SrArmorName}"]
+                        }
+                    );
+                    submenu.Armor.AddMenuEntry(
+                        new AppearanceItemData()
+                        {
+                            // "<ArmorName> - Classic - <Weight>"
+                            SrCenterText = 210210236,
+                            ApplyOutfitId = 64,
+                            DisplayVars = [$"${srColossusClassic}", $"${GetArmorTypeStringRef(EArmorType.HVY)}", $"${armorSet.SrArmorName}"]
+                        }
+                    );
+                    
                 }
             }
         }

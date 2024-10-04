@@ -1,5 +1,6 @@
 ﻿using AppearanceModMenuBuilder.LE1.Models;
 using AppearanceModMenuBuilder.LE1.UScriptModels;
+using LegendaryExplorerCore.Gammtek.Dynamic;
 using MassEffectModBuilder;
 using MassEffectModBuilder.DLCTasks;
 using MassEffectModBuilder.Models;
@@ -127,26 +128,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             ];
             helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs);
 
-
-            /*
-             * Planned stuff based on previous build
-            ; -10 and on are breathers not matched to a specific outfit, which is the vanilla player and squadmate behavior
-            +breatherSpecs=(Id=-15, Mesh="BIOG_AMM_HMF_HGR.BRT.HVYa.HMF_BRT_HVYa_MDL", Materials=("BIOG_AMM_HMF_HGR.BRT.HVYa.HMF_BRT_HVYa_MAT_Default"),  suppressVisor=true, comment="NPC faceplate in black.Gray to match any outfit")
-            ; TODO port this one to female height
-            ; +breatherSpecs=(Id=-14, Mesh="BIOG_AMM_HMM_HGR.BRT.MEDb.HMM_BRTb_MED_MDL", Materials=("BIOG_AMM_HMM_HGR.BRT.MEDb.HMM_BRT_MEDb_Mat_1a", "BIOG_AMM_HMM_HGR.BRT.MEDb.HMM_BRTb_MED_MAT_2a"), suppressVisor=true, comment="Kaidan faceplate")
-            +breatherSpecs=(Id=-13, Mesh="BIOG_AMM_HMF_HGR.BRT.LGT.HMF_BRT_LGT_MDL", Materials=("BIOG_AMM_HMF_HGR.BRT.LGT.HMF_HGR_LGTa_BRT_MAT_1a"), comment="Ashley faceplate")
-            +breatherSpecs=(Id=-12, Mesh="BIOG_AMM_HMF_HGR.BRT.MED.HMF_BRT_MEDa_MDL", Materials=("BIOG_AMM_HMF_HGR.BRT.MED.HMF_BRT_MEDa_MAT_1a"), comment="Liara faceplate")
-            +breatherSpecs=(Id=-11, Mesh="BIOG_AMM_HMF_HGR.BRT.HVYb.HMF_BRT_HVYb_MDL", Materials=("BIOG_AMM_HMF_HGR.BRT.HVYb.HMF_BRT_HVY_MAT_1a"), comment="Shepard faceplate")
-            +breatherSpecs=(Id=-10,specPath="AMM_BreatherSpec.NPCFaceplateBreatherSpec", comment="NPC faceplate spec; will look for a helmet with an id matching the armor id and use that if it exists. Otherwise fall back to vanilla faceplate")
-            ; 0 to -9 are special cases with specific behavior, reserved and not species specific
-            +breatherSpecs=(Id=-3,specPath="AMM_BreatherSpec.DefaultBreatherSpec", comment="determined by pawn params, with fallback to true vanilla if value is invalid")
-            +breatherSpecs=(Id=-2,specPath="AMM_BreatherSpec.NoBreatherSpec",      comment="no faceplate (even in no atmosphere)")
-            +breatherSpecs=(Id=-1,specPath="AMM_BreatherSpec.VanillaBreatherSpec", comment="same as 0")
-            +breatherSpecs=(Id=0, specPath="AMM_BreatherSpec.VanillaBreatherSpec", comment="vanilla behavior, determined by vanilla appearance system, can be overridden by older style mods")
-             * Then the positive numbers are id matched NPC full face plates matched to the colors of the armor
-             */
             specialSpecs = [
                 //; -10 and on are breathers not matched to a specific outfit, which is the vanilla player and squadmate behavior
+                // -16 is Liara's (light variant with textures from unused model)
+                new SimpleBreatherSpecItem(-16, "BIOG_HMF_BRT_AMM.Liara.HMF_BRT_Liara_MDL", ["BIOG_HMM_BRT_AMM.Liara.HMM_BRT_Liara_MAT_2a"]),
                 // -15 is the NPC faceplate (TODO match colors better; I'm thinking at least a neutral black/gray)
                 new SimpleBreatherSpecItem(-15, "BIOG_HMF_BRT_AMM.NPC.HMF_BRT_NPC_MDL", ["BIOG_HMF_BRT_AMM.NPC.HMF_BRT_NPC_MAT_1a"])
                 {
@@ -214,26 +199,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // needed to clone this as there was no ASA HVYb mesh or material. mesh cloned from HVYa, material cloned from HMF HVYb mat
             AddVanillaHelmetSpecs(helmetConfig, 61, helmetFileName, OutfitType.HVY, 1, helmetType, 1, 1, visorMesh, hideHair: true);
 
-            // manually add OT material params colossus that has the red stripe instead of solid grey like it is in LE
-            var colossus_lgt = new SimpleHelmetSpecItem(62, $"{helmetFileName}.LGTa.{helmetType}_HGR_LGTa_MDL", ["BIOG_HMM_HGR_AMM.Alt.Colossus_Classic"], visorMesh)
-            {
-                HideHair = true,
-            };
-            helmetConfig.AddArrayEntries("helmetSpecs", colossus_lgt);
-
-            // manually add OT material params colossus that has the red stripe instead of solid grey like it is in LE
-            var colossus_med = new SimpleHelmetSpecItem(63, $"{helmetFileName}.MEDa.{helmetType}_HGR_MEDa_MDL", ["BIOG_HMM_HGR_AMM.Alt.Colossus_Classic"], visorMesh)
-            {
-                HideHair = true,
-            };
-            helmetConfig.AddArrayEntries("helmetSpecs", colossus_med);
-
-            // manually add OT material params colossus that has the red stripe instead of solid grey like it is in LE
-            var colossus_hvy = new SimpleHelmetSpecItem(64, $"{helmetFileName}.HVYa.{helmetType}_HGR_HVYa_MDL", ["BIOG_HMM_HGR_AMM.Alt.Colossus_Classic"], visorMesh)
-            {
-                HideHair = true,
-            };
-            helmetConfig.AddArrayEntries("helmetSpecs", colossus_hvy);
+            AddClasssicColossusEntries(helmetFileName, armorFileName, bodyType, helmetType, visorMesh, bodyConfig, helmetConfig);
 
             // add entries for the non armor outfits
             // NKDa (naked human/Avina)
@@ -562,6 +528,28 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             configs.Add(breatherConfig);
         }
 
+        private static void AddClasssicColossusEntries(string helmetFileName, string armorFileName, string bodyType, string helmetType, AppearanceMeshPaths visorMesh, ModConfigClass bodyConfig, ModConfigClass helmetConfig)
+        {
+            string[] weights = ["LGT", "MED", "HVY"];
+            int[] ids = [62, 63, 64];
+
+            for (int i = 0; i < 3; i++)
+            {
+                var arm = new SimpleOutfitSpecItem(ids[i], $"{armorFileName}.{weights[i]}a.{bodyType}_ARM_{weights[i]}a_MDL", [$"{armorFileName}.{weights[i]}a.{bodyType}_ARM_{weights[i]}a_Mat_12a"])
+                {
+                    HelmetSpec = ids[i]
+                };
+
+                var helm = new SimpleHelmetSpecItem(ids[i], $"{helmetFileName}.{weights[i]}a.{helmetType}_HGR_{weights[i]}a_MDL", ["BIOG_HMM_HGR_AMM.Alt.Colossus_Classic"], visorMesh)
+                {
+                    HideHair = true,
+                };
+                
+                helmetConfig.AddArrayEntries("helmetSpecs", helm);
+                bodyConfig.AddArrayEntries("outfitSpecs", arm);
+            }
+        }
+
         private void GenerateHMMSpecs()
         {
             /*
@@ -605,6 +593,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs);
 
             specialSpecs = [
+                // -16 is Liara's (light variant)
+                new SimpleBreatherSpecItem(-16, "BIOG_HMM_BRT_AMM.Liara.HMM_BRT_Liara_MDL", ["BIOG_HMM_BRT_AMM.Liara.HMM_BRT_Liara_MAT_2a"]),
                 //; -10 and on are breathers not matched to a specific outfit, which is the vanilla player and squadmate behavior
                 // -15 is the NPC faceplate (TODO match colors better; I'm thinking at least a neutral black/gray)
                 new SimpleBreatherSpecItem(-15, "BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MDL", ["BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_1a"])
@@ -618,7 +608,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 },
                 // -13 is Ashley's default faceplate
                 new SimpleBreatherSpecItem(-13, "BIOG_HMM_BRT_AMM.Ashley.HMM_BRT_Ashley_MDL", ["BIOG_HMM_BRT_AMM.Ashley.HMM_BRT_Ashley_MAT_1a"]),
-                //// -12 is Liara's
+                // -12 is Liara's
                 new SimpleBreatherSpecItem(-12, "BIOG_HMM_BRT_AMM.Liara.HMM_BRT_Liara_MDL", ["BIOG_HMM_BRT_AMM.Liara.HMM_BRT_Liara_MAT_1a"]),
                 // -11 is Shepard's
                 new SimpleBreatherSpecItem(-11, "BIOG_HMM_BRT_AMM.Shepard.HMM_BRT_Shepard_MDL", ["BIOG_HMM_BRT_AMM.Shepard.HMM_BRT_Shepard_MAT_1a"]),
@@ -669,26 +659,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             AddVanillaOutfitSpecs(bodyConfig, 61, hmmArmorFileName, OutfitType.HVY, 1, bodyType, 1, 1, true);
             AddVanillaHelmetSpecs(helmetConfig, 61, hmmHelmetFileName, OutfitType.HVY, 1, bodyType, 1, 1, visorMesh, hideHair: true);
 
-            // manually add OT material params colossus that has the red stripe instead of solid grey like it is in LE
-            var colossus_lgt = new SimpleHelmetSpecItem(62, $"{hmmHelmetFileName}.LGTa.{bodyType}_HGR_LGTa_MDL", ["BIOG_HMM_HGR_AMM.Alt.Colossus_Classic"], visorMesh)
-            {
-                HideHair = true,
-            };
-            helmetConfig.AddArrayEntries("helmetSpecs", colossus_lgt);
-
-            // manually add OT material params colossus that has the red stripe instead of solid grey like it is in LE
-            var colossus_med = new SimpleHelmetSpecItem(63, $"{hmmHelmetFileName}.MEDa.{bodyType}_HGR_MEDa_MDL", ["BIOG_HMM_HGR_AMM.Alt.Colossus_Classic"], visorMesh)
-            {
-                HideHair = true,
-            };
-            helmetConfig.AddArrayEntries("helmetSpecs", colossus_med);
-
-            // manually add OT material params colossus that has the red stripe instead of solid grey like it is in LE
-            var colossus_hvy = new SimpleHelmetSpecItem(64, $"{hmmHelmetFileName}.HVYa.{bodyType}_HGR_HVYa_MDL", ["BIOG_HMM_HGR_AMM.Alt.Colossus_Classic"], visorMesh)
-            {
-                HideHair = true,
-            };
-            helmetConfig.AddArrayEntries("helmetSpecs", colossus_hvy);
+            AddClasssicColossusEntries(hmmHelmetFileName, hmmArmorFileName, bodyType, bodyType, visorMesh, bodyConfig, helmetConfig);
 
             // add all the non armor outfits for male humans to the menu
             // NKDa (naked human/VI)

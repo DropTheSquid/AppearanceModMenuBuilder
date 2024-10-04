@@ -472,7 +472,7 @@ Romance</data>
 	<string>
 		<id>210210299</id>
 		<flags>1</flags>
-		<data>Colossus Classic</data>
+		<data>&lt;CUSTOM02&gt; - Classic</data>
 	</string>
 	<string>
 		<id>210210300</id>
@@ -508,5 +508,10 @@ Romance</data>
 		<id>210210306</id>
 		<flags>1</flags>
 		<data>Force Liara to wear armor on Virmire disabled description</data>
+	</string>
+	<string>
+		<id>210210307</id>
+		<flags>1</flags>
+		<data>&lt;CUSTOM0&gt; - Light Variant</data>
 	</string>
 </tlkFile>
