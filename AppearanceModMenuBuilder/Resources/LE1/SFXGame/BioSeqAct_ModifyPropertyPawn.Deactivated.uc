@@ -39,6 +39,7 @@ public event function Deactivated()
 			case "Active":
 			case "Hidden":
 			case "Helmet: Show Visor":
+			case "m_oActorType":
 				shouldUpdateAppearance = true;
 				break;
 			case "Helmet: Override":
