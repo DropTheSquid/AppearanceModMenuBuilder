@@ -435,6 +435,37 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     SrCenterText = 210210245,
                     ApplyBreatherId = -15,
                 });
+                menu.Breather.AddMenuEntry(new AppearanceItemData()
+                {
+                    SCenterText = "Clear",
+                    ApplyBreatherId = -17,
+                });
+                menu.Breather.AddMenuEntry(new AppearanceItemData()
+                {
+                    SCenterText = "NPC Clear no jaw",
+                    ApplyBreatherId = -19,
+                });
+                menu.Breather.AddMenuEntry(new AppearanceItemData()
+                {
+                    SCenterText = "NPC Clear",
+                    ApplyBreatherId = -18,
+                });
+                menu.Breather.AddMenuEntry(new AppearanceItemData()
+                {
+                    SCenterText = "NPC clear no sides",
+                    ApplyBreatherId = -20,
+                });
+                // add special NPC breather entries
+                for (int i = 1; i <= 16; i++)
+                {
+                    menu.Breather.AddMenuEntry(new AppearanceItemData()
+                    {
+                        // "NPC"
+                        SCenterText = $"NPC {i}",
+                        ApplyOutfitId = i,
+                        ApplyBreatherId = i,
+                    });
+                }
             }
             // common breathers for human/Asari bodytypes
             HumanIshCommonBreathers(humanFemaleOutfitMenus);
