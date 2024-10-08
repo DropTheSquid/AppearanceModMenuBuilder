@@ -200,7 +200,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     HideHead = true
                 },
                 // -16 is Liara's (light variant with textures from unused model)
-                new SimpleBreatherSpecItem(-16, "BIOG_ASA_HGR_AMM.BRT.Liara.ASA_BRT_Liara_MDL", ["BIOG_HMM_BRT_AMM.Liara.HMM_BRT_Liara_MAT_2a"]),
+                new SimpleBreatherSpecItem(-16, "BIOG_HMF_BRT_AMM.Liara.HMF_BRT_Liara_MDL", ["BIOG_HMM_BRT_AMM.Liara.HMM_BRT_Liara_MAT_2a"]),
                 // -13 is Ashley's default faceplate
                 new SimpleBreatherSpecItem(-13, "BIOG_HMF_BRT_AMM.Ashley.HMF_BRT_Ashley_MDL", ["BIOG_HMF_BRT_AMM.Ashley.HMF_BRT_Ashley_MAT_1a"]),
                 // -12 is Liara's
