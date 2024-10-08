@@ -108,6 +108,13 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     SuppressVisor = true,
                     HideHead = true
                 },
+                // -14 is Kaidan's faceplate (ported a bit from LE2)
+                new SimpleBreatherSpecItem(-14, "BIOG_HMF_BRT_AMM.Kaidan.HMF_BRT_Kaidan_MDL", ["BIOG_HMF_BRT_AMM.Kaidan.HMM_BRT_Kaidan_Mat_1a", "BIOG_HMF_BRT_AMM.Kaidan.HMM_BRT_Kaidan_Mat_2a"])
+                {
+                    // with a new mesh for blocking the eyes and/or the texture details on the mesh that are visible
+                    VisorMeshOverride = new AppearanceMeshPaths("BIOG_HMF_BRT_AMM.Kaidan.hmf_eye_blocker", ["BIOG_HMF_BRT_AMM.Kaidan.Eye_Blocker_mat"]),
+                    HideHead = true
+                },
             };
 
             HmfAsaCommon(bodyType, bodyType, visorMesh, humanFemaleOutfitMenus, breatherSpecs);
@@ -147,6 +154,14 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 new SimpleBreatherSpecItem(-15, "BIOG_ASA_HGR_AMM.BRT.Custom.ASA_BRT_NPC_Separate_Materials_MDL", ["BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic", "BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic", "BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic", "BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic"])
                 {
                     SuppressVisor = true,
+                    HideHead = true
+                },
+
+                // -14 is Kaidan's faceplate (ported a bit from LE2)
+                new SimpleBreatherSpecItem(-14, "BIOG_ASA_HGR_AMM.BRT.Kaidan.ASA_BRT_Kaidan_MDL", ["BIOG_HMF_BRT_AMM.Kaidan.HMM_BRT_Kaidan_Mat_1a", "BIOG_HMF_BRT_AMM.Kaidan.HMM_BRT_Kaidan_Mat_2a"])
+                {
+                    // with a new mesh for blocking the eyes and/or the texture details on the mesh that are visible
+                    VisorMeshOverride = new AppearanceMeshPaths("BIOG_HMF_BRT_AMM.Kaidan.hmf_eye_blocker", ["BIOG_HMF_BRT_AMM.Kaidan.Eye_Blocker_mat"]),
                     HideHead = true
                 },
             };
@@ -192,13 +207,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             specialSpecs = [
                 ..breatherSpecs,
-                // -14 is Kaidan's faceplate (ported a bit from LE2)
-                new SimpleBreatherSpecItem(-14, "BIOG_HMF_BRT_AMM.Kaidan.HMF_BRT_Kaidan_MDL", ["BIOG_HMF_BRT_AMM.Kaidan.HMM_BRT_Kaidan_Mat_1a", "BIOG_HMF_BRT_AMM.Kaidan.HMM_BRT_Kaidan_Mat_2a"])
-                {
-                    // with a new mesh for blocking the eyes and/or the texture details on the mesh that are visible
-                    VisorMeshOverride = new AppearanceMeshPaths("BIOG_HMF_BRT_AMM.Kaidan.hmf_eye_blocker", ["BIOG_HMF_BRT_AMM.Kaidan.Eye_Blocker_mat"]),
-                    HideHead = true
-                },
                 // -16 is Liara's (light variant with textures from unused model)
                 new SimpleBreatherSpecItem(-16, "BIOG_HMF_BRT_AMM.Liara.HMF_BRT_Liara_MDL", ["BIOG_HMM_BRT_AMM.Liara.HMM_BRT_Liara_MAT_2a"]),
                 // -13 is Ashley's default faceplate
