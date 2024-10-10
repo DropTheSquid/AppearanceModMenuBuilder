@@ -184,12 +184,12 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 //},
 
                 ////; -10 and on are breathers not matched to a specific outfit, which is the vanilla player and squadmate behavior
-                //// -17 is a full glass faceplate, derived from the NPC plate
-                //new SimpleBreatherSpecItem(-17, "BIOG_ASA_HGR_AMM.BRT.Custom.ASA_VSR_FULL_MDL", ["BIOG_ASA_HGR_AMM.BRT.Custom.ASA_VSR_FULL_MAT_CLEAR"])
-                //{
-                //    SuppressVisor = true,
-                //},
-                // -15 is the NPC faceplate with generic colors and without the jaw bits
+                //// -18 is a kitbash of my full clear plate with Shepard's breather
+                new SimpleBreatherSpecItem(-18, "BIOG_ASA_HGR_AMM.BRT.Shepard.ASA_Shep_Clear", ["BIOG_HMF_BRT_AMM.Shepard.HMF_BRT_Shepard_MAT_1a", "HMN_Faceplate_AMM.HMN.HMN_VSR_FULL_MAT"])
+                {
+                    SuppressVisor = true,
+                },
+                // -17 is the NPC faceplate with generic colors and without the jaw bits
                 new SimpleBreatherSpecItem(-17, "HMN_Faceplate_AMM.ASA.ASA_BRT_FACEPLATE_Min_MDL", ["HMN_Faceplate_AMM.HMN.HMN_BRT_FACEPLATE_MAT_Generic", "HMN_Faceplate_AMM.HMN.HMN_BRT_FACEPLATE_MAT_Generic"])
                 {
                     SuppressVisor = true,

@@ -445,11 +445,11 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 //    SCenterText = "NPC Clear no jaw",
                 //    ApplyBreatherId = -19,
                 //});
-                //menu.Breather.AddMenuEntry(new AppearanceItemData()
-                //{
-                //    SCenterText = "NPC Clear",
-                //    ApplyBreatherId = -18,
-                //});
+                menu.Breather.AddMenuEntry(new AppearanceItemData()
+                {
+                    SCenterText = "Reinforced clear alt",
+                    ApplyBreatherId = -18,
+                });
                 //menu.Breather.AddMenuEntry(new AppearanceItemData()
                 //{
                 //    SCenterText = "NPC clear no sides",
