@@ -81,10 +81,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             var breatherSpecs = new List<SpecItemBase> {
                 // clear, smooth
-                //new SimpleBreatherSpecItem(-23, "BIOG_HMF_BRT_AMM.Custom.HMF_VSR_FULL_SMOOTH_MDL", ["BIOG_HMF_BRT_AMM.Custom.HMM_VSR_FULL_MAT_CLEAR_SMOOTH"])
-                //{
-                //    SuppressVisor = true,
-                //},
+                new SimpleBreatherSpecItem(-23, "BIOG_HMF_BRT_AMM.Custom.HMF_VSR_FULL_SMOOTH_MDL", ["BIOG_HMF_BRT_AMM.Custom.HMM_VSR_FULL_MAT_CLEAR_SMOOTH"])
+                {
+                    SuppressVisor = true,
+                },
                 //// clear with sides, with jaws
                 //new SimpleBreatherSpecItem(-22, "BIOG_HMF_BRT_AMM.Custom.HMF_BRT_NPC_Separate_Materials_MDL", ["BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic", "BIOG_HMM_BRT_AMM.Custom.HMM_VSR_FULL_MAT_CLEAR", "BIOG_HMM_BRT_AMM.Custom.HMM_VSR_FULL_MAT_CLEAR", "BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic"])
                 //{
@@ -143,10 +143,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             var breatherSpecs = new List<SpecItemBase> {
                 // clear, smooth
-                //new SimpleBreatherSpecItem(-23, "BIOG_ASA_HGR_AMM.BRT.Custom.ASA_VSR_FULL_SMOOTH_MDL", ["BIOG_ASA_HGR_AMM.BRT.Custom.HMM_VSR_FULL_MAT_CLEAR_SMOOTH"])
-                //{
-                //    SuppressVisor = true,
-                //},
+                new SimpleBreatherSpecItem(-23, "BIOG_ASA_HGR_AMM.BRT.Custom.ASA_VSR_FULL_SMOOTH_MDL", ["BIOG_ASA_HGR_AMM.BRT.Custom.HMM_VSR_FULL_MAT_CLEAR_SMOOTH"])
+                {
+                    SuppressVisor = true,
+                },
                 //// clear with sides, with jaws
                 //new SimpleBreatherSpecItem(-22, "BIOG_ASA_HGR_AMM.BRT.Custom.ASA_BRT_NPC_Separate_Materials_MDL", ["BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic", "BIOG_HMM_BRT_AMM.Custom.HMM_VSR_FULL_MAT_CLEAR", "BIOG_HMM_BRT_AMM.Custom.HMM_VSR_FULL_MAT_CLEAR", "BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic"])
                 //{
@@ -693,10 +693,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             specialSpecs = [
                 // clear, smooth
-                //new SimpleBreatherSpecItem(-23, "BIOG_HMM_BRT_AMM.Custom.HMM_VSR_FULL_SMOOTH_MDL", ["BIOG_HMM_BRT_AMM.Custom.HMM_VSR_FULL_MAT_CLEAR_SMOOTH"])
-                //{
-                //    SuppressVisor = true,
-                //},
+                new SimpleBreatherSpecItem(-23, "BIOG_HMM_BRT_AMM.Custom.HMM_VSR_FULL_SMOOTH_MDL", ["BIOG_HMM_BRT_AMM.Custom.HMM_VSR_FULL_MAT_CLEAR_SMOOTH"])
+                {
+                    SuppressVisor = true,
+                },
                 //// clear with sides, with jaws
                 //new SimpleBreatherSpecItem(-22, "BIOG_HMM_BRT_AMM.Custom.HMM_BRT_NPC_Separate_Materials_MDL", ["BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic", "BIOG_HMM_BRT_AMM.Custom.HMM_VSR_FULL_MAT_CLEAR", "BIOG_HMM_BRT_AMM.Custom.HMM_VSR_FULL_MAT_CLEAR", "BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic"])
                 //{

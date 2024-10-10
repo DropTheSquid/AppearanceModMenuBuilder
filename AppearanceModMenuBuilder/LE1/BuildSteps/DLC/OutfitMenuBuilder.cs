@@ -465,11 +465,11 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 //    SCenterText = "NPC clear with sides and jaw",
                 //    ApplyBreatherId = -22,
                 //});
-                //menu.Breather.AddMenuEntry(new AppearanceItemData()
-                //{
-                //    SCenterText = "full glass, smooth",
-                //    ApplyBreatherId = -23,
-                //});
+                menu.Breather.AddMenuEntry(new AppearanceItemData()
+                {
+                    SCenterText = "clear",
+                    ApplyBreatherId = -23,
+                });
                 // add special NPC breather entries
                 for (int i = 1; i <= 16; i++)
                 {
