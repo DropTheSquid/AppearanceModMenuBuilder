@@ -117,12 +117,18 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 //{
                 //    SuppressVisor = true,
                 //},
-                //// -15 is the NPC faceplate with generic colors
-                //new SimpleBreatherSpecItem(-15, "BIOG_HMF_BRT_AMM.NPC.HMF_BRT_NPC_MDL", ["BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic"])
-                //{
-                //    SuppressVisor = true,
-                //    HideHead = true
-                //},
+                // -15 is the NPC faceplate with generic colors and without the jaw bits
+                new SimpleBreatherSpecItem(-17, "HMN_Faceplate_AMM.HMF.HMF_BRT_FACEPLATE_Min_MDL", ["HMN_Faceplate_AMM.HMN.HMN_BRT_FACEPLATE_MAT_Generic", "HMN_Faceplate_AMM.HMN.HMN_BRT_FACEPLATE_MAT_Generic"])
+                {
+                    SuppressVisor = true,
+                    HideHead = true
+                },
+                // -15 is the NPC faceplate with generic colors
+                new SimpleBreatherSpecItem(-15, "HMN_Faceplate_AMM.HMF.HMF_BRT_FACEPLATE_MDL", ["HMN_Faceplate_AMM.HMN.HMN_BRT_FACEPLATE_MAT_Generic", "HMN_Faceplate_AMM.HMN.HMN_BRT_FACEPLATE_MAT_Generic", "HMN_Faceplate_AMM.HMN.HMN_BRT_FACEPLATE_MAT_Generic"])
+                {
+                    SuppressVisor = true,
+                    HideHead = true
+                },
                 // -14 is Kaidan's faceplate (ported a bit from LE2)
                 new SimpleBreatherSpecItem(-14, "BIOG_HMF_BRT_AMM.Kaidan.HMF_BRT_Kaidan_MDL", ["BIOG_HMF_BRT_AMM.Kaidan.HMM_BRT_Kaidan_Mat_1a", "BIOG_HMF_BRT_AMM.Kaidan.HMM_BRT_Kaidan_Mat_2a"])
                 {
@@ -130,6 +136,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     VisorMeshOverride = new AppearanceMeshPaths("BIOG_HMF_BRT_AMM.Kaidan.hmf_eye_blocker", ["BIOG_HMF_BRT_AMM.Kaidan.Eye_Blocker_mat"]),
                     HideHead = true
                 },
+                // -11 is Shepard's
+                new SimpleBreatherSpecItem(-11, "BIOG_HMF_BRT_AMM.Shepard.HMF_BRT_Shepard_MDL", ["BIOG_HMF_BRT_AMM.Shepard.HMF_BRT_Shepard_MAT_1a"]),
             };
 
             HmfAsaCommon(bodyType, bodyType, visorMesh, humanFemaleOutfitMenus, breatherSpecs);
@@ -179,6 +187,18 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 //{
                 //    SuppressVisor = true,
                 //},
+                // -15 is the NPC faceplate with generic colors and without the jaw bits
+                new SimpleBreatherSpecItem(-17, "HMN_Faceplate_AMM.ASA.ASA_BRT_FACEPLATE_Min_MDL", ["HMN_Faceplate_AMM.HMN.HMN_BRT_FACEPLATE_MAT_Generic", "HMN_Faceplate_AMM.HMN.HMN_BRT_FACEPLATE_MAT_Generic"])
+                {
+                    SuppressVisor = true,
+                    HideHead = true
+                },
+                // -15 is the NPC faceplate with generic colors
+                new SimpleBreatherSpecItem(-15, "HMN_Faceplate_AMM.ASA.ASA_BRT_FACEPLATE_MDL", ["HMN_Faceplate_AMM.HMN.HMN_BRT_FACEPLATE_MAT_Generic", "HMN_Faceplate_AMM.HMN.HMN_BRT_FACEPLATE_MAT_Generic", "HMN_Faceplate_AMM.HMN.HMN_BRT_FACEPLATE_MAT_Generic"])
+                {
+                    SuppressVisor = true,
+                    HideHead = true
+                },
                 
                 //// -15 is the NPC faceplate with generic colors
                 //new SimpleBreatherSpecItem(-15, "BIOG_ASA_HGR_AMM.BRT.Custom.ASA_BRT_NPC_Separate_Materials_MDL", ["BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic", "BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic", "BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic", "BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic"])
@@ -194,6 +214,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     VisorMeshOverride = new AppearanceMeshPaths("BIOG_HMF_BRT_AMM.Kaidan.hmf_eye_blocker", ["BIOG_HMF_BRT_AMM.Kaidan.Eye_Blocker_mat"]),
                     HideHead = true
                 },
+                // -11 is Shepard's
+                new SimpleBreatherSpecItem(-11, "BIOG_ASA_HGR_AMM.BRT.Shepard.ASA_BRT_Shepard_MDL", ["BIOG_HMF_BRT_AMM.Shepard.HMF_BRT_Shepard_MAT_1a"]),
             };
 
             HmfAsaCommon(bodyType, helmetType, visorMesh, asariOutfitMenus, breatherSpecs);
@@ -243,8 +265,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 new SimpleBreatherSpecItem(-13, "BIOG_HMF_BRT_AMM.Ashley.HMF_BRT_Ashley_MDL", ["BIOG_HMF_BRT_AMM.Ashley.HMF_BRT_Ashley_MAT_1a"]),
                 // -12 is Liara's
                 new SimpleBreatherSpecItem(-12, "BIOG_HMF_BRT_AMM.Liara.HMF_BRT_Liara_MDL", ["BIOG_HMF_BRT_AMM.Liara.HMF_BRT_Liara_MAT_1a"]),
-                // -11 is Shepard's
-                new SimpleBreatherSpecItem(-11, "BIOG_HMF_BRT_AMM.Shepard.HMF_BRT_Shepard_MDL", ["BIOG_HMF_BRT_AMM.Shepard.HMF_BRT_Shepard_MAT_1a"]),
                 // TODO a special loaded spec for the NPC faceplate in -10
                 //+ breatherSpecs = (Id = -10, specPath = "AMM_BreatherSpec.NPCFaceplateBreatherSpec", comment = "NPC faceplate spec; will look for a helmet with an id matching the armor id and use that if it exists. Otherwise fall back to vanilla faceplate")
                 //; 0 to - 9 are special cases with specific behavior, reserved and not species specific
@@ -727,14 +747,27 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 //{
                 //    SuppressVisor = true,
                 //},
+                // -17 is the NPC faceplate with generic colors and without the jaw bits
+                new SimpleBreatherSpecItem(-17, "HMN_Faceplate_AMM.HMM.HMM_BRT_FACEPLATE_Min_MDL", ["HMN_Faceplate_AMM.HMN.HMN_BRT_FACEPLATE_MAT_Generic", "HMN_Faceplate_AMM.HMN.HMN_BRT_FACEPLATE_MAT_Generic"])
+                {
+                    SuppressVisor = true,
+                    HideHead = true
+                },
+                // -15 is the NPC faceplate with generic colors
+                new SimpleBreatherSpecItem(-15, "HMN_Faceplate_AMM.HMM.HMM_BRT_FACEPLATE_MDL", ["HMN_Faceplate_AMM.HMN.HMN_BRT_FACEPLATE_MAT_Generic", "HMN_Faceplate_AMM.HMN.HMN_BRT_FACEPLATE_MAT_Generic", "HMN_Faceplate_AMM.HMN.HMN_BRT_FACEPLATE_MAT_Generic"])
+                {
+                    SuppressVisor = true,
+                    HideHead = true
+                },
+
                 // -16 is Liara's (light variant)
                 new SimpleBreatherSpecItem(-16, "BIOG_HMM_BRT_AMM.Liara.HMM_BRT_Liara_MDL", ["BIOG_HMM_BRT_AMM.Liara.HMM_BRT_Liara_MAT_2a"]),
                 //; -10 and on are breathers not matched to a specific outfit, which is the vanilla player and squadmate behavior
                 // -15 is the NPC faceplate (TODO match colors better; I'm thinking at least a neutral black/gray)
-                new SimpleBreatherSpecItem(-15, "BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MDL", ["BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic"])
-                {
-                    SuppressVisor = true
-                },
+                //new SimpleBreatherSpecItem(-15, "BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MDL", ["BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic"])
+                //{
+                //    SuppressVisor = true
+                //},
                 // -14 is Kaidan's faceplate
                 new SimpleBreatherSpecItem(-14, "BIOG_HMM_BRT_AMM.Kaidan.HMM_BRT_Kaidan_MDL", ["BIOG_HMM_BRT_AMM.Kaidan.HMM_BRT_Kaidan_Mat_1a", "BIOG_HMM_BRT_AMM.Kaidan.HMM_BRT_Kaidan_Mat_2a"])
                 {

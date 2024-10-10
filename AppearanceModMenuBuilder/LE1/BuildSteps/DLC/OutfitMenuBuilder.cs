@@ -429,17 +429,17 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     SrCenterText = 151316,
                     ApplyBreatherId = -14,
                 });
-                //menu.Breather.AddMenuEntry(new AppearanceItemData()
-                //{
-                //    // "NPC"
-                //    SrCenterText = 210210245,
-                //    ApplyBreatherId = -15,
-                //});
-                //menu.Breather.AddMenuEntry(new AppearanceItemData()
-                //{
-                //    SCenterText = "Clear",
-                //    ApplyBreatherId = -17,
-                //});
+                menu.Breather.AddMenuEntry(new AppearanceItemData()
+                {
+                    // "Faceplate"
+                    SrCenterText = 210210245,
+                    ApplyBreatherId = -15,
+                });
+                menu.Breather.AddMenuEntry(new AppearanceItemData()
+                {
+                    SCenterText = "Minimal Faceplate",
+                    ApplyBreatherId = -17,
+                });
                 //menu.Breather.AddMenuEntry(new AppearanceItemData()
                 //{
                 //    SCenterText = "NPC Clear no jaw",

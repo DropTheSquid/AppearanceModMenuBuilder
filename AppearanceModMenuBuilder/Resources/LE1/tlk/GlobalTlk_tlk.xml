@@ -197,7 +197,7 @@ You can customize characters' appearances at any time from the Inventory screen 
 	<string>
 		<id>210210245</id>
 		<flags>1</flags>
-		<data>NPC</data>
+		<data>Faceplate</data>
 	</string>
 	<!-- name and description for the ignore forced helmet setting -->
 	<string>
