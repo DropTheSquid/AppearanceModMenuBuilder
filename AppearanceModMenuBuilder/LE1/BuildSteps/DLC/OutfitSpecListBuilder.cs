@@ -81,7 +81,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             var breatherSpecs = new List<SpecItemBase> {
                 // clear, smooth
-                new SimpleBreatherSpecItem(-23, "BIOG_HMF_BRT_AMM.Custom.HMF_VSR_FULL_SMOOTH_MDL", ["BIOG_HMF_BRT_AMM.Custom.HMM_VSR_FULL_MAT_CLEAR_SMOOTH"])
+                new SimpleBreatherSpecItem(-23, "HMN_Faceplate_AMM.HMF.HMF_VSR_FULL_MDL", ["HMN_Faceplate_AMM.HMN.HMN_VSR_FULL_MAT"])
                 {
                     SuppressVisor = true,
                 },
@@ -90,11 +90,11 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 //{
                 //    SuppressVisor = true,
                 //},
-                //// clear with sides, without jaws
-                //new SimpleBreatherSpecItem(-21, "BIOG_HMF_BRT_AMM.Custom.HMF_BRT_NPC_NO_JAW_MDL", ["BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic", "BIOG_HMM_BRT_AMM.Custom.HMM_VSR_FULL_MAT_CLEAR", "BIOG_HMM_BRT_AMM.Custom.HMM_VSR_FULL_MAT_CLEAR"])
-                //{
-                //    SuppressVisor = true,
-                //},
+                // reinforced faceplate (sides and corners from NPC plate, glass from clear)
+                new SimpleBreatherSpecItem(-21, "HMN_Faceplate_AMM.HMF.HMF_VSR_FULL_REINFORCED_MDL", ["HMN_Faceplate_AMM.HMN.HMN_VSR_FULL_MAT", "HMN_Faceplate_AMM.HMN.HMN_BRT_FACEPLATE_MAT_Generic", "HMN_Faceplate_AMM.HMN.HMN_BRT_FACEPLATE_MAT_Generic"])
+                {
+                    SuppressVisor = true,
+                },
                 //// for the sake of completeness, the full face plate with the jaw bits
                 //new SimpleBreatherSpecItem(-20, "BIOG_HMF_BRT_AMM.Custom.HMF_BRT_NPC_JAW_MDL", ["BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic"])
                 //{
@@ -143,7 +143,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             var breatherSpecs = new List<SpecItemBase> {
                 // clear, smooth
-                new SimpleBreatherSpecItem(-23, "BIOG_ASA_HGR_AMM.BRT.Custom.ASA_VSR_FULL_SMOOTH_MDL", ["BIOG_ASA_HGR_AMM.BRT.Custom.HMM_VSR_FULL_MAT_CLEAR_SMOOTH"])
+                new SimpleBreatherSpecItem(-23, "HMN_Faceplate_AMM.ASA.ASA_VSR_FULL_MDL", ["HMN_Faceplate_AMM.HMN.HMN_VSR_FULL_MAT"])
                 {
                     SuppressVisor = true,
                 },
@@ -152,11 +152,11 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 //{
                 //    SuppressVisor = true,
                 //},
-                //// clear with sides, without jaws
-                //new SimpleBreatherSpecItem(-21, "BIOG_ASA_HGR_AMM.BRT.Custom.ASA_BRT_NPC_NO_JAW_MDL", ["BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic", "BIOG_HMM_BRT_AMM.Custom.HMM_VSR_FULL_MAT_CLEAR", "BIOG_HMM_BRT_AMM.Custom.HMM_VSR_FULL_MAT_CLEAR"])
-                //{
-                //    SuppressVisor = true,
-                //},
+                // reinforced faceplate (sides and corners from NPC plate, glass from clear)
+                new SimpleBreatherSpecItem(-21, "HMN_Faceplate_AMM.ASA.ASA_VSR_FULL_REINFORCED_MDL", ["HMN_Faceplate_AMM.HMN.HMN_VSR_FULL_MAT", "HMN_Faceplate_AMM.HMN.HMN_BRT_FACEPLATE_MAT_Generic", "HMN_Faceplate_AMM.HMN.HMN_BRT_FACEPLATE_MAT_Generic"])
+                {
+                    SuppressVisor = true,
+                },
                 // // for the sake of completeness, the full face plate with the jaw bits
                 //new SimpleBreatherSpecItem(-20, "BIOG_ASA_HGR_AMM.BRT.Custom.ASA_BRT_NPC_JAW_MDL", ["BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic"])
                 //{
@@ -693,7 +693,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             specialSpecs = [
                 // clear, smooth
-                new SimpleBreatherSpecItem(-23, "BIOG_HMM_BRT_AMM.Custom.HMM_VSR_FULL_SMOOTH_MDL", ["BIOG_HMM_BRT_AMM.Custom.HMM_VSR_FULL_MAT_CLEAR_SMOOTH"])
+                new SimpleBreatherSpecItem(-23, "HMN_Faceplate_AMM.HMM.HMM_VSR_FULL_MDL", ["HMN_Faceplate_AMM.HMN.HMN_VSR_FULL_MAT"])
                 {
                     SuppressVisor = true,
                 },
@@ -702,11 +702,11 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 //{
                 //    SuppressVisor = true,
                 //},
-                //// clear with sides, without jaws
-                //new SimpleBreatherSpecItem(-21, "BIOG_HMM_BRT_AMM.Custom.HMM_BRT_NPC_NO_JAW_MDL", ["BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic", "BIOG_HMM_BRT_AMM.Custom.HMM_VSR_FULL_MAT_CLEAR", "BIOG_HMM_BRT_AMM.Custom.HMM_VSR_FULL_MAT_CLEAR"])
-                //{
-                //    SuppressVisor = true,
-                //},
+                // reinforced faceplate (sides and corners from NPC plate, glass from clear)
+                new SimpleBreatherSpecItem(-21, "HMN_Faceplate_AMM.HMM.HMM_VSR_FULL_REINFORCED_MDL", ["HMN_Faceplate_AMM.HMN.HMN_VSR_FULL_MAT", "HMN_Faceplate_AMM.HMN.HMN_BRT_FACEPLATE_MAT_Generic", "HMN_Faceplate_AMM.HMN.HMN_BRT_FACEPLATE_MAT_Generic"])
+                {
+                    SuppressVisor = true,
+                },
                 //// for the sake of completeness, the full face plate with the jaw bits
                 //new SimpleBreatherSpecItem(-20, "BIOG_HMM_BRT_AMM.Custom.HMM_BRT_NPC_JAW_MDL", ["BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic"])
                 //{
