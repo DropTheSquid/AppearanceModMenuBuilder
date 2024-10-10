@@ -136,6 +136,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     VisorMeshOverride = new AppearanceMeshPaths("BIOG_HMF_BRT_AMM.Kaidan.hmf_eye_blocker", ["BIOG_HMF_BRT_AMM.Kaidan.Eye_Blocker_mat"]),
                     HideHead = true
                 },
+                 // -13 is Ashley's default faceplate
+                new SimpleBreatherSpecItem(-13, "BIOG_HMF_BRT_AMM.Ashley.HMF_BRT_Ashley_MDL", ["BIOG_HMF_BRT_AMM.Ashley.HMF_BRT_Ashley_MAT_1a"]),
                 // -11 is Shepard's
                 new SimpleBreatherSpecItem(-11, "BIOG_HMF_BRT_AMM.Shepard.HMF_BRT_Shepard_MDL", ["BIOG_HMF_BRT_AMM.Shepard.HMF_BRT_Shepard_MAT_1a"]),
             };
@@ -199,6 +201,11 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     SuppressVisor = true,
                     HideHead = true
                 },
+
+                 // -13 is Ashley's default faceplate
+                new SimpleBreatherSpecItem(-13, "BIOG_ASA_HGR_AMM.BRT.Ashley.ASA_BRT_Ashley_MDL", ["BIOG_HMF_BRT_AMM.Ashley.HMF_BRT_Ashley_MAT_1a"]),
+
+                
                 
                 //// -15 is the NPC faceplate with generic colors
                 //new SimpleBreatherSpecItem(-15, "BIOG_ASA_HGR_AMM.BRT.Custom.ASA_BRT_NPC_Separate_Materials_MDL", ["BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic", "BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic", "BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic", "BIOG_HMM_BRT_AMM.NPC.HMM_BRT_NPC_MAT_Generic"])
@@ -261,8 +268,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 ..breatherSpecs,
                 // -16 is Liara's (light variant with textures from unused model)
                 new SimpleBreatherSpecItem(-16, "BIOG_HMF_BRT_AMM.Liara.HMF_BRT_Liara_MDL", ["BIOG_HMM_BRT_AMM.Liara.HMM_BRT_Liara_MAT_2a"]),
-                // -13 is Ashley's default faceplate
-                new SimpleBreatherSpecItem(-13, "BIOG_HMF_BRT_AMM.Ashley.HMF_BRT_Ashley_MDL", ["BIOG_HMF_BRT_AMM.Ashley.HMF_BRT_Ashley_MAT_1a"]),
                 // -12 is Liara's
                 new SimpleBreatherSpecItem(-12, "BIOG_HMF_BRT_AMM.Liara.HMF_BRT_Liara_MDL", ["BIOG_HMF_BRT_AMM.Liara.HMF_BRT_Liara_MAT_1a"]),
                 // TODO a special loaded spec for the NPC faceplate in -10
