@@ -429,56 +429,66 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     SrCenterText = 151316,
                     ApplyBreatherId = -14,
                 });
-                menu.Breather.AddMenuEntry(new AppearanceItemData()
-                {
-                    // "NPC"
-                    SrCenterText = 210210245,
-                    ApplyBreatherId = -15,
-                });
-                menu.Breather.AddMenuEntry(new AppearanceItemData()
-                {
-                    SCenterText = "Clear",
-                    ApplyBreatherId = -17,
-                });
-                menu.Breather.AddMenuEntry(new AppearanceItemData()
-                {
-                    SCenterText = "NPC Clear no jaw",
-                    ApplyBreatherId = -19,
-                });
-                menu.Breather.AddMenuEntry(new AppearanceItemData()
-                {
-                    SCenterText = "NPC Clear",
-                    ApplyBreatherId = -18,
-                });
-                menu.Breather.AddMenuEntry(new AppearanceItemData()
-                {
-                    SCenterText = "NPC clear no sides",
-                    ApplyBreatherId = -20,
-                });
-                menu.Breather.AddMenuEntry(new AppearanceItemData()
-                {
-                    SCenterText = "NPC clear with sides, no jaw",
-                    ApplyBreatherId = -21,
-                });
-                menu.Breather.AddMenuEntry(new AppearanceItemData()
-                {
-                    SCenterText = "NPC clear with sides and jaw",
-                    ApplyBreatherId = -22,
-                });
-                menu.Breather.AddMenuEntry(new AppearanceItemData()
-                {
-                    SCenterText = "full glass, smooth",
-                    ApplyBreatherId = -23,
-                });
+                //menu.Breather.AddMenuEntry(new AppearanceItemData()
+                //{
+                //    // "NPC"
+                //    SrCenterText = 210210245,
+                //    ApplyBreatherId = -15,
+                //});
+                //menu.Breather.AddMenuEntry(new AppearanceItemData()
+                //{
+                //    SCenterText = "Clear",
+                //    ApplyBreatherId = -17,
+                //});
+                //menu.Breather.AddMenuEntry(new AppearanceItemData()
+                //{
+                //    SCenterText = "NPC Clear no jaw",
+                //    ApplyBreatherId = -19,
+                //});
+                //menu.Breather.AddMenuEntry(new AppearanceItemData()
+                //{
+                //    SCenterText = "NPC Clear",
+                //    ApplyBreatherId = -18,
+                //});
+                //menu.Breather.AddMenuEntry(new AppearanceItemData()
+                //{
+                //    SCenterText = "NPC clear no sides",
+                //    ApplyBreatherId = -20,
+                //});
+                //menu.Breather.AddMenuEntry(new AppearanceItemData()
+                //{
+                //    SCenterText = "NPC clear with sides, no jaw",
+                //    ApplyBreatherId = -21,
+                //});
+                //menu.Breather.AddMenuEntry(new AppearanceItemData()
+                //{
+                //    SCenterText = "NPC clear with sides and jaw",
+                //    ApplyBreatherId = -22,
+                //});
+                //menu.Breather.AddMenuEntry(new AppearanceItemData()
+                //{
+                //    SCenterText = "full glass, smooth",
+                //    ApplyBreatherId = -23,
+                //});
                 // add special NPC breather entries
                 for (int i = 1; i <= 16; i++)
                 {
                     menu.Breather.AddMenuEntry(new AppearanceItemData()
                     {
                         // "NPC"
-                        SCenterText = $"NPC {i}",
+                        SCenterText = $"Faceplate {i}",
                         ApplyOutfitId = i,
                         ApplyBreatherId = i,
+                    });
+                }
+                for (int i = 1; i <= 16; i++)
+                {
+                    menu.Breather.AddMenuEntry(new AppearanceItemData()
+                    {
+                        // "NPC"
+                        SCenterText = $"Minimal Faceplate {i}",
+                        ApplyOutfitId = i,
+                        ApplyBreatherId = i + 100,
                     });
                 }
             }
