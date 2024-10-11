@@ -435,62 +435,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     SrCenterText = 210210245,
                     ApplyBreatherId = -15,
                 });
-                menu.Breather.AddMenuEntry(new AppearanceItemData()
-                {
-                    SCenterText = "Minimal Faceplate",
-                    ApplyBreatherId = -17,
-                });
-                //menu.Breather.AddMenuEntry(new AppearanceItemData()
-                //{
-                //    SCenterText = "NPC Clear no jaw",
-                //    ApplyBreatherId = -19,
-                //});
-                menu.Breather.AddMenuEntry(new AppearanceItemData()
-                {
-                    SCenterText = "Reinforced clear alt",
-                    ApplyBreatherId = -18,
-                });
-                //menu.Breather.AddMenuEntry(new AppearanceItemData()
-                //{
-                //    SCenterText = "NPC clear no sides",
-                //    ApplyBreatherId = -20,
-                //});
-                menu.Breather.AddMenuEntry(new AppearanceItemData()
-                {
-                    SCenterText = "Reinforced clear",
-                    ApplyBreatherId = -21,
-                });
-                //menu.Breather.AddMenuEntry(new AppearanceItemData()
-                //{
-                //    SCenterText = "NPC clear with sides and jaw",
-                //    ApplyBreatherId = -22,
-                //});
-                menu.Breather.AddMenuEntry(new AppearanceItemData()
-                {
-                    SCenterText = "clear",
-                    ApplyBreatherId = -23,
-                });
-                // add special NPC breather entries
-                for (int i = 1; i <= 16; i++)
-                {
-                    menu.Breather.AddMenuEntry(new AppearanceItemData()
-                    {
-                        // "NPC"
-                        SCenterText = $"Faceplate {i}",
-                        ApplyOutfitId = i,
-                        ApplyBreatherId = i,
-                    });
-                }
-                for (int i = 1; i <= 16; i++)
-                {
-                    menu.Breather.AddMenuEntry(new AppearanceItemData()
-                    {
-                        // "NPC"
-                        SCenterText = $"Minimal Faceplate {i}",
-                        ApplyOutfitId = i,
-                        ApplyBreatherId = i + 100,
-                    });
-                }
             }
             // common breathers for human/Asari bodytypes
             HumanIshCommonBreathers(humanFemaleOutfitMenus);

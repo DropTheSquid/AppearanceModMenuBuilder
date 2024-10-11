@@ -175,7 +175,7 @@ You can customize characters' appearances at any time from the Inventory screen 
 		<flags>1</flags>
 		<data>N7 Onyx</data>
 	</string>
-	<!-- replacing vanilla "Thermal Armor" as most armors do not have the work Armor in the name -->
+	<!-- replacing vanilla "Thermal Armor" as most armors do not have the word Armor in the name -->
 	<string>
 		<id>210210242</id>
 		<flags>1</flags>
