@@ -307,7 +307,7 @@ public function RefreshMenu(optional bool firstEnter = FALSE)
 		RefreshHelmetTimer = 0.02;
         if (isAppearanceDirty)
         {
-            BioWorldInfo(oWorldInfo).m_UIWorld.TriggerEvent('re_AMM_update_Appearance', oWorldInfo);
+            UIWorldEvent('re_AMM_update_Appearance');
             isAppearanceDirty = FALSE;
         }
         currentDisplayItems.Length = 0;
@@ -315,6 +315,10 @@ public function RefreshMenu(optional bool firstEnter = FALSE)
         PopulateFromSubmenu(currentMenu);
         RenderMenu(state);
     }
+}
+protected function UIWorldEvent(name event)
+{
+    BioWorldInfo(oWorldInfo).m_UIWorld.TriggerEvent(event, oWorldInfo);
 }
 private function bool ShouldShowSelectCharacter()
 {

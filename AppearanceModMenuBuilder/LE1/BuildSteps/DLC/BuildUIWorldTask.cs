@@ -247,6 +247,32 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             KismetHelper.AddObjectToSequence(setLocationAct, mainSeq);
             KismetHelper.CreateOutputLink(RE_SetRotation, "Out", setLocationAct);
 
+            // add some sequence to add/remove the idle animations depending on the zoom level
+            //var RE_ZoomedIn = AddRemoteEvent("re_AMM_ZoomedIn", "removes some animations from the preview character when we zoom in");
+            //var RE_ZoomedOut = AddRemoteEvent("re_AMM_ZoomedOut", "adds animations to the character when we zoom out");
+
+            //ExportEntry AddAnimNode(string targetNode, ExportEntry targetPawn, float weight, float blendTime, int nTargetChild)
+            //{
+            //    var animNodeBlend = SequenceObjectCreator.CreateSequenceObject(pcc, "BioSeqAct_SetAnimNodeBlend");
+            //    KismetHelper.CreateVariableLink(animNodeBlend, "Pawn", targetPawn);
+            //    KismetHelper.AddObjectToSequence(animNodeBlend, mainSeq);
+
+            //    animNodeBlend.WriteProperty(new NameProperty(targetNode, "nmTargetNode"));
+            //    animNodeBlend.WriteProperty(new IntProperty(nTargetChild, "nTargetChild"));
+            //    animNodeBlend.WriteProperty(new FloatProperty(weight, "fWeight"));
+            //    animNodeBlend.WriteProperty(new FloatProperty(blendTime, "fBlendTime"));
+            //    return animNodeBlend;
+            //}
+
+            //KismetHelper.CreateOutputLink(RE_ZoomedIn, "Out", AddAnimNode("AddWeightShifts", InventoryPawnSeqVar, 1.0f, 1.4f, 0));
+            //KismetHelper.CreateOutputLink(RE_ZoomedIn, "Out", AddAnimNode("IdleZoomed", InventoryPawnSeqVar, 1.0f, 1.4f, 1));
+            //KismetHelper.CreateOutputLink(RE_ZoomedIn, "Out", AddAnimNode("AddIdle", InventoryPawnSeqVar, 1.0f, 1.4f, 0));
+
+            //KismetHelper.CreateOutputLink(RE_ZoomedOut, "Out", AddAnimNode("AddWeightShifts", InventoryPawnSeqVar, 1.0f, 0.5f, 1));
+            //KismetHelper.CreateOutputLink(RE_ZoomedOut, "Out", AddAnimNode("IdleZoomed", InventoryPawnSeqVar, 1.0f, 0.5f, 0));
+            //KismetHelper.CreateOutputLink(RE_ZoomedOut, "Out", AddAnimNode("AddIdle", InventoryPawnSeqVar, 1.0f, 0.5f, 1));
+
+
             pcc.Save();
         }
     }

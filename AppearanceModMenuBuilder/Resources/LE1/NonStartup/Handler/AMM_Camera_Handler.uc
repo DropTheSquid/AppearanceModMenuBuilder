@@ -152,6 +152,14 @@ public function MouseWheelZoom(bool zoomIn)
 }
 private function Zoom(float step)
 {
+	// if (step > 0)
+	// {
+	// 	_outerMenu.UIWorldEvent('re_AMM_ZoomedIn');
+	// }
+	// else
+	// {
+	// 	_outerMenu.UIWorldEvent('re_AMM_ZoomedOut');
+	// }
 	CurrentZoom = FClamp(CurrentZoom + step, 0, 1);
 }
 private function ChangeHeight(float step)
