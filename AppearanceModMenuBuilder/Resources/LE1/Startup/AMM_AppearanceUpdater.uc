@@ -518,7 +518,7 @@ private function RegisterListener()
 	listener = class'ModSeqEvent_RemoteEvent_Dynamic'.static.RegisterRemoteEvent('re_AMM_RequestAppearanceUpdate', ListenerFired);
 }
 
-private function ListenerFired(name eventName, optional Array<Object> params1, optional Array<string> params2)
+private function bool ListenerFired(name eventName, optional Array<Object> params1, optional Array<string> params2)
 {
 	local BioPawn targetPawn;
 	local string source;
@@ -530,6 +530,7 @@ private function ListenerFired(name eventName, optional Array<Object> params1, o
 		source = "re_AMM_RequestAppearanceUpdate handler";
 	}
 	UpdatePawnAppearance(targetPawn, source);
+	return true;
 }
 
 private function CommitHelmetPreference(BioPawn target, AMM_Pawn_Parameters params, PawnAppearanceIds currentAppearance)
