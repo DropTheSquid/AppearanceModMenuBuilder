@@ -361,6 +361,7 @@ public function ForceAppearanceType(eArmorOverrideState state)
     local BioWorldInfo oBWI;
     
     oBWI = BioWorldInfo(_outerMenu.oWorldInfo);
+	// show weapons or not on pawn
     if (state == eArmorOverrideState.overridden)
     {
         oBWI.m_UIWorld.TriggerEvent('re_AMM_NonCombat', _outerMenu.oWorldInfo);
@@ -370,18 +371,6 @@ public function ForceAppearanceType(eArmorOverrideState state)
         oBWI.m_UIWorld.TriggerEvent('re_AMM_Combat', _outerMenu.oWorldInfo);
     }
 }
-
-// public function SetHelmetVisibilityPreference(bool bVisible)
-// {
-// 	local BioWorldInfo oBWI;
-    
-// 	if (_currentDisplayedPawn != None)
-// 	{
-// 		oBWI = BioWorldInfo(_outerMenu.oWorldInfo);
-// 		_currentDisplayedPawn.SetHeadGearVisiblePreference(bVisible);
-// 		oBWI.m_UIWorld.UpdateHeadGearVisibility(_currentDisplayedPawn);
-// 	}
-// }
 
 public function bool HelmetButtonPressed()
 {
@@ -396,11 +385,9 @@ public function bool HelmetButtonPressed()
 
 public function string GetHelmetButtonText(string appearanceType)
 {
-	// LogInternal("GetHelmetButtonText"@PathName(_currentDisplayedPawn));
 	if (GetUIWorldPawn() != None)
 	{
-		return _outermenu.helmetHandler.GetHelmetButtonText(GetUIWorldPawn(), appearanceType);
-		// return class'AMM_AppearanceUpdater'.static.GetHelmetButtonTextStatic();
+		return class'AMM_AppearanceUpdater'.static.ShouldShowHelmetButtonStatic(GetUIWorldPawn());
 	}
 	return "";
 }

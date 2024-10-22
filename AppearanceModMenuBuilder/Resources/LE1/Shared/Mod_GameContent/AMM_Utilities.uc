@@ -962,32 +962,23 @@ private static function bool GetMenuHelmetOverride(BioPawn target, eHelmetDispla
 			if (desiredState == eHelmetDisplayState.Full)
 			{
 				result = eHelmetDisplayState.on;
+                return true;
 			}
-			else
-			{
-				result = desiredState;
-			}
-			return true;
+			return false;
 		case eMenuHelmetOverride.onOrFull:
 			if (desiredState == eHelmetDisplayState.off)
 			{
 				result = eHelmetDisplayState.on;
+                return true;
 			}
-			else
-			{
-				result = desiredState;
-			}
-			return true;
+			return false;
 		case eMenuHelmetOverride.offOrFull:
 			if (desiredState == eHelmetDisplayState.on)
 			{
 				result = eHelmetDisplayState.off;
+                return true;
 			}
-			else
-			{
-				result = desiredState;
-			}
-			return true;
+			return false;
 		case eMenuHelmetOverride.unchanged:
 		default:
 			return false;

@@ -296,9 +296,14 @@ protected function string ShouldShowHelmetButton(BioPawn Target)
 	local bool hasDistinctHelmetAppearance;
 	local bool HasDistinctFullHelmetAppearance;
 	local bool HasDistinctBreatherAppearance;
+	local BioSFPanel _;
 
 	if (!GetPawnParams(target, params))
 	{
+		if (IsInAMM(_))
+		{
+			return "";
+		}
 		return super.ShouldShowHelmetButton(target);
 	}
 	params.SpecialHandling(target);
@@ -306,12 +311,27 @@ protected function string ShouldShowHelmetButton(BioPawn Target)
 		|| !GetAppearanceForHelmetType(target, params, eHelmetDisplayState.on, helmetAppearance)
 		|| !GetAppearanceForHelmetType(target, params, eHelmetDisplayState.full, fullHelmetAppearance))
 	{
+		if (IsInAMM(_))
+		{
+			return "";
+		}
 		return super.ShouldShowHelmetButton(target);
 	}
+
+
 	// check for differences between all of them
 	HasDistinctHelmetAppearance = DoAppearancesDiffer(noHelmetAppearance, helmetAppearance);
 	HasDistinctFullHelmetAppearance = DoAppearancesDiffer(helmetAppearance, fullHelmetAppearance);
-	HasDistinctBreatherAppearance = DoAppearancesDiffer(noHelmetAppearance, fullHelmetAppearance);
+	// if A == B and B == C, then we know A == C without needing to check
+	if (!HasDistinctHelmetAppearance && !HasDistinctFullHelmetAppearance)
+	{
+		HasDistinctBreatherAppearance = false;
+	}
+	else
+	{
+		HasDistinctBreatherAppearance = DoAppearancesDiffer(noHelmetAppearance, fullHelmetAppearance);
+	}
+
 	if (!HasDistinctHelmetAppearance && !HasDistinctFullHelmetAppearance)
 	{
 		// all are identical; we should not show this button
@@ -405,10 +425,15 @@ public function HelmetButtonPressed(BioPawn Target)
 	local bool HasDistinctFullHelmetAppearance;
 	local bool HasDistinctBreatherAppearance;
 	local eHelmetDisplayState currentState;
+	local BioSFPanel _;
+
 
 	if (!GetPawnParams(target, params))
 	{
-		super.HelmetButtonPressed(target);
+		if (!IsInAMM(_))
+		{
+			super.HelmetButtonPressed(target);
+		}
 		return;
 	}
 	params.SpecialHandling(target);
@@ -418,13 +443,16 @@ public function HelmetButtonPressed(BioPawn Target)
 		return;
 	}
 	
-	currentState = appearanceIds.m_appearanceSettings.helmetDisplayState;
+	currentState = class'AMM_Utilities'.static.GetHelmetDisplayState(appearanceIds, target);
 
 	if (!GetAppearanceForHelmetType(target, params, eHelmetDisplayState.off, noHelmetAppearance)
 		|| !GetAppearanceForHelmetType(target, params, eHelmetDisplayState.on, helmetAppearance)
 		|| !GetAppearanceForHelmetType(target, params, eHelmetDisplayState.full, fullHelmetAppearance))
 	{
-		super.HelmetButtonPressed(target);
+		if (!IsInAMM(_))
+		{
+			super.HelmetButtonPressed(target);
+		}
 		return;
 	}
 	// check for differences between all of them

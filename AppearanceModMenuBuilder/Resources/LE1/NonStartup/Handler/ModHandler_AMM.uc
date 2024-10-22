@@ -31,13 +31,11 @@ var transient bool launchedInPrologue;
 var transient Pawn_Parameter_Handler paramHandler;
 var transient AMM_Camera_Handler cameraHandler;
 var transient AMM_DialogBox_Handler dialogHandler;
-var transient AMM_Helmet_Handler helmetHandler;
 var transient bool isAppearanceDirty;
 // var transient eMenuHelmetOverride chosenMenuHelmetVisibilityOverride;
 var GFxMovieInfo movieInfo;
 var transient bool GameWasPaused;
 var transient bool rightClickHeld;
-var transient float RefreshHelmetTimer;
 
 // overrides the same function in CustomUIHandlerInterface; this signature must stay the same
 public static function CustomUIHandlerInterface LaunchMenu(optional string Param)
@@ -124,8 +122,6 @@ public function OnPanelAdded()
     paramHandler = new Class'Pawn_Parameter_Handler';
     cameraHandler = new Class'AMM_Camera_Handler';
     cameraHandler.Init(self);
-	helmetHandler = new (self) Class'AMM_Helmet_Handler';
-	helmetHandler.Init(self);
 	// if we launched from the prologue, just start at character selection
 	if (launchedInPrologue)
 	{
@@ -165,11 +161,14 @@ public function Close()
 
     pawnHandler.Cleanup();
     cameraHandler.Cleanup();
-	helmetHandler.Cleanup();
 	if (dialogHandler != None)
 	{
 		dialogHandler.Cleanup();
 	}
+    
+    // clear this before we update all actor appearances
+	updaterInstance.SetOnAppearanceUpdatedCallback(None);
+
 	// make sure we run this. it might be redundant in many cases, but it is better to do it twice than not at all when we should
 	UpdateAllActorAppearances();
     // updater = AMM_AppearanceUpdater(Class'AMM_AppearanceUpdater'.static.GetInstance());
@@ -178,7 +177,6 @@ public function Close()
 	// restore whether it was paused
 	oWorldInfo.bPlayersOnly = GameWasPaused;
 
-	updaterInstance.SetOnAppearanceUpdatedCallback(None);
     Super.Close();
 }
 
@@ -195,7 +193,6 @@ public function UpdateAsyncPawnLoadingState(string tag, string appearanceType, P
 			cameraHandler.ResetCameraForCharacter(tag);
 			pawnHandler.DisplayPawn(tag, appearanceType);
 			RefreshHelmetButton();
-			RefreshHelmetTimer = 0.02;
 		}
 		// TODO get rid of the loading spinner here
 	}
@@ -248,15 +245,6 @@ public event function Update(float fDeltaT)
 	SetMouseShown(!oPanel.bUsingGamepad && !rightClickHeld);
 	pawnHandler.Update(fDeltaT);
 	cameraHandler.Update(fDeltaT);
-	if (RefreshHelmetTimer > 0)
-	{
-		RefreshHelmetTimer -= fDeltaT;
-		if (RefreshHelmetTimer <= 0)
-		{
-			RefreshHelmetButton();
-			RefreshHelmetTimer = 0;
-		}
-	}
 }
 public function RefreshMenu(optional bool firstEnter = FALSE)
 {
@@ -291,6 +279,7 @@ public function RefreshMenu(optional bool firstEnter = FALSE)
 			if (state.pawnTag ~= "None")
             {
                 pawnHandler.DisplayPawn("None", "");
+                // TODO remove helmet button here?
             }
             else if (state.pawnTag != "")
             {
@@ -303,8 +292,6 @@ public function RefreshMenu(optional bool firstEnter = FALSE)
 		// apply (or remove) the menu helmet override
 		updaterInstance = class'AMM_AppearanceUpdater'.static.GetDlcInstance();
 		updaterInstance.menuHelmetOverride = int(state.currentMenuHelmetOverride);
-		RefreshHelmetButton();
-		RefreshHelmetTimer = 0.02;
         if (isAppearanceDirty)
         {
             UIWorldEvent('re_AMM_update_Appearance');
@@ -358,7 +345,6 @@ private function RefreshHelmetButton()
 	state = getMenuState();
 
 	helmetButtonText = pawnHandler.GetHelmetButtonText(state.appearanceTypeOverride);
-	// LogInternal("RefreshHelmetButton"@helmetButtonText);
 	if (helmetButtonText == "")
 	{
 		ASSetAuxButtonText("");
@@ -386,6 +372,9 @@ private function TryDisplayPawn(string tag, string appearanceType)
 	}
 	else if (state == PawnLoadState.Loading)
 	{
+        // clear current pawn here
+        pawnHandler.DisplayPawn("None", "");
+        // TODO clear helmet button here?
 		// TODO start a loading spinner here
 	}
 }
@@ -1177,8 +1166,7 @@ public function ActionButtonPressedEx(int selectedIndex)
 public function AuxButtonPressedEx(int selectedIndex)
 {
 	pawnHandler.HelmetButtonPressed();
-	isAppearanceDirty = true;
-	RefreshMenu();
+    BioWorldInfo(oWorldInfo).m_UIWorld.TriggerEvent('re_AMM_update_Appearance', oWorldInfo);
 }
 public function TopButtonPressedEx(int selectedIndex)
 {
