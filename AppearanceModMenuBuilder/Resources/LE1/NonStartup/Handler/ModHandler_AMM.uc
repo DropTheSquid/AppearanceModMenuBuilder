@@ -115,7 +115,7 @@ public function OnPanelAdded()
     GetManager().SetupBackground();
 	// save whether it was paused, pause it either way
 	GameWasPaused = oWorldInfo.bPlayersOnly;
-	oWorldInfo.bPlayersOnly = true;
+    oWorldInfo.bPlayersOnly = true;
     // LogInternal("Panel added; launch param:" @ launchParam @ "launched in prologue?"@launchedInPrologue);
     pawnHandler = new (Self) Class'AMM_Pawn_Handler';
 	pawnHandler.Init(self);
@@ -1073,13 +1073,18 @@ public function ConfirmExitDialogInputPressed(bool bAPressed)
 public function UpdateAllActorAppearances()
 {
     local Actor tempActor;
+    local Array<Object> objectParams;
+    local Array<string> stringParams;
 
     // TODO filter this down to only pawns that could have been affected
     foreach BioWorldInfo(oWorldInfo).AllActors(Class'Actor', tempActor, )
     {
         if (BioPawn(tempActor) != None)
         {
-			Class'AMM_AppearanceUpdater_Base'.static.UpdatePawnAppearanceStatic(BioPawn(tempActor), "AMM UpdateAllActorAppearances");
+            // send out a remote event to trigger it to update this actor
+			objectParams[0] = tempActor;
+			stringParams[0] = "AMM UpdateAllActorAppearances";
+			class'ModSeqEvent_RemoteEvent_Dynamic'.static.InvokeDynamicEvent('re_AMM_RequestAppearanceUpdate', false, objectParams, stringParams);
         }
     }
 }

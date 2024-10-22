@@ -29,7 +29,10 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 	local MaterialInstanceConstant mic;
 	local Array<AttachmentToTransfer> attachments;
 	local bool applyingVanillaOutfit;
+	local Array<Object> eventObjectParams;
+	local Array<string> eventStringParams;
 
+	RegisterListener();
 	UpdateOuterWorldInfo();
 	if (Target == None)
 	{
@@ -102,6 +105,13 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 			if (__onAppearanceUpdated__Delegate != None)
 			{
 				__onAppearanceUpdated__Delegate(target, source);
+			}
+			if (!IsTargetUIWorldPawn(target))
+			{
+				// send out a remote event for anyone who is listening for it
+				eventObjectParams[0] = target;
+				eventStringParams[0] = source;
+				class'ModSeqEvent_RemoteEvent_Dynamic'.static.InvokeDynamicEvent('re_AMM_AppearanceUpdated', true, eventObjectParams, eventStringParams);
 			}
 		}
 		else
@@ -198,11 +208,16 @@ private function UpdateOuterWorldInfo()
     }
 }
 
+private static function bool IsTargetUIWorldPawn(BioPawn target)
+{
+	return target.GetPackageName() == 'BIOG_UIWorld';
+}
+
 private static final function RemoveAIControllerFromPreviews(BioPawn target)
 {
 	// ocasionally, an NPC has an AI controller that causes it to move, even in the UI world. It does not need that. 
 	// this removes it. 
-    if (target.GetPackageName() == 'BIOG_UIWorld' && target.Controller != None)
+    if (IsTargetUIWorldPawn(target) && target.Controller != None)
     {
         target.Controller.UnPossess();
     }
@@ -212,7 +227,7 @@ private function UpdatePreviewTags(BioPawn target)
 {
 	// UI world preview pawns don't carry over the tag from their original pawn, instead using the ActorType name as the tag
 	// this is usually bad and we want to fix it before we update the appearance
-	if (target.GetPackageName() == 'BIOG_UIWorld' && menuTagOverride != 'None')
+	if (IsTargetUIWorldPawn(target) && menuTagOverride != 'None')
 	{
 		// do not overwrite these ones; it will destroy our info about the player's gender
 		if (target.tag == 'Human_Male' || target.tag == 'Human_Female')
@@ -427,7 +442,6 @@ public function HelmetButtonPressed(BioPawn Target)
 	local eHelmetDisplayState currentState;
 	local BioSFPanel _;
 
-
 	if (!GetPawnParams(target, params))
 	{
 		if (!IsInAMM(_))
@@ -495,6 +509,27 @@ public function HelmetButtonPressed(BioPawn Target)
 	}
 	// commit the new helmet preference
 	CommitHelmetPreference(target, params, appearanceIds);
+}
+
+private function RegisterListener()
+{
+	local ModSeqEvent_RemoteEvent_Dynamic listener;
+
+	listener = class'ModSeqEvent_RemoteEvent_Dynamic'.static.RegisterRemoteEvent('re_AMM_RequestAppearanceUpdate', ListenerFired);
+}
+
+private function ListenerFired(name eventName, optional Array<Object> params1, optional Array<string> params2)
+{
+	local BioPawn targetPawn;
+	local string source;
+
+	targetPawn = BioPawn(params1[0]);
+	source = string(params2[0]);
+	if (source == "")
+	{
+		source = "re_AMM_RequestAppearanceUpdate handler";
+	}
+	UpdatePawnAppearance(targetPawn, source);
 }
 
 private function CommitHelmetPreference(BioPawn target, AMM_Pawn_Parameters params, PawnAppearanceIds currentAppearance)

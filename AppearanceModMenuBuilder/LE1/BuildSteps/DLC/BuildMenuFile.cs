@@ -37,7 +37,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 // needed by the AMM handler
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\NonStartup\Handler\AMM_Handler_Helper.uc", ["Handler"]),
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\NonStartup\Handler\AMM_Pawn_Handler.uc", ["Handler"]),
-                LooseClassCompile.GetClassFromFile(@"Resources\LE1\NonStartup\Handler\AMM_Helmet_Handler.uc", ["Handler"]),
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\NonStartup\Handler\AMM_Camera_Handler.uc", ["Handler"]),
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\NonStartup\Handler\AMM_DialogBox_Handler.uc", ["Handler"]),
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AppearanceSubmenu.uc", ["Mod_GameContent"]),
@@ -52,7 +51,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\SimpleBreatherSpec.uc", ["Mod_GameContent"]),
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\SimpleHelmetSpec.uc", ["Mod_GameContent"]),
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\helmetSpecBase.uc", ["Mod_GameContent"]),
-                LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\SeqEvent_RemoteEvent_Amm.uc", ["Mod_GameContent"]),
+                LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\ModSeqEvent_RemoteEvent_Amm.uc", ["Mod_GameContent"]),
+                LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\ModSeqEvent_RemoteEvent_Dynamic.uc", ["Mod_GameContent"]),
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AMM_Utilities.uc", ["Mod_GameContent"]));
             classTask.RunModTask(context);
         }

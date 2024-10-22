@@ -35,7 +35,7 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
     else
     {
         // check if they have an override spec set
-        delegateSpec = params.GetOverrideDefaultSpec(target);
+        delegateSpec = OutfitSpecBase(params.GetOverrideDefaultSpec(target));
 
         if (delegateSpec == None)
         {

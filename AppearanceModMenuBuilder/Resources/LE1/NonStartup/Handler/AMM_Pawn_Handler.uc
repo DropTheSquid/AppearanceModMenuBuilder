@@ -128,7 +128,7 @@ public function OnRemoteEvent(Name EventName)
 	}
 	if (CanUnregisterEvent(EventName))
 	{
-		class'SeqEvent_RemoteEvent_AMM'.static.UnregisterRemoteEvent(EventName);
+		class'ModSeqEvent_RemoteEvent_Dynamic'.static.UnregisterRemoteEvent(Name(currentRequest.frameworkLiveEventName), class'ModSeqEvent_RemoteEvent_AMM');
 	}
 }
 
@@ -583,7 +583,7 @@ public function Update(float fDeltaT)
 					if (currentRequest.originalState == FrameworkStreamState.visible && !currentRequest.pollSent)
 					{
 						// LogInternal("starting to listen + firing poll event for already loaded file"@currentRequest.frameworkFileName);
-						class'SeqEvent_RemoteEvent_AMM'.static.RegisterRemoteEvent(Name(currentRequest.frameworkLiveEventName));
+						class'ModSeqEvent_RemoteEvent_Dynamic'.static.RegisterRemoteEvent(Name(currentRequest.frameworkLiveEventName), None, class'ModSeqEvent_RemoteEvent_AMM');
 						_outerMenu.EmitRemoteEvent(currentRequest.frameworkPollEventName);
 						streamingRequests[i].pollSent = true;
 					}
@@ -596,7 +596,7 @@ public function Update(float fDeltaT)
 				case FrameworkStreamState.Loaded:
 					// at this point, start listening for the live event
 					// LogInternal("starting to listen for loaded but not visible file"@currentRequest.frameworkFileName);
-					class'SeqEvent_RemoteEvent_AMM'.static.RegisterRemoteEvent(Name(currentRequest.frameworkLiveEventName));
+					class'ModSeqEvent_RemoteEvent_Dynamic'.static.RegisterRemoteEvent(Name(currentRequest.frameworkLiveEventName), None, class'ModSeqEvent_RemoteEvent_AMM');
 					// if it is properly loaded, now tell it to be visible. doing it this way will avoid blocking
 					SetLevelStreamingStatus(currentRequest.frameworkFileName, DesiredStreamingState.visible);
 					break;
