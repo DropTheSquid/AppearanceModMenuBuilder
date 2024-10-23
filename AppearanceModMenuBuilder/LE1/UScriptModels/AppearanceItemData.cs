@@ -170,6 +170,18 @@ namespace AppearanceModMenuBuilder.LE1.UScriptModels
             set => SetBool(nameof(HideIfHatsSuppressed), value);
         }
 
+        public bool? DisableIfHelmetLocked
+        {
+            get => GetBool(nameof(DisableIfHelmetLocked));
+            set => SetBool(nameof(DisableIfHelmetLocked), value);
+        }
+
+        public bool? DisableIfBreatherLocked
+        {
+            get => GetBool(nameof(DisableIfBreatherLocked));
+            set => SetBool(nameof(DisableIfBreatherLocked), value);
+        }
+
         public string[]? AApplicableCharacters
         {
             get => GetStringArray(nameof(AApplicableCharacters));

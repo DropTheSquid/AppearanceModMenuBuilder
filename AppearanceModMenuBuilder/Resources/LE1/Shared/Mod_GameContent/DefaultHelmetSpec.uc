@@ -3,13 +3,26 @@ Class DefaultHelmetSpec extends HelmetSpecBase;
 public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds, out pawnAppearance appearance)
 {
 	local HelmetSpecBase delegateSpec;
+
+    delegateSpec = GetDelegateSpec(target, specLists, appearanceIds);
+    if (delegateSpec == None)
+    {
+        return false;
+    }
+
+    return delegateSpec.LoadHelmet(target, specLists, appearanceIds, appearance);
+}
+
+private function HelmetSpecBase GetDelegateSpec(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds)
+{
+    local HelmetSpecBase delegateSpec;
     local BioWorldInfo BWI;
     local BioGlobalVariableTable globalVars;
     local AMM_Pawn_Parameters params;
 
     if (!class'AMM_AppearanceUpdater'.static.GetPawnParams(target, params))
 	{
-		return false;
+		return None;
 	}
 
     BWI = class'AMM_AppearanceUpdater'.static.GetOuterWorldInfo();
@@ -22,12 +35,23 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
         && params.GetAppearanceType(target) ~= "combat")
     {
         // then use the equipped helmet spec
-        delegateSpec = new Class'EquippedArmorHelmetSpec';
+        return new Class'EquippedArmorHelmetSpec';
     }
     else
     {
         // else use vanilla helmet spec
-        delegateSpec = new Class'VanillaHelmetSpec';
+        return new Class'VanillaHelmetSpec';
     }
-    return delegateSpec.LoadHelmet(target, specLists, appearanceIds, appearance);
+}
+
+public function bool LocksBreatherSelection(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds)
+{
+    local HelmetSpecBase delegateSpec;
+
+    delegateSpec = GetDelegateSpec(target, specLists, appearanceIds);
+    if (delegateSpec == None)
+    {
+        return false;
+    }
+    return delegateSpec.LocksBreatherSelection(target, specLists, appearanceIds);
 }

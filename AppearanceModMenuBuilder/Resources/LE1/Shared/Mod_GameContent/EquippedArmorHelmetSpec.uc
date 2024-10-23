@@ -103,3 +103,5 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 	
 	return true;
 }
+
+// TODO locks breather check here, returns true if breather is suppressed

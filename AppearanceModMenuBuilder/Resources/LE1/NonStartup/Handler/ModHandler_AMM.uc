@@ -14,6 +14,8 @@ struct menuState
 	var string inheritedTitle;
 	var string inheritedSubtitle;
     var string cameraPosition;
+    var bool helmetLocked;
+    var bool breatherLocked;
 };
 
 // Variables
@@ -69,6 +71,8 @@ private final function menuState getMenuState()
     local AppearanceSubmenu currentSubmenu;
 	local string currentTitle;
 	local string currentSubtitle;
+    local BioPawn target;
+    local PawnAppearanceIds appIds;
     
     for (i = 0; i < submenuStack.Length; i++)
     {
@@ -103,6 +107,13 @@ private final function menuState getMenuState()
         if (currentSubmenu.cameraPosition != "")
         {
             newState.cameraPosition = currentSubmenu.cameraPosition;
+        }
+        if (newState.params != None)
+        {
+            target = pawnHandler.GetUIWorldPawn();
+            newState.params.GetAppearanceIds(newState.appearanceTypeOverride, appIds);
+            newState.helmetLocked = class'OutfitSpecListBase'.static.IsHelmetLocked(target, class'AMM_Utilities'.static.GetSpecLists(target, newState.params), appIds);
+            newState.breatherLocked = class'OutfitSpecListBase'.static.IsBreatherLocked(target, class'AMM_Utilities'.static.GetSpecLists(target, newState.params), appIds);
         }
     }
     return newState;
@@ -698,7 +709,7 @@ public final function bool doesPackageExportExist(string packageName)
 {
     return DynamicLoadObject(packageName, Class'Object') != None;
 }
-public function bool ShouldItemBeEnabled(AppearanceItemData item)
+public function bool ShouldItemBeEnabled(AppearanceItemData item, menuState state)
 {
     local BioWorldInfo BWI;
     local BioGlobalVariableTable globalVars;
@@ -706,6 +717,14 @@ public function bool ShouldItemBeEnabled(AppearanceItemData item)
     if (item.disabled)
     {
         return FALSE;
+    }
+    if (item.disableIfHelmetLocked && state.helmetLocked)
+    {
+        return false;
+    }
+    if (item.disableIfBreatherLocked && state.breatherLocked)
+    {
+        return false;
     }
     BWI = BioWorldInfo(oWorldInfo);
     if (item.EnableConditional > 0 && !BWI.CheckConditional(item.EnableConditional))
@@ -908,7 +927,7 @@ public function AddItemForDisplay(AppearanceItemData item, AppearanceSubmenu cur
     {
         return;
     }
-    item.disabled = !ShouldItemBeEnabled(item);
+    item.disabled = !ShouldItemBeEnabled(item, state);
     item.submenuInstance = GetSubmenuFromItem(item);
     item.currentlyApplied = IsItemCurrentlyApplied(item, state);
 	// preload the pawn for this submenu, if applicable

@@ -4,3 +4,8 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 {
 	return true;
 }
+
+public function bool LocksBreatherSelection(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds)
+{
+	return true;
+}

@@ -12,7 +12,7 @@ var int helmetTypeOverride;
 var int HelmetOnBodySpec;
 // delegates to a different body spec if the helmet is full to account for things like hoods/faceplates
 var int HelmetFullBodySpec;
-// a default helmet spec to be used for full hlmet situations if one is not set by the user
+// a default helmet spec to be used for full helmet situations if one is not set by the user
 var int helmetFullHelmetSpec;
 // force a specific helmet spec, overriding user choice
 var int forceHelmetSpec;
@@ -88,4 +88,104 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
 	}
 
 	return true;
+}
+
+public function bool LocksHelmetSelection(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds)
+{
+	local OutfitSpecBase delegateOutfitSpec;
+	local bool helmetOnSpecLocksHelmet;
+	local bool helmetFullSpecLocksHelmet;
+
+	// if this outfit spec forces a specific helmet, then indicate it will ignore helmet choice
+	if (forceHelmetSpec != 0)
+	{
+		return true;
+	}
+	// same if it suppresses the helmet
+	if (bSuppressHelmet)
+	{
+		return true;
+	}
+	// if this has helmet on/helmet full specs, we gotta ask those as well
+	if (HelmetOnBodySpec != 0)
+	{
+		if (SpecLists.outfitSpecs.GetOutfitSpecById(HelmetOnBodySpec, delegateOutfitSpec))
+		{
+			helmetOnSpecLocksHelmet = delegateOutfitSpec.LocksHelmetSelection(target, specLists, appearanceIds);
+		}
+	}
+	if (HelmetFullBodySpec != 0)
+	{
+		if (SpecLists.outfitSpecs.GetOutfitSpecById(HelmetFullBodySpec, delegateOutfitSpec))
+		{
+			helmetFullSpecLocksHelmet = delegateOutfitSpec.LocksHelmetSelection(target, specLists, appearanceIds);
+		}
+	}
+	// return true if both lock the helmet; if only one does, then you can let them pick a helmet
+    return helmetOnSpecLocksHelmet && helmetFullSpecLocksHelmet;
+}
+
+public function bool LocksBreatherSelection(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds)
+{
+	local HelmetSpecBase delegateHelmetSpec;
+	local OutfitSpecBase delegateOutfitSpec;
+	local bool helmetOnSpecLocksHelmet;
+	local bool helmetFullSpecLocksHelmet;
+	local bool defaultLocksHelmet;
+
+	if (bSuppressHelmet && !bSuppressBreather && breatherSpecOverride != 0)
+	{
+		return true;
+	}
+	if (bSuppressBreather)
+	{
+		return true;
+	}
+	// check if a forced helmet locks the breather
+	if (forceHelmetSpec != 0)
+	{
+		appearanceIds.helmetAppearanceId = forceHelmetSpec;
+	}
+	// otherwise, if it sets a default helmet that is not overridden, check that
+	else if ((appearanceIds.helmetAppearanceId == 0 || appearanceIds.helmetAppearanceId == -1)
+		&& helmetTypeOverride != 0)
+	{
+		appearanceIds.helmetAppearanceId = helmetTypeOverride;
+	}
+
+	// if this has helmet on/helmet full specs, we gotta ask those as well
+	if (HelmetOnBodySpec != 0)
+	{
+		if (SpecLists.outfitSpecs.GetOutfitSpecById(HelmetOnBodySpec, delegateOutfitSpec))
+		{
+			helmetOnSpecLocksHelmet = delegateOutfitSpec.LocksBreatherSelection(target, specLists, appearanceIds);
+		}
+	}
+	if (HelmetFullBodySpec != 0)
+	{
+		if (SpecLists.outfitSpecs.GetOutfitSpecById(HelmetFullBodySpec, delegateOutfitSpec))
+		{
+			helmetFullSpecLocksHelmet = delegateOutfitSpec.LocksBreatherSelection(target, specLists, appearanceIds);
+		}
+	}
+
+	// if this has both a helmet on and helmet full body spec, only look at those
+	if (HelmetOnBodySpec != 0 && HelmetFullBodySpec != 0)
+	{
+		// return true if both lock the helmet; if only one does, then you can let them pick a breather
+		return helmetOnSpecLocksHelmet && helmetFullSpecLocksHelmet;
+	}
+
+	// otherwise also take into account the non body override helmet
+	if (SpecLists.helmetSpecs.GetHelmetSpecById(appearanceIds.helmetAppearanceId, delegateHelmetSpec))
+	{
+		if (helmetFullHelmetSpec != 0 && SimpleHelmetSpec(delegateHelmetSpec) != None && SimpleHelmetSpec(delegateHelmetSpec).helmetFullHelmetSpec != 0)
+		{
+			SimpleHelmetSpec(delegateHelmetSpec).helmetFullHelmetSpec = helmetFullHelmetSpec;
+		}
+		defaultLocksHelmet = delegateHelmetSpec.LocksBreatherSelection(target, SpecLists, appearanceIds);
+	}
+
+	// lock it only if it is locked in all states
+	return defaultLocksHelmet && (HelmetOnBodySpec == 0 || helmetOnSpecLocksHelmet) && (HelmetFullBodySpec == 0 || helmetFullSpecLocksHelmet);
 }

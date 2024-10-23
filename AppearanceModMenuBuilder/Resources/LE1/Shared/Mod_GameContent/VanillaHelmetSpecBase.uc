@@ -67,6 +67,43 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 	return true;
 }
 
+public function bool LocksBreatherSelection(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds)
+{
+    local int armorType;
+    local int meshVariant;
+    local int materialVariant;
+	local AppearanceMeshPaths helmetMeshPaths;
+	local bool suppressVisor;
+	local bool suppressBreather;
+	local bool hideHair;
+	local bool hideHead;
+
+	if (!GetVariant(target, armorType, meshVariant, materialVariant))
+    {
+        return FALSE;
+    }
+
+	// get the helmet mesh paths and various parameters around it
+	if (!GetHelmetMeshPaths(
+		class'AMM_Utilities'.static.GetPawnType(target),
+		armorType,
+		meshVariant,
+		materialVariant,
+		helmetMeshPaths,
+		hideHair,
+		hideHead,
+		suppressVisor,
+		suppressBreather
+	))
+	{
+		return false;
+	}
+
+	// if this vanilla outfit supresses the breather, then count that as locking it
+	return suppressBreather;
+}
+
+
 protected function bool GetVariant(BioPawn targetPawn, out int armorType, out int meshVariant, out int materialVariant)
 {
 	// This is in the abstract base class, and needs to be overridden in child classes

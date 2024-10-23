@@ -90,4 +90,4 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
 	return true;
 }
 
-
+// TODO locks helmet/breather spec here

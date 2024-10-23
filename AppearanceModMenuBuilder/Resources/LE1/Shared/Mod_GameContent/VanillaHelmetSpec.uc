@@ -4,14 +4,26 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 {
 	local HelmetSpecBase delegateSpec;
 
-	if (Class'AMM_Utilities'.static.IsPawnArmorAppearanceOverridden(target))
-    {
-        delegateSpec = new Class'ArmorOverrideVanillaHelmetSpec';
-    }
-    else
-    {
-        delegateSpec = new Class'EquippedArmorHelmetSpec';
-    }
+    delegateSpec = GetDelegateSpec(target, SpecLists, appearanceIds);
     return delegateSpec.LoadHelmet(target, specLists, appearanceIds, appearance);
 }
 
+private function HelmetSpecBase GetDelegateSpec(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds)
+{
+    if (Class'AMM_Utilities'.static.IsPawnArmorAppearanceOverridden(target))
+    {
+        return new Class'ArmorOverrideVanillaHelmetSpec';
+    }
+    else
+    {
+        return new Class'EquippedArmorHelmetSpec';
+    }
+}
+
+public function bool LocksBreatherSelection(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds)
+{
+    local HelmetSpecBase delegateSpec;
+
+    delegateSpec = GetDelegateSpec(target, specLists, appearanceIds);
+    return delegateSpec.LocksBreatherSelection(target, specLists, appearanceIds);
+}

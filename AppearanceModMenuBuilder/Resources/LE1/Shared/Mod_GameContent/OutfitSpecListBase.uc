@@ -137,6 +137,36 @@ private function bool GetOutfitSpecItemById(int Id, out OutfitSpecItem item)
     return FALSE;
 }
 
+public static function bool IsHelmetLocked(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds)
+{
+	local OutfitSpecBase delegateSpec;
+
+	if (SpecLists.outfitSpecs.GetOutfitSpecById(appearanceIds.bodyAppearanceId, delegateSpec))
+	{
+		return delegateSpec.LocksHelmetSelection(target, specLists, appearanceIds);
+	}
+	return false;
+}
+
+public static function bool IsBreatherLocked(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds)
+{
+	local OutfitSpecBase delegateOutfitSpec;
+	local HelmetSpecBase delegateHelmetSpec;
+	local bool outfitLocksBreather;
+	local bool helmetLocksBreather;
+
+	if (SpecLists.outfitSpecs.GetOutfitSpecById(appearanceIds.bodyAppearanceId, delegateOutfitSpec))
+	{
+		outfitLocksBreather = delegateOutfitSpec.LocksBreatherSelection(target, specLists, appearanceIds);
+	}
+	if (SpecLists.helmetSpecs.GetHelmetSpecById(appearanceIds.helmetAppearanceId, delegateHelmetSpec))
+	{
+		helmetLocksBreather = delegateHelmetSpec.LocksBreatherSelection(target, specLists, appearanceIds);
+	}
+
+	return outfitLocksBreather || helmetLocksBreather;
+}
+
 //class default properties can be edited in the Properties tab for the class's Default__ object.
 defaultproperties
 {

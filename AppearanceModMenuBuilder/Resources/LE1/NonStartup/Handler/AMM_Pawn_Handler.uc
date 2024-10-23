@@ -392,7 +392,7 @@ public function string GetHelmetButtonText(string appearanceType)
 	return "";
 }
 
-private function BioPawn GetUIWorldPawn()
+public function BioPawn GetUIWorldPawn()
 {
 	local Object obj;
 	local SeqVar_Object svo;

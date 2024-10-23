@@ -35,6 +35,8 @@ namespace AppearanceModMenuBuilder.LE1.Models
             bool? hideIfHeadgearSuppressed = null,
             bool? hideIfBreatherSuppressed = null,
             bool? hideIfHatsSuppressed = null,
+            bool? disableIfHeadgearLocked = null,
+            bool? disableIfBreatherLocked = null,
             string[]? displayVars = null)
         {
             var result =  new AppearanceItemData()
@@ -46,6 +48,8 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 HideIfHeadgearSuppressed = hideIfHeadgearSuppressed,
                 HideIfBreatherSuppressed = hideIfBreatherSuppressed,
                 HideIfHatsSuppressed = hideIfHatsSuppressed,
+                DisableIfHelmetLocked = disableIfHeadgearLocked,
+                DisableIfBreatherLocked = disableIfBreatherLocked,
                 DisplayBool = displayBool,
                 DisplayConditional = displayConditional,
                 DisplayVars = displayVars

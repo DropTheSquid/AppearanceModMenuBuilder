@@ -46,6 +46,21 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
 	return true;
 }
 
+public function bool LocksBreatherSelection(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds)
+{
+	local HelmetSpecBase delegateSpec;
+
+	if ((appearanceIds.helmetAppearanceId == 0 || appearanceIds.helmetAppearanceId == -1) && GetDefaultOverrideHelmetSpec(target, delegateSpec))
+	{
+		return delegateSpec.LocksBreatherSelection(target, SpecLists, appearanceIds);
+	}
+	else if (specLists.helmetSpecs.GetHelmetSpecById(appearanceIds.helmetAppearanceId, delegateSpec))
+	{
+		return delegateSpec.LocksBreatherSelection(target, SpecLists, appearanceIds);
+	}
+    return false;
+}
+
 protected function bool GetVariant(BioPawn targetPawn, out int armorType, out int meshVariant, out int materialVariant)
 {
 	// This is in the abstract base class, and needs to be overridden in child classes

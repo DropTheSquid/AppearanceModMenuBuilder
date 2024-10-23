@@ -47,10 +47,36 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 		// if the breather spec is overridden, use that
 		if (breatherSpecOverride != 0)
 		{
-			LogInternal("forcing breather spec"@breatherSpecOverride);
+			// LogInternal("forcing breather spec"@breatherSpecOverride);
 			appearanceIds.breatherAppearanceId = breatherSpecOverride;
 		}
 		specLists.breatherSpecs.DelegateToBreatherSpec(target, specLists, appearanceIds, appearance);
 	}
 	return true;
+}
+
+public function bool LocksBreatherSelection(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds)
+{
+	local HelmetSpecBase delegateHelmetSpec;
+
+	if (bSuppressBreather)
+	{
+		return true;
+	}
+	if (breatherSpecOverride != 0)
+	{
+		return true;
+	}
+	if (helmetFullHelmetSpec != 0)
+	{
+		if (SpecLists.helmetSpecs.GetHelmetSpecById(helmetFullHelmetSpec, delegateHelmetSpec))
+		{
+			if (helmetFullHelmetSpec != 0 && SimpleHelmetSpec(delegateHelmetSpec) != None && SimpleHelmetSpec(delegateHelmetSpec).helmetFullHelmetSpec != 0)
+			{
+				SimpleHelmetSpec(delegateHelmetSpec).helmetFullHelmetSpec = helmetFullHelmetSpec;
+			}
+			return delegateHelmetSpec.LocksBreatherSelection(target, SpecLists, appearanceIds);
+		}
+	}
+    return false;
 }

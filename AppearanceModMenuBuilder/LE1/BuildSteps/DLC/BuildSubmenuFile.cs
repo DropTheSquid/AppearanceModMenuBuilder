@@ -328,7 +328,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     menus.Combat.AddMenuEntry(menus.Armor.GetInlineEntryPoint(displayInt: (1594, 0)));
 
                     // add non armor headgear/hats
-                    menus.NonArmor.AddMenuEntry(menus.NonArmorHeadgear.GetEntryPoint(210210282, hideIfHatsSuppressed: true));
+                    menus.NonArmor.AddMenuEntry(menus.NonArmorHeadgear.GetEntryPoint(210210282, hideIfHatsSuppressed: true, disableIfHeadgearLocked: true));
 
                     // "Hats"
                     menus.NonArmorHeadgear.CameraPosition = "head";
@@ -348,7 +348,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     menus.Combat.AddMenuEntry(menus.Armor.GetInlineEntryPoint());
                 }
 
-                menus.Armor.AddMenuEntry(menus.ArmorHeadgear.GetEntryPoint(210210237, hideIfHeadgearSuppressed: true));
+                menus.Armor.AddMenuEntry(menus.ArmorHeadgear.GetEntryPoint(210210237, hideIfHeadgearSuppressed: true, disableIfHeadgearLocked: true));
 
 
                 menus.ArmorHeadgear.CameraPosition = "head";
@@ -389,7 +389,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     Comment = "Equipped Armor helmet entry for the whole squad within the helmet menu in any appearance type besides combat"
                 });
 
-                menus.ArmorHeadgear.AddMenuEntry(menus.Breather.GetEntryPoint(210210244, hideIfBreatherSuppressed: true));
+                menus.ArmorHeadgear.AddMenuEntry(menus.Breather.GetEntryPoint(210210244, disableIfBreatherLocked: true));
 
                 menus.Breather.CameraPosition = "face";
                 // "Breather"

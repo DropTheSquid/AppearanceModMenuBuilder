@@ -5,8 +5,12 @@ class OutfitSpecBase extends Object
 // the out param holds the loaded outfit meshes and parameters about how to alter the pawn's appearance
 public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds, out pawnAppearance appearance);
 
-// allow you to take full control of altering the pawn's appearance if you return true
-// public function bool HandlePawnUpdate(PawnAppearanceIds appearanceIds, BioPawn target)
-// {
-// 	return false;
-// }
+public function bool LocksHelmetSelection(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds)
+{
+    return false;
+}
+
+public function bool LocksBreatherSelection(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds)
+{
+    return false;
+}

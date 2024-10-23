@@ -5,9 +5,7 @@ Class DefaultOutfitSpec extends OutfitSpecBase;
 public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds, out pawnAppearance appearance)
 {
 	local OutfitSpecBase delegateSpec;
-    local BioWorldInfo BWI;
-    local BioGlobalVariableTable globalVars;
-    local AMM_Pawn_Parameters params;
+    
 
     // disabled, but can be reenabled for testing
     // if (TestHandlingOn0 && appearanceIds.bodyAppearanceId == 0)
@@ -15,9 +13,25 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
     //     return CopyRealPawnAppearance(target, specLists, appearanceIds, appearance);
     // }
 
+    delegateSpec = GetDelegateSpec(target, specLists, appearanceIds);
+    if (delegateSpec == None)
+    {
+        return false;
+    }
+
+    return delegateSpec.LoadOutfit(target, specLists, appearanceIds, appearance);
+}
+
+private function OutfitSpecBase GetDelegateSpec(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds)
+{
+    local OutfitSpecBase delegateSpec;
+    local BioWorldInfo BWI;
+    local BioGlobalVariableTable globalVars;
+    local AMM_Pawn_Parameters params;
+
     if (!class'AMM_AppearanceUpdater'.static.GetPawnParams(target, params))
 	{
-		return false;
+		return None;
 	}
 
     BWI = class'AMM_AppearanceUpdater'.static.GetOuterWorldInfo();
@@ -30,7 +44,7 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
         && params.GetAppearanceType(target) ~= "combat")
     {
         // then use the Equipped armor spec
-        delegateSpec = new Class'EquippedArmorOutfitSpec';
+        return new Class'EquippedArmorOutfitSpec';
     }
     else
     {
@@ -42,8 +56,33 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
             // otherwise, defer to vanilla behavior
             delegateSpec = new Class'VanillaOutfitSpec';
         }
+
+        return delegateSpec;
     }
-    return delegateSpec.LoadOutfit(target, specLists, appearanceIds, appearance);
+}
+
+public function bool LocksHelmetSelection(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds)
+{
+    local OutfitSpecBase delegateSpec;
+
+    delegateSpec = GetDelegateSpec(target, specLists, appearanceIds);
+    if (delegateSpec == None)
+    {
+        return false;
+    }
+    return delegateSpec.LocksHelmetSelection(target, specLists, appearanceIds);
+}
+
+public function bool LocksBreatherSelection(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds)
+{
+    local OutfitSpecBase delegateSpec;
+
+    delegateSpec = GetDelegateSpec(target, specLists, appearanceIds);
+    if (delegateSpec == None)
+    {
+        return false;
+    }
+    return delegateSpec.LocksBreatherSelection(target, specLists, appearanceIds);
 }
 
 // private function bool CopyRealPawnAppearance(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds, out pawnAppearance appearance)
