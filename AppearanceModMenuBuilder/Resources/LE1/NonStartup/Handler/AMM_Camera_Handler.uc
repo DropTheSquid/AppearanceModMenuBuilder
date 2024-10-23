@@ -37,6 +37,7 @@ var transient float rotateMouse;
 var transient float rotateController;
 
 var transient cameraTransition currentCameraTransition;
+var InterpCurveFloat CameraTransitionCurve;
 
 var bool debugLogging;
 
@@ -174,8 +175,7 @@ public function Update(float fDeltaT)
 			currentCameraTransition.RemainingTime = 0;
 		}
 
-		// TODO use an interp curve rather than a lerp for this transition
-		transitionPercent = (currentCameraTransition.TransitionTime - currentCameraTransition.RemainingTime) / currentCameraTransition.TransitionTime;
+		transitionPercent = InterpolateFloat(CameraTransitionCurve, (currentCameraTransition.TransitionTime - currentCameraTransition.RemainingTime) / currentCameraTransition.TransitionTime, 0, 1);
 		currentCameraPosition.zoom = Lerp(currentCameraTransition.Start.zoom, currentCameraTransition.end.zoom, transitionPercent);
 		currentCameraPosition.Height = Lerp(currentCameraTransition.Start.Height, currentCameraTransition.end.Height, transitionPercent);
 		currentCameraPosition.rotation = RLerp(currentCameraTransition.Start.Rotation, currentCameraTransition.end.Rotation, transitionPercent, true);
@@ -382,6 +382,14 @@ defaultproperties
 					{InVal = 0.5, OutVal = 0.197620898, ArriveTangent = -0.651773274, LeaveTangent = -0.651773274, InterpMode = EInterpCurveMode.CIM_CurveUser}, 
 					{InVal = 0.8, OutVal = 0.0702829957, ArriveTangent = -0.295241803, LeaveTangent = -0.295241803, InterpMode = EInterpCurveMode.CIM_CurveAuto}, 
 					{InVal = 1.0, OutVal = 0.0500000007, ArriveTangent = 0.0, LeaveTangent = 0.0, InterpMode = EInterpCurveMode.CIM_CurveAuto}
+				)
+		}
+
+	// makes camera transitions nice and smooth
+	CameraTransitionCurve = {
+		Points = ({InVal = 0, OutVal = 0.00157867733, ArriveTangent = -0.0326901302, LeaveTangent = -0.0326901302, InterpMode = EInterpCurveMode.CIM_CurveBreak}, 
+				{InVal = 0.484916598, OutVal = 0.494218081, ArriveTangent = 1.32384884, LeaveTangent = 1.32384884, InterpMode = EInterpCurveMode.CIM_CurveUser}, 
+				{InVal = 1.0, OutVal = 1.0, ArriveTangent = -0.0195635185, LeaveTangent = -0.0195635185, InterpMode = EInterpCurveMode.CIM_CurveUser}
 				)
 		}
 }
