@@ -93,7 +93,13 @@ public function ResetCameraForCharacter(string tag)
 		currentCameraPosition.zoom = 0;
 		// head height if we zoomed in (approx)
 		currentCameraPosition.Height = 0.95;
-		ZoomedInMaxHeight = params.PreviewCameraMaxHeight;
+		// get the max camera height from the body spec list
+		ZoomedInMaxHeight = OutfitSpecListBase(params.GetOutfitSpecList(_outermenu.pawnHandler.GetUIWorldPawn())).PreviewCameraMaxHeight;
+		// it can be overridden by the pawn params
+		if (params.PreviewCameraMaxHeight != 0)
+		{
+			ZoomedInMaxHeight = params.PreviewCameraMaxHeight;
+		}
 		UpdateCameraPosition();
 
 		currentCameraPosition.Rotation = _originalRotation;
@@ -321,7 +327,7 @@ private final function SeqAct_SetLocation GetSetLocationNode()
 private final function PlayerStart GetPlayerStart()
 {
     local PlayerStart start;
-    
+
     start = PlayerStart(FindObject("BIOG_UIWorld.TheWorld.PersistentLevel.PlayerStart_2", Class'PlayerStart'));
     return start;
 }
@@ -340,7 +346,7 @@ defaultproperties
 	ZoomedOutHeight = -9
 	ZoomedInMinHeight = -88.5
 
-	debugLogging = true
+	debugLogging = false
 
 	MaxZoomedOutCameraXY = {X = -1974.85974, Y = -234.663101}
 	MaxZoomedInCameraXY = {X = -1265.6636, Y = -136.8608}

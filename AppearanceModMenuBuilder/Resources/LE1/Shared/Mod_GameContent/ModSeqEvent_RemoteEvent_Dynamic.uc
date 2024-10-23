@@ -64,7 +64,6 @@ public static function InvokeDynamicEvent(Name EventNameToInvoke, optional bool 
     local SequenceEvent se;
     local ModSeqEvent_RemoteEvent_Dynamic dynamicEvent;
     local SeqEvent_RemoteEvent re;
-    local bool activated;
     
     BWI = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo());
     BWI.GetGlobalEvents(Class'SeqEvent_RemoteEvent', seqEvents);

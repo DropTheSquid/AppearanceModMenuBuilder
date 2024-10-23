@@ -34,8 +34,10 @@ struct OutfitSpecItem
 	var int breatherSpecOverride;
 };
 
-// Variables
+// the outfits for this body type
 var config array<OutfitSpecItem> outfitSpecs;
+// the max camera height for this body type in the menu
+var config float PreviewCameraMaxHeight;
 
 public function bool DelegateToOutfitSpecById(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds, out pawnAppearance appearance)
 {
@@ -122,4 +124,11 @@ private function bool GetOutfitSpecItemById(int Id, out OutfitSpecItem item)
     }
 	LogInternal("Warning: Could not get outfitSpecItem by id"@Id);
     return FALSE;
+}
+
+//class default properties can be edited in the Properties tab for the class's Default__ object.
+defaultproperties
+{
+	// good enough for most characters, but too short for Turian or Krogan
+	PreviewCameraMaxHeight = 87
 }

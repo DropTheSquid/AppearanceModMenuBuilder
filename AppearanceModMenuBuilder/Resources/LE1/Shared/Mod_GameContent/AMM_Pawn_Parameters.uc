@@ -288,8 +288,6 @@ public function bool SpawnPawn(string appearanceType, out BioPawn spawnedPawn)
 //class default properties can be edited in the Properties tab for the class's Default__ object.
 defaultproperties
 {
-	// good enough for most characters, but too short for Turian or Krogan
-	PreviewCameraMaxHeight = 87
 	// hide hats by default
 	suppressHatMenu=true
 	GiveFullHelmetControl=true

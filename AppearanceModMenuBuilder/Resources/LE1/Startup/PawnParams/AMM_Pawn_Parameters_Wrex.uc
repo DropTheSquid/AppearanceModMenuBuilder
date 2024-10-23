@@ -55,10 +55,3 @@ public function string GetAppearanceType(BioPawn targetPawn)
 	// otherwise, go with the normal system of relying on the armor override to account for in party with/without casual hubs
 	return Super(AMM_Pawn_Parameters_Squad).GetAppearanceType(targetPawn);
 }
-
-
-defaultproperties
-{
-	// Wrex is too tall for the default camera height
-	PreviewCameraMaxHeight = 105
-}

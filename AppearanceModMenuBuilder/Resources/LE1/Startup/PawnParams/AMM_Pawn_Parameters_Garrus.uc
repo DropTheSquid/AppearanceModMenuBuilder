@@ -33,9 +33,3 @@ public function string GetAppearanceType(BioPawn targetPawn)
 	// otherwise, go with the normal system of relying on the armor override to account for in party with/without casual hubs
     return Super.GetAppearanceType(targetPawn);
 }
-
-defaultproperties
-{
-	// Garrus is too tall to use the default camera height
-	PreviewCameraMaxHeight = 97
-}

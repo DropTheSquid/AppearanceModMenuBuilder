@@ -127,3 +127,13 @@ helmetSpecListPath=OutfitSpecs.HMM_HelmetSpec
 breatherSpecListPath=OutfitSpecs.HMM_BreatherSpec
 +AppearanceIdLookupsList=(appearanceType="casual", bodyAppearanceLookup=(plotIntId=1584), helmetAppearanceLookup=(plotIntId=1585), breatherAppearanceLookup=(plotIntId=1586), appearanceFlagsLookup=(plotIntId=1587), FrameworkFileName="BIONPC_Jenkins_Normandy", FrameworkLiveEventName="Live_NPC_Jenkins", FrameworkPollEventName="Poll_NPC_Jenkins")
 +AppearanceIdLookupsList=(appearanceType="combat", bodyAppearanceLookup=(plotIntId=1588), helmetAppearanceLookup=(plotIntId=1589), breatherAppearanceLookup=(plotIntId=1590), appearanceFlagsLookup=(plotIntId=1591))
+
+; a few speicies are especially tall and so need a higher camera height in the preview
+[BioGame.ini OutfitSpecs.KRO_OutfitSpec]
+PreviewCameraMaxHeight=105
+
+[BioGame.ini OutfitSpecs.TUR_OutfitSpec]
+PreviewCameraMaxHeight=97
+
+[BioGame.ini OutfitSpecs.SAL_OutfitSpec]
+PreviewCameraMaxHeight=97
