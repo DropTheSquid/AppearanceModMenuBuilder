@@ -137,5 +137,11 @@ namespace AppearanceModMenuBuilder.LE1.Models
             get => GetBoolValue(nameof(DoNotCheckAppliedInSubmenu));
             set => SetBoolValue(nameof(DoNotCheckAppliedInSubmenu), value);
         }
+
+        public string? CameraPosition
+        {
+            get => GetStringValue(nameof(CameraPosition));
+            set => SetStringValue(nameof(CameraPosition), value);
+        }
     }
 }

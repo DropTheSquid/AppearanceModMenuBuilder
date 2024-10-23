@@ -15,6 +15,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
         public int? DisplayConditional { get; init; } = null;
         public int? RomanceConditional { get; init; } = null;
         public int? RecruitedBool { get; init; } = null;
+
         // Liara gets a bit of special handling, in that her pre recruitment look is casual unless a setting is turned on to put her in armor
         public bool LiaraSpecialHandling { get; init; } = false;
 
@@ -66,6 +67,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
                 ArmorOverride = "overridden",
                 SrTitleWithComment = (SquadMemberNameStringref, "the squadmember's name"),
                 SrSubtitleWithComment = (210210213, "Choose an outfit type"),
+                CameraPosition = "body",
                 // we want the character name to carry through to child menus
                 UseTitleForChildMenus = true,
                 Comment = "Do not add items directly to this menu; add them to the species specific outfit menus instead"

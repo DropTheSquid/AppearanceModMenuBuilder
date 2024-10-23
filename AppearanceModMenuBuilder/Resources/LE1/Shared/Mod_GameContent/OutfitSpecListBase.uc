@@ -34,10 +34,21 @@ struct OutfitSpecItem
 	var int breatherSpecOverride;
 };
 
+struct presetCameraPosition
+{
+	var string cameraPositionName;
+	var float zoom;
+	var float height;
+	var float rotation;
+	var float transitionTime;
+};
+
 // the outfits for this body type
 var config array<OutfitSpecItem> outfitSpecs;
 // the max camera height for this body type in the menu
 var config float PreviewCameraMaxHeight;
+
+var config array<presetCameraPosition> cameraPositions;
 
 public function bool DelegateToOutfitSpecById(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds, out pawnAppearance appearance)
 {

@@ -331,6 +331,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     menus.NonArmor.AddMenuEntry(menus.NonArmorHeadgear.GetEntryPoint(210210282, hideIfHatsSuppressed: true));
 
                     // "Hats"
+                    menus.NonArmorHeadgear.CameraPosition = "head";
                     menus.NonArmorHeadgear.SrSubtitle = 210210282;
                     menus.NonArmorHeadgear.MenuHelmetOverride = AppearanceItemData.EMenuHelmetOverride.onOrFull;
                     menus.NonArmorHeadgear.AddMenuEntry(new AppearanceItemData()
@@ -349,6 +350,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
                 menus.Armor.AddMenuEntry(menus.ArmorHeadgear.GetEntryPoint(210210237, hideIfHeadgearSuppressed: true));
 
+
+                menus.ArmorHeadgear.CameraPosition = "head";
                 // "Helmets"
                 menus.ArmorHeadgear.SrSubtitle = 210210237;
                 menus.ArmorHeadgear.MenuHelmetOverride = AppearanceItemData.EMenuHelmetOverride.onOrFull;
@@ -388,6 +391,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
                 menus.ArmorHeadgear.AddMenuEntry(menus.Breather.GetEntryPoint(210210244, hideIfBreatherSuppressed: true));
 
+                menus.Breather.CameraPosition = "face";
                 // "Breather"
                 menus.Breather.SrSubtitle = 210210244;
                 menus.Breather.MenuHelmetOverride = AppearanceItemData.EMenuHelmetOverride.Full;

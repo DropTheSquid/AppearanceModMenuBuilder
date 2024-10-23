@@ -137,3 +137,15 @@ PreviewCameraMaxHeight=97
 
 [BioGame.ini OutfitSpecs.SAL_OutfitSpec]
 PreviewCameraMaxHeight=97
+
+; base camera positions that should be broadly suitable
+[BioGame.ini Mod_GameContent.OutfitSpecListBase]
++cameraPositions=(cameraPositionName="body",zoom=0,height=1,rotation=0,transitionTime=1)
++cameraPositions=(cameraPositionName="head",zoom=0.6,height=1,rotation=0,transitionTime=1)
++cameraPositions=(cameraPositionName="face",zoom=0.7,height=1,rotation=0,transitionTime=1)
+
+; different ones for Krogan because their heads are so very big
+[BioGame.ini outfitSpecs.KRO_OutfitSpec]
++cameraPositions=(cameraPositionName="body",zoom=0,height=1,rotation=0,transitionTime=1)
++cameraPositions=(cameraPositionName="head",zoom=0.4,height=1,rotation=0,transitionTime=1)
++cameraPositions=(cameraPositionName="face",zoom=0.5,height=1,rotation=0,transitionTime=1)

@@ -24,8 +24,11 @@ public event function Activated()
     local QueuedActivationParams params;
 	local bool handled;
 
-    params = QueuedActivations[0];
-    QueuedActivations.Remove(0, 1);
+    if (QueuedActivations.length > 0)
+    {
+        params = QueuedActivations[0];
+        QueuedActivations.Remove(0, 1);
+    }
 
 	Super(SequenceOp).Activated();
 	// TODO get params if invoked by sequence?

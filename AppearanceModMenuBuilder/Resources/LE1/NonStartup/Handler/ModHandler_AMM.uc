@@ -13,6 +13,7 @@ struct menuState
     var eMenuHelmetOverride currentMenuHelmetOverride;
 	var string inheritedTitle;
 	var string inheritedSubtitle;
+    var string cameraPosition;
 };
 
 // Variables
@@ -36,6 +37,7 @@ var transient bool isAppearanceDirty;
 var GFxMovieInfo movieInfo;
 var transient bool GameWasPaused;
 var transient bool rightClickHeld;
+var transient string lastCameraPosition;
 
 // overrides the same function in CustomUIHandlerInterface; this signature must stay the same
 public static function CustomUIHandlerInterface LaunchMenu(optional string Param)
@@ -98,6 +100,10 @@ private final function menuState getMenuState()
 		{
 			newState.inheritedSubtitle = GetString(currentSubmenu.sSubtitle, currentSubmenu.srSubtitle);
 		}
+        if (currentSubmenu.cameraPosition != "")
+        {
+            newState.cameraPosition = currentSubmenu.cameraPosition;
+        }
     }
     return newState;
 }
@@ -279,6 +285,7 @@ public function RefreshMenu(optional bool firstEnter = FALSE)
 			if (state.pawnTag ~= "None")
             {
                 pawnHandler.DisplayPawn("None", "");
+                lastCameraPosition = "";
                 // TODO remove helmet button here?
             }
             else if (state.pawnTag != "")
@@ -288,6 +295,8 @@ public function RefreshMenu(optional bool firstEnter = FALSE)
             // updater.appearanceTypeOverride = state.appearanceTypeOverride;
             // LogInternal("currentMenu.pawnOverride" @ currentMenu.pawnOverride);
             pawnHandler.ForceAppearanceType(state.armorOverrideState);
+
+            DoCameraPosition(state);
         }
 		// apply (or remove) the menu helmet override
 		updaterInstance = class'AMM_AppearanceUpdater'.static.GetDlcInstance();
@@ -301,6 +310,28 @@ public function RefreshMenu(optional bool firstEnter = FALSE)
         currentMenu.inlineStack.AddItem(PathName(currentMenu.Class));
         PopulateFromSubmenu(currentMenu);
         RenderMenu(state);
+    }
+}
+private function DoCameraPosition(menuState state)
+{
+    local OutfitSpecListBase outfitSpecList;
+    local int i;
+    local presetCameraPosition cameraPos;
+
+    // LogInternal("doing camera position"@state.CameraPosition@lastCameraPosition);
+    // check if we need to transition the camera position
+    if (state.cameraPosition != lastCameraPosition)
+    {
+        lastCameraPosition = state.CameraPosition;
+        outfitSpecList = OutfitSpecListBase(state.params.GetOutfitSpecList(pawnHandler.GetUIWorldPawn()));
+        i = outfitSpecList.cameraPositions.Find('cameraPositionName', state.CameraPosition);
+        // LogInternal("checking"@outfitSpecList@outfitSpecList.cameraPositions.length@i);
+        if (i != -1)
+        {
+            // LogInternal("got"@cameraPos.zoom@cameraPos.height@cameraPos.rotation@cameraPos.transitionTime);
+            cameraPos = outfitSpecList.cameraPositions[i];
+            cameraHandler.GoToCameraPosition(cameraPos.zoom, cameraPos.height, cameraPos.rotation, cameraPos.transitionTime);
+        }
     }
 }
 protected function UIWorldEvent(name event)

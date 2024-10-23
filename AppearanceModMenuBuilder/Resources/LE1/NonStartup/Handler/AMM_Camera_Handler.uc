@@ -232,6 +232,19 @@ public function GoToCameraPosition(float zoom, float height, float rotation, flo
 	height = FClamp(height, 0, 1);
 	Rotation = FClamp(Rotation, -1, 1);
 
+	// if the transition time is zero, go straight to the final position with no delay
+	if (TransitionTime == 0)
+	{
+		// cancel any in progress camera transition
+		currentCameraTransition.RemainingTime = 0;
+		// immediately go to the new position
+		currentCameraPosition.zoom = zoom;
+		currentCameraPosition.height = height;
+		currentCameraPosition.rotation.yaw = _originalRotation.yaw + (rotation * 65535);
+		UpdateCameraPosition();
+		CommitRotation();
+	}
+
 	// height has no effect on when all the way zoomed out, so we can skip straight to the desired height
 	if (currentCameraPosition.zoom == 0)
 	{
@@ -239,6 +252,7 @@ public function GoToCameraPosition(float zoom, float height, float rotation, flo
 	}
 
 	// similarly, if the target is to zoom all the way out, we don't need to transition the height
+	// this will minimize the appearance of the camera moving up and down while moving out
 	if (zoom == 0)
 	{
 		height = currentCameraPosition.Height;

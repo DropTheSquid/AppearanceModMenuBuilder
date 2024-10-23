@@ -80,6 +80,7 @@ var config bool preloadPawn;
 var config bool UseTitleForChildMenus;
 var config bool UseSubtitleForChildMenus;
 var config bool DoNotCheckAppliedInSubmenu;
+var config string cameraPosition;
 
 // Functions
 public function bool OnRefreshMenu(Object outerMenu)
