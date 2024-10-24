@@ -131,7 +131,7 @@ public function ASLoadedEx()
 public function LogEX(string funcName, string message)
 {
     // comment("This gets called from the GUI to log various things. Can be safely ignored or overriden");
-    LogInternal("AS LOG:" @ funcName @ message, );
+    // LogInternal("AS LOG:" @ funcName @ message, );
 }
 public function BackButtonPressedEx()
 {

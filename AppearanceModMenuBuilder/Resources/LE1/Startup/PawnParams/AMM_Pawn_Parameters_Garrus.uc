@@ -5,7 +5,7 @@ public function string GetAppearanceType(BioPawn targetPawn)
 {
 	// all Garrus appearances:
 	// pre recruitment in Med Clinic (sta60_Garrus)
-	// late pre recruitment in CSec TODO
+	// late pre recruitment in CSec
 	// in party w/ or w/o casual hubs
 	// Virmire
 	// Normandy

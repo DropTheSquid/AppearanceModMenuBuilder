@@ -1001,7 +1001,7 @@ public function ASLoadedEx()
     
 	if (!class'AMM_AppearanceUpdater_Base'.static.IsMergeModInstalled(basegameInstance))
 	{
-        LogInternal("Closing menu, as it was installed incorrectly; If you are seeing this, you uninstalled or overwrote the basegame changes of AMM but left the DLC. Remove the DLC to finish uninstalling it, or apply the mod again to make it work.", );
+        LogInternal("Warning: Closing menu, as it was installed incorrectly; If you are seeing this, you uninstalled or overwrote the basegame changes of AMM but left the DLC. Remove the DLC to finish uninstalling it, or apply the mod again to make it work.", );
         Super.Close();
         return;
     }

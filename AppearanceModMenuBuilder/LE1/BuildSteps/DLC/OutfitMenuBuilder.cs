@@ -297,7 +297,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             {
                 MED = new WeightVariant()
                 {
-                    // TODO what is the appearance id?
                     MeshVariant = 0,
                     MaterialVariant = 4
                 }
@@ -309,7 +308,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             {
                 LGT = new WeightVariant()
                 {
-                    // TODO what is the appearance id?
                     MeshVariant = 0,
                     MaterialVariant = 6
                 }
@@ -321,7 +319,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             {
                 HVY = new WeightVariant()
                 {
-                    // TODO what is the appearance id?
                     MeshVariant = 0,
                     MaterialVariant = 4
                 }
@@ -333,7 +330,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             {
                 HVY = new WeightVariant()
                 {
-                    // TODO what is the appearance id?
                     MeshVariant = 0,
                     MaterialVariant = 5
                 }
@@ -400,20 +396,20 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             {
                 menu.Breather.AddMenuEntry(new AppearanceItemData()
                 {
-                    // "Shepard"
-                    SrCenterText = 125303,
+                    // "Special Forces Breather" (Shepard's
+                    SrCenterText = 210210308,
                     ApplyBreatherId = -11
                 });
                 menu.Breather.AddMenuEntry(new AppearanceItemData()
                 {
-                    // "Ashley"
-                    SrCenterText = 168842,
+                    // "Soldier Breather" (Ashley's)
+                    SrCenterText = 210210309,
                     ApplyBreatherId = -13,
                 });
                 menu.Breather.AddMenuEntry(new AppearanceItemData()
                 {
-                    // "Liara"
-                    SrCenterText = 149285,
+                    // "Adept Breather" (Liara)
+                    SrCenterText = 210210311,
                     ApplyBreatherId = -12,
                 });
                 menu.Breather.AddMenuEntry(new AppearanceItemData()
@@ -421,12 +417,12 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     // will resolve to "Liara - Light Variant"
                     SrCenterText = 210210307,
                     ApplyBreatherId = -16,
-                    DisplayVars = ["$149285"]
+                    DisplayVars = ["$210210311"]
                 });
                 menu.Breather.AddMenuEntry(new AppearanceItemData()
                 {
-                    // "Kaidan"
-                    SrCenterText = 151316,
+                    // "Sentinel Breather" (Kaidan's)
+                    SrCenterText = 210210310,
                     ApplyBreatherId = -14,
                 });
                 menu.Breather.AddMenuEntry(new AppearanceItemData()

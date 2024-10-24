@@ -1,517 +1,538 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <tlkFile Name="GlobalTlk_tlk">
-	<!-- hardcoded base string -->
+	<!-- hardcoded base string; do not localize -->
 	<string>
 		<id>210210210</id>
-		<flags>1</flags>
 		<data>AppearanceModMenu</data>
 	</string>
 	<!-- button in inventory menu -->
 	<string>
 		<id>210210211</id>
-		<flags>1</flags>
 		<data>Customize Appearance</data>
 	</string>
-	<!-- shown when you exit the menu in the proluge. Should update the text to refl ect new ways of accessing -->
+	<!-- shown when you exit the menu in the proluge. Should update the text to reflect new ways of accessing -->
 	<string>
 		<id>210210212</id>
-		<flags>1</flags>
 		<data>Do you want to accept the appearances and start the game?
-You can customize characters' appearances at any time from the Inventory screen or by loading Save 1 to replay the prologue.</data>
+You can customize characters' appearances at any time from the lockers in the Normandy Vehicle Bay.</data>
 	</string>
 	<!-- subtitle at root of each character's menu -->
 	<string>
 		<id>210210213</id>
-		<flags>1</flags>
 		<data>Select an appearance type</data>
 	</string>
 	<!-- appearance type submenus -->
 	<string>
 		<id>210210214</id>
-		<flags>1</flags>
 		<data>Casual Appearance</data>
 	</string>
 	<string>
 		<id>210210215</id>
-		<flags>1</flags>
 		<data>Combat Appearance</data>
 	</string>
 	<string>
 		<id>210210216</id>
-		<flags>1</flags>
 		<data>Romance Appearance</data>
 	</string>
-	<!-- character select menu -->
+	<!-- character select button, shown at the top of the menu when appropriate -->
 	<string>
 		<id>210210217</id>
-		<flags>1</flags>
 		<data>Select a Character</data>
 	</string>
-	<!-- what is says on the tin. If you use this stringref, it will replace it with your Shep's name. -->
+	<!-- what is says on the tin. If you use this stringref, it will replace it with your Shep's name. you do not need to localize this. -->
 	<string>
 		<id>210210218</id>
-		<flags>1</flags>
 		<data>This is a special stringref which, within AMM, will resolve to Shepard's full name. It's a neat touch. Use this in menu names and stuff</data>
 	</string>
-	<!-- interact prompt for new armor locker terminal -->
+	<!-- interact prompt for new armor locker terminal; copied from LE2 276596 -->
+	<!-- DE Panzerungsspind -->
+	<!-- ES Armario de armadura -->
+	<!-- FR Casier à armure -->
+	<!-- IT Armadietto corazze -->
+	<!-- JA アーマー ロッカー -->
+	<!-- PL Szafka na pancerze -->
+	<!-- RU Шкаф для брони -->
 	<string>
 		<id>210210219</id>
-		<flags>1</flags>
 		<data>Armor Locker</data>
 	</string>
+	<!-- used with above; copied from LE2 276597 -->
+	<!-- DE Ausrüstung modifizieren -->
+	<!-- ES Personalizar equipo -->
+	<!-- FR Personnaliser l'équipement -->
+	<!-- IT Personalizza equipaggiamento -->
+	<!-- JA ギアをカスタマイズ -->
+	<!-- PL Dostosowanie sprzętu -->
+	<!-- RU Настройки снаряжения -->
 	<string>
 		<id>210210220</id>
-		<flags>1</flags>
 		<data>Customize Gear</data>
 	</string>
-	<!-- string for mod settings menu -->
+	<!-- strings for mod settings menu -->
 	<string>
 		<id>210210221</id>
-		<flags>1</flags>
 		<data>Appearance Modification Menu</data>
 	</string>
 	<string>
 		<id>210210222</id>
-		<flags>1</flags>
 		<data>Settings for Appearance Modification Menu</data>
 	</string>
 	<string>
 		<id>210210223</id>
-		<flags>1</flags>
-		<data>Settings for Appearance Modification Menu. This will enable additional options which are disabled by default</data>
+		<data>Settings for Appearance Modification Menu. This allows you to enable additional options which are disabled by default.</data>
 	</string>
 	<!-- menu accessibility option -->
 	<string>
 		<id>210210224</id>
-		<flags>1</flags>
-		<data>Menu accesibility</data>
+		<data>Menu Accesibility</data>
 	</string>
 	<string>
 		<id>210210225</id>
-		<flags>1</flags>
 		<data>Default</data>
 	</string>
-	<string>
+	<!-- <string>
 		<id>210210226</id>
-		<flags>1</flags>
 		<data>Non Combat Areas</data>
 	</string>
 	<string>
 		<id>210210227</id>
-		<flags>1</flags>
 		<data>Outside of Combat</data>
-	</string>
+	</string> -->
 	<string>
 		<id>210210228</id>
-		<flags>1</flags>
-		<data>Always</data>
+		<data>Always Accessible</data>
 	</string>
-	<!--  TODO expand these -->
 	<string>
 		<id>210210229</id>
-		<flags>1</flags>
-		<data>Default Menu accessibility Description</data>
+		<data>The menu will be available after character creation and before the prologue and from the lockers in the Normandy Vehicle Bay, and at any other access points added by other mods.</data>
 	</string>
-	<string>
+	<!-- <string>
 		<id>210210230</id>
-		<flags>1</flags>
 		<data>Non Combat Area Menu accessibility Description</data>
 	</string>
 	<string>
 		<id>210210231</id>
-		<flags>1</flags>
 		<data>Outside of Combat Menu accessibility Description</data>
-	</string>
+	</string> -->
 	<string>
 		<id>210210232</id>
-		<flags>1</flags>
-		<data>Always Menu accessibility Description</data>
+		<data>The menu will always be available in the Equipment screen. You may ocasionally run into issues if you access it during certain timed missions or while in combat or in a vehicle. </data>
 	</string>
+	<!-- submenu names -->
 	<string>
 		<id>210210233</id>
-		<flags>1</flags>
 		<data>Armor</data>
 	</string>
 	<string>
 		<id>210210234</id>
-		<flags>1</flags>
 		<data>Non Armor</data>
 	</string>
+	<!-- used to enumerate styles of outfits; the CUSTOM0 section will be replaced with a number. order can be changed for localizations. -->
 	<string>
 		<id>210210235</id>
-		<flags>1</flags>
 		<data>Style &lt;CUSTOM0&gt;</data>
 	</string>
-	<!-- used for "Manufacturer — ArmorName" when there are no different weight versions -->
+	<!-- used for "Manufacturer — ArmorName" when there are no different weight versions; no need to localize -->
 	<string>
 		<id>210210236</id>
-		<flags>1</flags>
 		<data>&lt;CUSTOM0&gt; - &lt;CUSTOM1&gt;</data>
 	</string>
+	<!-- submenu name -->
 	<string>
 		<id>210210237</id>
-		<flags>1</flags>
 		<data>Helmet</data>
 	</string>
-	<!-- used for armor weight in the above stringref -->
+	<!-- used for armor weight in the above stringref; copied from 125355/771340 -->
+	<!-- DE Leichte -->
+	<!-- ES Ligera -->
+	<!-- FR Légère -->
+	<!-- IT Leggera -->
+	<!-- JA 軽量 -->
+	<!-- PL Lekki -->
+	<!-- RU Легкая -->
 	<string>
 		<id>210210238</id>
-		<flags>1</flags>
 		<data>Light</data>
 	</string>
+	<!-- copied from 125353/771342 -->
+	<!-- DE Mittelschwere -->
+	<!-- ES Media -->
+	<!-- FR Intermédiaire -->
+	<!-- IT Media -->
+	<!-- JA 標準 -->
+	<!-- PL Średni  -->
+	<!-- RU Средняя -->
 	<string>
 		<id>210210239</id>
-		<flags>1</flags>
 		<data>Medium</data>
 	</string>
+	<!-- copied from 125354/771344 -->
+	<!-- DE Schwere -->
+	<!-- ES Pesada -->
+	<!-- FR Lourde -->
+	<!-- IT Pesante -->
+	<!-- JA 重量 -->
+	<!-- PL Ciężki -->
+	<!-- RU Тяжелая -->
 	<string>
 		<id>210210240</id>
-		<flags>1</flags>
 		<data>Heavy</data>
 	</string>
-	<!-- to differentiate from squadmate Onyx -->
+	<!-- to differentiate from squadmate Onyx; Onyx is 143390 -->
+	<!-- DE N7 Onyx -->
+	<!-- ES N7 Onyx -->
+	<!-- FR N7 Onyx -->
+	<!-- IT N7 Onyx -->
+	<!-- JA N7 オニキス -->
+	<!-- PL N7 Onyks -->
+	<!-- RU N7 Оникс -->
 	<string>
 		<id>210210241</id>
-		<flags>1</flags>
 		<data>N7 Onyx</data>
 	</string>
-	<!-- replacing vanilla "Thermal Armor" as most armors do not have the word Armor in the name -->
+	<!-- replacing vanilla "Thermal Armor" as most armors do not have the word Armor in the name; Thermal Armor is in 171735 -->
+	<!-- DE Thermo -->
+	<!-- ES Termal -->
+	<!-- FR Thermique -->
+	<!-- IT Termica -->
+	<!-- JA サーマル -->
+	<!-- PL Termiczny -->
+	<!-- RU Термо -->
 	<string>
 		<id>210210242</id>
-		<flags>1</flags>
 		<data>Thermal</data>
 	</string>
-	<!-- same as above with "Spectre Armor" -->
+	<!-- same as above with "Spectre Armor", which is in 174134 -->
+	<!-- DE Spectre -->
+	<!-- ES Espectro -->
+	<!-- FR Spectre -->
+	<!-- IT Spettro -->
+	<!-- JA スペクター -->
+	<!-- PL Widma -->
+	<!-- RU Спектр -->
 	<string>
 		<id>210210243</id>
-		<flags>1</flags>
 		<data>Spectre</data>
 	</string>
 	<!-- submenu name -->
 	<string>
 		<id>210210244</id>
-		<flags>1</flags>
 		<data>Breather</data>
 	</string>
 	<!-- name for the breather NPCs use that covers their full face -->
 	<string>
 		<id>210210245</id>
-		<flags>1</flags>
 		<data>Faceplate</data>
 	</string>
 	<!-- name and description for the ignore forced helmet setting -->
 	<string>
 		<id>210210246</id>
-		<flags>1</flags>
 		<data>Ignore Forced Helmet</data>
 	</string>
 	<string>
 		<id>210210247</id>
-		<flags>1</flags>
-		<data>Ignore Forced Helmet Description</data>
+		<data>Sometimes, the game forces characters to wear full helmets, especially in environments without breatheable air. This setting will ignore that and respect the helmet visibility last selected. Disabled by default for immersion.</data>
 	</string>
+	<!-- Shows up within the menu and in the Squad record screen to cycle through no helmet, helmet without breather, and helmet with breather -->
 	<string>
 		<id>210210248</id>
-		<flags>1</flags>
 		<data>Cycle Helmet</data>
 	</string>
+	<!-- more mod settings strings -->
 	<string>
 		<id>210210249</id>
-		<flags>1</flags>
 		<data>Allow Casual Outfits as Combat Outfit</data>
 	</string>
 	<string>
 		<id>210210250</id>
-		<flags>1</flags>
-		<data>Allow Casual Outfits as Combat Outfit Description</data>
+		<data>By default, only armor is available for combat appearances. With this setting enabled, casual clothes will also be available for character's combat appearances. This will not hide their weapons, and weapons might not holster correctly on all outfits. </data>
 	</string>
 	<string>
 		<id>210210251</id>
-		<flags>1</flags>
 		<data>Allow Combat Outfits as Casual Outfit</data>
 	</string>
 	<string>
 		<id>210210252</id>
-		<flags>1</flags>
-		<data>Allow Combat Outfits as Casual Outfit Description</data>
+		<data>By default, armor is not available for casual situations. With this setting enabled, armor will be available to select even for casual situation. This will not affect the present of weapons.</data>
 	</string>
+	<!-- submenu titles -->
 	<string>
 		<id>210210253</id>
-		<flags>1</flags>
 		<data>&lt;CUSTOM0&gt;
 Casual</data>
 	</string>
 	<string>
 		<id>210210254</id>
-		<flags>1</flags>
 		<data>&lt;CUSTOM0&gt;
 Combat</data>
 	</string>
 	<string>
 		<id>210210255</id>
-		<flags>1</flags>
 		<data>&lt;CUSTOM0&gt;
 Romance</data>
 	</string>
+	<!-- subtitle for outfit menu -->
 	<string>
 		<id>210210256</id>
-		<flags>1</flags>
 		<data>Choose an outfit</data>
 	</string>
+	<!-- submenu names and outfit names -->
 	<string>
 		<id>210210257</id>
-		<flags>1</flags>
 		<data>Alliance Formal</data>
 	</string>
 	<string>
 		<id>210210258</id>
-		<flags>1</flags>
 		<data>Science/Medical Uniform</data>
 	</string>
 	<string>
 		<id>210210259</id>
-		<flags>1</flags>
 		<data>Miscellaneous</data>
 	</string>
 	<string>
 		<id>210210260</id>
-		<flags>1</flags>
 		<data>Nude</data>
 	</string>
 	<string>
 		<id>210210261</id>
-		<flags>1</flags>
 		<data>Dancer</data>
 	</string>
 	<string>
 		<id>210210262</id>
-		<flags>1</flags>
 		<data>Fatigues</data>
 	</string>
 	<string>
 		<id>210210263</id>
-		<flags>1</flags>
 		<data>Suit</data>
 	</string>
 	<string>
 		<id>210210264</id>
-		<flags>1</flags>
 		<data>Expensive Dress</data>
 	</string>
 	<string>
 		<id>210210265</id>
-		<flags>1</flags>
 		<data>Trendy Dress</data>
 	</string>
 	<string>
 		<id>210210266</id>
-		<flags>1</flags>
 		<data>Sexy Dress</data>
 	</string>
 	<string>
 		<id>210210267</id>
-		<flags>1</flags>
 		<data>Civilian Outfit 1</data>
 	</string>
 	<string>
 		<id>210210268</id>
-		<flags>1</flags>
 		<data>Civilian Outfit 2</data>
 	</string>
 	<string>
 		<id>210210269</id>
-		<flags>1</flags>
 		<data>Civilian Outfit 3</data>
 	</string>
 	<string>
 		<id>210210270</id>
-		<flags>1</flags>
 		<data>Civilian Outfit 4</data>
 	</string>
+	<!-- more mod settings names and descriptions -->
 	<string>
 		<id>210210271</id>
-		<flags>1</flags>
 		<data>Romance Appearance Customization</data>
 	</string>
 	<string>
 		<id>210210272</id>
-		<flags>1</flags>
-		<data>Romance Appearance Customization enabled description</data>
+		<data>Allows you to select a different outfit for character's romance scenes. This setting is currently enabled. </data>
 	</string>
 	<string>
 		<id>210210273</id>
-		<flags>1</flags>
-		<data>Romance Appearance Customization disabled description</data>
+		<data>Allows you to select a different outfit for character's romance scenes. This setting is currently disabled. (default)</data>
 	</string>
 	<string>
 		<id>210210274</id>
-		<flags>1</flags>
 		<data>Pre recruitment Appearance Customization</data>
 	</string>
 	<string>
 		<id>210210275</id>
-		<flags>1</flags>
-		<data>Pre recruitment Appearance Customization enabled description</data>
+		<data>Allows you to customize squadmate appearances before they have been recruited into your party. This setting is currently enabled. </data>
 	</string>
 	<string>
 		<id>210210276</id>
-		<flags>1</flags>
-		<data>Pre recruitment Appearance Customization diabled description</data>
+		<data>Allows you to customize squadmate appearances before they have been recruited into your party. This setting is currently disabled. (default)</data>
 	</string>
 	<string>
 		<id>210210277</id>
-		<flags>1</flags>
-		<data>Show weird outfits</data>
+		<data>Show Immersion Breaking Outfits</data>
 	</string>
 	<string>
 		<id>210210278</id>
-		<flags>1</flags>
-		<data>Show weird outfits enabled description</data>
+		<data>Allows you to select immersion breaking outfits such as the romance body, the dancer, or Avina body as casual outfits. This option is current enabled.</data>
 	</string>
 	<string>
 		<id>210210279</id>
-		<flags>1</flags>
-		<data>Show weird outfits disabled description</data>
+		<data>Allows you to select immersion breaking outfits such as the romance body, the dancer, or Avina body as casual outfits. This option is current disabled. (default)</data>
 	</string>
+	<!-- menu names that should go along with 210210214 and 210210215 above, shown before someone is recruited if that option is enabled-->
 	<string>
 		<id>210210280</id>
-		<flags>1</flags>
 		<data>Casual/Pre Recruitment Appearance</data>
 	</string>
 	<string>
 		<id>210210281</id>
-		<flags>1</flags>
 		<data>Combat/Pre Recruitment Appearance</data>
 	</string>
+	<!--  menu option for non combat headgear (not accessible by default, but can be expanded in the future) -->
 	<string>
 		<id>210210282</id>
-		<flags>1</flags>
 		<data>Hats</data>
 	</string>
+	<!-- menu option to restore a character to their default outfit -->
 	<string>
 		<id>210210283</id>
-		<flags>1</flags>
 		<data>Default Outfit</data>
 	</string>
+	<!-- menu option to restore a character to their default helmet, unless they have picked an outfit that has a different default helmet, in which case it will use that one -->
 	<string>
 		<id>210210284</id>
-		<flags>1</flags>
 		<data>Default Helmet Matching Outfit</data>
 	</string>
+	<!-- menu option to restore a character to using their default breather -->
 	<string>
 		<id>210210285</id>
-		<flags>1</flags>
 		<data>Default Breather</data>
 	</string>
 	<string>
 		<id>210210286</id>
-		<flags>1</flags>
-		<data>Force Liara to wear armor for her recruitment mission</data>
+		<data>Liara Wears Armor for Recruitment Mission</data>
 	</string>
 	<string>
 		<id>210210287</id>
-		<flags>1</flags>
-		<data>Force Liara to wear armor for her recruitment mission enabled description</data>
+		<data>Puts Liara in her default armor (or her combat appearance, if overridden) for her recruitment mission rather than casual. This option is currently enabled. </data>
 	</string>
 	<string>
 		<id>210210288</id>
-		<flags>1</flags>
-		<data>Force Liara to wear armor for her recruitment mission disabled description</data>
+		<data>Puts Liara in her default armor (or her combat appearance, if overridden) for her recruitment mission rather than casual. This option is currently disabled. (default)</data>
 	</string>
 	<string>
 		<id>210210289</id>
-		<flags>1</flags>
-		<data>Tali uses the same appearance on and off the Normandy</data>
+		<data>Tali Uses the Same Appearance in Casual and Combat</data>
 	</string>
 	<string>
 		<id>210210290</id>
-		<flags>1</flags>
-		<data>Tali uses the same appearance on and off the Normandy enabled description</data>
+		<data>This setting makes Tali use the same appearance for both casual and combat situations, so any selected overrides will apply to both. This setting is currently enabled. </data>
 	</string>
 	<string>
 		<id>210210291</id>
-		<flags>1</flags>
-		<data>Tali uses the same appearance on and off the Normandy disabled description</data>
+		<data>This setting makes Tali use the same appearance for both casual and combat situations, so any selected overrides will apply to both. This setting is currently disabled. (default)</data>
 	</string>
 	<string>
 		<id>210210292</id>
-		<flags>1</flags>
 		<data>Squadmates Wear Equipped Armor</data>
 	</string>
 	<string>
 		<id>210210293</id>
-		<flags>1</flags>
-		<data>Squadmates Wear Equipped Armor enabled description</data>
+		<data>This setting makes squadmates wear their equipped armor when they are in a combat appearance even when they are not actively in the party. This will override their default "iconic" appearance. Any selected appearance override will still have precedence over this. This option is currently enabled.</data>
 	</string>
 	<string>
 		<id>210210294</id>
-		<flags>1</flags>
-		<data>Squadmates Wear Equipped Armor disabled description</data>
+		<data>This setting makes squadmates wear their equipped armor when they are in a combat appearance even when they are not actively in the party. This will override their default "iconic" appearance. Any selected appearance override will still have precedence over this. This option is currently disabled. (default)</data>
 	</string>
+	<!-- Interact prompt with newly added squad locker; similar to vanilla strings like 169933 -->
+	<!-- DE Shepard ausrüsten -->
+	<!-- ES Dar equipo a Shepard -->
+	<!-- FR Équiper Shepard -->
+	<!-- IT Equipaggia Shepard -->
+	<!-- JA シェパードの装備を変更 -->   
+	<!-- PL Wyposaż Shepard -->
+	<!-- RU Экипировать Шепард -->
 	<string>
 		<id>210210295</id>
-		<flags>1</flags>
 		<data>Equip Shepard</data>
 	</string>
+	<!-- options within the menu -->
 	<string>
 		<id>210210296</id>
-		<flags>1</flags>
 		<data>Equipped Armor</data>
 	</string>
 	<string>
 		<id>210210297</id>
-		<flags>1</flags>
 		<data>Equipped Helmet</data>
 	</string>
+	<!-- salarian outfit descrition -->
 	<string>
 		<id>210210298</id>
-		<flags>1</flags>
 		<data>Cloak</data>
 	</string>
 	<!-- used to denote a few helmets with materials ported from OT -->
 	<string>
 		<id>210210299</id>
-		<flags>1</flags>
 		<data>&lt;CUSTOM02&gt; - Classic</data>
 	</string>
+	<!-- outfit submenu descriptions -->
 	<string>
 		<id>210210300</id>
-		<flags>1</flags>
 		<data>Colonist Outfit</data>
 	</string>
 	<string>
 		<id>210210301</id>
-		<flags>1</flags>
 		<data>Miner Jumpsuit</data>
 	</string>
 	<string>
 		<id>210210302</id>
-		<flags>1</flags>
 		<data>Robust Outfit</data>
 	</string>
 	<string>
 		<id>210210303</id>
-		<flags>1</flags>
 		<data>Puffy Vest Outfit</data>
 	</string>
+	<!-- more mod settings strings -->
 	<string>
 		<id>210210304</id>
-		<flags>1</flags>
-		<data>Force Liara to wear armor on Virmire</data>
+		<data>Liara Wears Armor on Virmire</data>
 	</string>
 	<string>
 		<id>210210305</id>
-		<flags>1</flags>
-		<data>Force Liara to wear armor on Virmire enabled description</data>
+		<data>Puts Liara in an armor appearance on Virmire while she is not in the party. This will use either her default armor, her equipped armor, or the selected override depending on other settings. This option is currently enabled. </data>
 	</string>
 	<string>
 		<id>210210306</id>
-		<flags>1</flags>
-		<data>Force Liara to wear armor on Virmire disabled description</data>
+		<data>Puts Liara in an armor appearance on Virmire while she is not in the party. This will use either her default armor, her equipped armor, or the selected override depending on other settings. This option is currently disabled. (default)</data>
 	</string>
+	<!-- used for a breather variant; light as in light in color, not weight -->
 	<string>
 		<id>210210307</id>
-		<flags>1</flags>
 		<data>&lt;CUSTOM0&gt; - Light Variant</data>
+	</string>
+	<!-- names for breathers -->
+	<!-- this is the one used by Shepard by default -->
+	<string>
+		<id>210210308</id>
+		<data>Special Forces Breather</data>
+	</string>
+	<!-- this is the one used by Ashley by default -->
+	<string>
+		<id>210210309</id>
+		<data>Soldier Breather</data>
+	</string>
+	<!-- this is the one used by Kaidan by default -->
+	<string>
+		<id>210210310</id>
+		<data>Sentinel Breather</data>
+	</string>
+	<!-- this is the one used by Liara by default -->
+	<string>
+		<id>210210311</id>
+		<data>Adept Breather</data>
+	</string>
+	<!-- more mod settings strings -->
+	<string>
+		<id>210210312</id>
+		<data>Remove Helmets in Conversations and Cinematics</data>
+	</string>
+	<string>
+		<id>210210313</id>
+		<data>This setting will remove helmets during conversations and cinematics, then restore them after. It will still respect forced full helmets unless the setting to ignore that is enabled. This setting is currently disabled. (default)</data>
+	</string>
+	<string>
+		<id>210210314</id>
+		<data>This setting will remove helmets during conversations and cinematics, then restore them after. It will still respect forced full helmets unless the setting to ignore that is enabled. This setting is currently enabled. </data>
 	</string>
 </tlkFile>

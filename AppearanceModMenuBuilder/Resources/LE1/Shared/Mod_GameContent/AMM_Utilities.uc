@@ -57,7 +57,7 @@ public static function bool IsPawnArmorAppearanceOverridden(BioPawn targetPawn)
     pawnType = GetPawnType(targetPawn);
     if (pawnType == None)
     {
-        LogInternal("Why does this pawn not have a pawnType???" @ PathName(targetPawn), );
+        LogInternal("Warning: Why does this pawn not have a pawnType???" @ PathName(targetPawn), );
         return FALSE;
     }
     // this is nasty, but basically, the first is the 'default' behavior of this pawn, such as true for most NPCs on the Normandy (except the ones that are inexplicably broken)

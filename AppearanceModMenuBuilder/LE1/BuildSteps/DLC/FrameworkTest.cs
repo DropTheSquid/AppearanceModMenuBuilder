@@ -29,7 +29,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             Directory.CreateDirectory(Path.Combine(context.CookedPCConsoleFolder, "FrameworkTest"));
             ConfigMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-FrameworkTest.m3cd");
-            // TODO make this relative to output dir 
             var frameworkLibraryDir = Path.Combine(Directory.GetParent(context.DLCBaseFolder).Parent.FullName, @"LE1 Framework\DLC_MOD_Framework\CookedPCConsole");
             foreach (var file in Directory.EnumerateFiles(frameworkLibraryDir, "BIONPC_*", SearchOption.AllDirectories))
             {

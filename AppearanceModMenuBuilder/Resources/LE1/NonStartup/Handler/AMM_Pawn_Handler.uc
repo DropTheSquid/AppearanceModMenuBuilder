@@ -95,7 +95,7 @@ public function OnRemoteEvent(Name EventName)
 	local BioPawn pawn;
 	local RealWorldPawnRecord newRecord;
 
-	LogInternal("received remote event"@EventName);
+	// LogInternal("received remote event"@EventName);
 	foreach streamingRequests(currentRequest, i)
 	{
 		if (!currentRequest.completed && currentRequest.FrameworkLiveEventName ~= string(EventName))
@@ -121,7 +121,7 @@ public function OnRemoteEvent(Name EventName)
 			}
 			else
 			{
-				LogInternal("got live event before level was visible? very strange");
+				LogInternal("Warning: got NPC live event before level was visible");
 			}
 			break;
 		}
@@ -155,7 +155,7 @@ private function bool CanUnregisterEvent(Name EventName)
 	if (!anyRequestOpen)
 	{
 		// re pause the game, remove the timeout
-		LogInternal("pausing due to all complete");
+		// LogInternal("pausing due to all complete");
 		sequenceTimer = 0;
 		_outerMenu.oWorldInfo.bPlayersOnly = true;
 	}
@@ -571,7 +571,7 @@ public function Update(float fDeltaT)
 					{
 						if (_outerMenu.oWorldInfo.bPlayersOnly)
 						{
-							LogInternal("unpausing to wait for live event"@currentRequest.frameworkLiveEventName);
+							// LogInternal("unpausing to wait for live event"@currentRequest.frameworkLiveEventName);
 							_outerMenu.oWorldInfo.bPlayersOnly = false;
 						}
 						streamingRequests[i].timeoutSet = true;
@@ -642,7 +642,7 @@ private function bool FindStreamedInPawn(string tag, string fileName, out BioPaw
 			}
 		}
 	}
-	LogInternal("could not find streamed in pawn"@tag@filename);
+	LogInternal("Warning: could not find streamed in pawn"@tag@filename);
     return FALSE;
 }
 
