@@ -81,4 +81,6 @@ defaultproperties
 {
 	// false for squadmates, in general
 	requiresFramework=false
+    // squadmates can hide their helmets in conversations
+    hideHelmetsInConversations=true
 }

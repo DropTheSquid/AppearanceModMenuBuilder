@@ -10,6 +10,8 @@ var config bool ExtraCharacterModulesPresent;
 var transient bool InEquippedArmorLookup;
 // disabled as I do not currently need this
 // var transient array<string> handledPawns;
+var transient bool bInConversationMode;
+var transient bool bInCinematicMode;
 
 var transient delegate<onAppearanceUpdated> __onAppearanceUpdated__Delegate;
 
@@ -609,6 +611,41 @@ public function ApplyPlayerAppearance(BioPawn target)
 
 	saveGame = class'SFXEngine'.static.GetEngine().CurrentSaveGame;
 	target.m_oBehavior.m_oAppearanceType.m_oMorphFace = saveGame.LoadMorphHead();
+}
+
+public function GameModeChanged(SFXGameModeBase newGameMode, bool activated)
+{
+	local bool eitherActive;
+	local BioGlobalVariableTable globalVars;
+	local Actor tempActor;
+
+	// record this before we update anything
+	eitherActive = bInConversationMode || bInCinematicMode;
+	if (newGameMode.class == class'SFXGameModeConversation')
+	{
+		bInConversationMode = Activated;
+	}
+	if (newGameMode.class == class'SFXGameModeCinematic')
+	{
+		bInCinematicMode = Activated;
+	}
+	// don't do anything unless the setting for hiding helmets during convo/cinematic is on
+	globalVars = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo()).GetGlobalVariables();
+	if (globalVars.GetInt(1603) == 1)
+	{
+		// if we are transitioning in or out of both/either
+		if (eitherActive != (bInConversationMode || bInCinematicMode))
+		{
+			// trigger an update of all pawns
+			foreach BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo()).AllActors(Class'Actor', tempActor, )
+			{
+				if (BioPawn(tempActor) != None)
+				{
+					UpdatePawnAppearance(BioPawn(tempActor), "AMM GameModeChanged");
+				}
+			}
+		}
+	}
 }
 
 

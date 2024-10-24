@@ -905,10 +905,16 @@ public static function eHelmetDisplayState GetHelmetDisplayState(PawnAppearanceI
 	if (params.GiveFullHelmetControl || (appearanceIds.m_appearanceSettings.bOverridedefaultHeadgearVisibility && params.canChangeHelmetState))
 	{
 		// if the game has an override to breather and we are not ignoring it, use a full breather
-		if (ShouldUseForcedBreather(target, params))
+        if (ShouldUseForcedBreather(target, params))
 		{
 			return eHelmetDisplayState.full;
 		}
+
+        // after that check passes, check if we should be hiding it for conversations
+        if (ShouldHideHelmetForCinematic(target, params))
+        {
+            return eHelmetDisplayState.off;
+        }
 
 		if (GetMenuHelmetOverride(target, appearanceIds.m_appearanceSettings.helmetDisplayState, forceHelmetState))
 		{
@@ -1025,6 +1031,37 @@ private static function bool ShouldUseForcedBreather(BioPawn target, AMM_Pawn_Pa
 	faceplateVisible = appearance.m_headGearVisibilityRunTimeOverride.m_a[1].m_bIsVisible;
 	// force the breather only if the helmet and faceplate have been forced into visibility
 	return helmetVisible && faceplateVisible;
+}
+
+private static function bool ShouldHideHelmetForCinematic(BioPawn target, AMM_Pawn_Parameters params)
+{
+    local BioGlobalVariableTable globalVars;
+    local AMM_AppearanceUpdater updaterInstance;
+
+    // if this is a preview pawn, return false; we should ignore forced state there
+	if (target.GetPackageName() == 'BIOG_UIWORLD')
+	{
+		return false;
+	}
+
+    if (!params.hideHelmetsInConversations)
+    {
+        // don't touch non squad helmets
+        return false;
+    }
+
+	// don't do anything unless the setting for hiding helmets during convo/cinematic is on
+	globalVars = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo()).GetGlobalVariables();
+	if (globalVars.GetInt(1603) == 0)
+    {
+        return false;
+    }
+    updaterInstance = class'AMM_AppearanceUpdater'.static.GetDlcInstance();
+    if (updaterInstance.bInConversationMode || updaterInstance.bInCinematicMode)
+    {
+        return true;
+    }
+    return false;
 }
 
 // private static function eHelmetDisplayState GetVanillaHelmetState(BioPawn target)

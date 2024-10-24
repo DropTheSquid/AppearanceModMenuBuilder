@@ -74,3 +74,9 @@ public function string GetAppearanceType(BioPawn targetPawn)
 	}
     return Super.GetAppearanceType(targetPawn);
 }
+
+defaultproperties
+{
+    // don't hide Jenkin's helmet; it is awkward when he dies and his helemt is appearing and disappearing. Also, you're not supposed to see his bare head.
+    hideHelmetsInConversations=false
+}

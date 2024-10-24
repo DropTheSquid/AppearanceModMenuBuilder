@@ -56,6 +56,7 @@ var config eHelmetDisplayState defaultHelmetState;
 // again, no effect if GiveFullHelmetControl is true
 var config bool canChangeHelmetState;
 var config bool requiresFramework;
+var config bool hideHelmetsInConversations;
 // recommendation here:
 // if the pawn does not normally have a helmet and there is no good reason not to let them have one, just give full control, with default off (see most NPCs in armor)
 // similarly, if they have a helmet in vanilla but there is no reason you shouldn't be able to remove it, set the default and allow the user to change it, but don't give full control immediately.

@@ -94,3 +94,18 @@ public static function UpdateHelmetPreferenceStatic(BioPawn Target, bool bPrefer
         Instance.UpdateHelmetPreference(Target, bPreferVisible, bForce);
     }
 }
+
+public function GameModeChanged(SFXGameModeBase newGameMode, bool activated)
+{
+	// nothing to do if mod is not installed
+}
+
+public static function GameModeChangedStatic(SFXGameModeBase newGameMode, bool activated)
+{
+	local AMM_AppearanceUpdater_Base Instance;
+    
+    if (GetInstance(Instance))
+    {
+        Instance.GameModeChanged(newGameMode, activated);
+    }
+}
