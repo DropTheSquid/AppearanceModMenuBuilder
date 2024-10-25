@@ -31,22 +31,21 @@ public final function UpdateCharacter()
         WI = BioWorldInfo(oWorldInfo);
         WI.m_UIWorld.TriggerEvent('SetupCharCreate', WI);
     }
+    // both branches of this will overwrite AMM's change
     if (!bUpdateAppearance)
     {
         Update3DModelByClass(ClassName, TargetBP, m_nCurrentTemplate, bUpdateAnimsAndVFX, FALSE, bUpdateAnimsAndVFX);
     }
     else
     {
-		// this method overwrites my AMM changes. I need to reapply after this runs
         BioWorldInfo(oWorldInfo).m_UIWorld.UpdateAppearance(lstTemplates[int(m_nCurrentTemplate)], ClassName);
-		// this is only set in certain branches, so set it if it is unset
-        if (WI == None)
-        {
-            WI = BioWorldInfo(oWorldInfo);
-        }
-		// trigger my new Remote Event that will update the appearance
-		// this will safely do nothing if the mod is not installed.
-        WI.m_UIWorld.TriggerEvent('re_amm_update_cc', WI);
     }
-    
+    // this is only set in certain branches, so set it if it is unset
+    if (WI == None)
+    {
+        WI = BioWorldInfo(oWorldInfo);
+    }
+    // trigger my new Remote Event that will update the appearance
+    // this will safely do nothing if the mod is not installed.
+    WI.m_UIWorld.TriggerEvent('re_amm_update_cc', WI);
 }

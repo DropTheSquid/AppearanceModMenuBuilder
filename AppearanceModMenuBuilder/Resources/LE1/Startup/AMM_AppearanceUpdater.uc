@@ -608,6 +608,13 @@ public function UpdateHelmetPreference(BioPawn target, bool bPreferVisible, bool
 public function ApplyPlayerAppearance(BioPawn target)
 {
 	local SFXSaveGame saveGame;
+	local BioSFHandler_NewCharacter _;
+
+	// skip this in the character creator
+	if (IsInCharacterCreator(_))
+	{
+		return;
+	}
 
 	saveGame = class'SFXEngine'.static.GetEngine().CurrentSaveGame;
 	target.m_oBehavior.m_oAppearanceType.m_oMorphFace = saveGame.LoadMorphHead();

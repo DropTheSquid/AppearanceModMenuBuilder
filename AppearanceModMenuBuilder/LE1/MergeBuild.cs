@@ -49,6 +49,7 @@ namespace AppearanceModMenuBuilder.LE1
                 .AddTask(new AddOrReplaceOnClass("SFXGame.pcc", MergeModName, "BioSeqAct_ModifyPropertyPawn", @"Resources\LE1\SFXGame\BioSeqAct_ModifyPropertyPawn.Deactivated.uc"))
                 // hook to handle Character creator places that overwrite the appearance
                 .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "BioSFHandler_NewCharacter.UpdateCharacter", @"Resources\LE1\SFXGame\BioSFHandler_NewCharacter.UpdateCharacter.uc"))
+                .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "BioSFHandler_NewCharacter.UpdateUIState", @"Resources\LE1\SFXGame\BioSFHandler_NewCharacter.UpdateUIState.uc"))
                 // update several functions in squad screen so that it handles it better and updates the appearance
                 .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "BioSFHandler_CharacterRecord.ToggleHelmet", @"Resources\LE1\SFXGame\BioSFHandler_CharacterRecord.ToggleHelmet.uc"))
                 .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "BioSFHandler_CharacterRecord.Update", @"Resources\LE1\SFXGame\BioSFHandler_CharacterRecord.Update.uc"))

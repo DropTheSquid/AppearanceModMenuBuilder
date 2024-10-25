@@ -167,13 +167,14 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             KismetHelper.CreateOutputLink(RE_ForceTexture, "Out", inventoryUpdateSeqAct);
 
             // and Character Creation, which has several different pawns for no good reason
+            // new remote event to trigger appearance update for character creation on demand
             var charCreateSeqAct = AddPawnAppearanceUpdateSeqAct(
-                FindRemoteEvent("SetupCharCreate", "TheWorld.PersistentLevel.Main_Sequence.SeqEvent_RemoteEvent_22"),
+                AddRemoteEvent("re_amm_update_cc", "updates the character create pawn(s)"),
                 CharCreateSeqVars);
 
-            // new remote event to trigger appearance update for character creation on demand
-            var RE_UpdateCC = AddRemoteEvent("re_amm_update_cc", "updates the character create pawn(s)");
-            KismetHelper.CreateOutputLink(RE_UpdateCC, "Out", charCreateSeqAct);
+            // and hook this up to the camera init re to catch the first appearance
+            var RE_CCCameraInit = FindRemoteEvent("CharCreateInitCamera", "TheWorld.PersistentLevel.Main_Sequence.SeqEvent_RemoteEvent_18");
+            KismetHelper.CreateOutputLink(RE_CCCameraInit, "Out", charCreateSeqAct);
 
             // new remote event to trigger the camera position update for inventory setup
             var cameraInterp = pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqAct_Interp_2")
