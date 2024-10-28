@@ -12,8 +12,20 @@ var config int CharacterCreatorBodyAppearanceId_Vanguard;
 var config int CharacterCreatorBodyAppearanceId_Sentinel;
 var config int CharacterCreatorBodyAppearanceId_Infiltrator;
 
+public function SpecialHandling(BioPawn targetPawn)
+{
+	local BioWorldInfo BWI;
+	local BioSFPanel _;
 
-// Functions
+	// only if this is a real world player romance pawn and we are in AMM should we copy the headmorph
+	if (GetAppearanceType(TargetPawn) ~= "Romance" && targetPawn.GetPackageName() != 'BIOG_UIWorld' && class'AMM_AppearanceUpdater'.static.IsInAMM(_))
+	{
+		// get the player pawn and copy their morphHead (if any) onto the target pawn
+		BWI = class'AMM_AppearanceUpdater'.static.GetOuterWorldInfo();
+		targetPawn.m_oBehavior.m_oAppearanceType.m_oMorphFace = BWI.m_playerSquad.m_playerPawn.m_oBehavior.m_oAppearanceType.m_oMorphFace;
+	}
+}
+
 public function bool matchesPawn(BioPawn targetPawn)
 {
     local bool bIsFemale;

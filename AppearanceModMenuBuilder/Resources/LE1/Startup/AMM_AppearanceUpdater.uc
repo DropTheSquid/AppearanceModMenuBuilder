@@ -63,10 +63,6 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 	if (paramHandler.GetPawnParams(target, params))
 	{
 		params.SpecialHandling(target);
-		if (params.isPlayer)
-		{
-			ApplyPlayerAppearance(target);
-		}
 		RemoveAIControllerFromPreviews(target);
 		// LogInternal("appearance update for target"@PathName(target)@Target.Tag@Target.UniqueTag@"from source"@source);
 		// LogInternal("target is in appearance type"@params.GetAppearanceType(target));
@@ -602,22 +598,6 @@ public function UpdateHelmetPreference(BioPawn target, bool bPreferVisible, bool
 		appearanceIds.m_appearanceSettings.helmetDisplayState = eHelmetDisplayState.off;
 		CommitHelmetPreference(target, params, appearanceIds);
 	}
-}
-
-// this applies the player headmorph to pawns that do not already have it, such as the romance pawn
-public function ApplyPlayerAppearance(BioPawn target)
-{
-	local SFXSaveGame saveGame;
-	local BioSFHandler_NewCharacter _;
-
-	// skip this in the character creator
-	if (IsInCharacterCreator(_))
-	{
-		return;
-	}
-
-	saveGame = class'SFXEngine'.static.GetEngine().CurrentSaveGame;
-	target.m_oBehavior.m_oAppearanceType.m_oMorphFace = saveGame.LoadMorphHead();
 }
 
 public function GameModeChanged(SFXGameModeBase newGameMode, bool activated)
