@@ -119,7 +119,7 @@ public static function bool GetActorType(string tag, out BioPawnType actorType)
     i = rowNames.Find(name(tag));
     if (i == -1)
     {
-        LogInternal("failed to find a row named"@tag);
+        // LogInternal("failed to find a row named"@tag);
         return false;
     }
     if (!characters2DA.GetStringEntryIN(i, 'ActorType', actorTypePath))
