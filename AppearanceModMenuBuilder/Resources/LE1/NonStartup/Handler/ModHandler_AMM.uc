@@ -534,9 +534,12 @@ public function string GetDisplayVar(string input)
 }
 public function string GetString(string s, stringref sr)
 {
+    Local BioWorldInfo BWI;
+
     if (sr == $210210218)
     {
-        return Class'SFXEngine'.static.GetEngine().CurrentSaveGame.PlayerRecord.FirstName @ $156667;
+        BWI = class'AMM_AppearanceUpdater'.static.GetOuterWorldInfo();
+        return BioAttributesPawnPlayer(BWI.m_playerSquad.m_playerPawn.m_oBehavior.m_PawnAttributes).m_FirstName @ $156667;
     }
     return s != "" ? s : string(sr);
 }
