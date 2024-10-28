@@ -227,6 +227,8 @@ public static function bool LoadEquipmentAndGetAttributes(name tag, int itemId, 
     local BioGameEffectAttributeFloat floatEffect;
     local BioGameEffectAddItemProperty propEffect;
     local BioGameEffectAttribute attributeEffect;
+    local int squadmateArmorTypeOverride;
+    local int manfArmorTypeOVerride;
 
     squadMateGPL = GetGamePropertyLabel(tag, itemId, armorType);
     // items2DA = Bio2DANumberedRows(FindObject("BIOG_2DA_Equipment_X.Items_ItemEffectLevels", class'Bio2DANumberedRows'));
@@ -235,6 +237,9 @@ public static function bool LoadEquipmentAndGetAttributes(name tag, int itemId, 
         LogInternal("could not get squadmate GPL");
         return false;
     }
+
+    squadmateArmorTypeOverride = -1;
+    manfArmorTypeOVerride = -1;
 
     armor = BioItemArmor(Class'BioItemImporter'.static.LoadGameItem(itemId, sophistication, 'None', class'AMM_AppearanceUpdater'.static.GetDlcInstance(), ManufacturerID));
     if (armor != None)
@@ -261,9 +266,15 @@ public static function bool LoadEquipmentAndGetAttributes(name tag, int itemId, 
                     {
                         materialVariant = intEffect.m_value;
                     }
+                    // these can also appear under the  squadmate GPL with Iconic Fashion Party installed
+                    if (intEffect.m_nmGameEffectName == 'GE_Armor_AppearanceOverride')
+                    {
+                        squadmateArmorTypeOverride = intEffect.m_value;
+                        break;
+                    }
                 }
             }
-            // or if it is an appearance override. those matter
+            // or if it is a generic appearance override. those matter
             if (prop.m_nmGamePropertyName == 'GP_Manf_Armor_AppearanceOverride')
             {
                 for (j = 0; j < prop.m_aGameEffects.Length; j++)
@@ -275,12 +286,21 @@ public static function bool LoadEquipmentAndGetAttributes(name tag, int itemId, 
                     }
                     if (intEffect.m_nmGameEffectName == 'GE_Armor_AppearanceOverride')
                     {
-                        ArmorType = intEffect.m_value;
+                        manfArmorTypeOVerride = intEffect.m_value;
                         break;
                     }
                 }
             }
             // TODO handle GP_HelmetAppr_PlayerFemale type properties
+        }
+        // apply these in this order even if they appear in a different order
+        if (manfArmorTypeOVerride != -1)
+        {
+            ArmorType = manfArmorTypeOVerride;
+        }
+        if (squadmateArmorTypeOverride != -1)
+        {
+            ArmorType = squadmateArmorTypeOverride;
         }
     }
     return true;
