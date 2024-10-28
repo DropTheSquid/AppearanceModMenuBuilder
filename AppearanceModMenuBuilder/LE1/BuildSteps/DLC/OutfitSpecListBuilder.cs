@@ -704,7 +704,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             humanMaleOutfitMenus.CasualOutfitMenus[0].AddMenuEntry(new AppearanceItemData()
             {
                 // "Nude"
-                SrCenterText = 210210260,
+                SrCenterText = 210210315,
                 ApplyOutfitId = 100
             });
             humanMaleOutfitMenus.CasualOutfitMenus[0].AddMenuEntry(new AppearanceItemData()

@@ -1,1 +1,8 @@
-﻿
+﻿<?xml version="1.0" encoding="utf-8"?>
+<tlkFile Name="GlobalTlk_tlk">
+	<!-- PL translation provided by TreoPL on MEM Discord -->
+	<string>
+		<id>210210295</id>
+		<data>Wyposaż Sheparda</data>
+	</string>
+</tlkFile>

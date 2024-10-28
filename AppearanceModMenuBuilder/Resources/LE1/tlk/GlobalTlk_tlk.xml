@@ -277,10 +277,12 @@ Romance</data>
 		<data>Choose an outfit</data>
 	</string>
 	<!-- submenu names and outfit names -->
+	<!-- for female/Asari characters -->
 	<string>
 		<id>210210257</id>
 		<data>Alliance Formal</data>
 	</string>
+	<!-- for female/Asari characters -->
 	<string>
 		<id>210210258</id>
 		<data>Science/Medical Uniform</data>
@@ -289,6 +291,7 @@ Romance</data>
 		<id>210210259</id>
 		<data>Miscellaneous</data>
 	</string>
+	<!-- for female/Asari characters -->
 	<string>
 		<id>210210260</id>
 		<data>Nude</data>
@@ -297,6 +300,7 @@ Romance</data>
 		<id>210210261</id>
 		<data>Dancer</data>
 	</string>
+	<!-- for female/Asari characters -->
 	<string>
 		<id>210210262</id>
 		<data>Fatigues</data>
@@ -467,10 +471,12 @@ Romance</data>
 		<data>&lt;CUSTOM02&gt; - Classic</data>
 	</string>
 	<!-- outfit submenu descriptions -->
+	<!-- for female/Asari characters -->
 	<string>
 		<id>210210300</id>
 		<data>Colonist Outfit</data>
 	</string>
+	<!-- for female/Asari characters -->
 	<string>
 		<id>210210301</id>
 		<data>Miner Jumpsuit</data>
@@ -534,5 +540,36 @@ Romance</data>
 	<string>
 		<id>210210314</id>
 		<data>This setting will remove helmets during conversations and cinematics, then restore them after. It will still respect forced full helmets unless the setting to ignore that is enabled. This setting is currently enabled. </data>
+	</string>
+	<!-- duplicate strings that are indentical per gender in English, but not necessarily in other languages -->
+	<!--male version of 210210260 -->
+	<string>
+		<id>210210315</id>
+		<data>Nude</data>
+	</string>
+	<!-- same as 210210258 but applied to male characters -->
+	<string>
+		<id>210210316</id>
+		<data>Science/Medical Uniform</data>
+	</string>
+	<!-- male version of 210210300 -->
+	<string>
+		<id>210210317</id>
+		<data>Colonist Outfit</data>
+	</string>
+	<!--  male version of 210210301 -->
+	<string>
+		<id>210210318</id>
+		<data>Miner Jumpsuit</data>
+	</string>
+	<!-- male version of 210210257-->
+	<string>
+		<id>210210319</id>
+		<data>Alliance Formal</data>
+	</string>
+	<!-- male version of 210210262 -->
+	<string>
+		<id>210210320</id>
+		<data>Fatigues</data>
 	</string>
 </tlkFile>

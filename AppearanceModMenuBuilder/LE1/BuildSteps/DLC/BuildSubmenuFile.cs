@@ -488,24 +488,24 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[0].GetEntryPoint(210210259, displayInt: (1598, 1)));
 
                 // "Alliance Formal" CTHa
-                menus.CasualOutfitMenus[1].SrSubtitle = 210210257;
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[1].GetEntryPoint(210210257));
+                menus.CasualOutfitMenus[1].SrSubtitle = 210210319;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[1].GetEntryPoint(210210319));
 
                 // "Fatgiues" CTHb
-                menus.CasualOutfitMenus[2].SrSubtitle = 210210262;
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[2].GetEntryPoint(210210262));
+                menus.CasualOutfitMenus[2].SrSubtitle = 210210320;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[2].GetEntryPoint(210210320));
 
                 // "Science/Medical Uniform"
-                menus.CasualOutfitMenus[8].SrSubtitle = 210210258;
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[8].GetEntryPoint(210210258));
+                menus.CasualOutfitMenus[8].SrSubtitle = 210210316;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[8].GetEntryPoint(210210316));
 
                 // "Colonist Outfit"
-                menus.CasualOutfitMenus[5].SrSubtitle = 210210300;
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[5].GetEntryPoint(210210300));
+                menus.CasualOutfitMenus[5].SrSubtitle = 210210317;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[5].GetEntryPoint(210210317));
 
                 // "Miner Jumpsuit"
-                menus.CasualOutfitMenus[6].SrSubtitle = 210210301;
-                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[6].GetEntryPoint(210210301));
+                menus.CasualOutfitMenus[6].SrSubtitle = 210210318;
+                menus.NonArmor!.AddMenuEntry(menus.CasualOutfitMenus[6].GetEntryPoint(210210318));
 
                 // "Rebust Outfit"
                 menus.CasualOutfitMenus[4].SrSubtitle = 210210302;

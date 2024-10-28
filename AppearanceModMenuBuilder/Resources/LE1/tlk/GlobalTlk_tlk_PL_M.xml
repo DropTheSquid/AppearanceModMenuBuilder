@@ -1,0 +1,480 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<tlkFile Name="GlobalTlk_tlk">
+	<!-- PL translation provided by TreoPL on MEM Discord -->
+	<!-- button in inventory menu -->
+	<string>
+		<id>210210211</id>
+		<data>Dostosowanie wyglądu</data>
+	</string>
+	<!-- shown when you exit the menu in the proluge.  -->
+	<string>
+		<id>210210212</id>
+		<data>Chcesz zaakceptować wyglądy postaci i rozpocząć grę? Możesz to zrobić ponownie w dowolnej chwili, korzystając z szafek w maszynowni Normandii.</data>
+	</string>
+	<!-- subtitle at root of each character's menu -->
+	<string>
+		<id>210210213</id>
+		<data>Wybierz typ wyglądu.</data>
+	</string>
+	<!-- appearance type submenus -->
+	<string>
+		<id>210210214</id>
+		<data>Wygląd swobodny</data>
+	</string>
+	<string>
+		<id>210210215</id>
+		<data>Wygląd bojowy</data>
+	</string>
+	<string>
+		<id>210210216</id>
+		<data>Wygląd romansowy</data>
+	</string>
+	<!-- character select button, shown at the top of the menu when appropriate -->
+	<string>
+		<id>210210217</id>
+		<data>Wybierz postać</data>
+	</string>
+	<!-- interact prompt for new armor locker terminal; copied from LE2 276596 -->
+	<string>
+		<id>210210219</id>
+		<data>Szafka na pancerze</data>
+	</string>
+	<!-- used with above; copied from LE2 276597 -->
+	<string>
+		<id>210210220</id>
+		<data>Dostosowanie sprzętu</data>
+	</string>
+	<!-- strings for mod settings menu -->
+	<string>
+		<id>210210221</id>
+		<data>Menu Modyfikacji Wyglądu</data>
+	</string>
+	<string>
+		<id>210210222</id>
+		<data>Ustawienia do Menu Modyfikacji Wyglądu</data>
+	</string>
+	<string>
+		<id>210210223</id>
+		<data>Ustawienia do Menu Modyfikacji Wyglądu. To ci pozowoli na przełączenie dodatkowych opcji, które są domyślnie wyłączone.</data>
+	</string>
+	<!-- menu accessibility option -->
+	<string>
+		<id>210210224</id>
+		<data>Menu dostępności </data>
+	</string>
+	<string>
+		<id>210210225</id>
+		<data>Zwykły</data>
+	</string>
+	<string>
+		<id>210210228</id>
+		<data>Zawsze dostępne</data>
+	</string>
+	<string>
+		<id>210210229</id>
+		<data>To menu będzie dostępne po stworzeniu postaci, przed prologiem, z szafek w maszynowni Normandii i w innych punktach dostępu dodanych przez inne modyfikacje.</data>
+	</string>
+	<string>
+		<id>210210232</id>
+		<data>To menu będzie zawsze dostępne w oknie ekwipunku. Możesz napotkać problem podczas szczególnych misji lub w trakcie walki w pojeździe.  </data>
+	</string>
+	<!-- submenu names -->
+	<string>
+		<id>210210233</id>
+		<data>Pancerze</data>
+	</string>
+	<string>
+		<id>210210234</id>
+		<data>Stroje</data>
+	</string>
+	<!-- used to enumerate styles of outfits; the CUSTOM0 section will be replaced with a number. order can be changed for localizations. -->
+	<string>
+		<id>210210235</id>
+		<data>Styl &lt;CUSTOM0&gt;</data>
+	</string>
+	<!-- used for "Manufacturer — ArmorName" when there are no different weight versions; no need to localize -->
+	<string>
+		<id>210210236</id>
+		<data>&lt;CUSTOM0&gt; - &lt;CUSTOM1&gt;</data>
+	</string>
+	<!-- submenu name -->
+	<string>
+		<id>210210237</id>
+		<data>Hełm</data>
+	</string>
+	<!-- used for armor weight in the above stringref; copied from 125355/771340 -->
+	<string>
+		<id>210210238</id>
+		<data>Lekki</data>
+	</string>
+	<!-- copied from 125353/771342 -->
+	<string>
+		<id>210210239</id>
+		<data>Średni</data>
+	</string>
+	<!-- copied from 125354/771344 -->
+	<string>
+		<id>210210240</id>
+		<data>Ciężki</data>
+	</string>
+	<!-- to differentiate from squadmate Onyx; Onyx is 143390 -->
+	<string>
+		<id>210210241</id>
+		<data>N7 Onyks</data>
+	</string>
+	<!-- replacing vanilla "Thermal Armor" as most armors do not have the word Armor in the name; Thermal Armor is in 171735 -->
+	<string>
+		<id>210210242</id>
+		<data>Termiczny</data>
+	</string>
+	<!-- same as above with "Spectre Armor", which is in 174134 -->
+	<string>
+		<id>210210243</id>
+		<data>Widma</data>
+	</string>
+	<!-- submenu name -->
+	<string>
+		<id>210210244</id>
+		<data>Maska tlenowa</data>
+	</string>
+	<!-- name for the breather NPCs use that covers their full face -->
+	<string>
+		<id>210210245</id>
+		<data>Faceplate</data>
+	</string>
+	<!-- name and description for the ignore forced helmet setting -->
+	<string>
+		<id>210210246</id>
+		<data>Zignoruj przymusowe hełmy</data>
+	</string>
+	<string>
+		<id>210210247</id>
+		<data>Czasami gra zmusza postacie do zakładania pełnych hełmów, zwłaszcza w środowiskach nie nadających się do oddychania. Ta opcja ignoruje to i pozwala na odkrycie głowy wybrany w opcjach. Domyślnie wyłączone dla imersji.</data>
+	</string>
+	<!-- Shows up within the menu and in the Squad record screen to cycle through no helmet, helmet without breather, and helmet with breather -->
+	<string>
+		<id>210210248</id>
+		<data>Zmień hełm</data>
+	</string>
+	<!-- more mod settings strings -->
+	<string>
+		<id>210210249</id>
+		<data>Korzystanie z strojów swobodnych jako bojowe</data>
+	</string>
+	<string>
+		<id>210210250</id>
+		<data>Domyślnie pancerze są tylko dostępne do wyglądu bojowego. Po włączeniu tej opcji stroje swobodne będą dostępne w wyglądzie bojowym postaci. To nie ukryje broni i mogą nie być prawidłowo schowane w kaburze w każdym ubiorze. </data>
+	</string>
+	<string>
+		<id>210210251</id>
+		<data>Korzystanie z strojów bojowych jako swobodne</data>
+	</string>
+	<string>
+		<id>210210252</id>
+		<data>Domyślnie pancerze nie są dostępne w sytuacjach swobodnych. Włączenie tej opcji na to pozwoli. To nie wpłynie na obecność broni.</data>
+	</string>
+	<!-- submenu titles -->
+	<string>
+		<id>210210253</id>
+		<data>&lt;CUSTOM0&gt;
+Wygląd swobodny</data>
+	</string>
+	<string>
+		<id>210210254</id>
+		<data>&lt;CUSTOM0&gt;
+Wygląd bojowy</data>
+	</string>
+	<string>
+		<id>210210255</id>
+		<data>&lt;CUSTOM0&gt;
+Wygląd romansowy</data>
+	</string>
+	<!-- subtitle for outfit menu -->
+	<string>
+		<id>210210256</id>
+		<data>Wybierz strój</data>
+	</string>
+	<!-- submenu names and outfit names -->
+	<string>
+		<id>210210257</id>
+		<data>Strój formalny Przymierza</data>
+	</string>
+	<string>
+		<id>210210258</id>
+		<data>Mundur naukowy/medyczny</data>
+	</string>
+	<string>
+		<id>210210259</id>
+		<data>Dodatkowe</data>
+	</string>
+	<string>
+		<id>210210260</id>
+		<data>Nagość</data>
+	</string>
+	<string>
+		<id>210210261</id>
+		<data>Tancerka</data>
+	</string>
+	<string>
+		<id>210210262</id>
+		<data>Mundur polowy</data>
+	</string>
+	<string>
+		<id>210210263</id>
+		<data>Garnitur</data>
+	</string>
+	<string>
+		<id>210210264</id>
+		<data>Droga suknia</data>
+	</string>
+	<string>
+		<id>210210265</id>
+		<data>Modna suknia</data>
+	</string>
+	<string>
+		<id>210210266</id>
+		<data>Seksowna suknia</data>
+	</string>
+	<string>
+		<id>210210267</id>
+		<data>Strój cywilny 1</data>
+	</string>
+	<string>
+		<id>210210268</id>
+		<data>Strój cywilny 2</data>
+	</string>
+	<string>
+		<id>210210269</id>
+		<data>Strój cywilny 3</data>
+	</string>
+	<string>
+		<id>210210270</id>
+		<data>Strój cywilny 4</data>
+	</string>
+	<!-- more mod settings names and descriptions -->
+	<string>
+		<id>210210271</id>
+		<data>Dostosowanie wyglądu do romansu</data>
+	</string>
+	<string>
+		<id>210210272</id>
+		<data>Pozwala ci na zmianę stroju podczas scen romansowych postaci. Ta opcja jest obecnie włączona. </data>
+	</string>
+	<string>
+		<id>210210273</id>
+		<data>Pozwala ci na zmianę stroju podczas scen romansowych postaci. Ta opcja jest obecnie wyłączona. (domyślnie)</data>
+	</string>
+	<string>
+		<id>210210274</id>
+		<data>Dostosowanie wyglądu przed rekrutacją</data>
+	</string>
+	<string>
+		<id>210210275</id>
+		<data>Pozwala ci na zmianę wyglądu towarzyszy przed dołączeniem do drużyny. Ta opcja jest obecnie włączona.</data>
+	</string>
+	<string>
+		<id>210210276</id>
+		<data>Pozwala ci na zmianę wyglądu towarzyszy przed dołączeniem do drużyny. Ta opcja jest obecnie wyłączona. (domyślnie)</data>
+	</string>
+	<string>
+		<id>210210277</id>
+		<data>Pokaż stroje łamiące imersje</data>
+	</string>
+	<string>
+		<id>210210278</id>
+		<data>Pozwala ci na wybranie strojów, które łamią imersje jak nagie ciało, strój tancerki czy ciało Aviny jako ubiór swobodny. Ta opcja jest obecnie włączona.</data>
+	</string>
+	<string>
+		<id>210210279</id>
+		<data>Pozwala ci na wybranie strojów, które łamią imersje jak nagie ciało, strój tancerki czy ciało Aviny jako ubiór swobodny. Ta opcja jest obecnie wyłączona. (domyślnie)(default)</data>
+	</string>
+	<!-- menu names that should go along with 210210214 and 210210215 above, shown before someone is recruited if that option is enabled-->
+	<string>
+		<id>210210280</id>
+		<data>Wygląd swobodny/przed rekrutacją</data>
+	</string>
+	<string>
+		<id>210210281</id>
+		<data>Wygląd bojowy/przed rekrutacją</data>
+	</string>
+	<!--  menu option for non combat headgear (not accessible by default, but can be expanded in the future) -->
+	<string>
+		<id>210210282</id>
+		<data>Czapki</data>
+	</string>
+	<!-- menu option to restore a character to their default outfit -->
+	<string>
+		<id>210210283</id>
+		<data>Strój domyślny</data>
+	</string>
+	<!-- menu option to restore a character to their default helmet, unless they have picked an outfit that has a different default helmet, in which case it will use that one -->
+	<string>
+		<id>210210284</id>
+		<data>Hełm domyślny pasujący do stroju</data>
+	</string>
+	<!-- menu option to restore a character to using their default breather -->
+	<string>
+		<id>210210285</id>
+		<data>Hełm z maską domyślny</data>
+	</string>
+	<string>
+		<id>210210286</id>
+		<data>Liara w pancerzu podczas misji rekrutacyjnej</data>
+	</string>
+	<string>
+		<id>210210287</id>
+		<data>Zamiast stroju swobodnego Liara ma na sobie domyślny pancerz (lub jej strój bojowy, jeśli wybrano taką opcję) podczas misji rekrutacyjnej. Ta opcja jest obecnie włączona.</data>
+	</string>
+	<string>
+		<id>210210288</id>
+		<data>Zamiast stroju swobodnego Liara ma na sobie domyślny pancerz (lub jej strój bojowy, jeśli wybrano taką opcje) podczas misji rekrutacyjnej. Ta opcja jest obecnie wyłączona (domyślnie)</data>
+	</string>
+	<string>
+		<id>210210289</id>
+		<data>Tali ma ten sam wygląd swobodny jak i bojowy</data>
+	</string>
+	<string>
+		<id>210210290</id>
+		<data>To ustawienie powoduje, że Tali ma ten sam wygląd w sytuacjach swobodnych i bojowych. Każde wybrane obejście będzie dostosowane do obu przypadków. Ta opcja jest obecnie włączona.</data>
+	</string>
+	<string>
+		<id>210210291</id>
+		<data>To ustawienie powoduje, że Tali ma ten sam wygląd w sytuacjach swobodnych i bojowych. Każde wybrane obejście będzie dostosowane do obu przypadków. Ta opcja jest obecnie wyłączona. (domyślnie)</data>
+	</string>
+	<string>
+		<id>210210292</id>
+		<data>Towarzysze zakładają wyposażony pancerz</data>
+	</string>
+	<string>
+		<id>210210293</id>
+		<data>To ustawienie powoduje, że towarzysze zakładają swoje wyposażone pancerze w sytuacjach bojowych nawet gdy nie są obecnie w drużynie. To nadpisze i domyślny "ikoniczny" wygląd. Każde inne obejście będzie miało pierwszeństwo nad tą opcję. Ta opcja jest obecnie włączona.</data>
+	</string>
+	<string>
+		<id>210210294</id>
+		<data>To ustawienie powoduje, że towarzysze zakładają swoje wyposażone pancerze w sytuacjach bojowych nawet gdy nie są obecnie w drużynie. To nadpisze również domyślny "ikoniczny" wygląd. Każde inne obejście będzie miało pierwszeństwo nad tą opcją. </data>
+	</string>
+	<!-- Interact prompt with newly added squad locker; similar to vanilla strings like 169933 -->
+	<string>
+		<id>210210295</id>
+		<data>Wyposaż Shepard</data>
+	</string>
+	<!-- options within the menu -->
+	<string>
+		<id>210210296</id>
+		<data>Wyposaż pancerz</data>
+	</string>
+	<string>
+		<id>210210297</id>
+		<data>Wyposaż hełm</data>
+	</string>
+	<!-- salarian outfit descrition -->
+	<string>
+		<id>210210298</id>
+		<data>Płaszcz</data>
+	</string>
+	<!-- used to denote a few helmets with materials ported from OT -->
+	<string>
+		<id>210210299</id>
+		<data>&lt;CUSTOM02&gt; - Classic</data>
+	</string>
+	<!-- outfit submenu descriptions -->
+	<string>
+		<id>210210300</id>
+		<data>Ubiór kolonisty</data>
+	</string>
+	<string>
+		<id>210210301</id>
+		<data>Kombinezon górnika</data>
+	</string>
+	<string>
+		<id>210210302</id>
+		<data>Odzież robocza</data>
+	</string>
+	<string>
+		<id>210210303</id>
+		<data>Kamizelka puchowa</data>
+	</string>
+	<!-- more mod settings strings -->
+	<string>
+		<id>210210304</id>
+		<data>Liara zakłada pancerz na Virmirze</data>
+	</string>
+	<string>
+		<id>210210305</id>
+		<data>Liara ma na sobie wygląd bojowy na Virmirze, gdy nie jest w drużynie. Wtedy to będzie albo jej domyślny pancerz, obecnie wyposażony pancerz lub inny ubiór wybrany przez gracza. Ta opcja jest obecnie włączona.</data>
+	</string>
+	<string>
+		<id>210210306</id>
+		<data>Liara ma na sobie wygląd bojowy na Virmirze, gdy nie jest w drużynie. Wtedy to będzie albo jej domyślny pancerz, obecnie wyposażony pancerz lub inny ubiór wybrany przez gracza. Ta opcja jest obecnie wyłączona. (domyślnie)</data>
+	</string>
+	<!-- used for a breather variant; light as in light in color, not weight -->
+	<string>
+		<id>210210307</id>
+		<data>&lt;CUSTOM0&gt; - Lekki wariant</data>
+	</string>
+	<!-- names for breathers -->
+	<!-- this is the one used by Shepard by default -->
+	<string>
+		<id>210210308</id>
+		<data>Maska sił specjalnych</data>
+	</string>
+	<!-- this is the one used by Ashley by default -->
+	<string>
+		<id>210210309</id>
+		<data>Maska żołnierza</data>
+	</string>
+	<!-- this is the one used by Kaidan by default -->
+	<string>
+		<id>210210310</id>
+		<data>Maska strażnika</data>
+	</string>
+	<!-- this is the one used by Liara by default -->
+	<string>
+		<id>210210311</id>
+		<data>Maksa adepta</data>
+	</string>
+	<!-- more mod settings strings -->
+	<string>
+		<id>210210312</id>
+		<data>Usuń hełmy podczas rozmów i przerywników</data>
+	</string>
+	<string>
+		<id>210210313</id>
+		<data>To ustawienie usunie hełmy podczas rozmów i przerywników i zakłada je z powrotem po ich zakończeniu. Opcja uszanuje przymusowe pełne hełmy, chyba że ustawienie które to ignoruje jest włączone. To ustawienie jest obecnie wyłączone. (domyślnie)</data>
+	</string>
+	<string>
+		<id>210210314</id>
+		<data>To ustawienie usunie hełmy podczas rozmów i przerywników i zakłada je z powrotem po ich zakończeniu. Opcja uszanuje przymusowe pełne hełmy, chyba że ustawienie które to ignoruje jest włączone. To ustawienie jest obecnie włączone. </data>
+	</string>
+	<!-- duplicate strings that are indentical per gender in English, but not necessarily in other languages -->
+	<!--male version of 210210260 -->
+	<string>
+		<id>210210315</id>
+		<data>Nagość</data>
+	</string>
+	<!-- same as 210210258 but applied to male characters -->
+	<string>
+		<id>210210316</id>
+		<data>Mundur naukowy/medyczny</data>
+	</string>
+	<!-- male version of 210210300 -->
+	<string>
+		<id>210210317</id>
+		<data>Ubiór kolonisty</data>
+	</string>
+	<!--  male version of 210210301 -->
+	<string>
+		<id>210210318</id>
+		<data>Kombinezon górnika</data>
+	</string>
+	<!-- male version of 210210257-->
+	<string>
+		<id>210210319</id>
+		<data>Strój formalny Przymierza</data>
+	</string>
+	<!-- male version of 210210262 -->
+	<string>
+		<id>210210320</id>
+		<data>Mundur polowy</data>
+	</string>
+</tlkFile>

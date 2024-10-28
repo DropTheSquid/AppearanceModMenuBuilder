@@ -52,6 +52,10 @@ namespace AppearanceModMenuBuilder.LE1
                 .AddTask(new OutputConfigMerge())
                 // compile tlks
                 .AddTask(new ImportGame1TlkLocaliazation(MELocalization.INT, @"Resources\LE1\tlk\GlobalTlk_tlk.xml"))
+                //.AddTask(new ImportGame1TlkLocaliazation(MELocalization.DEU, @"Resources\LE1\tlk\GlobalTlk_tlk_DE.xml"))
+                //.AddTask(new ImportGame1TlkLocaliazation(MELocalization.ESN, @"Resources\LE1\tlk\GlobalTlk_tlk_ES.xml"))
+                .AddTask(new ImportGame1TlkLocaliazation(MELocalization.POL, @"Resources\LE1\tlk\GlobalTlk_tlk_PL_M.xml", @"Resources\LE1\tlk\GlobalTlk_tlk_PL.xml"))
+                //.AddTask(new ImportGame1TlkLocaliazation(MELocalization.RUS, @"Resources\LE1\tlk\GlobalTlk_tlk_RU.xml"))
                 .AddTask(new OutputTlk());
 
             return intermediate;
