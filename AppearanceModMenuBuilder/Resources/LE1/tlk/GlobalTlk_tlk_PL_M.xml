@@ -140,7 +140,7 @@
 	<!-- name for the breather NPCs use that covers their full face -->
 	<string>
 		<id>210210245</id>
-		<data>Faceplate</data>
+		<data>Osłona na twarz</data>
 	</string>
 	<!-- name and description for the ignore forced helmet setting -->
 	<string>
@@ -375,7 +375,7 @@ Wygląd romansowy</data>
 	<!-- used to denote a few helmets with materials ported from OT -->
 	<string>
 		<id>210210299</id>
-		<data>&lt;CUSTOM02&gt; - Classic</data>
+		<data>&lt;CUSTOM02&gt; - Klasyczny</data>
 	</string>
 	<!-- outfit submenu descriptions -->
 	<string>
