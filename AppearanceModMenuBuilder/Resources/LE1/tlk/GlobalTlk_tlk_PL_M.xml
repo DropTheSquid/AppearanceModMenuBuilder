@@ -356,7 +356,7 @@ Wygląd romansowy</data>
 	<!-- Interact prompt with newly added squad locker; similar to vanilla strings like 169933 -->
 	<string>
 		<id>210210295</id>
-		<data>Wyposaż Shepard</data>
+		<data>Wyposaż Sheparda</data>
 	</string>
 	<!-- options within the menu -->
 	<string>
