@@ -1035,8 +1035,8 @@ public function HandleInputEvent(BioGuiEvents Event, optional float fValue = 1.0
     bpi = BioPlayerInput(oController.PlayerInput);
     switch (Event)
     {
-		// handle controller zoom with triggers
-		// TODO take another crack at making this analog
+        // handle controller zoom with triggers
+        // TODO take another crack at making this analog
 		case BioGuiEvents.BIOGUI_EVENT_BUTTON_LT:
 			cameraHandler.zoomOutTriggerPressed = 1.0;
 			break;
@@ -1063,24 +1063,32 @@ public function HandleInputEvent(BioGuiEvents Event, optional float fValue = 1.0
 			{
 				cameraHandler.moveUpDownMouse = fValue;
 			}
-			else
+            // if either trigger is pressed, don't send this on, as it will result in hover events we don't really need or want
+			else if (cameraHandler.zoomInTriggerPressed == 0 && cameraHandler.zoomOutTriggerPressed == 0)
 			{
 				Super.HandleInputEvent(Event, fValue);
 			}
 			break;
 		case BioGuiEvents.BIOGUI_EVENT_AXIS_MOUSE_X:
-			// TODO any deadzone here? any max value we should enforce?
 			if (rightClickHeld)
 			{
 				cameraHandler.rotateMouse = fValue;
 			}
-			else
+            // if either trigger is pressed, don't send this on, as it will result in hover events we don't really need or want
+			else if (cameraHandler.zoomInTriggerPressed == 0 && cameraHandler.zoomOutTriggerPressed == 0)
 			{
 				Super.HandleInputEvent(Event, fValue);
 			}
 			break;
-        default:
+        case BioGuiEvents.BIOGUI_EVENT_AXIS_RSTICK_X:
+        case BioGuiEvents.BIOGUI_EVENT_AXIS_RSTICK_Y:
             Super.HandleInputEvent(Event, fValue);
+        default:
+            // if right click is held or either trigger is held, we don't actually want to send most events on
+            if (!rightClickHeld && cameraHandler.zoomInTriggerPressed == 0 && cameraHandler.zoomOutTriggerPressed == 0)
+            {
+                Super.HandleInputEvent(Event, fValue);
+            }
     }
 }
 public function OnScrollWheelEX(eScrollWheelDir direction, bool overList, bool overRightPane)
