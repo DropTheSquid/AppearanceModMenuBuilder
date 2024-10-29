@@ -54,6 +54,8 @@ namespace AppearanceModMenuBuilder.LE1
                 .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "BioSFHandler_CharacterRecord.ToggleHelmet", @"Resources\LE1\SFXGame\BioSFHandler_CharacterRecord.ToggleHelmet.uc"))
                 .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "BioSFHandler_CharacterRecord.Update", @"Resources\LE1\SFXGame\BioSFHandler_CharacterRecord.Update.uc"))
                 .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "BioSFHandler_CharacterRecord.ChangeToCharacter", @"Resources\LE1\SFXGame\BioSFHandler_CharacterRecord.ChangeToCharacter.uc"))
+                // adding an appearance update to the xmods handler so helmets don't disappear when changing mods in some cases
+                .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "BioSFHandler_XMods.EquipSelectedItem", @"Resources\LE1\SFXGame\BioSFHandler_XMods.EquipSelectedItem.uc"))
                 // update GameModeBase so it signals us when the game mode changes
                 .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "SFXGameModeBase.Activated", @"Resources\LE1\SFXGame\SFXGameModeBase.Activated.uc"))
                 .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "SFXGameModeBase.Deactivated", @"Resources\LE1\SFXGame\SFXGameModeBase.Deactivated.uc"))
