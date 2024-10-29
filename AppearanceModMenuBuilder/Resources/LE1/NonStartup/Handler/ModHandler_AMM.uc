@@ -297,7 +297,9 @@ public function RefreshMenu(optional bool firstEnter = FALSE)
             {
                 pawnHandler.DisplayPawn("None", "");
                 lastCameraPosition = "";
-                // TODO remove helmet button here?
+                // clear the helmet button; it will be brought back (if appropriate) when the pawn loads
+                    ASSetAuxButtonText("");
+                    ASSetAuxButtonActive(false);
             }
             else if (state.pawnTag != "")
             {
@@ -416,7 +418,9 @@ private function TryDisplayPawn(string tag, string appearanceType)
 	{
         // clear current pawn here
         pawnHandler.DisplayPawn("None", "");
-        // TODO clear helmet button here?
+        // clear the helmet button
+        ASSetAuxButtonText("");
+		ASSetAuxButtonActive(false);
 		// TODO start a loading spinner here
 	}
 }
