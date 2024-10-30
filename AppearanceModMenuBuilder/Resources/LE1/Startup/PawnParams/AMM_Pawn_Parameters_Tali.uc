@@ -5,6 +5,7 @@ public function string GetAppearanceType(BioPawn targetPawn)
 {
 	local BioWorldInfo BWI;
     local BioGlobalVariableTable globalVars;
+	local name packageName;
 
 	// check if we have the setting to always show Tali in her combat appearance regardless of the situation
     BWI = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo());
@@ -34,11 +35,22 @@ public function string GetAppearanceType(BioPawn targetPawn)
 	// or it can be Virmire, which I think I will count as combat
 	if (targetPawn.Tag == 'hench_quarian')
 	{
-		// if this is streamed in with the framework or it's in the Salarian Comp of Virmire, count it as combat
-		if (targetPawn.GetPackageName() == 'BIONPC_Tali' || targetPawn.GetPackageName() == 'BIOA_JUG20_08_DSG')
+		packageName = targetPawn.GetPackageName();
+		switch (packageName)
 		{
-			return "combat";
+			case 'BIONPC_Tali':
+			case 'BIOA_JUG20_08_DSG':
+				// if this is her Non Nor BioNPC file or in the Virmire camp, return combat
+				return "combat";
+			case 'BIOA_NOR10_04A_DSG':
+			case 'BIOA_NOR10_01_DS2':
+				// if this is a post mission debrief or the Pre Ilos cutscene, return casual
+				return "casual";
+			default:
+				break;
 		}
+
+		// TODO possible also BIOA_NOR_C.hench_quarian as pawnType to identify casual?
 	}
 	// otherwise, go with the normal system of relying on the armor override to account for in party with/without casual hubs
     return Super(AMM_Pawn_Parameters_Squad).GetAppearanceType(targetPawn);
