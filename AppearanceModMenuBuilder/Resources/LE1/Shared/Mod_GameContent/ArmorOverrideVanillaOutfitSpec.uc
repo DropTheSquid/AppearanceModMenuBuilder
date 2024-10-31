@@ -4,30 +4,9 @@ Class ArmorOverrideVanillaOutfitSpec extends VanillaOutfitSpecBase;
 
 protected function bool GetVariant(BioPawn targetPawn, out int armorType, out int meshVariant, out int materialVariant)
 {
-    local BioPawnType previousPawnType;
     local BioPawnType pawnType;
 
-    // a bit of speical handling for compatibility with Casual Hubs
-    // check if Casual Hubs is installed and the frmaeork is not
-    // and then try to get the pawnType from the hench file to grab settings from that
-    if (DynamicLoadObject("DLC_MOD_CasualHubs_GlobalTlk.GlobalTlk_tlk", class'Object', true) != None
-        && !class'AMM_Common'.static.IsFrameworkInstalled()
-        && class'AMM_Utilities'.static.GetActorType(string(targetPawn.tag), pawnType)
-        // restrict this fix only to Garrus and WRex, who have material overrides that otherwise don't apply
-        && (targetPawn.Tag == 'Hench_Turian' || targetPawn.Tag == 'Hench_Krogan'))
-    {
-        // save the previous pawn type for the moment
-        previousPawnType = Class'AMM_Utilities'.static.GetPawnType(targetPawn);
-        // replace the pawnType on the actor with the one from their hench file so their casual outfits work correctly
-        // also take the armor override value from this so that they stay in casual if they were in casual
-        // but put it on the pawn behavior, not the pawn type because that will affect other things too
-        targetPawn.m_oBehavior.m_oActorType = pawnType;
-        targetPawn.m_oBehavior.m_bArmorOverridden = previousPawnType.m_bIsArmorOverridden;
-    }
-    else
-    {
-        pawnType = Class'AMM_Utilities'.static.GetPawnType(targetPawn);
-    }
+    pawnType = Class'AMM_Utilities'.static.GetPawnType(targetPawn);
 
     if (pawnType == None)
     {
