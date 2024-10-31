@@ -14,18 +14,12 @@ public function SpecialHandling(BioPawn targetPawn)
 
 	packageName = targetPawn.GetPackageName();
 
-	if (// if casual hubs is installed
-		DynamicLoadObject("DLC_MOD_CasualHubs_GlobalTlk.GlobalTlk_tlk", class'Object', true) != None
-		// and we can get the actorType for Garrus
-		&& class'AMM_Utilities'.static.GetActorType("Hench_Turian", pawnType)
-		// and it is in Clothing (casual hubs Garrus/Wrex option)
-		&& pawnType.m_oAppearanceSettings.m_oBodySettings.m_eArmorType == EBioArmorType.ARMOR_TYPE_CLOTHING)
+	if (IsCasualHubsGarrusWrexOptionInstalled(pawnType))
 	{
-
 		if ( // Normandy garage
-			packageName == 'BIOA_NOR10_11_DSG' 
+			packageName == 'BIOA_NOR10_11_DSG'
 			// speech when first leaving the citadel
-			|| packageName == 'BIOA_NOR10_01patton_DSG' 
+			|| packageName == 'BIOA_NOR10_01patton_DSG'
 			// post mission debriefs
 			|| packageName == 'BIOA_NOR10_04A_DSG'
 			// CSec - !Garrus waiting to congratulate you && Garrus previously refused && you have left the citadel already
@@ -39,6 +33,15 @@ public function SpecialHandling(BioPawn targetPawn)
 	}
 }
 
+private function bool IsCasualHubsGarrusWrexOptionInstalled(out BioPawnType pawnType)
+{
+	return DynamicLoadObject("DLC_MOD_CasualHubs_GlobalTlk.GlobalTlk_tlk", class'Object', true) != None
+		// and we can get the actorType for Garrus
+        && class'AMM_Utilities'.static.GetActorType("Hench_Turian", pawnType)
+		// and it is in Clothing (casual hubs Garrus/Wrex option)
+		&& pawnType.m_oAppearanceSettings.m_oBodySettings.m_eArmorType == EBioArmorType.ARMOR_TYPE_CLOTHING;
+}
+
 public function string GetAppearanceType(BioPawn targetPawn)
 {
 	// all Garrus appearances:
@@ -49,6 +52,12 @@ public function string GetAppearanceType(BioPawn targetPawn)
 	// Normandy
 	// normandy debrief?
 	local name packageName;
+	local BioPawnType _;
+	local BioWorldInfo BWI;
+	local BioGlobalVariableTable globalVars;
+
+	BWI = class'AMM_AppearanceUpdater'.static.GetOuterWorldInfo();
+	globalVars = BWI.GetGlobalVariables();
 
 	// pre recruitment tags:
 	// sta60_Garrus is med clinic recruitment (both cutscene and combat I think; need to confirm)
@@ -65,8 +74,17 @@ public function string GetAppearanceType(BioPawn targetPawn)
 	{
 		packageName = targetPawn.GetPackageName();
 		// if this is streamed in with the framework or it's in the Salarian Camp on Virmire, or the late recruitment pickup in csec count it as combat
-		if (packageName == 'BIONPC_Garrus' || packageName == 'BIOA_JUG20_08_DSG' || packageName == 'BIOA_STA30_01_DSG')
+		if (packageName == 'BIONPC_Garrus' || packageName == 'BIOA_JUG20_08_DSG')
 		{
+			return "combat";
+		}
+		else if (packageName == 'BIOA_STA30_01_DSG')
+		{
+			// is Casual Hubs installed and is this a late recruit after having left the citadel once?
+			if (IsCasualHubsGarrusWrexOptionInstalled(_) && !BWI.CheckConditional(790) && BWI.CheckConditional(1368) && globalVars.GetBool(4117))
+			{
+				return "casual";
+			}
 			return "combat";
 		}
 	}

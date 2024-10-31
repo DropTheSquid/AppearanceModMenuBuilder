@@ -13,11 +13,7 @@ public function SpecialHandling(BioPawn targetPawn)
 	packageName = targetPawn.GetPackageName();
 
 	// if casual hubs garrus + wrex option is installed
-	if (DynamicLoadObject("DLC_MOD_CasualHubs_GlobalTlk.GlobalTlk_tlk", class'Object', true) != None
-		// and we can get the actorType for Wrex
-        && class'AMM_Utilities'.static.GetActorType("Hench_Krogan", pawnType)
-		// and it is in Clothing (casual hubs Garrus/Wrex option)
-		&& pawnType.m_oAppearanceSettings.m_oBodySettings.m_eArmorType == EBioArmorType.ARMOR_TYPE_CLOTHING)
+	if (IsCasualHubsGarrusWrexOptionInstalled(pawnType))
 	{
 		// BIOA_NOR10_11_DSG is the vehicle bay
 		// BIOA_NOR10_01patton_DSG is the speech upon leaving the citadel as a spectre for the first time
@@ -64,24 +60,49 @@ public function SpecialHandling(BioPawn targetPawn)
 	}
 }
 
+private function bool IsCasualHubsGarrusWrexOptionInstalled(out BioPawnType pawnType)
+{
+	return DynamicLoadObject("DLC_MOD_CasualHubs_GlobalTlk.GlobalTlk_tlk", class'Object', true) != None
+		// and we can get the actorType for Wrex
+        && class'AMM_Utilities'.static.GetActorType("Hench_Krogan", pawnType)
+		// and it is in Clothing (casual hubs Garrus/Wrex option)
+		&& pawnType.m_oAppearanceSettings.m_oBodySettings.m_eArmorType == EBioArmorType.ARMOR_TYPE_CLOTHING;
+}
+
 public function string GetAppearanceType(BioPawn targetPawn)
 {
+	local name packageName;
+	local BioWorldInfo BWI;
+	local BioGlobalVariableTable globalVars;
+	local BioPawnType _;
+
+	BWI = class'AMM_AppearanceUpdater'.static.GetOuterWorldInfo();
+	globalVars = BWI.GetGlobalVariables();
+	packageName = targetPawn.GetPackageName();
+
 	// Wrex has a few weird appearances. He appears in CSec (BIOA_STA30_01_DSG) to recruit him before taking on Fist or after taking on Fist
 	// and in Chora's den before talking to Barla Von/Garrus, and after you refuse him in CSec
 	if (targetPawn.Tag == 'hench_krogan')
 	{
 		// if this is streamed in with the framework or it's in the Salarian Camp on Virmire, or the normal recruitment pickup in csec count it as combat
-		if (
-			// framework streamed in
-			targetPawn.GetPackageName() == 'BIONPC_Wrex'
+		if ( // framework streamed in
+			packageName == 'BIONPC_Wrex'
 			// virmire camp
-			|| targetPawn.GetPackageName() == 'BIOA_JUG20_08_DSG'
+			|| packageName == 'BIOA_JUG20_08_DSG'
 			// csec
-			|| targetPawn.GetPackageName() == 'BIOA_STA30_01_DSG'
-			// chora's den
-			|| targetPawn.GetPackageName() == 'BIOA_STA60_05A_DSG')
+			|| packageName == 'BIOA_STA30_01_DSG')
 		{
 			return "combat";
+		}
+		// chora's den
+		else if (packageName == 'BIOA_STA60_05A_DSG')
+		{
+			// is this the casual hubs late recruit after you have left the citadel?
+			if (IsCasualHubsGarrusWrexOptionInstalled(_) && BWI.CheckConditional(1367) && globalVars.GetBool(4117))
+			{
+				return "casual";
+			}
+			return"combat";
 		}
 	}
 	// otherwise, go with the normal system of relying on the armor override to account for in party with/without casual hubs
