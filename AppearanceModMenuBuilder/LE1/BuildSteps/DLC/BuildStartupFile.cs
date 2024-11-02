@@ -48,6 +48,14 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\NoHelmetSpec.uc", ["Mod_GameContent"]),
                     LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\VanillaBreatherSpec.uc", ["Mod_GameContent"]),
                     LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\NoBreatherSpec.uc", ["Mod_GameContent"]),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\ArmorFromItemIdHelmetSpec.uc", ["Mod_GameContent"]),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\ArmorFromItemIdOutfitSpec.uc", ["Mod_GameContent"]),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\TaliArmorSpecColossus.uc", ["Mod_GameContent"]),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\TaliArmorSpecExplorer.uc", ["Mod_GameContent"]),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\TaliArmorSpecLiberator.uc", ["Mod_GameContent"]),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\TaliArmorSpecOnyx.uc", ["Mod_GameContent"]),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\TaliArmorSpecPhoenix.uc", ["Mod_GameContent"]),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\TaliArmorSpecSurvivor.uc", ["Mod_GameContent"]),
                     LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\ModSeqEvent_RemoteEvent_Dynamic.uc", ["Mod_GameContent"]),
                     ])
                 .RunModTask(context);

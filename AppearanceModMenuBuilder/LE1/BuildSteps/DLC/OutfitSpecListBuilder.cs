@@ -1198,11 +1198,21 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             ];
             breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs);
 
-            const string qrnArmorFileName = "BIOG_QRN_ARM_AMM";
+            // Quarians will be handled in a slightly unique way. Rather than hardcoding my copies of them meshes, I will actually be pointing to the vanilla outfits
+            // by manufactorer id, and then loading those
+            // this will make it soft incompatible with IFP's Tali option, but much more compatible with every other Tali appearance mod that overrides her armor appearances, often by redirecting to another file
 
-            // add all vanilla armor variants into positive IDs less than 100
-            // Tali is the only vanilla Quarian, and she only has 6 color/texture variants of the same LGTa mesh
-            AddVanillaOutfitSpecs(bodyConfig, 1, qrnArmorFileName, OutfitType.LGT, 0, "QRN_FAC", 6, 2);
+            LoadedSpecItem[] specs =
+            [
+                new LoadedSpecItem(1, "Mod_GameContent.TaliArmorSpecOnyx"),
+                new LoadedSpecItem(2, "Mod_GameContent.TaliArmorSpecColossus"),
+                new LoadedSpecItem(3, "Mod_GameContent.TaliArmorSpecExplorer"),
+                new LoadedSpecItem(4, "Mod_GameContent.TaliArmorSpecSurvivor"),
+                new LoadedSpecItem(5, "Mod_GameContent.TaliArmorSpecPhoenix"),
+                new LoadedSpecItem(6, "Mod_GameContent.TaliArmorSpecLiberator"),
+            ];
+
+            bodyConfig.AddArrayEntries("outfitSpecs", specs);
 
             configs.Add(bodyConfig);
             configs.Add(helmetConfig);

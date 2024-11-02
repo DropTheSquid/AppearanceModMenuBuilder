@@ -9,6 +9,7 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
 	local array<string> meshMaterialPaths;
 	local eHelmetDisplayState helmetDisplayState;
 	local HelmetSpecBase delegateSpec;
+	local BioPawnType pawnType;
 
 	// this is for equipping their vanilla outfit
 	// we will determine what outfit it should be based on the pawn's settings and then apply it
@@ -16,16 +17,21 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
     {
         return FALSE;
     }
+
+	if (!GetPawnType(target, pawnType))
+	{
+		return false;
+	}
 	
 	if (!GetOutfitStrings(
-		class'AMM_Utilities'.static.GetPawnType(target),
+		pawnType,
 		armorType, meshVariant, materialVariant,
 		meshPaths))
 	{
 		return false;
 	}
 
-	if (!class'AMM_Utilities'.static.LoadAppearanceMesh(meshPaths, appearance.bodyMesh))
+	if (!class'AMM_Utilities'.static.LoadAppearanceMesh(meshPaths, appearance.bodyMesh, false, true))
 	{
 		return false;
 	}
@@ -66,6 +72,12 @@ protected function bool GetVariant(BioPawn targetPawn, out int armorType, out in
 	// This is in the abstract base class, and needs to be overridden in child classes
     LogInternal("You have made a programming mistake; VanillaOutfitSpecBase.GetVariant should never be called", );
     return FALSE;
+}
+
+protected function bool GetPawnType(BioPawn target, out BioPawnTYpe pawnType)
+{
+	pawnType = class'AMM_Utilities'.static.GetPawnType(target);
+	return true;
 }
 
 protected static function bool GetOutfitStrings(BioPawnType pawnType, int armorType, int meshVariant, int materialVariant, out AppearanceMeshPaths Mesh)

@@ -63,7 +63,7 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
 		return false;
 	}
 
-	if (!class'AMM_Utilities'.static.LoadAppearanceMesh(meshPaths, appearance.bodyMesh))
+	if (!class'AMM_Utilities'.static.LoadAppearanceMesh(meshPaths, appearance.bodyMesh, false, true))
 	{
 		return false;
 	}

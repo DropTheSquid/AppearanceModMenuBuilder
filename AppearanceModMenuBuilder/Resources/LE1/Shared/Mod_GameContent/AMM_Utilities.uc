@@ -109,23 +109,33 @@ public static function bool GetActorType(string tag, out BioPawnType actorType)
     local int i;
     local string actorTypePath;
 
-    characters2DA = Bio2DA(FindObject("BIOG_2DA_Characters_X.Characters_Character", class'Bio2DA'));
-    if (characters2DA == None)
+    if (tag ~= "Human_Male")
     {
-        LogInternal("failed to load the characters 2DA");
-        return false;
+        actorTypePath = class'BioCharacterImporter'.default.m_maleActorType;
     }
-    rowNames = characters2DA.GetRowNames();
-    i = rowNames.Find(name(tag));
-    if (i == -1)
+    else if (tag ~= "Human_Male")
     {
-        // LogInternal("failed to find a row named"@tag);
-        return false;
+        actorTypePath = class'BioCharacterImporter'.default.m_femaleActorType;
     }
-    if (!characters2DA.GetStringEntryIN(i, 'ActorType', actorTypePath))
+    else
     {
-        LogInternal("failed to find a column value"@tag);
-        return false;
+        characters2DA = Bio2DA(FindObject("BIOG_2DA_Characters_X.Characters_Character", class'Bio2DA'));
+        if (characters2DA == None)
+        {
+            LogInternal("failed to load the characters 2DA");
+            return false;
+        }
+        rowNames = characters2DA.GetRowNames();
+        i = rowNames.Find(name(tag));
+        if (i == -1)
+        {
+            return false;
+        }
+        if (!characters2DA.GetStringEntryIN(i, 'ActorType', actorTypePath))
+        {
+            LogInternal("failed to find a column value"@tag);
+            return false;
+        }
     }
 
     actorType = BioPawnType(DynamicLoadObject(actorTypePath, class'BioPawnType'));
@@ -212,7 +222,6 @@ public static function bool LoadEquipmentFromSaveRecord(coerce name tag, out int
 public static function bool LoadEquipmentAndGetAttributes(name tag, int itemId, int manufacturerId, byte sophistication, out int armorType, out int meshVariant, out int materialVariant)
 {
     local string squadMateGPL;
-    local Bio2DANumberedRows items2DA;
     local BioItem item;
     local BioItemArmor armor;
     local BioMaterialOverride matOverrides;
@@ -231,7 +240,6 @@ public static function bool LoadEquipmentAndGetAttributes(name tag, int itemId, 
     local int manfArmorTypeOVerride;
 
     squadMateGPL = GetGamePropertyLabel(tag, itemId, armorType);
-    // items2DA = Bio2DANumberedRows(FindObject("BIOG_2DA_Equipment_X.Items_ItemEffectLevels", class'Bio2DANumberedRows'));
     if (squadMateGPL == "")
     {
         LogInternal("could not get squadmate GPL");
@@ -648,10 +656,10 @@ private static final function ApplyTextureParameterToAllMICs(TextureParameterVal
     }
 }
 
-public static function bool LoadAppearanceMesh(AppearanceMeshPaths meshPaths, out AppearanceMesh AppearanceMesh, optional bool allowNone = false)
+public static function bool LoadAppearanceMesh(AppearanceMeshPaths meshPaths, out AppearanceMesh AppearanceMesh, optional bool allowNone = false, optional bool permissive = false)
 {
 	if (class'AMM_Utilities'.static.LoadSkeletalMesh(meshPaths.meshPath, AppearanceMesh.Mesh, allowNone)
-		&& class'AMM_Utilities'.static.LoadMaterials(meshPaths.MaterialPaths, AppearanceMesh.Materials))
+		&& class'AMM_Utilities'.static.LoadMaterials(meshPaths.MaterialPaths, AppearanceMesh.Materials, permissive))
 	{
 		return true;
 	}
@@ -673,7 +681,7 @@ public static function bool LoadSkeletalMesh(string skeletalMeshPath, out Skelet
     return TRUE;
 }
 
-public static function bool LoadMaterials(array<string> materialPaths, out array<MaterialInterface> Materials)
+public static function bool LoadMaterials(array<string> materialPaths, out array<MaterialInterface> Materials, optional bool permissive = false)
 {
     local string materialString;
     local MaterialInterface material;
@@ -682,7 +690,8 @@ public static function bool LoadMaterials(array<string> materialPaths, out array
     foreach materialPaths(materialString, )
     {
         material = MaterialInterface(DynamicLoadObject(materialString, Class'MaterialInterface'));
-        if (material == None)
+        // vanilla allows materials to be missing and will defer to the material on the mesh. I don't love it but I will allow it in some cases too
+        if (material == None && !permissive)
         {
             LogInternal("WARNING failed to Load material" @ materialString, );
             return FALSE;
@@ -775,6 +784,7 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
 {
     local int i;
     local MaterialInstanceConstant MIC;
+    local MaterialInterface parent;
 
 	if (smc == None)
 	{
@@ -784,6 +794,14 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
 
     for (i = 0; i < AppearanceMesh.Materials.Length; i++)
     {
+        if (AppearanceMesh.Materials[i] == None && AppearanceMesh.Mesh.Materials.length > i)
+        {
+            parent = AppearanceMesh.Mesh.Materials[i];
+        }
+        else
+        {
+            parent = AppearanceMesh.Materials[i];
+        }
 		// reuse existing MICs when possible; it makes the game much more stable. I am not sure why
 
 		// I need to do this entirely based around the methods I think. idk why, but that's the next thing to try
@@ -791,7 +809,7 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
         if (MIC != None && MIC.outer == targetPawn)
         {
 			MIC.ClearParameterValues();
-            MIC.SetParent(AppearanceMesh.Materials[i]);
+            MIC.SetParent(parent);
 			// trying to do this even though it should already be there
 			smc.SetMaterial(i, MIC);
         }
@@ -799,7 +817,7 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
 		{
 			// if they do not have a suitable MIC, make one and point it at the right parent.
 			MIC = new (targetPawn) Class'BioMaterialInstanceConstant';
-			MIC.SetParent(AppearanceMesh.Materials[i]);
+			MIC.SetParent(parent);
 			smc.SetMaterial(i, MIC);
 		}
 	}

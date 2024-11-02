@@ -12,6 +12,12 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 	local bool hideHair;
 	local bool hideHead;
 	local eHelmetDisplayState helmetDisplayState;
+	local BioPawnType pawnType;
+
+	if (!GetPawnType(target, pawnType))
+	{
+		return false;
+	}
 
 	// this is for equipping their vanilla outfit
 	// we will determine what outfit it should be based on the pawn's settings and then apply it
@@ -22,7 +28,7 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 
 	// get the helmet mesh paths and various parameters around it
 	if (!GetHelmetMeshPaths(
-		class'AMM_Utilities'.static.GetPawnType(target),
+		pawnType,
 		armorType,
 		meshVariant,
 		materialVariant,
@@ -37,7 +43,7 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 	}
 
 	// load the helmet mesh
-	if (!class'AMM_Utilities'.static.LoadAppearanceMesh(helmetMeshPaths, appearance.HelmetMesh, true))
+	if (!class'AMM_Utilities'.static.LoadAppearanceMesh(helmetMeshPaths, appearance.HelmetMesh, true, true))
 	{
 		return false;
 	}
@@ -48,7 +54,7 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 	// if the visor is not suppressed, get the visor mesh
 	if (!suppressVisor)
 	{
-		class'AMM_Utilities'.static.GetVanillaVisorMesh(class'AMM_Utilities'.static.GetPawnType(target), appearance.VisorMesh);
+		class'AMM_Utilities'.static.GetVanillaVisorMesh(pawnType, appearance.VisorMesh);
 	}
 
 	// check whether we should display a breather
@@ -64,6 +70,12 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 		specLists.breatherSpecs.DelegateToBreatherSpec(target, specLists, appearanceIds, appearance);
 	}
 	
+	return true;
+}
+
+protected function bool GetPawnType(BioPawn target, out BioPawnTYpe pawnType)
+{
+	pawnType = class'AMM_Utilities'.static.GetPawnType(target);
 	return true;
 }
 

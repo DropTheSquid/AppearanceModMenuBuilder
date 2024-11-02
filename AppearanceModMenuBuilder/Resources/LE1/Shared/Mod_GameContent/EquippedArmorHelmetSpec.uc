@@ -70,7 +70,7 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
     }
 
     // load the helmet mesh
-    if (!class'AMM_Utilities'.static.LoadAppearanceMesh(helmetMeshPaths, appearance.HelmetMesh, true))
+    if (!class'AMM_Utilities'.static.LoadAppearanceMesh(helmetMeshPaths, appearance.HelmetMesh, true, true))
     {
         return false;
     }
