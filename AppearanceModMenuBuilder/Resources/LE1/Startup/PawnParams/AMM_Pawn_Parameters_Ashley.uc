@@ -1,6 +1,24 @@
 Class AMM_Pawn_Parameters_Ashley extends AMM_Pawn_Parameters_Romanceable
     config(Game);
 
+public function Object GetOverrideDefaultSpec(BioPawn targetPawn)
+{
+	local SimpleOutfitSpec delegateSpec;
+
+	// check if AUC is installed
+	if (DynamicLoadObject("DLC_MOD_AllianceUniformConsistency_GlobalTlk.GlobalTlk_tlk", class'Object') != None)
+	{
+		delegateSpec = new class'SimpleOutfitSpec';
+		delegateSpec.bodyMesh.MaterialPaths.AddItem("BIOG_ARM_CTHb_ME3_R.Feminine.HMF_ARM_CTHb_ME3_MAT");
+		delegateSpec.helmetTypeOverride = -2;
+		delegateSpec.bodyMesh.MeshPath = "BIOG_ARM_CTHb_ME3_R.Feminine.HMF_ARM_CTHb_ME3_MDL";
+		
+	}
+	// otherwise, let it behave as normal
+
+	return None;
+}
+
 public function SpecialHandling(BioPawn targetPawn)
 {
     local BioPawnType pawnType;
