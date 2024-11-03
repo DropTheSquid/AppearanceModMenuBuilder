@@ -1,6 +1,21 @@
 Class AMM_Pawn_Parameters_Tali extends AMM_Pawn_Parameters_Squad
     config(Game);
 
+public function SpecialHandling(BioPawn targetPawn)
+{
+	local BioPawnType pawnType;
+
+	// if Tali's LE1 outfits for Tali Overhaul HD is installed, fix up the pawn type so it works consistently
+	// this will completely fix this mod.
+	if (DynamicLoadObject("DLC_MOD_TLI_LE1_GlobalTlk.GlobalTlk_tlk", class'Object') != None
+		&& DynamicLoadObject("DLC_MOD_TaliOverhaulHD_GlobalTlk.GlobalTlk_tlk", class'Object') != None)
+	{
+		pawnType = class'AMM_Utilities'.static.GetPawnType(targetPawn);
+		pawnType.m_oAppearance.Body.Armor[2].m_meshPackageName = 'BIOG_QRN_TLI_ARM_R';
+		pawnType.m_oAppearance.Body.Armor[2].m_materialPackageName = 'BIOG_QRN_TLI_ARM_R';
+	}
+}
+
 public function string GetAppearanceType(BioPawn targetPawn)
 {
 	local BioWorldInfo BWI;

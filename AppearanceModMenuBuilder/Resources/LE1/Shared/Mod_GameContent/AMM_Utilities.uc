@@ -672,6 +672,17 @@ public static function bool LoadSkeletalMesh(string skeletalMeshPath, out Skelet
 	{
 		return true;
 	}
+    // if this is Tali's vanilla mesh (at least by name)
+    if (skeletalMeshPath ~= "BIOG_QRN_ARM_LGT_R.LGTa.QRN_FAC_ARM_LGTa_MDL")
+    {
+        // and Tali Overhaul is installed
+        if (DynamicLoadObject("DLC_MOD_TaliOverhaulHD_GlobalTlk.GlobalTlk_tlk", class'Object') != None
+            || DynamicLoadObject("DLC_MOD_TaliOverhaul_GlobalTlk.GlobalTlk_tlk", class'Object') != None)
+        {
+            // replace it with this one that is memory unique
+            skeletalMeshPath = "tali_overhaul_0.TaliOverhaul.tali_overhaul_";
+        }
+    }
     Mesh = SkeletalMesh(DynamicLoadObject(skeletalMeshPath, Class'SkeletalMesh'));
     if (Mesh == None)
     {
@@ -685,16 +696,39 @@ public static function bool LoadMaterials(array<string> materialPaths, out array
 {
     local string materialString;
     local MaterialInterface material;
-    
+
     Materials.Length = 0;
     foreach materialPaths(materialString, )
     {
+        // if this is Tali's vanilla material (at least by name)
+        if (materialString ~= "BIOG_QRN_ARM_LGT_R.LGTa.QRN_FAC_ARM_LGTa_MAT_1a")
+        {
+            // and Tali Overhaul is installed
+            if (DynamicLoadObject("DLC_MOD_TaliOverhaulHD_GlobalTlk.GlobalTlk_tlk", class'Object') != None || DynamicLoadObject("DLC_MOD_TaliOverhaul_GlobalTlk.GlobalTlk_tlk", class'Object') != None)
+            {
+                // replace it with this one that is memory unique
+                materialString = "tali_overhaul_0.TaliOverhaul.Materials.tali_overhal_mat";
+            }
+        }
+        // if this is Tali's vanilla material (at least by name)
+        if (materialString ~= "BIOG_QRN_ARM_LGT_R.LGTa.QRN_FAC_ARM_LGTa_MAT_1b")
+        {
+            // and Tali Overhaul is installed
+            if (DynamicLoadObject("DLC_MOD_TaliOverhaulHD_GlobalTlk.GlobalTlk_tlk", class'Object') != None || DynamicLoadObject("DLC_MOD_TaliOverhaul_GlobalTlk.GlobalTlk_tlk", class'Object') != None)
+            {
+                // replace it with this one that is memory unique
+                materialString = "tali_overhaul_0.TaliOverhaul.Materials.Tali_Vsr";
+            }
+        }
         material = MaterialInterface(DynamicLoadObject(materialString, Class'MaterialInterface'));
         // vanilla allows materials to be missing and will defer to the material on the mesh. I don't love it but I will allow it in some cases too
-        if (material == None && !permissive)
+        if (material == None)
         {
-            LogInternal("WARNING failed to Load material" @ materialString, );
-            return FALSE;
+            if (!permissive)
+            {
+                LogInternal("WARNING failed to Load material" @ materialString, );
+                return FALSE;
+            }
         }
         Materials.AddItem(material);
     }
@@ -786,6 +820,8 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
     local MaterialInstanceConstant MIC;
     local MaterialInterface parent;
 
+    LogInternal("Replacing"@PathName(smc.SkeletalMesh)@"with"@PathName(appearanceMesh.Mesh));
+
 	if (smc == None)
 	{
 		return;
@@ -797,10 +833,12 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
         if (AppearanceMesh.Materials[i] == None && AppearanceMesh.Mesh.Materials.length > i)
         {
             parent = AppearanceMesh.Mesh.Materials[i];
+            LogInternal("Applying material from mesh"@i@PathName(parent));
         }
         else
         {
             parent = AppearanceMesh.Materials[i];
+            LogInternal("Applying material from spec"@i@PathName(parent));
         }
 		// reuse existing MICs when possible; it makes the game much more stable. I am not sure why
 
