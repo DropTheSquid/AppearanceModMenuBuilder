@@ -21,6 +21,7 @@ public function Object GetOverrideDefaultSpec(BioPawn targetPawn)
 		{
 			delegateSpec.bodyMesh.MeshPath = "BIOG_ARM_CTHb_ME3_R.Masculine.HMM_ARM_CTHb_ME3_MDL";
 		}
+		return DelegateSpec;
 	}
 	// otherwise, let it behave as normal
 

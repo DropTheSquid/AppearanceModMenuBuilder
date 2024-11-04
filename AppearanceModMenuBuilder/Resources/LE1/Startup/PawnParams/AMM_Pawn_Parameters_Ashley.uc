@@ -12,7 +12,7 @@ public function Object GetOverrideDefaultSpec(BioPawn targetPawn)
 		delegateSpec.bodyMesh.MaterialPaths.AddItem("BIOG_ARM_CTHb_ME3_R.Feminine.HMF_ARM_CTHb_ME3_MAT");
 		delegateSpec.helmetTypeOverride = -2;
 		delegateSpec.bodyMesh.MeshPath = "BIOG_ARM_CTHb_ME3_R.Feminine.HMF_ARM_CTHb_ME3_MDL";
-		
+		return DelegateSpec;
 	}
 	// otherwise, let it behave as normal
 
