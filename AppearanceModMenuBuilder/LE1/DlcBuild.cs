@@ -52,10 +52,13 @@ namespace AppearanceModMenuBuilder.LE1
                 .AddTask(new OutputConfigMerge())
                 // compile tlks
                 .AddTask(new ImportGame1TlkLocaliazation(MELocalization.INT, @"Resources\LE1\tlk\GlobalTlk_tlk.xml"))
-                //.AddTask(new ImportGame1TlkLocaliazation(MELocalization.DEU, @"Resources\LE1\tlk\GlobalTlk_tlk_DE.xml"))
-                //.AddTask(new ImportGame1TlkLocaliazation(MELocalization.ESN, @"Resources\LE1\tlk\GlobalTlk_tlk_ES.xml"))
+                .AddTask(new ImportGame1TlkLocaliazation(MELocalization.DEU, @"Resources\LE1\tlk\GlobalTlk_tlk_DE.xml"))
+                .AddTask(new ImportGame1TlkLocaliazation(MELocalization.ESN, @"Resources\LE1\tlk\GlobalTlk_tlk_ES.xml"))
                 .AddTask(new ImportGame1TlkLocaliazation(MELocalization.POL, @"Resources\LE1\tlk\GlobalTlk_tlk_PL_M.xml", @"Resources\LE1\tlk\GlobalTlk_tlk_PL.xml"))
-                //.AddTask(new ImportGame1TlkLocaliazation(MELocalization.RUS, @"Resources\LE1\tlk\GlobalTlk_tlk_RU.xml"))
+                .AddTask(new ImportGame1TlkLocaliazation(MELocalization.RUS, @"Resources\LE1\tlk\GlobalTlk_tlk_RU.xml"))
+                .AddTask(new ImportGame1TlkLocaliazation(MELocalization.FRA, @"Resources\LE1\tlk\GlobalTlk_tlk_FR.xml"))
+                .AddTask(new ImportGame1TlkLocaliazation(MELocalization.ITA, @"Resources\LE1\tlk\GlobalTlk_tlk_IT.xml"))
+                //.AddTask(new ImportGame1TlkLocaliazation(MELocalization.JPN, @"Resources\LE1\tlk\GlobalTlk_tlk_JA.xml"))
                 .AddTask(new OutputTlk());
 
             return intermediate;
