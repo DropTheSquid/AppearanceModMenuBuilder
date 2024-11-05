@@ -12,6 +12,7 @@ public function SpecialHandling(BioPawn targetPawn)
 	globalVars = BWI.GetGlobalVariables();
 	packageName = targetPawn.GetPackageName();
 
+	// HACK Casual Hubs compat
 	// if casual hubs garrus + wrex option is installed
 	if (IsCasualHubsGarrusWrexOptionInstalled(pawnType))
 	{

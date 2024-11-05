@@ -7,6 +7,7 @@ public function Object GetOverrideDefaultSpec(BioPawn targetPawn)
 
 	if (GetAppearanceType(targetPawn) ~= "casual")
 	{
+		// HACK AUC compat, same as Ashley's
 		// check if AUC is installed
 		if (DynamicLoadObject("DLC_MOD_AllianceUniformConsistency_GlobalTlk.GlobalTlk_tlk", class'Object') != None)
 		{
@@ -43,6 +44,7 @@ public function SpecialHandling(BioPawn targetPawn)
 	// while his Normandy appearance is CTHb 1
 	// if the framework is not installed
 	// note that casual hubs also addresses this issue
+	// HACK vanilla issue, will be addressed by framework
 	if (!Class'AMM_Common'.static.IsFrameworkInstalled())
 	{
 		// and this is a UI world pawn with armor overridden (casual preview)

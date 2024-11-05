@@ -64,8 +64,8 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 	{
 		params.SpecialHandling(target);
 		RemoveAIControllerFromPreviews(target);
-		LogInternal("appearance update for target"@PathName(target)@Target.Tag@Target.UniqueTag@"from source"@source);
-		LogInternal("target is in appearance type"@params.GetAppearanceType(target));
+		// LogInternal("appearance update for target"@PathName(target)@Target.Tag@Target.UniqueTag@"from source"@source);
+		// LogInternal("target is in appearance type"@params.GetAppearanceType(target));
 		if (params.GetCurrentAppearanceIds(target, appearanceIds))
 		{
 			specLists = class'AMM_Utilities'.static.GetSpecLists(target, params);
@@ -117,10 +117,10 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 			LogInternal("Warning: Could not get appearance Ids from params"@params@target);
 		}
 	}
-	else
-	{
-		LogInternal("appearance update with no params for target"@PathName(target)@Target.Tag@Target.UniqueTag@"from source"@source);
-	}
+	// else
+	// {
+	// 	LogInternal("appearance update with no params for target"@PathName(target)@Target.Tag@Target.UniqueTag@"from source"@source);
+	// }
 }
 
 struct AttachmentToTransfer

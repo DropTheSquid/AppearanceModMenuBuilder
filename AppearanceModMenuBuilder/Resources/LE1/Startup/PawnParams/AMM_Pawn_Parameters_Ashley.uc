@@ -7,6 +7,8 @@ public function Object GetOverrideDefaultSpec(BioPawn targetPawn)
 
 	if (GetAppearanceType(targetPawn) ~= "casual")
 	{
+		// HACK AUC compatibility; this, along with adding the AUC outfit as dynamically loadable ensures Ashley will appear in the correct casual outfit in all circumstances
+		// TODO remove this after AUC is rebuilt on framework hopefully
 		// check if AUC is installed
 		if (DynamicLoadObject("DLC_MOD_AllianceUniformConsistency_GlobalTlk.GlobalTlk_tlk", class'Object') != None)
 		{
@@ -35,6 +37,7 @@ public function SpecialHandling(BioPawn targetPawn)
 	// note that casual hubs also addresses this issue
 	if (!Class'AMM_Common'.static.IsFrameworkInstalled())
 	{
+		// HACK vanilla issue. can be removed if we ever start to require the framework
 		// and this is a UI world pawn with armor overridden (casual preview)
 		if (string(targetPawn.GetPackageName()) ~= "BIOG_UIWORLD" && Class'AMM_Utilities'.static.IsPawnArmorAppearanceOverridden(targetPawn))
 		{

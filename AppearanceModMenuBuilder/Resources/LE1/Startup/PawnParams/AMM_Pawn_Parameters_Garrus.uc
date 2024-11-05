@@ -14,6 +14,7 @@ public function SpecialHandling(BioPawn targetPawn)
 
 	packageName = targetPawn.GetPackageName();
 
+	// HACK Casual Hubs compatibility. can be removed once casual hubs is rebuilt on the framework
 	if (IsCasualHubsGarrusWrexOptionInstalled(pawnType))
 	{
 		if ( // Normandy garage
@@ -80,6 +81,7 @@ public function string GetAppearanceType(BioPawn targetPawn)
 		}
 		else if (packageName == 'BIOA_STA30_01_DSG')
 		{
+			// HACK Casual Hubs compat; can probably be removed once it is rebuilt on framework
 			// is Casual Hubs installed and is this a late recruit after having left the citadel once?
 			if (IsCasualHubsGarrusWrexOptionInstalled(_) && !BWI.CheckConditional(790) && BWI.CheckConditional(1368) && globalVars.GetBool(4117))
 			{

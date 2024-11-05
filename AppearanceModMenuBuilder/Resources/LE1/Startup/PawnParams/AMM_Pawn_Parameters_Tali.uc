@@ -5,11 +5,15 @@ public function SpecialHandling(BioPawn targetPawn)
 {
 	local BioPawnType pawnType;
 
+	// HACK Tali's LE1 Outfits for Tali Overhaul HD compatibility
+	// can remove once this is built on the framework
 	// if Tali's LE1 outfits for Tali Overhaul HD is installed, fix up the pawn type so it works consistently
 	// this will completely fix this mod.
 	if (DynamicLoadObject("DLC_MOD_TLI_LE1_GlobalTlk.GlobalTlk_tlk", class'Object') != None
 		&& DynamicLoadObject("DLC_MOD_TaliOverhaulHD_GlobalTlk.GlobalTlk_tlk", class'Object') != None)
 	{
+		// the memory clashes are really gross. basically, the Tali that gets spawned into the party correctly points to the right armor file, but the ones out of party do not
+		// this fixes them so they do, and it can load the correct outfit
 		pawnType = class'AMM_Utilities'.static.GetPawnType(targetPawn);
 		pawnType.m_oAppearance.Body.Armor[2].m_meshPackageName = 'BIOG_QRN_TLI_ARM_R';
 		pawnType.m_oAppearance.Body.Armor[2].m_materialPackageName = 'BIOG_QRN_TLI_ARM_R';
