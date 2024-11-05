@@ -1,5 +1,5 @@
 [BioUI.ini ModSettings_Submenus_LE1CP.ModSettingsSubmenu_Root]
-+menuItems=(srCenterText=210210221, srDescriptionText=210210223, srDescriptionTitleText=210210221, SubMenuClassName="ModSettings_Submenus_AMM.AMM.ModSettingsSubmenu_AMM", Images=())
++menuItems=(srCenterText=210210221, srDescriptionText=210210223, srDescriptionTitleText=210210221, SubMenuClassName="ModSettings_Submenus_AMM.AMM.ModSettingsSubmenu_AMM", Images=("ModSetting_Images_AMM.AMM_entry"))
 
 [BioUI.ini ModSettings_Submenus_AMM.AMM.ModSettingsSubmenu_AMM]
 srTitle=210210221
@@ -11,22 +11,22 @@ srSubtitle=210210222
 ; or always (not recommended)
 ; TODO for now only default and always are implemented
 ;                     "menu accesibility"    "default"                     description too long             "menu accesibility"      ????     display only if int is default                  cycle int to 3
-+menuItems=(srLeftText=210210224, srRightText=210210225, srDescriptionText=210210229, srDescriptionTitleText=210210224, srActionText=1050028, DisplayInt=(Id=1592,Value=0), ApplySettingInts=((Id=1592,Value=3)), Images=())
++menuItems=(srLeftText=210210224, srRightText=210210225, srDescriptionText=210210229, srDescriptionTitleText=210210224, srActionText=1050028, DisplayInt=(Id=1592,Value=0), ApplySettingInts=((Id=1592,Value=3)), Images=("ModSetting_Images_AMM.menu_access_default"))
 ; +menuItems=(srLeftText=210210224, srRightText=210210226, srDescriptionText=210210230, srDescriptionTitleText=210210224, srActionText=1050028, DisplayInt=(Id=1592,Value=1), ApplySettingInts=((Id=1592,Value=2)), Images=())
 ; +menuItems=(srLeftText=210210224, srRightText=210210227, srDescriptionText=210210231, srDescriptionTitleText=210210224, srActionText=1050028, DisplayInt=(Id=1592,Value=2), ApplySettingInts=((Id=1592,Value=3)), Images=())
-+menuItems=(srLeftText=210210224, srRightText=210210228, srDescriptionText=210210232, srDescriptionTitleText=210210224, srActionText=1050028, DisplayInt=(Id=1592,Value=3), ApplySettingInts=((Id=1592,Value=0)), Images=())
++menuItems=(srLeftText=210210224, srRightText=210210228, srDescriptionText=210210232, srDescriptionTitleText=210210224, srActionText=1050028, DisplayInt=(Id=1592,Value=3), ApplySettingInts=((Id=1592,Value=0)), Images=("ModSetting_Images_AMM.menu_access_always"))
 
 ;                      "Ignore Forced Helmet" "Disabled"                                                                          "Enable"
-+menuItems=(srLeftText=210210246, srRightText=200054, srDescriptionText=210210247, srDescriptionTitleText=210210246, srActionText=200008, DisplayInt=(Id=1593,Value=0), ApplySettingInts=((Id=1593,Value=1)), Images=())
-+menuItems=(srLeftText=210210246, srRightText=200053, srDescriptionText=210210247, srDescriptionTitleText=210210246, srActionText=200009, DisplayInt=(Id=1593,Value=1), ApplySettingInts=((Id=1593,Value=0)), Images=())
++menuItems=(srLeftText=210210246, srRightText=200054, srDescriptionText=210210247, srDescriptionTitleText=210210246, srActionText=200008, DisplayInt=(Id=1593,Value=0), ApplySettingInts=((Id=1593,Value=1)), Images=("ModSetting_Images_AMM.forced_helmet_off"))
++menuItems=(srLeftText=210210246, srRightText=200053, srDescriptionText=210210247, srDescriptionTitleText=210210246, srActionText=200009, DisplayInt=(Id=1593,Value=1), ApplySettingInts=((Id=1593,Value=0)), Images=("ModSetting_Images_AMM.forced_helmet_on"))
 
 ; allow casual outfits in combat situations
-+menuItems=(srLeftText=210210249, srRightText=200054, srDescriptionText=210210250, srDescriptionTitleText=210210249, srActionText=200008, DisplayInt=(Id=1594,Value=0), ApplySettingInts=((Id=1594,Value=1)), Images=())
-+menuItems=(srLeftText=210210249, srRightText=200053, srDescriptionText=210210250, srDescriptionTitleText=210210249, srActionText=200009, DisplayInt=(Id=1594,Value=1), ApplySettingInts=((Id=1594,Value=0)), Images=())
++menuItems=(srLeftText=210210249, srRightText=200054, srDescriptionText=210210250, srDescriptionTitleText=210210249, srActionText=200008, DisplayInt=(Id=1594,Value=0), ApplySettingInts=((Id=1594,Value=1)), Images=("ModSetting_Images_AMM.casual_as_combat_off"))
++menuItems=(srLeftText=210210249, srRightText=200053, srDescriptionText=210210250, srDescriptionTitleText=210210249, srActionText=200009, DisplayInt=(Id=1594,Value=1), ApplySettingInts=((Id=1594,Value=0)), Images=("ModSetting_Images_AMM.casual_as_combat_on"))
 
 ; allow combat outfits in casual situations
-+menuItems=(srLeftText=210210251, srRightText=200054, srDescriptionText=210210252, srDescriptionTitleText=210210251, srActionText=200008, DisplayInt=(Id=1595,Value=0), ApplySettingInts=((Id=1595,Value=1)), Images=())
-+menuItems=(srLeftText=210210251, srRightText=200053, srDescriptionText=210210252, srDescriptionTitleText=210210251, srActionText=200009, DisplayInt=(Id=1595,Value=1), ApplySettingInts=((Id=1595,Value=0)), Images=())
++menuItems=(srLeftText=210210251, srRightText=200054, srDescriptionText=210210252, srDescriptionTitleText=210210251, srActionText=200008, DisplayInt=(Id=1595,Value=0), ApplySettingInts=((Id=1595,Value=1)), Images=("ModSetting_Images_AMM.combat_as_casual_off"))
++menuItems=(srLeftText=210210251, srRightText=200053, srDescriptionText=210210252, srDescriptionTitleText=210210251, srActionText=200009, DisplayInt=(Id=1595,Value=1), ApplySettingInts=((Id=1595,Value=0)), Images=("ModSetting_Images_AMM.combat_as_casual_on"))
 
 ; allow romance appearance customization
 ; hide unless framework is installed
@@ -34,28 +34,28 @@ srSubtitle=210210222
 +menuItems=(srLeftText=210210271, srRightText=200053, srDescriptionText=210210272, srDescriptionTitleText=210210271, srActionText=200009, DisplayInt=(Id=1596,Value=1), ApplySettingInts=((Id=1596,Value=0)), Images=(), displayRequiredPackageExports=("DLC_MOD_Framework_GlobalTlk.GlobalTlk_tlk"))
 
 ; allow pre recruitment appearance customization
-+menuItems=(srLeftText=210210274, srRightText=200054, srDescriptionText=210210276, srDescriptionTitleText=210210274, srActionText=200008, DisplayInt=(Id=1597,Value=0), ApplySettingInts=((Id=1597,Value=1)), Images=())
-+menuItems=(srLeftText=210210274, srRightText=200053, srDescriptionText=210210275, srDescriptionTitleText=210210274, srActionText=200009, DisplayInt=(Id=1597,Value=1), ApplySettingInts=((Id=1597,Value=0)), Images=())
++menuItems=(srLeftText=210210274, srRightText=200054, srDescriptionText=210210276, srDescriptionTitleText=210210274, srActionText=200008, DisplayInt=(Id=1597,Value=0), ApplySettingInts=((Id=1597,Value=1)), Images=("ModSetting_Images_AMM.pre_recruit_off"))
++menuItems=(srLeftText=210210274, srRightText=200053, srDescriptionText=210210275, srDescriptionTitleText=210210274, srActionText=200009, DisplayInt=(Id=1597,Value=1), ApplySettingInts=((Id=1597,Value=0)), Images=("ModSetting_Images_AMM.pre_recruit_on"))
 
 ; show immersion breaking outfits
-+menuItems=(srLeftText=210210277, srRightText=200054, srDescriptionText=210210279, srDescriptionTitleText=210210277, srActionText=200008, DisplayInt=(Id=1598,Value=0), ApplySettingInts=((Id=1598,Value=1)), Images=())
-+menuItems=(srLeftText=210210277, srRightText=200053, srDescriptionText=210210278, srDescriptionTitleText=210210277, srActionText=200009, DisplayInt=(Id=1598,Value=1), ApplySettingInts=((Id=1598,Value=0)), Images=())
++menuItems=(srLeftText=210210277, srRightText=200054, srDescriptionText=210210279, srDescriptionTitleText=210210277, srActionText=200008, DisplayInt=(Id=1598,Value=0), ApplySettingInts=((Id=1598,Value=1)), Images=("ModSetting_Images_AMM.immersion_breaking_off"))
++menuItems=(srLeftText=210210277, srRightText=200053, srDescriptionText=210210278, srDescriptionTitleText=210210277, srActionText=200009, DisplayInt=(Id=1598,Value=1), ApplySettingInts=((Id=1598,Value=0)), Images=("ModSetting_Images_AMM.immersion_breaking_on"))
 
 ; Liara wears armor on Recruitment mission
-+menuItems=(srLeftText=210210286, srRightText=200054, srDescriptionText=210210288, srDescriptionTitleText=210210286, srActionText=200008, DisplayConditional=2512, DisplayInt=(Id=1599,Value=0), ApplySettingInts=((Id=1599,Value=1)), Images=())
-+menuItems=(srLeftText=210210286, srRightText=200053, srDescriptionText=210210287, srDescriptionTitleText=210210286, srActionText=200009, DisplayConditional=2512, DisplayInt=(Id=1599,Value=1), ApplySettingInts=((Id=1599,Value=0)), Images=())
++menuItems=(srLeftText=210210286, srRightText=200054, srDescriptionText=210210288, srDescriptionTitleText=210210286, srActionText=200008, DisplayConditional=2512, DisplayInt=(Id=1599,Value=0), ApplySettingInts=((Id=1599,Value=1)), Images=("ModSetting_Images_AMM.Liara_Therum_armor_off"))
++menuItems=(srLeftText=210210286, srRightText=200053, srDescriptionText=210210287, srDescriptionTitleText=210210286, srActionText=200009, DisplayConditional=2512, DisplayInt=(Id=1599,Value=1), ApplySettingInts=((Id=1599,Value=0)), Images=("ModSetting_Images_AMM.Liara_Therum_armor_on"))
 
 ; Liara wears armor on Virmire
-+menuItems=(srLeftText=210210304, srRightText=200054, srDescriptionText=210210306, srDescriptionTitleText=210210304, srActionText=200008, DisplayConditional=2513, DisplayInt=(Id=1602,Value=0), ApplySettingInts=((Id=1602,Value=1)), Images=())
-+menuItems=(srLeftText=210210304, srRightText=200053, srDescriptionText=210210305, srDescriptionTitleText=210210304, srActionText=200009, DisplayConditional=2513, DisplayInt=(Id=1602,Value=1), ApplySettingInts=((Id=1602,Value=0)), Images=())
++menuItems=(srLeftText=210210304, srRightText=200054, srDescriptionText=210210306, srDescriptionTitleText=210210304, srActionText=200008, DisplayConditional=2513, DisplayInt=(Id=1602,Value=0), ApplySettingInts=((Id=1602,Value=1)), Images=("ModSetting_Images_AMM.Liara_Virmire_armor_off"))
++menuItems=(srLeftText=210210304, srRightText=200053, srDescriptionText=210210305, srDescriptionTitleText=210210304, srActionText=200009, DisplayConditional=2513, DisplayInt=(Id=1602,Value=1), ApplySettingInts=((Id=1602,Value=0)), Images=("ModSetting_Images_AMM.Liara_Virmire_armor_on"))
 
 ; Tali always in combat appearance
 +menuItems=(srLeftText=210210289, srRightText=200054, srDescriptionText=210210291, srDescriptionTitleText=210210289, srActionText=200008, DisplayInt=(Id=1600,Value=0), ApplySettingInts=((Id=1600,Value=1)), Images=())
 +menuItems=(srLeftText=210210289, srRightText=200053, srDescriptionText=210210290, srDescriptionTitleText=210210289, srActionText=200009, DisplayInt=(Id=1600,Value=1), ApplySettingInts=((Id=1600,Value=0)), Images=())
 
 ; Squadmates wear equipped armor
-+menuItems=(srLeftText=210210292, srRightText=200054, srDescriptionText=210210294, srDescriptionTitleText=210210292, srActionText=200008, DisplayInt=(Id=1601,Value=0), ApplySettingInts=((Id=1601,Value=1)), Images=())
-+menuItems=(srLeftText=210210292, srRightText=200053, srDescriptionText=210210293, srDescriptionTitleText=210210292, srActionText=200009, DisplayInt=(Id=1601,Value=1), ApplySettingInts=((Id=1601,Value=0)), Images=())
++menuItems=(srLeftText=210210292, srRightText=200054, srDescriptionText=210210294, srDescriptionTitleText=210210292, srActionText=200008, DisplayInt=(Id=1601,Value=0), ApplySettingInts=((Id=1601,Value=1)), Images=("ModSetting_Images_AMM.Equipped_outfit_off"))
++menuItems=(srLeftText=210210292, srRightText=200053, srDescriptionText=210210293, srDescriptionTitleText=210210292, srActionText=200009, DisplayInt=(Id=1601,Value=1), ApplySettingInts=((Id=1601,Value=0)), Images=("ModSetting_Images_AMM.Equipped_outfit_on"))
 
 ; Hide helmets in conversations/cinematics
 +menuItems=(srLeftText=210210312, srRightText=200054, srDescriptionText=210210313, srDescriptionTitleText=210210312, srActionText=200008, DisplayInt=(Id=1603,Value=0), ApplySettingInts=((Id=1603,Value=1)), Images=())

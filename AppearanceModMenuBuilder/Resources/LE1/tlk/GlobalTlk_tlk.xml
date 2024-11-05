@@ -253,7 +253,7 @@ You can customize characters' appearances at any time from the lockers in the No
 	</string>
 	<string>
 		<id>210210252</id>
-		<data>By default, armor is not available for casual situations. With this setting enabled, armor will be available to select even for casual situation. This will not affect the present of weapons.</data>
+		<data>By default, armor is not available for casual situations. With this setting enabled, armor will be available to select even for casual situation. This will not affect the presence of weapons.</data>
 	</string>
 	<!-- submenu titles -->
 	<string>
