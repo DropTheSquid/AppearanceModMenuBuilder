@@ -389,7 +389,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     Comment = "Equipped Armor helmet entry for the whole squad within the helmet menu in any appearance type besides combat"
                 });
 
-                menus.ArmorHeadgear.AddMenuEntry(menus.Breather.GetEntryPoint(210210244, disableIfBreatherLocked: true));
+                menus.ArmorHeadgear.AddMenuEntry(menus.Breather.GetEntryPoint(210210244, hideIfBreatherSuppressed: true, disableIfBreatherLocked: true));
 
                 menus.Breather.CameraPosition = "face";
                 // "Breather"
