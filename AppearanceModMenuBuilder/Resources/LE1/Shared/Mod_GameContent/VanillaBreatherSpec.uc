@@ -50,9 +50,24 @@ private static function GetVanillaBreatherMesh(BioPawnType pawnType, out Appeara
 	// there is a very weird thing in vanilla where the m_bHidesVisor on the breather spec
 	// means actively un hide it if it is false. so we need to follow that here
 	visorState = breatherMeshSpecs[0].m_bHidesVisor ? eVisorState.hide : eVisorState.show;
+	
+	// Ashley has a vanilla bug where her visor gets hidden. It is fixed in LE1CP, but not in all other places. I can programatically fix it here. 
+	if (PathName(breatherMesh.Mesh) ~= "BIOG_HMF_HGR_LGT_R.BRT.HMF_BRT_LGT_MDL")
+	{
+		visorState = eVisorState.show;
+	}
+
+
 	// similarly, this is an array, but I am not sure if it is for a visor with multiple materials or to index into different visor specs, as above
 	// I am going to pretend it only ever deals with a single spec with one material.
 	breatherMesh.Materials[0] = breatherMaterialSpecs[0];
+
+	// the game only lists the first material of his breather mesh, but this causes issues if you swap to his default from one of the other 2 material breathers
+	// where it uses the second material from the old one. This should fix it by loading the second material in that case.
+	if (PathName(breatherMesh.Mesh) ~= "BIOG_HMM_HGR_MED_R.BRTb.HMM_BRTb_MED_MDL" && PathName(breatherMesh.Materials[0]) ~= "BIOG_HMM_HGR_MED_R.BRTb.HMM_BRT_MEDb_Mat_1a")
+	{
+		breatherMesh.Materials[1] = MaterialInterface(DynamicLoadObject("BIOG_HMM_HGR_MED_R.BRTb.HMM_BRTb_MED_MAT_2a", class'MaterialInterface'));
+	}
 }
 
 
