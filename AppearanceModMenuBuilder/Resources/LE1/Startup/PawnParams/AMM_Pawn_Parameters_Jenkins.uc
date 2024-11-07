@@ -1,6 +1,29 @@
 Class AMM_Pawn_Parameters_Jenkins extends AMM_Pawn_Parameters_Squad
     config(Game);
 
+public function Object GetOverrideDefaultSpec(BioPawn targetPawn)
+{
+	local SimpleOutfitSpec delegateSpec;
+
+	if (GetAppearanceType(targetPawn) ~= "casual")
+	{
+		// HACK AUC compat, same as Kaindan's
+		// check if AUC is installed
+		if (DynamicLoadObject("DLC_MOD_AllianceUniformConsistency_GlobalTlk.GlobalTlk_tlk", class'Object') != None)
+		{
+			delegateSpec = new class'SimpleOutfitSpec';
+			delegateSpec.bodyMesh.MaterialPaths.AddItem("BIOG_ARM_CTHb_ME3_R.Masculine.HMM_ARM_CTHb_ME3_MAT");
+			delegateSpec.helmetTypeOverride = -2;
+			delegateSpec.bodyMesh.MeshPath = "BIOG_ARM_CTHb_ME3_R.Masculine.HMM_ARM_CTHb_ME3_MDL";
+			return DelegateSpec;
+		}
+	}
+
+	// otherwise, let it behave as normal
+
+	return None;
+}
+
 public function SpecialHandling(BioPawn targetPawn)
 {
     local BioPawnType pawnType;
