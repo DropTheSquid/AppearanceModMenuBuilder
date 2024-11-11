@@ -12,7 +12,7 @@ public function Object GetOverrideDefaultSpec(BioPawn targetPawn)
 		if (DynamicLoadObject("DLC_MOD_AllianceUniformConsistency_GlobalTlk.GlobalTlk_tlk", class'Object') != None)
 		{
 			delegateSpec = new class'SimpleOutfitSpec';
-			delegateSpec.bodyMesh.MaterialPaths.AddItem("BIOG_ARM_CTHb_ME3_R.Masculine.HMM_ARM_CTHb_ME3_MAT");
+			delegateSpec.bodyMesh.MaterialPaths.AddItem("BIOG_HMM_ARM_CTH_AUC_R.CTHb.HMM_ARM_CTHb_AUC_MAT_1a");
 			delegateSpec.helmetTypeOverride = -2;
 
 			// then also check if Kaidan Overhaul is installed
@@ -22,7 +22,7 @@ public function Object GetOverrideDefaultSpec(BioPawn targetPawn)
 			}
 			else
 			{
-				delegateSpec.bodyMesh.MeshPath = "BIOG_ARM_CTHb_ME3_R.Masculine.HMM_ARM_CTHb_ME3_MDL";
+				delegateSpec.bodyMesh.MeshPath = "BIOG_HMM_ARM_CTH_AUC_R.CTHb.HMM_ARM_CTHb_AUC_MDL";
 			}
 			return DelegateSpec;
 		}
