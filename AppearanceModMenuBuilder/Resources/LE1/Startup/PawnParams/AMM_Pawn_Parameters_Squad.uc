@@ -61,7 +61,7 @@ public function Object GetOverrideDefaultOutfitSpec(BioPawn targetPawn)
 	return super.GetOverrideDefaultOutfitSpec(targetPawn);
 }
 
-private final function bool GetPawnFromParty(string LookupTag, out BioPawn squadmate)
+protected final function bool GetPawnFromParty(string LookupTag, out BioPawn squadmate)
 {
     local BioWorldInfo BWI;
     local MemberData tempsquadMember;
