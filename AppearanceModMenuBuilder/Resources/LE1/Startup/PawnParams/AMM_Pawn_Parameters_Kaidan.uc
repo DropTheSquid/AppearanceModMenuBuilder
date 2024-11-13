@@ -38,8 +38,6 @@ private function initHack(BioPawn targetPawn)
 	local int i;
 	local BioPawn partyPawn;
 
-	return;
-
 	// HACK KAO compatibility
 	// if we force his body mesh to LOD 0 (continuously) then his face doesn't melt, regardless of what outfit he has on.
 
