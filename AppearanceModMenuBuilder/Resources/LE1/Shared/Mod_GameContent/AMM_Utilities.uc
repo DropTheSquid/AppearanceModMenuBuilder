@@ -824,7 +824,7 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
     local MaterialInstanceConstant MIC;
     local MaterialInterface parent;
 
-    // LogInternal("Replacing"@PathName(smc.SkeletalMesh)@"with"@PathName(appearanceMesh.Mesh));
+    LogInternal("Replacing"@PathName(smc.SkeletalMesh)@"with"@PathName(appearanceMesh.Mesh));
 
 	if (smc == None)
 	{
@@ -837,12 +837,12 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
         if (AppearanceMesh.Materials[i] == None && AppearanceMesh.Mesh.Materials.length > i)
         {
             parent = AppearanceMesh.Mesh.Materials[i];
-            // LogInternal("Applying material from mesh"@i@PathName(parent));
+            LogInternal("Applying material from mesh"@i@PathName(parent));
         }
         else
         {
             parent = AppearanceMesh.Materials[i];
-            // LogInternal("Applying material from spec"@i@PathName(parent));
+            LogInternal("Applying material from spec"@i@PathName(parent));
         }
 		// reuse existing MICs when possible; it makes the game much more stable. I am not sure why
 

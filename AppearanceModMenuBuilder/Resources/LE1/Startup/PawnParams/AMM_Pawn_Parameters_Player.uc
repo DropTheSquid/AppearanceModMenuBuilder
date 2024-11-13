@@ -42,7 +42,7 @@ public function string GetAppearanceType(BioPawn targetPawn)
 {
 	local BioSFHandler_NewCharacter ncHandler;
 	local string currentClass;
-    
+
 	if (class'AMM_AppearanceUpdater'.static.IsInCharacterCreator(ncHandler))
 	{
 		if (ncHandler.UIState < NewCharacterUIState.NCMS_Class)

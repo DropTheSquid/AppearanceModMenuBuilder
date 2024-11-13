@@ -1,22 +1,34 @@
 Class AMM_Pawn_Parameters_Kaidan extends AMM_Pawn_Parameters_Romanceable
     config(Game);
 
-public function Object GetOverrideDefaultSpec(BioPawn targetPawn)
+public function Object GetOverrideDefaultOutfitSpec(BioPawn targetPawn)
 {
 	local SimpleOutfitSpec delegateSpec;
+	local bool AucInstalled;
+	local bool KaoInstalled;
+	local object baseResult;
+
+	baseResult = super.GetOverrideDefaultOutfitSpec(targetPawn);
+
+	if (baseResult != None)
+	{
+		return baseResult;
+	}
 
 	if (GetAppearanceType(targetPawn) ~= "casual")
 	{
 		// HACK AUC compat, same as Ashley's
 		// check if AUC is installed
-		if (DynamicLoadObject("DLC_MOD_AllianceUniformConsistency_GlobalTlk.GlobalTlk_tlk", class'Object') != None)
+		AucInstalled = DynamicLoadObject("DLC_MOD_AllianceUniformConsistency_GlobalTlk.GlobalTlk_tlk", class'Object') != None;
+		KaoInstalled = DynamicLoadObject("DLC_MOD_KaidanOverhaul2_GlobalTlk.GlobalTlk_tlk", class'Object') != None;
+		if (AucInstalled)
 		{
 			delegateSpec = new class'SimpleOutfitSpec';
 			delegateSpec.bodyMesh.MaterialPaths.AddItem("BIOG_HMM_ARM_CTH_AUC_R.CTHb.HMM_ARM_CTHb_AUC_MAT_1a");
 			delegateSpec.helmetTypeOverride = -2;
 
 			// then also check if Kaidan Overhaul is installed
-			if (DynamicLoadObject("DLC_MOD_KaidanOverhaul2_GlobalTlk.GlobalTlk_tlk", class'Object') != None)
+			if (KaoInstalled)
 			{
 				delegateSpec.bodyMesh.MeshPath = "kaidan_overhaul.kaidan_clth";
 			}
@@ -26,9 +38,19 @@ public function Object GetOverrideDefaultSpec(BioPawn targetPawn)
 			}
 			return DelegateSpec;
 		}
+		else
+		{
+			// replace the mesh with the fixed one here too to prevent face melting
+			if (KaoInstalled)
+			{
+				delegateSpec = new class'SimpleOutfitSpec';
+				delegateSpec.bodyMesh.MeshPath = "kaidan_overhaul.kaidan_clothes";
+				delegateSpec.bodyMesh.MaterialPaths.AddItem("BIOG_HMM_ARM_CTH_R.CTHb.HMM_ARM_CTHb_MAT_1a");
+				delegateSpec.helmetTypeOverride = -2;
+				return delegateSpec;
+			}
+		}
 	}
-
-	// otherwise, let it behave as normal
 
 	return None;
 }
@@ -63,6 +85,12 @@ public function SpecialHandling(BioPawn targetPawn)
 			}
 		}
 	}
+	LogInternal("gathering kaidan data", );
+    LogInternal(PathName(targetPawn.Mesh), );
+    LogInternal(PathName(targetPawn.m_oHeadMesh.ParentAnimComponent), );
+    LogInternal(string(targetPawn.m_oHeadMesh.bTransformFromAnimParent), );
+    LogInternal(string(targetPawn.m_oHeadMesh.bOverrideParentSkeleton), );
+	targetPawn.m_oHeadMesh.bOverrideParentSkeleton = false;
 }
 
 public function string GetAppearanceType(BioPawn targetPawn)

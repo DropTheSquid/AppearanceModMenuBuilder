@@ -49,7 +49,7 @@ private function OutfitSpecBase GetDelegateSpec(BioPawn target, SpecLists specLi
     else
     {
         // check if they have an override spec set
-        delegateSpec = OutfitSpecBase(params.GetOverrideDefaultSpec(target));
+        delegateSpec = OutfitSpecBase(params.GetOverrideDefaultOutfitSpec(target));
 
         if (delegateSpec == None)
         {

@@ -4,6 +4,10 @@ Class AMM_Pawn_Parameters_Romanceable extends AMM_Pawn_Parameters_Squad
 
 var config string romancePawnTag;
 
+var config int defaultRomanceBodyAppearanceId;
+var config int defaultRomanceHelmetAppearanceId;
+var config int defaultRomanceBreatherAppearanceId;
+
 public function bool matchesPawn(BioPawn targetPawn)
 {
     if (string(targetPawn.Tag) ~= romancePawnTag)
@@ -33,4 +37,26 @@ public function string GetAppearanceType(BioPawn targetPawn)
         return "romance";
     }
     return Super.GetAppearanceType(targetPawn);
+}
+
+public function Object GetOverrideDefaultOutfitSpec(BioPawn targetPawn)
+{
+	local OutfitSpecBase delegateSpec;
+    local SpecLists specLists;
+
+	if (GetAppearanceType(targetPawn) ~= "romance" && defaultRomanceBodyAppearanceId != 0)
+	{
+        specLists = class'AMM_Utilities'.static.GetSpecLists(targetPawn, self);
+        if (specLists.outfitSpecs == None)
+        {
+            return super.GetOverrideDefaultOutfitSpec(targetPawn);
+        }
+
+        if (specLists.outfitSpecs.GetOutfitSpecById(defaultRomanceBodyAppearanceId, delegateSpec))
+        {
+            return delegateSpec;
+        }
+	}
+
+	return super.GetOverrideDefaultOutfitSpec(targetPawn);
 }

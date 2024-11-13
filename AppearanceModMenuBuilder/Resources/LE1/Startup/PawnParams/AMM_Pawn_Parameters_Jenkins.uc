@@ -1,7 +1,7 @@
 Class AMM_Pawn_Parameters_Jenkins extends AMM_Pawn_Parameters_Squad
     config(Game);
 
-public function Object GetOverrideDefaultSpec(BioPawn targetPawn)
+public function Object GetOverrideDefaultOutfitSpec(BioPawn targetPawn)
 {
 	local SimpleOutfitSpec delegateSpec;
 
@@ -21,7 +21,7 @@ public function Object GetOverrideDefaultSpec(BioPawn targetPawn)
 
 	// otherwise, let it behave as normal
 
-	return None;
+	return super.GetOverrideDefaultOutfitSpec(targetPawn);
 }
 
 public function SpecialHandling(BioPawn targetPawn)

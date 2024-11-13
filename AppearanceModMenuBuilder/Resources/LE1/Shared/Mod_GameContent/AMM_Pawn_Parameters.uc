@@ -63,6 +63,11 @@ var config bool hideHelmetsInConversations;
 // this will be almost the same, except you will be able to restore it to default. is that even needed?
 // if they should not have a helmet (dubious) or they must have a helmet/breather (see corpses with no head under there) then set the default and don't let them change it
 
+// overrides the default appearance id for all appearance types
+var config int defaultBodyAppearanceId;
+var config int defaultHelmetAppearanceId;
+var config int defaultBreatherAppearanceId;
+
 // Returns true if a given pawn should be controlled by these params
 public function bool matchesPawn(BioPawn targetPawn)
 {
@@ -146,7 +151,7 @@ public function string GetMenuRootPath()
 	return menuRootPath;
 }
 
-public function Object GetOverrideDefaultSpec(BioPawn target)
+public function Object GetOverrideDefaultOutfitSpec(BioPawn target)
 {
 	return None;
 }
@@ -167,6 +172,19 @@ public function bool GetAppearanceIds(string appearanceType, out PawnAppearanceI
 	PawnAppearanceIds.helmetAppearanceId = GetAppearanceIdValue(lookups.helmetAppearanceLookup, globalVars);
 	PawnAppearanceIds.breatherAppearanceId = GetAppearanceIdValue(lookups.breatherAppearanceLookup, globalVars);
 	PawnAppearanceIds.m_appearanceSettings = class'AMM_Common'.static.DecodeAppearanceSettings(GetAppearanceIdValue(lookups.appearanceFlagsLookup, globalVars));
+	// if the default appearance ids are set and an override has not been set, return the defaults
+	if (defaultBodyAppearanceId != 0 && (PawnAppearanceIds.bodyAppearanceId == 0 || PawnAppearanceIds.bodyAppearanceId == -1))
+	{
+		PawnAppearanceIds.bodyAppearanceId = defaultBodyAppearanceId;
+	}
+	if (defaultHelmetAppearanceId != 0 && (PawnAppearanceIds.HelmetAppearanceId == 0 || PawnAppearanceIds.HelmetAppearanceId == -1))
+	{
+		PawnAppearanceIds.HelmetAppearanceId = defaultHelmetAppearanceId;
+	}
+	if (defaultBreatherAppearanceId != 0 && (PawnAppearanceIds.BreatherAppearanceId == 0 || PawnAppearanceIds.BreatherAppearanceId == -1))
+	{
+		PawnAppearanceIds.BreatherAppearanceId = defaultBreatherAppearanceId;
+	}
 	return true;
 }
 

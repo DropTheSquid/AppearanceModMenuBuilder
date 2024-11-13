@@ -2,6 +2,14 @@ Class AMM_Pawn_Parameters_Squad extends AMM_Pawn_Parameters
     abstract
     config(Game);
 
+var config int defaultCasualBodyAppearanceId;
+var config int defaultCasualHelmetAppearanceId;
+var config int defaultCasualBreatherAppearanceId;
+
+var config int defaultCombatBodyAppearanceId;
+var config int defaultCombatHelmetAppearanceId;
+var config int defaultCombatBreatherAppearanceId;
+
 // Functions
 public function string GetAppearanceType(BioPawn targetPawn)
 {
@@ -22,6 +30,35 @@ public function bool GetExistingPawn(string appearanceType, out BioPawn existing
     }
     // else, grab them from the party
     return GetPawnFromParty(Tag, existingPawn);
+}
+
+public function Object GetOverrideDefaultOutfitSpec(BioPawn targetPawn)
+{
+	local OutfitSpecBase delegateSpec;
+    local SpecLists specLists;
+
+    specLists = class'AMM_Utilities'.static.GetSpecLists(targetPawn, self);
+    if (specLists.outfitSpecs == None)
+    {
+        return super.GetOverrideDefaultOutfitSpec(targetPawn);
+    }
+
+	if (GetAppearanceType(targetPawn) ~= "casual")
+	{
+        if (defaultCasualBodyAppearanceId != 0 && specLists.outfitSpecs.GetOutfitSpecById(defaultCasualBodyAppearanceId, delegateSpec))
+        {
+            return delegateSpec;
+        }
+	}
+    else if (GetAppearanceType(targetPawn) ~= "casual")
+	{
+        if (defaultCasualBodyAppearanceId != 0 && specLists.outfitSpecs.GetOutfitSpecById(defaultCasualBodyAppearanceId, delegateSpec))
+        {
+            return delegateSpec;
+        }
+	}
+
+	return super.GetOverrideDefaultOutfitSpec(targetPawn);
 }
 
 private final function bool GetPawnFromParty(string LookupTag, out BioPawn squadmate)

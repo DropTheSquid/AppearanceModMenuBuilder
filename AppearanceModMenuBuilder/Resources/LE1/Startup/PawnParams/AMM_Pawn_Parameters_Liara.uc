@@ -7,7 +7,7 @@ Class AMM_Pawn_Parameters_Liara extends AMM_Pawn_Parameters_Romanceable
 var config bool LiaraWearsArmorOnTherum;
 var config bool LiaraWearsArmorOnVirmire;
 
-public function Object GetOverrideDefaultSpec(BioPawn targetPawn)
+public function Object GetOverrideDefaultOutfitSpec(BioPawn targetPawn)
 {
 	local VanillaOutfitByIdSpec delegateSpec;
 
@@ -24,7 +24,7 @@ public function Object GetOverrideDefaultSpec(BioPawn targetPawn)
 
 	// otherwise, let it behave as normal
 
-	return None;
+	return super.GetOverrideDefaultOutfitSpec(targetPawn);
 }
 
 public function string GetAppearanceType(BioPawn targetPawn)
