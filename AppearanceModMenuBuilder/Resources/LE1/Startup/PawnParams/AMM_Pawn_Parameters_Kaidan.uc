@@ -1,8 +1,6 @@
 Class AMM_Pawn_Parameters_Kaidan extends AMM_Pawn_Parameters_Romanceable
     config(Game);
 
-var transient array<string> pawnsToFix;
-
 public function Object GetOverrideDefaultOutfitSpec(BioPawn targetPawn)
 {
 	local SimpleOutfitSpec delegateSpec;
@@ -31,69 +29,6 @@ public function Object GetOverrideDefaultOutfitSpec(BioPawn targetPawn)
 	}
 
 	return None;
-}
-
-private function initHack(BioPawn targetPawn)
-{
-	local int i;
-	local BioPawn partyPawn;
-
-	// HACK KAO compatibility
-	// if we force his body mesh to LOD 0 (continuously) then his face doesn't melt, regardless of what outfit he has on.
-
-	// if this is a preview pawn. don't bother
-	if (string(targetPawn.GetPackageName()) ~= "BIOG_UIWORLD")
-	{
-		return;
-	}
-
-	// if this pawn is in the party, don't bother
-	if (GetPawnFromParty("hench_humanMale", partyPawn) && partypawn == targetPawn)
-	{
-		return;
-	}
-
-	
-	// if KAO is not installed, don't bother
-	if (DynamicLoadObject("DLC_MOD_KaidanOverhaul2_GlobalTlk.GlobalTlk_tlk", class'Object') == None)
-	{
-		return;
-	}
-
-	if (!targetPawn.IsTimerActive('AMM_KAO_HACK'))
-	{
-		i = pawnsToFix.Find(PathName(targetPawn));
-		if (i == -1)
-		{
-			pawnsToFix.AddItem(PathName(targetPawn));
-		}
-		targetPawn.SetTimer(0.01, TRUE, 'AMM_KAO_HACK', Self);
-	}
-}
-
-private function AMM_KAO_HACK()
-{
-	local string currentPawnString;
-	local BioPawn currentPawn;
-	local array<string> pawnsToRemove;
-
-	// LogInternal("function has been called");
-	foreach pawnsToFix(currentPawnString)
-	{
-		currentPawn = BioPawn(FindObject(currentPawnString, class'BioPawn'));
-		if (currentPawn != None)
-		{
-			currentPawn.Mesh.ForcedLodModel = 1;
-		}
-		else
-		{
-			pawnsToRemove.AddItem(currentPawnString);
-		}
-	}
-	foreach pawnsToRemove(currentPawnString)
-	{
-		pawnsToFix.RemoveItem(currentPawnString);
-	}
 }
 
 public function SpecialHandling(BioPawn targetPawn)
@@ -126,7 +61,6 @@ public function SpecialHandling(BioPawn targetPawn)
 			}
 		}
 	}
-	initHack(targetPawn);
 }
 
 public function string GetAppearanceType(BioPawn targetPawn)

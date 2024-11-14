@@ -816,6 +816,8 @@ public static function ApplyPawnAppearance(BioPawn target, pawnAppearance appear
 	// This call is very important to prevent all kinds of weirdness
 	// for example bone melting and materials misbehaving, and possibly even crashing
 	target.ForceUpdateComponents(FALSE, FALSE);
+
+    CheckForFaceMelting(target);
 }
 
 public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc, AppearanceMesh AppearanceMesh)
@@ -863,6 +865,24 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
 			smc.SetMaterial(i, MIC);
 		}
 	}
+}
+
+public static function CheckForFaceMelting(BioPawn target)
+{
+    // this is checking for the conditions that lead to face melting and correcting them (with a warning)
+
+    if (// they have a head mesh
+        target.m_oHeadMesh != None
+        // and the number of LODs on the head mesh is less than the number of LODs on the main mesh (can happen if you replace the head mesh with a new one)
+        && target.m_oHeadMesh.skeletalMesh.LODInfo.Length < target.Mesh.SkeletalMesh.LodInfo.Length
+        // and the min LOD level set on the actorType is not 0
+        && BioPawnType(target.m_oBehavior.m_oActorType).m_nMinAutoLODLevel > 0)
+    {
+        // then you will get face melting, which I can fix
+        LogInternal("Warning: pawn"@PathName(target)@"is likely to experience face melting. fixing it for you, but you should set m_nMinAutoLODLevel on m_oBehavior.m_oActorType and Mesh.MinAutoLODLevel on the pawn to 0 to prevent this.");
+        BioPawnType(target.m_oBehavior.m_oActorType).m_nMinAutoLODLevel = 0;
+        target.Mesh.MinAutoLODLevel = 0;
+    }
 }
 
 public static function string GetArmorCode(EBioArmorType armorType)
