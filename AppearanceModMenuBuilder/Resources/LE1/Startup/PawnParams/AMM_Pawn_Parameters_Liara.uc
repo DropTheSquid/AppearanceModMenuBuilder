@@ -7,6 +7,17 @@ Class AMM_Pawn_Parameters_Liara extends AMM_Pawn_Parameters_Romanceable
 var config bool LiaraWearsArmorOnTherum;
 var config bool LiaraWearsArmorOnVirmire;
 
+public function bool matchesPawn(BioPawn targetPawn)
+{
+	// there are two pawns in a scene near the end that have the same tag as Liara for some reason. They should not be matched as Liara
+	// HACK vanilla issue, would be resolved by the framework, but is also fairly harmless to leave in. 
+    if (PathName(targetPawn) ~= "BIOA_END70C_Bridge_CIN.TheWorld:PersistentLevel.BioPawn_1" || PathName(targetPawn) ~= "BIOA_END70C_Bridge_CIN.TheWorld:PersistentLevel.BioPawn_7")
+    {
+        return false;
+    }
+    return Super.matchesPawn(targetPawn);
+}
+
 public function Object GetOverrideDefaultOutfitSpec(BioPawn targetPawn)
 {
 	local VanillaOutfitByIdSpec delegateSpec;
