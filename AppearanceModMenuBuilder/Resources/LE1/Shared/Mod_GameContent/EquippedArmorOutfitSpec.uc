@@ -4,7 +4,7 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
 {
     local AMM_Pawn_Parameters params;
     local BioPawn partyMember;
-    local OutfitSpecBase delegateSpec;
+    local OutfitSpecBase outfitDelegateSpec;
     local int armorType;
     local int meshVariant;
     local int materialVariant;
@@ -32,8 +32,8 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
             // LogInternal("replacing it with -3 (equipped armor helmet)");
             appearanceIds.helmetAppearanceId = -3;
         }
-        delegateSpec = new Class'NonOverriddenVanillaOutfitSpec';
-        return delegateSpec.LoadOutfit(target, specLists, appearanceIds, appearance);
+        outfitDelegateSpec = new Class'NonOverriddenVanillaOutfitSpec';
+        return outfitDelegateSpec.LoadOutfit(target, specLists, appearanceIds, appearance);
     }
 
     // first, try getting a pawn from the party and pulling params off of them

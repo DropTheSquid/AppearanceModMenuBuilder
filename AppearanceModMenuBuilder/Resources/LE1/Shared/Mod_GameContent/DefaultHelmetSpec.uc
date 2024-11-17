@@ -39,8 +39,16 @@ private function HelmetSpecBase GetDelegateSpec(BioPawn target, SpecLists specLi
     }
     else
     {
+        // check if they have an override spec set
+        delegateSpec = HelmetSpecBase(params.GetOverrideDefaultHelmetSpec(target));
+
         // else use vanilla helmet spec
-        return new Class'VanillaHelmetSpec';
+        if (delegateSpec == None)
+        {
+            delegateSpec = new Class'VanillaHelmetSpec';
+        }
+
+        return delegateSpec;
     }
 }
 

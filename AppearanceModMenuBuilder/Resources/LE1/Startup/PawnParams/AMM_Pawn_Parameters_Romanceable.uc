@@ -60,3 +60,47 @@ public function Object GetOverrideDefaultOutfitSpec(BioPawn targetPawn)
 
 	return super.GetOverrideDefaultOutfitSpec(targetPawn);
 }
+
+public function Object GetOverrideDefaultHelmetSpec(BioPawn targetPawn)
+{
+	local HelmetSpecBase delegateSpec;
+    local SpecLists specLists;
+
+	if (GetAppearanceType(targetPawn) ~= "romance" && defaultRomanceHelmetAppearanceId != 0)
+	{
+        specLists = class'AMM_Utilities'.static.GetSpecLists(targetPawn, self);
+        if (specLists.HelmetSpecs == None)
+        {
+            return super.GetOverrideDefaultHelmetSpec(targetPawn);
+        }
+
+        if (specLists.helmetSpecs.GetHelmetSpecById(defaultRomanceHelmetAppearanceId, delegateSpec))
+        {
+            return delegateSpec;
+        }
+	}
+
+	return super.GetOverrideDefaultHelmetSpec(targetPawn);
+}
+
+public function Object GetOverrideDefaultBreatherSpec(BioPawn targetPawn)
+{
+	local BreatherSpecBase delegateSpec;
+    local SpecLists specLists;
+
+	if (GetAppearanceType(targetPawn) ~= "romance" && defaultRomanceBreatherAppearanceId != 0)
+	{
+        specLists = class'AMM_Utilities'.static.GetSpecLists(targetPawn, self);
+        if (specLists.BreatherSpecs == None)
+        {
+            return super.GetOverrideDefaultBreatherSpec(targetPawn);
+        }
+
+        if (specLists.BreatherSpecs.GetBreatherSpecById(defaultRomanceBreatherAppearanceId, delegateSpec))
+        {
+            return delegateSpec;
+        }
+	}
+
+	return super.GetOverrideDefaultBreatherSpec(targetPawn);
+}

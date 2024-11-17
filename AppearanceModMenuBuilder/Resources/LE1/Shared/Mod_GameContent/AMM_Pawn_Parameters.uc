@@ -156,6 +156,16 @@ public function Object GetOverrideDefaultOutfitSpec(BioPawn target)
 	return None;
 }
 
+public function Object GetOverrideDefaultHelmetSpec(BioPawn target)
+{
+	return None;
+}
+
+public function Object GetOverrideDefaultBreatherSpec(BioPawn target)
+{
+	return None;
+}
+
 // given an appearance type, return what outfit, helmet, and breather should be used, as well as any settings
 public function bool GetAppearanceIds(string appearanceType, out PawnAppearanceIds PawnAppearanceIds)
 {

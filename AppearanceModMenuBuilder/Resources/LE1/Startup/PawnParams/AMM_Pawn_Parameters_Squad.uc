@@ -37,6 +37,8 @@ public function Object GetOverrideDefaultOutfitSpec(BioPawn targetPawn)
 	local OutfitSpecBase delegateSpec;
     local SpecLists specLists;
 
+    LogInternal("GetOverrideDefaultOutfitSpec"@defaultCasualBodyAppearanceId@defaultCombatBodyAppearanceId);
+
     specLists = class'AMM_Utilities'.static.GetSpecLists(targetPawn, self);
     if (specLists.outfitSpecs == None)
     {
@@ -50,15 +52,76 @@ public function Object GetOverrideDefaultOutfitSpec(BioPawn targetPawn)
             return delegateSpec;
         }
 	}
-    else if (GetAppearanceType(targetPawn) ~= "casual")
+    else if (GetAppearanceType(targetPawn) ~= "Combat")
 	{
-        if (defaultCasualBodyAppearanceId != 0 && specLists.outfitSpecs.GetOutfitSpecById(defaultCasualBodyAppearanceId, delegateSpec))
+        if (defaultCombatBodyAppearanceId != 0 && specLists.outfitSpecs.GetOutfitSpecById(defaultCombatBodyAppearanceId, delegateSpec))
         {
             return delegateSpec;
         }
 	}
 
 	return super.GetOverrideDefaultOutfitSpec(targetPawn);
+}
+
+public function Object GetOverrideDefaultHelmetSpec(BioPawn targetPawn)
+{
+	local HelmetSpecBase delegateSpec;
+    local SpecLists specLists;
+
+    specLists = class'AMM_Utilities'.static.GetSpecLists(targetPawn, self);
+    if (specLists.HelmetSpecs == None)
+    {
+        return super.GetOverrideDefaultHelmetSpec(targetPawn);
+    }
+
+	if (GetAppearanceType(targetPawn) ~= "casual")
+	{
+        if (defaultCasualHelmetAppearanceId != 0 && specLists.helmetSpecs.GetHelmetSpecById(defaultCasualHelmetAppearanceId, delegateSpec))
+        {
+            return delegateSpec;
+        }
+	}
+    else if (GetAppearanceType(targetPawn) ~= "Combat")
+	{
+        if (defaultCombatHelmetAppearanceId != 0 && specLists.helmetSpecs.GetHelmetSpecById(defaultCombatHelmetAppearanceId, delegateSpec))
+        {
+            return delegateSpec;
+        }
+	}
+
+	return super.GetOverrideDefaultHelmetSpec(targetPawn);
+}
+
+public function Object GetOverrideDefaultBreatherSpec(BioPawn targetPawn)
+{
+	local BreatherSpecBase delegateSpec;
+    local SpecLists specLists;
+
+    LogInternal("GetOverrideDefaultBreatherSpec"@defaultCasualBreatherAppearanceId@defaultCombatBreatherAppearanceId);
+    specLists = class'AMM_Utilities'.static.GetSpecLists(targetPawn, self);
+    if (specLists.BreatherSpecs == None)
+    {
+        LogInternal("no spec lists :(");
+        return super.GetOverrideDefaultBreatherSpec(targetPawn);
+    }
+
+	if (GetAppearanceType(targetPawn) ~= "casual")
+	{
+        if (defaultCasualBreatherAppearanceId != 0 && specLists.BreatherSpecs.GetBreatherSpecById(defaultCasualBreatherAppearanceId, delegateSpec))
+        {
+            return delegateSpec;
+        }
+	}
+    else if (GetAppearanceType(targetPawn) ~= "Combat")
+	{
+        if (defaultCombatBreatherAppearanceId != 0 && specLists.BreatherSpecs.GetBreatherSpecById(defaultCombatBreatherAppearanceId, delegateSpec))
+        {
+            LogInternal("using override spec!");
+            return delegateSpec;
+        }
+	}
+
+	return super.GetOverrideDefaultBreatherSpec(targetPawn);
 }
 
 protected final function bool GetPawnFromParty(string LookupTag, out BioPawn squadmate)

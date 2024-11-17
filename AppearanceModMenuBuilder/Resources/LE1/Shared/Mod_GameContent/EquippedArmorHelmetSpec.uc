@@ -94,6 +94,7 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 	// if the breather is not suppressed, delegate to the breather spec
 	if (!suppressBreather)
 	{
+        // TODO check for an override spec here
 		if (!specLists.breatherSpecs.DelegateToBreatherSpec(target, specLists, appearanceIds, appearance))
         {
             LogInternal("failed to apply breather spec");

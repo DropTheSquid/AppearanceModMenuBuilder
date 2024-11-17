@@ -16,7 +16,7 @@ private function HelmetSpecBase GetDelegateSpec(BioPawn target, SpecLists specLi
     }
     else
     {
-        return new Class'EquippedArmorHelmetSpec';
+        return new Class'NonOverriddenVanillaHelmetSpec';
     }
 }
 

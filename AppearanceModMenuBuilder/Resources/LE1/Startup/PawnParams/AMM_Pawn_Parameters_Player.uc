@@ -115,5 +115,5 @@ public function bool GetAppearanceIds(string appearanceType, out PawnAppearanceI
 		default:
 			break;
 	}
-	return Super(AMM_Pawn_Parameters).GetAppearanceIds(appearanceType, PawnAppearanceIds);
+	return Super.GetAppearanceIds(appearanceType, PawnAppearanceIds);
 }

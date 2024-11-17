@@ -176,9 +176,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 // TODO a special loaded spec for the NPC faceplate in -10
                 //+ breatherSpecs = (Id = -10, specPath = "AMM_BreatherSpec.NPCFaceplateBreatherSpec", comment = "NPC faceplate spec; will look for a helmet with an id matching the armor id and use that if it exists. Otherwise fall back to vanilla faceplate")
                 //; 0 to - 9 are special cases with specific behavior, reserved and not species specific
+                new LoadedSpecItem(-3, "Mod_GameContent.VanillaBreatherSpec"),
                 new LoadedSpecItem(-2, "Mod_GameContent.NoBreatherSpec"),
-                new LoadedSpecItem(-1, "Mod_GameContent.VanillaBreatherSpec"),
-                new LoadedSpecItem(0, "Mod_GameContent.VanillaBreatherSpec")
+                new LoadedSpecItem(-1, "Mod_GameContent.DefaultBreatherSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.DefaultBreatherSpec")
             ];
             breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs);
 
@@ -642,9 +643,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 // TODO a special loaded spec for the NPC faceplate in -10
                 //+ breatherSpecs = (Id = -10, specPath = "AMM_BreatherSpec.NPCFaceplateBreatherSpec", comment = "NPC faceplate spec; will look for a helmet with an id matching the armor id and use that if it exists. Otherwise fall back to vanilla faceplate")
                 //; 0 to - 9 are special cases with specific behavior, reserved and not species specific
+                new LoadedSpecItem(-3, "Mod_GameContent.VanillaBreatherSpec"),
                 new LoadedSpecItem(-2, "Mod_GameContent.NoBreatherSpec"),
-                new LoadedSpecItem(-1, "Mod_GameContent.VanillaBreatherSpec"),
-                new LoadedSpecItem(0, "Mod_GameContent.VanillaBreatherSpec")
+                new LoadedSpecItem(-1, "Mod_GameContent.DefaultBreatherSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.DefaultBreatherSpec")
             ];
 
             breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs);
@@ -938,9 +940,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs);
 
             specialSpecs = [
+                new LoadedSpecItem(-3, "Mod_GameContent.VanillaBreatherSpec"),
                 new LoadedSpecItem(-2, "Mod_GameContent.NoBreatherSpec"),
-                new LoadedSpecItem(-1, "Mod_GameContent.VanillaBreatherSpec"),
-                new LoadedSpecItem(0, "Mod_GameContent.VanillaBreatherSpec")
+                new LoadedSpecItem(-1, "Mod_GameContent.DefaultBreatherSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.DefaultBreatherSpec")
             ];
             breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs);
 
@@ -1035,9 +1038,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 {
                     VisorMeshOverride = new AppearanceMeshPaths("BIOG_TUR_HGR_AMM.VSR.TUR_VSR_MDL", ["BIOG_TUR_HGR_AMM.VSR.TUR_VSR_MAT_1a"])
                 },
+                new LoadedSpecItem(-3, "Mod_GameContent.VanillaBreatherSpec"),
                 new LoadedSpecItem(-2, "Mod_GameContent.NoBreatherSpec"),
-                new LoadedSpecItem(-1, "Mod_GameContent.VanillaBreatherSpec"),
-                new LoadedSpecItem(0, "Mod_GameContent.VanillaBreatherSpec")
+                new LoadedSpecItem(-1, "Mod_GameContent.DefaultBreatherSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.DefaultBreatherSpec")
             ];
             breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs);
 
@@ -1192,9 +1196,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs);
 
             specialSpecs = [
+                new LoadedSpecItem(-3, "Mod_GameContent.VanillaBreatherSpec"),
                 new LoadedSpecItem(-2, "Mod_GameContent.NoBreatherSpec"),
-                new LoadedSpecItem(-1, "Mod_GameContent.VanillaBreatherSpec"),
-                new LoadedSpecItem(0, "Mod_GameContent.VanillaBreatherSpec")
+                new LoadedSpecItem(-1, "Mod_GameContent.DefaultBreatherSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.DefaultBreatherSpec")
             ];
             breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs);
 
@@ -1263,9 +1268,10 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             helmetConfig.AddArrayEntries("helmetSpecs", specialSpecs);
 
             specialSpecs = [
+                new LoadedSpecItem(-3, "Mod_GameContent.VanillaBreatherSpec"),
                 new LoadedSpecItem(-2, "Mod_GameContent.NoBreatherSpec"),
-                new LoadedSpecItem(-1, "Mod_GameContent.VanillaBreatherSpec"),
-                new LoadedSpecItem(0, "Mod_GameContent.VanillaBreatherSpec")
+                new LoadedSpecItem(-1, "Mod_GameContent.DefaultBreatherSpec"),
+                new LoadedSpecItem(0, "Mod_GameContent.DefaultBreatherSpec")
             ];
             breatherConfig.AddArrayEntries("breatherSpecs", specialSpecs);
 
