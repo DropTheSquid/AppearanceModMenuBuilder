@@ -788,6 +788,8 @@ public static function ApplyPawnAppearance(BioPawn target, pawnAppearance appear
 	replaceMesh(target, target.m_oHeadGearMesh, appearance.HelmetMesh);
 	target.m_oHeadGearMesh.SetHidden(appearance.HelmetMesh.Mesh == None);
 	target.m_oHeadGearMesh.CastShadow = appearance.HelmetMesh.Mesh != None;
+    // makes glowy visors not flicker with the hair; have not found any downside yet. 
+    target.m_oHeadGearMesh.TranslucencySortPriority = -1;
 
 	if (target.m_oVisorMesh == None)
     {
@@ -813,11 +815,11 @@ public static function ApplyPawnAppearance(BioPawn target, pawnAppearance appear
     target.m_oFacePlateMesh.SetHidden(appearance.BreatherMesh.Mesh == None);
 	target.m_oFacePlateMesh.CastShadow = appearance.BreatherMesh.Mesh != None;
 
+    CheckForFaceMelting(target);
+
 	// This call is very important to prevent all kinds of weirdness
 	// for example bone melting and materials misbehaving, and possibly even crashing
 	target.ForceUpdateComponents(FALSE, FALSE);
-
-    CheckForFaceMelting(target);
 }
 
 public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc, AppearanceMesh AppearanceMesh)
