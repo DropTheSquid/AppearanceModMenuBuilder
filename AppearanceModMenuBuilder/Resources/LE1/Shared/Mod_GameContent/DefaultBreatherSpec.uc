@@ -20,8 +20,6 @@ private function BreatherSpecBase GetDelegateSpec(BioPawn target, SpecLists spec
     local BioGlobalVariableTable globalVars;
     local AMM_Pawn_Parameters params;
 
-    LogInternal("GetDelegateSpec");
-
     if (!class'AMM_AppearanceUpdater'.static.GetPawnParams(target, params))
 	{
 		return None;
@@ -33,12 +31,7 @@ private function BreatherSpecBase GetDelegateSpec(BioPawn target, SpecLists spec
     // else use vanilla breather spec
     if (delegateSpec == None)
     {
-        LogInternal("Going with VanillaBreatherSpec");
         delegateSpec = new Class'VanillaBreatherSpec';
-    }
-    else
-    {
-        LogInternal("Going with"@delegateSpec);
     }
 
     return delegateSpec;

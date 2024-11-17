@@ -37,8 +37,6 @@ public function Object GetOverrideDefaultOutfitSpec(BioPawn targetPawn)
 	local OutfitSpecBase delegateSpec;
     local SpecLists specLists;
 
-    LogInternal("GetOverrideDefaultOutfitSpec"@defaultCasualBodyAppearanceId@defaultCombatBodyAppearanceId);
-
     specLists = class'AMM_Utilities'.static.GetSpecLists(targetPawn, self);
     if (specLists.outfitSpecs == None)
     {
@@ -97,11 +95,9 @@ public function Object GetOverrideDefaultBreatherSpec(BioPawn targetPawn)
 	local BreatherSpecBase delegateSpec;
     local SpecLists specLists;
 
-    LogInternal("GetOverrideDefaultBreatherSpec"@defaultCasualBreatherAppearanceId@defaultCombatBreatherAppearanceId);
     specLists = class'AMM_Utilities'.static.GetSpecLists(targetPawn, self);
     if (specLists.BreatherSpecs == None)
     {
-        LogInternal("no spec lists :(");
         return super.GetOverrideDefaultBreatherSpec(targetPawn);
     }
 
@@ -116,7 +112,6 @@ public function Object GetOverrideDefaultBreatherSpec(BioPawn targetPawn)
 	{
         if (defaultCombatBreatherAppearanceId != 0 && specLists.BreatherSpecs.GetBreatherSpecById(defaultCombatBreatherAppearanceId, delegateSpec))
         {
-            LogInternal("using override spec!");
             return delegateSpec;
         }
 	}
