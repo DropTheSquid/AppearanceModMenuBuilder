@@ -144,18 +144,15 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             ExportEntry[] CharCreateSeqVars = [
                 pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_8"),
                 pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_31"),
-                pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_33"),
+                pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_32"),
                 pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.SeqVar_Object_30")
                 ];
 
             // add a sequence action to update whenever the character record changes is set up/changes characters
             var charRecUpdateSequenceAct = AddPawnAppearanceUpdateSeqAct(
-                FindRemoteEvent("SetupCharRec", "TheWorld.PersistentLevel.Main_Sequence.SeqEvent_RemoteEvent_16"),
+                // add a new RemoteEvent to update the character record pawn
+                AddRemoteEvent("re_AMM_update_CharRec_Appearance", "updates the current character record pawn"),
                 CharRecPawnSeqVar);
-
-            // add a new RemoteEvent to update the character record pawn
-            var RE_UpdateCharRec = AddRemoteEvent("re_AMM_update_CharRec_Appearance", "updates the current character record pawn");
-            KismetHelper.CreateOutputLink(RE_UpdateCharRec, "Out", charRecUpdateSequenceAct);
 
             // same for inventory
             var inventoryUpdateSeqAct = AddPawnAppearanceUpdateSeqAct(
@@ -232,8 +229,9 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             KismetHelper.CreateOutputLink(RE_CharRecCasual, "Out", charRecHideWeaponsAct);
             KismetHelper.CreateOutputLink(RE_CharRecCasual, "Out", charRecUpdateSequenceAct, 1);
             KismetHelper.CreateOutputLink(RE_CharRecCombat, "Out", charRecUpdateSequenceAct, 2);
-            KismetHelper.CreateOutputLink(RE_CharRecCasual, "Out", charRecUpdateSequenceAct, 0);
-            KismetHelper.CreateOutputLink(RE_CharRecCombat, "Out", charRecUpdateSequenceAct, 0);
+
+            // connect the Done output of TheWorld.PersistentLevel.Main_Sequence.BioSeqAct_Delay_5 to the charRec appearance update
+            KismetHelper.CreateOutputLink(pcc.FindExport("TheWorld.PersistentLevel.Main_Sequence.BioSeqAct_Delay_5"), "Finished", charRecUpdateSequenceAct, 0);
 
             // hide the ugly black rectangle under the pawn's feet
             var pedestalStaticMesh = pcc.FindExport("TheWorld.PersistentLevel.InterpActor_2.StaticMeshComponent_3")
