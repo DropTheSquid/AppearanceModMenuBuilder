@@ -33,7 +33,7 @@ protected function bool GetVariant(BioPawn targetPawn, out int armorType, out in
     return true;
 }
 
-protected function bool GetPawnType(BioPawn targetPawn, out BioPawnTYpe pawnType)
+protected function bool GetPawnType(BioPawn targetPawn, out BioPawnType pawnType)
 {
     local AMM_Pawn_Parameters params;
 
