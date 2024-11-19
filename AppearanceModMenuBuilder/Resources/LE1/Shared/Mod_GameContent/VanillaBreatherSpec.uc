@@ -10,6 +10,8 @@ enum eVisorState
 public function bool LoadBreather(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds, out pawnAppearance appearance)
 {
 	local eVisorState visorState;
+
+	LogInternal("LoadBreather");
 	GetVanillaBreatherMesh(class'AMM_Utilities'.static.GetPawnType(target), appearance.BreatherMesh, visorState);
 
 	if (visorState == eVisorState.Show)

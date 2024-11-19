@@ -40,13 +40,17 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
 	helmetDisplayState = class'AMM_Utilities'.static.GetHelmetDisplayState(appearanceIds, target);
 	if (helmetDisplayState != eHelmetDisplayState.off)
 	{
-		if ((appearanceIds.helmetAppearanceId == 0 || appearanceIds.helmetAppearanceId == -1) && GetDefaultOverrideHelmetSpec(target, delegateSpec))
+		delegateSpec = GetHelmetSpec(target, specLists, appearanceIds);
+		if (delegateSpec != None)
 		{
-			delegateSpec.LoadHelmet(target, specLists, appearanceIds, appearance);
+			if (!delegateSpec.LoadHelmet(target, specLists, appearanceIds, appearance))
+			{
+				LogInternal("failed to load helmet"@delegateSpec);
+			}
 		}
 		else
 		{
-			specLists.helmetSpecs.DelegateToHelmetSpec(target, specLists, appearanceIds, appearance);
+			LogInternal("failed to get helmet spec");
 		}
 	}
 	return true;
@@ -56,15 +60,12 @@ public function bool LocksBreatherSelection(BioPawn target, SpecLists specLists,
 {
 	local HelmetSpecBase delegateSpec;
 
-	if ((appearanceIds.helmetAppearanceId == 0 || appearanceIds.helmetAppearanceId == -1) && GetDefaultOverrideHelmetSpec(target, delegateSpec))
+	delegateSpec = GetHelmetSpec(target, specLists, appearanceIds);
+	if (delegateSpec == None)
 	{
-		return delegateSpec.LocksBreatherSelection(target, SpecLists, appearanceIds);
+		return false;
 	}
-	else if (specLists.helmetSpecs.GetHelmetSpecById(appearanceIds.helmetAppearanceId, delegateSpec))
-	{
-		return delegateSpec.LocksBreatherSelection(target, SpecLists, appearanceIds);
-	}
-    return false;
+	return delegateSpec.LocksBreatherSelection(target, SpecLists, appearanceIds);
 }
 
 protected function bool GetVariant(BioPawn targetPawn, out int armorType, out int meshVariant, out int materialVariant)
@@ -124,7 +125,3 @@ protected static function bool GetOutfitStrings(BioPawnType pawnType, int armorT
     return TRUE;
 }
 
-protected function bool GetDefaultOverrideHelmetSpec(BioPawn target, out HelmetSpecBase helmetSpec)
-{
-	return false;
-}

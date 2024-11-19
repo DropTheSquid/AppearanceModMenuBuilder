@@ -14,6 +14,7 @@ var int breatherSpecOverride;
 public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds, out pawnAppearance appearance)
 {
 	local eHelmetDisplayState helmetDisplayState;
+	local BreatherSpecBase delegateBreatherSpec;
 
 	helmetDisplayState = class'AMM_Utilities'.static.GetHelmetDisplayState(appearanceIds, target);
 
@@ -25,7 +26,6 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 		appearanceIds.helmetAppearanceId = helmetFullHelmetSpec;
 		return specLists.helmetSpecs.DelegateToHelmetSpec(target, specLists, appearanceIds, appearance);
 	}
-
 
 	if (!class'AMM_Utilities'.static.LoadAppearanceMesh(HelmetMesh, appearance.helmetMesh))
 	{
@@ -44,15 +44,33 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 	// if we should display a breather and it is not suppressed for this helmet, delegate to the breather spec
 	if (!bSuppressBreather && helmetDisplayState == eHelmetDisplayState.full)
 	{
-		// if the breather spec is overridden, use that
-		if (breatherSpecOverride != 0)
+		delegateBreatherSpec = GetBreatherSpec(target, specLists, appearanceIds); 
+
+		if (delegateBreatherSpec != None)
 		{
-			// LogInternal("forcing breather spec"@breatherSpecOverride);
-			appearanceIds.breatherAppearanceId = breatherSpecOverride;
+			if (!delegateBreatherSpec.LoadBreather(target, specLists, appearanceIds, appearance))
+			{
+				LogInternal("failed to load breather spec"@delegateBreatherSpec);
+			}
 		}
-		specLists.breatherSpecs.DelegateToBreatherSpec(target, specLists, appearanceIds, appearance);
+		else
+		{
+			LogInternal("acould not get breather spec");
+		}
 	}
 	return true;
+}
+
+public function BreatherSpecBase GetBreatherSpec(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds)
+{
+    local BreatherSpecBase delegateBreatherSpec;
+
+	if (breatherSpecOverride != 0 && SpecLists.breatherSpecs.GetBreatherSpecById(breatherSpecOverride, delegateBreatherSpec))
+	{
+		return delegateBreatherSpec;
+	}
+
+    return super.GetBreatherSpec(target, specLists, appearanceIds);
 }
 
 public function bool LocksBreatherSelection(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds)

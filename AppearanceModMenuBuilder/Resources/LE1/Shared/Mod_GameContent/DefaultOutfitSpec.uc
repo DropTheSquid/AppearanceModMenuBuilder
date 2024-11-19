@@ -52,6 +52,18 @@ private function OutfitSpecBase GetDelegateSpec(BioPawn target, SpecLists specLi
     }
 }
 
+public function HelmetSpecBase GetHelmetSpec(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds)
+{
+    local OutfitSpecBase outfitDelegate;
+
+    outfitDelegate = GetDelegateSpec(target, specLists, appearanceIds);
+    if (outfitDelegate == None)
+    {
+        return None;
+    }
+    return outfitDelegate.GetHelmetSpec(target, SpecLists, appearanceIds);
+}
+
 public function bool LocksHelmetSelection(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds)
 {
     local OutfitSpecBase delegateSpec;

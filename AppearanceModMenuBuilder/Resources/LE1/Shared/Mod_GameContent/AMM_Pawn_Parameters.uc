@@ -183,18 +183,19 @@ public function bool GetAppearanceIds(string appearanceType, out PawnAppearanceI
 	PawnAppearanceIds.breatherAppearanceId = GetAppearanceIdValue(lookups.breatherAppearanceLookup, globalVars);
 	PawnAppearanceIds.m_appearanceSettings = class'AMM_Common'.static.DecodeAppearanceSettings(GetAppearanceIdValue(lookups.appearanceFlagsLookup, globalVars));
 	// if the default appearance ids are set and an override has not been set, return the defaults
-	if (defaultBodyAppearanceId != 0 && (PawnAppearanceIds.bodyAppearanceId == 0 || PawnAppearanceIds.bodyAppearanceId == -1))
-	{
-		PawnAppearanceIds.bodyAppearanceId = defaultBodyAppearanceId;
-	}
-	if (defaultHelmetAppearanceId != 0 && (PawnAppearanceIds.HelmetAppearanceId == 0 || PawnAppearanceIds.HelmetAppearanceId == -1))
-	{
-		PawnAppearanceIds.HelmetAppearanceId = defaultHelmetAppearanceId;
-	}
-	if (defaultBreatherAppearanceId != 0 && (PawnAppearanceIds.BreatherAppearanceId == 0 || PawnAppearanceIds.BreatherAppearanceId == -1))
-	{
-		PawnAppearanceIds.BreatherAppearanceId = defaultBreatherAppearanceId;
-	}
+	// TODO I need to implement this a bit better when the framework comes around
+	// if (defaultBodyAppearanceId != 0 && (PawnAppearanceIds.bodyAppearanceId == 0 || PawnAppearanceIds.bodyAppearanceId == -1))
+	// {
+	// 	PawnAppearanceIds.bodyAppearanceId = defaultBodyAppearanceId;
+	// }
+	// if (defaultHelmetAppearanceId != 0 && (PawnAppearanceIds.HelmetAppearanceId == 0 || PawnAppearanceIds.HelmetAppearanceId == -1))
+	// {
+	// 	PawnAppearanceIds.HelmetAppearanceId = defaultHelmetAppearanceId;
+	// }
+	// if (defaultBreatherAppearanceId != 0 && (PawnAppearanceIds.BreatherAppearanceId == 0 || PawnAppearanceIds.BreatherAppearanceId == -1))
+	// {
+	// 	PawnAppearanceIds.BreatherAppearanceId = defaultBreatherAppearanceId;
+	// }
 	return true;
 }
 

@@ -16,17 +16,13 @@ public function bool LoadBreather(BioPawn target, SpecLists specLists, out PawnA
 private function BreatherSpecBase GetDelegateSpec(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds)
 {
     local BreatherSpecBase delegateSpec;
-    local BioWorldInfo BWI;
-    local BioGlobalVariableTable globalVars;
     local AMM_Pawn_Parameters params;
 
-    if (!class'AMM_AppearanceUpdater'.static.GetPawnParams(target, params))
+    if (class'AMM_AppearanceUpdater'.static.GetPawnParams(target, params))
 	{
-		return None;
+		// check if they have an override spec set
+        delegateSpec = BreatherSpecBase(params.GetOverrideDefaultBreatherSpec(target));
 	}
-
-    // check if they have an override spec set
-    delegateSpec = BreatherSpecBase(params.GetOverrideDefaultBreatherSpec(target));
 
     // else use vanilla breather spec
     if (delegateSpec == None)

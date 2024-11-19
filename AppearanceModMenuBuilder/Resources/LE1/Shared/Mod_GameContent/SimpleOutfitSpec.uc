@@ -47,39 +47,27 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
 	appearance.hideHair = bHideHair;
 	appearance.hideHead = bHideHead;
 
-	if (forceHelmetSpec != 0)
-	{
-		appearanceIds.helmetAppearanceId = forceHelmetSpec;
-	}
-	// if we should display some kind of helmet, check if we should use the default one for this outfit
-	// if the helmet id is 0 or -1 and the outfit default is not 0, use it
-	else if ((appearanceIds.helmetAppearanceId == 0 || appearanceIds.helmetAppearanceId == -1)
-		&& helmetTypeOverride != 0)
-	{
-		appearanceIds.helmetAppearanceId = helmetTypeOverride;
-	}
-
 	// if a helmet is requested and it is not suppressed
 	if (helmetDisplayState != eHelmetDisplayState.off && !bSuppressHelmet)
 	{
-		if (SpecLists.helmetSpecs.GetHelmetSpecById(appearanceIds.helmetAppearanceId, delegateSpec))
+		delegateSpec = GetHelmetSpec(target, specLists, appearanceIds);
+
+		if (delegateSpec != None)
 		{
-			// the helmetFullHelmet spec set on the outfit takes precedence over the one on the helmet
-			if (helmetFullHelmetSpec != 0 && SimpleHelmetSpec(delegateSpec) != None && SimpleHelmetSpec(delegateSpec).helmetFullHelmetSpec != 0)
-			{
-				SimpleHelmetSpec(delegateSpec).helmetFullHelmetSpec = helmetFullHelmetSpec;
-			}
 			if (!delegateSpec.LoadHelmet(target, specLists, appearanceIds, appearance))
 			{
-				LogInternal("Warning: failed to apply helmet by id"@appearanceIds.helmetAppearanceId);
+				LogInternal("failed to load helmet spec"@delegateSpec);
 			}
 		}
-
-		specLists.helmetSpecs.DelegateToHelmetSpec(target, specLists, appearanceIds, appearance);
+		else
+		{
+			LogInternal("failed to get helmet spec");
+		}
 	}
 	// if a breather is requested and the helmet is suppressed but the breather is not
 	else if (helmetDisplayState == eHelmetDisplayState.full && bSuppressHelmet && !bSuppressBreather)
 	{
+		// TODO I need to check for breather overrides here?
 		if (breatherSpecOverride != 0)
 		{
 			appearanceIds.breatherAppearanceId = breatherSpecOverride;
@@ -176,8 +164,8 @@ public function bool LocksBreatherSelection(BioPawn target, SpecLists specLists,
 		return helmetOnSpecLocksHelmet && helmetFullSpecLocksHelmet;
 	}
 
-	// otherwise also take into account the non body override helmet
-	if (SpecLists.helmetSpecs.GetHelmetSpecById(appearanceIds.helmetAppearanceId, delegateHelmetSpec))
+	delegateHelmetSpec = GetHelmetSpec(target, specLists, appearanceIds);
+	if (delegateHelmetSpec != None)
 	{
 		if (helmetFullHelmetSpec != 0 && SimpleHelmetSpec(delegateHelmetSpec) != None && SimpleHelmetSpec(delegateHelmetSpec).helmetFullHelmetSpec != 0)
 		{
@@ -188,4 +176,22 @@ public function bool LocksBreatherSelection(BioPawn target, SpecLists specLists,
 
 	// lock it only if it is locked in all states
 	return defaultLocksHelmet && (HelmetOnBodySpec == 0 || helmetOnSpecLocksHelmet) && (HelmetFullBodySpec == 0 || helmetFullSpecLocksHelmet);
+}
+
+public function HelmetSpecBase GetHelmetSpec(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds)
+{
+    local HelmetSpecBase delegateHelmetSpec;
+
+	if (forceHelmetSpec != 0)
+	{
+		appearanceIds.helmetAppearanceId = forceHelmetSpec;
+	}
+	// if the helmet id is 0 or -1 and the outfit default is not 0, use it
+	else if ((appearanceIds.helmetAppearanceId == 0 || appearanceIds.helmetAppearanceId == -1)
+		&& helmetTypeOverride != 0)
+	{
+		appearanceIds.helmetAppearanceId = helmetTypeOverride;
+	}
+
+	return super.GetHelmetSpec(target, specLists, appearanceIds);
 }

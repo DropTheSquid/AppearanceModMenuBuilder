@@ -13,6 +13,7 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 	local bool hideHead;
 	local eHelmetDisplayState helmetDisplayState;
 	local BioPawnType pawnType;
+	local BreatherSpecBase delegateSpec;
 
 	if (!GetPawnType(target, pawnType))
 	{
@@ -67,7 +68,18 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 	// if the breather is not suppressed, delegate to the breather spec
 	if (!suppressBreather)
 	{
-		specLists.breatherSpecs.DelegateToBreatherSpec(target, specLists, appearanceIds, appearance);
+		delegateSpec = GetBreatherSpec(target, specLists, appearanceIds);
+		if (delegateSpec != None)
+		{
+			if (!delegateSpec.LoadBreather(target, specLists, appearanceIds, appearance))
+			{
+				LogInternal("failed to load breather spec"@delegateSpec);
+			}
+		}
+		else
+		{
+			LogInternal("failed to get breather spec");
+		}
 	}
 	
 	return true;
@@ -196,148 +208,3 @@ private static function bool GetHelmetMeshPaths(
     }
 	return true;
 }
-
-
-// public function bool GetPawnOutfitMeshes(PawnAppearanceIds AppearanceIds, BioPawn targetPawn, AMM_Pawn_Parameters pawnParams, appearanceFlagState helmetOverrideState, out PawnOutfitMeshes PawnOutfitMeshes)
-// {
-//     local BioInterface_Appearance_Pawn appearance;
-//     local BioPawnType pawnType;
-//     local bool headgearVisibilityPreference;
-//     local bool isHeadgearPreferenceOverridden;
-//     local bool ShouldShowHelmet;
-//     local bool ShouldShowVisor;
-//     local bool ShouldShowFaceplate;
-    
-//     pawnType = Class'PawnUtilities'.static.GetPawnType(targetPawn);
-//     appearance = BioInterface_Appearance_Pawn(targetPawn.m_oBehavior.m_oAppearanceType);
-//     isHeadgearPreferenceOverridden = !targetPawn.IsHeadGearVisiblePreferenceRelevant();
-//     if (helmetOverrideState.state == ehelmetState.off)
-//     {
-//         ShouldShowHelmet = FALSE;
-//         ShouldShowVisor = FALSE;
-//         ShouldShowFaceplate = FALSE;
-//     }
-//     else if (helmetOverrideState.state == ehelmetState.on || AppearanceIds.breatherAppearanceId == -2)
-//     {
-//         ShouldShowHelmet = TRUE;
-//         ShouldShowVisor = !pawnType.m_oAppearanceSettings.m_oBodySettings.m_oHeadGearSettings.m_visor.m_bIsHidden;
-//         ShouldShowFaceplate = FALSE;
-//     }
-//     else
-//     {
-//         ShouldShowHelmet = TRUE;
-//         ShouldShowVisor = !pawnType.m_oAppearance.Body.m_oHeadGearAppearance.m_aFacePlateMeshSpec[0].m_bHidesVisor;
-//         ShouldShowFaceplate = TRUE;
-//     }
-//     LogInternal("Getting vanilla headgear", );
-//     LogInternal("shouldShowHelmet" @ ShouldShowHelmet, );
-//     LogInternal("ShouldShowVisor" @ ShouldShowVisor, );
-//     LogInternal("ShouldShowFaceplate" @ ShouldShowFaceplate, );
-//     if (!ShouldShowHelmet)
-//     {
-//         // comment("delegate to the no helmet spec");
-//         AppearanceIds.helmetAppearanceId = -2;
-//         return Class'HelmetSpecBase'.static.GetMeshesFromHelmetSpec(AppearanceIds, targetPawn, pawnParams, helmetOverrideState, PawnOutfitMeshes);
-//     }
-//     GetHeadGearMeshes(targetPawn, AppearanceIds, pawnParams, helmetOverrideState, ShouldShowHelmet, ShouldShowVisor, ShouldShowFaceplate, PawnOutfitMeshes);
-//     return TRUE;
-// }
-// public static function bool GetHeadGearMeshes(BioPawn target, PawnAppearanceIds AppearanceIds, AMM_Pawn_Parameters pawnParams, appearanceFlagState helmetOverrideState, bool showHelmet, bool showVisor, bool showFaceplate, out PawnOutfitMeshes PawnOutfitMeshes)
-// {
-//     local BioPawnType pawnType;
-//     local int armorType;
-//     local int meshVariant;
-//     local int materialVariant;
-//     local bool suppressVisor;
-//     local bool suppressFacePlate;
-    
-//     pawnType = Class'PawnUtilities'.static.GetPawnType(target);
-//     if (pawnType == None)
-//     {
-//         Warn("Pawn" @ PathName(target) @ target.Tag @ "does not have a pawnType, so I cannot get the headgear.");
-//         return FALSE;
-//     }
-//     if (pawnType.m_oAppearanceSettings.m_oBodySettings.m_oHeadGearSettings == None)
-//     {
-//         Warn("Pawn has no Helmet settings");
-//         return FALSE;
-//     }
-//     armorType = int(BioInterface_Appearance_Pawn(target.m_oBehavior.m_oAppearanceType).m_oSettings.m_oBodySettings.m_eArmorType);
-//     meshVariant = BioInterface_Appearance_Pawn(target.m_oBehavior.m_oAppearanceType).m_oSettings.m_oBodySettings.m_nModelVariant;
-//     materialVariant = BioInterface_Appearance_Pawn(target.m_oBehavior.m_oAppearanceType).m_oSettings.m_oBodySettings.m_nMaterialConfig;
-//     if (!GetHelmetMesh(pawnType, armorType, meshVariant, materialVariant, PawnOutfitMeshes, suppressVisor, suppressFacePlate))
-//     {
-//         return FALSE;
-//     }
-//     if (showVisor && !suppressVisor || showFaceplate && !suppressFacePlate)
-//     {
-//         GetVisorMesh(pawnType, PawnOutfitMeshes.VisorMesh.Mesh, PawnOutfitMeshes.VisorMesh.Materials);
-//     }
-//     if (showFaceplate && !suppressFacePlate)
-//     {
-//         return Class'BreatherSpecBase'.static.GetBreatherMeshesFromSpec(AppearanceIds, target, pawnParams, helmetOverrideState, PawnOutfitMeshes);
-//     }
-//     return TRUE;
-// }
-// private static final function bool GetHelmetMeshPaths(BioPawnType pawnType, int armorType, int meshVariant, int materialVariant, out PawnOutfitMeshes PawnOutfitMeshes, out bool suppressVisor, out bool suppressFacePlate)
-// {
-//     local BioHeadGearAppearanceArmorSpec armorTypeSpec;
-//     local BioHeadGearAppearanceModelSpec modelSpec;
-//     local string headGearPackageName;
-//     local string modelCode;
-//     local string prefix;
-//     local string tempMaterial;
-//     local int i;
-//     local int numMaterials;
-//     local string meshPath;
-//     local array<string> materialPaths;
-    
-//     if (pawnType.m_oAppearance.Body.m_oHeadGearAppearance == None)
-//     {
-//         return FALSE;
-//     }
-//     armorTypeSpec = pawnType.m_oAppearance.Body.m_oHeadGearAppearance.m_aArmorSpec[armorType];
-//     headGearPackageName = string(armorTypeSpec.m_nmPackage);
-//     if (headGearPackageName == "None")
-//     {
-//         // comment("this is completely expected for nkd and clothes armor levels, where there is no package of headgear.");
-//         suppressVisor = TRUE;
-//         suppressFacePlate = TRUE;
-//         return TRUE;
-//     }
-//     modelSpec = armorTypeSpec.m_aModelSpec[meshVariant];
-//     PawnOutfitMeshes.hideHair = modelSpec.m_bIsHairHidden;
-//     PawnOutfitMeshes.hideHead = modelSpec.m_bIsHeadHidden;
-//     suppressVisor = modelSpec.m_bSuppressVisor;
-//     suppressFacePlate = modelSpec.m_bSuppressFacePlate;
-//     modelCode = class'Amm_Utilities'.static.GetArmorCode(byte(armorType)) $ class'Amm_Utilities'.static.GetLetter(meshVariant);
-//     prefix = string(pawnType.m_oAppearance.Body.m_oHeadGearAppearance.m_nmPrefix);
-//     meshPath = headGearPackageName $ "." $ modelCode $ "." $ prefix $ "_" $ modelCode $ "_MDL";
-//     numMaterials = modelSpec.m_nMaterialCountPerConfig;
-//     for (i = 0; i < numMaterials; i++)
-//     {
-//         tempMaterial = headGearPackageName $ "." $ modelCode $ "." $ prefix $ "_" $ modelCode $ "_MAT_" $ materialVariant + 1 $ GetLetter(i);
-//         materialPaths.AddItem(tempMaterial);
-//     }
-//     // if (!Class'PawnUtilities'.static.LoadSkeletalMesh(meshPath, PawnOutfitMeshes.HelmetMesh.Mesh))
-//     // {
-//     //     return FALSE;
-//     // }
-//     // if (!Class'PawnUtilities'.static.LoadMaterials(materialPaths, PawnOutfitMeshes.HelmetMesh.Materials))
-//     // {
-//     //     return FALSE;
-//     // }
-//     return TRUE;
-// }
-// private static final function bool GetVisorMesh(BioPawnType pawnType, out SkeletalMesh VisorMesh, out array<MaterialInterface> Materials)
-// {
-//     if (pawnType.m_oAppearance.Body.m_oHeadGearAppearance.m_apVisorMesh.Length == 0 || pawnType.m_oAppearance.Body.m_oHeadGearAppearance.m_apVisorMaterial.Length == 0)
-//     {
-//         VisorMesh = None;
-//         Materials.Length = 0;
-//         return TRUE;
-//     }
-//     VisorMesh = pawnType.m_oAppearance.Body.m_oHeadGearAppearance.m_apVisorMesh[0];
-//     Materials = pawnType.m_oAppearance.Body.m_oHeadGearAppearance.m_apVisorMaterial;
-//     return TRUE;
-// }

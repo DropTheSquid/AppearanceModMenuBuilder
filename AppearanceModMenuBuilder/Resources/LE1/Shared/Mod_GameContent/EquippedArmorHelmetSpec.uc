@@ -15,6 +15,7 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 	local bool suppressBreather;
 	local bool hideHair;
 	local bool hideHead;
+    local BreatherSpecBase delegateBreatherSpec;
 
     // LogInternal("EquippedArmorHelmetSpec"@target.tag);
     if (!class'AMM_AppearanceUpdater'.static.GetPawnParams(target, params))
@@ -94,11 +95,18 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 	// if the breather is not suppressed, delegate to the breather spec
 	if (!suppressBreather)
 	{
-        // TODO check for an override spec here
-		if (!specLists.breatherSpecs.DelegateToBreatherSpec(target, specLists, appearanceIds, appearance))
+		delegateBreatherSpec = GetBreatherSpec(target, specLists, appearanceIds); 
+
+		if (delegateBreatherSpec != None)
+		{
+			if (!delegateBreatherSpec.LoadBreather(target, specLists, appearanceIds, appearance))
+            {
+                LogInternal("failed to load breather spec"@delegateBreatherSpec);
+            }
+		}
+        else
         {
-            LogInternal("failed to apply breather spec");
-            return false;
+            LogInternal("no breather spec could be found");
         }
 	}
 	

@@ -12,14 +12,18 @@ protected function bool GetVariant(BioPawn targetPawn, out int iArmorType, out i
     return TRUE;
 }
 
-protected function bool GetDefaultOverrideHelmetSpec(BioPawn target, out HelmetSpecBase helmetSpec)
+public function HelmetSpecBase GetHelmetSpec(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds)
 {
     local VanillaHelmetByIdSpec delegateSpec;
 
-	delegateSpec = new class'VanillaHelmetByIdSpec';
-    delegateSpec.armorType = armorType;
-    delegateSpec.meshVariant = meshVariant;
-    delegateSpec.materialVariant = materialVariant;
-    helmetSpec = delegateSpec;
-    return true;
+    if (appearanceIds.helmetAppearanceId == 0 || appearanceIds.helmetAppearanceId == -1)
+    {
+        delegateSpec = new class'VanillaHelmetByIdSpec';
+        delegateSpec.armorType = armorType;
+        delegateSpec.meshVariant = meshVariant;
+        delegateSpec.materialVariant = materialVariant;
+        return delegateSpec;
+    }
+
+    return super.GetHelmetSpec(target, specLists, appearanceIds);
 }

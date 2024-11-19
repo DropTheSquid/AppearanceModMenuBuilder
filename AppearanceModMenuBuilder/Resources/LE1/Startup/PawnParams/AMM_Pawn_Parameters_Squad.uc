@@ -58,6 +58,12 @@ public function Object GetOverrideDefaultOutfitSpec(BioPawn targetPawn)
         }
 	}
 
+    // use the base one if neither of the above is set
+    if (defaultBodyAppearanceId != 0 && specLists.outfitSpecs.GetOutfitSpecById(defaultBodyAppearanceId, delegateSpec))
+    {
+        return delegateSpec;
+    }
+
 	return super.GetOverrideDefaultOutfitSpec(targetPawn);
 }
 
@@ -87,6 +93,12 @@ public function Object GetOverrideDefaultHelmetSpec(BioPawn targetPawn)
         }
 	}
 
+    // use the base one if neither of the above is set
+    if (defaultHelmetAppearanceId != 0 && specLists.helmetSpecs.GetHelmetSpecById(defaultHelmetAppearanceId, delegateSpec))
+    {
+        return delegateSpec;
+    }
+
 	return super.GetOverrideDefaultHelmetSpec(targetPawn);
 }
 
@@ -115,6 +127,12 @@ public function Object GetOverrideDefaultBreatherSpec(BioPawn targetPawn)
             return delegateSpec;
         }
 	}
+
+     // use the base one if neither of the above is set
+    if (defaultBreatherAppearanceId != 0 && specLists.breatherSpecs.GetBreatherSpecById(defaultBreatherAppearanceId, delegateSpec))
+    {
+        return delegateSpec;
+    }
 
 	return super.GetOverrideDefaultBreatherSpec(targetPawn);
 }

@@ -14,3 +14,28 @@ public function bool LocksBreatherSelection(BioPawn target, SpecLists specLists,
 {
     return false;
 }
+
+public function HelmetSpecBase GetHelmetSpec(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds)
+{
+    local HelmetSpecBase delegateHelmetSpec;
+    local AMM_Pawn_Parameters params;
+
+    if (appearanceIds.bodyAppearanceId == 0 || appearanceIds.bodyAppearanceId == -1)
+    {
+        if (class'AMM_AppearanceUpdater'.static.GetPawnParams(target, params))
+        {
+            delegateHelmetSpec = HelmetSpecBase(params.GetOverrideDefaultHelmetSpec(target));
+
+            if (delegateHelmetSpec != None)
+            {
+                return delegateHelmetSpec;
+            }
+        }
+    }
+
+    if (specLists.helmetSpecs != None && specLists.helmetSpecs.GetHelmetSpecById(appearanceIds.helmetAppearanceId, delegateHelmetSpec))
+    {
+        return delegateHelmetSpec;
+    }
+    return None;
+}

@@ -12,6 +12,7 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
 	local array<string> meshMaterialPaths;
     local BIoPawnType pawnType;
     local eHelmetDisplayState helmetDisplayState;
+    local HelmetSpecBase delegateHelmetSpec;
 
     if (!class'AMM_AppearanceUpdater'.static.GetPawnParams(target, params))
 	{
@@ -74,16 +75,17 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
     // this is important to ensure we don't add a helmet if the preference is to not have one
     if (helmetDisplayState != eHelmetDisplayState.off)
     {
-        // this ensures the equipped helmet is used unless overridden
-        if (appearanceIds.helmetAppearanceId == 0 || appearanceIds.helmetAppearanceId == -1)
+        delegateHelmetSpec = GetHelmetSpec(target, specLists, appearanceIds);
+        if (delegateHelmetSpec != None)
         {
-            // LogInternal("replacing it with -3 (equipped armor helmet)");
-            appearanceIds.helmetAppearanceId = -3;
+            if (!delegateHelmetSpec.LoadHelmet(target, specLists, appearanceIds, appearance))
+            {
+                LogInternal("failed to load helmet spec"@delegateHelmetSpec);
+            }
         }
-        if (!specLists.helmetSpecs.DelegateToHelmetSpec(target, specLists, appearanceIds, appearance))
+        else
         {
-            LogInternal("failed to apply helmet spec");
-            return false;
+            LogInternal("no helmet spec could be found");
         }
     }
 
@@ -91,3 +93,18 @@ public function bool LoadOutfit(BioPawn target, SpecLists specLists, out PawnApp
 }
 
 // TODO locks helmet/breather spec here
+public function HelmetSpecBase GetHelmetSpec(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds)
+{
+    local HelmetSpecBase delegateHelmetSpec;
+
+    if (appearanceIds.helmetAppearanceId == 0 || appearanceIds.helmetAppearanceId == -1)
+    {
+        // by default, try to go to the equipped helmet spec
+        if (SpecLists.helmetSpecs.GetHelmetSpecById(-3, delegateHelmetSpec))
+        {
+            return delegateHelmetSpec;
+        }
+    }
+
+    return super.GetHelmetSpec(target, specLists, appearanceIds);
+}
