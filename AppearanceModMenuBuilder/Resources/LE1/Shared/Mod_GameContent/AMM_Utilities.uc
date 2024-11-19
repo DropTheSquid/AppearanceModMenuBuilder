@@ -802,6 +802,8 @@ public static function ApplyPawnAppearance(BioPawn target, pawnAppearance appear
     replaceMesh(target, target.m_oVisorMesh, appearance.VisorMesh);
     target.m_oVisorMesh.SetHidden(appearance.VisorMesh.Mesh == None);
 	target.m_oVisorMesh.CastShadow = appearance.VisorMesh.Mesh != None;
+    // stops eyelash flickering with visors
+    target.m_oVisorMesh.TranslucencySortPriority = -1;
 
 	if (target.m_oFacePlateMesh == None)
     {
@@ -814,6 +816,8 @@ public static function ApplyPawnAppearance(BioPawn target, pawnAppearance appear
     replaceMesh(target, target.m_oFacePlateMesh, appearance.BreatherMesh);
     target.m_oFacePlateMesh.SetHidden(appearance.BreatherMesh.Mesh == None);
 	target.m_oFacePlateMesh.CastShadow = appearance.BreatherMesh.Mesh != None;
+    // stops eyelash flickering with visors
+    target.m_oFacePlateMesh.TranslucencySortPriority = -1;
 
     CheckForFaceMelting(target);
 
