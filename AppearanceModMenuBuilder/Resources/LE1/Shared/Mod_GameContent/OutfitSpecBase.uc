@@ -20,7 +20,7 @@ public function HelmetSpecBase GetHelmetSpec(BioPawn target, SpecLists specLists
     local HelmetSpecBase delegateHelmetSpec;
     local AMM_Pawn_Parameters params;
 
-    if (appearanceIds.bodyAppearanceId == 0 || appearanceIds.bodyAppearanceId == -1)
+    if (appearanceIds.helmetAppearanceId == 0 || appearanceIds.helmetAppearanceId == -1)
     {
         if (class'AMM_AppearanceUpdater'.static.GetPawnParams(target, params))
         {
