@@ -9,9 +9,15 @@ var config bool LiaraWearsArmorOnVirmire;
 
 public function bool matchesPawn(BioPawn targetPawn)
 {
-	// there are two pawns in a scene near the end that have the same tag as Liara for some reason. They should not be matched as Liara
+	local string targetPath;
+
+	targetPath = PathName(targetPawn);
+	// there are two pawns in two scenes near the end that have the same tag as Liara for some reason. They should not be matched as Liara
 	// HACK vanilla issue, would be resolved by the framework, but is also fairly harmless to leave in. 
-    if (PathName(targetPawn) ~= "BIOA_END70C_Bridge_CIN.TheWorld:PersistentLevel.BioPawn_1" || PathName(targetPawn) ~= "BIOA_END70C_Bridge_CIN.TheWorld:PersistentLevel.BioPawn_7")
+    if (targetPath ~= "BIOA_END70C_Bridge_CIN.TheWorld:PersistentLevel.BioPawn_1" 
+		|| targetPath ~= "BIOA_END70C_Bridge_CIN.TheWorld:PersistentLevel.BioPawn_7"
+		|| targetPath ~= "BIOA_LOS00_Bridge_CIN.TheWorld:PersistentLevel.BioPawn_1"
+		|| targetPath ~= "BIOA_LOS00_Bridge_CIN.TheWorld:PersistentLevel.BioPawn_7")
     {
         return false;
     }
