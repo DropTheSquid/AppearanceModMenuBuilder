@@ -15,6 +15,14 @@
     "LE1 quick": {
       "commandName": "Project",
       "commandLineArgs": "LE1 quick"
+    },
+    "LE2 Full": {
+      "commandName": "Project",
+      "commandLineArgs": "LE2 full"
+    },
+    "LE2 Quick": {
+      "commandName": "Project",
+      "commandLineArgs": "LE2 quick"
     }
   }
 }

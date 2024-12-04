@@ -1,4 +1,5 @@
 ﻿using AppearanceModMenuBuilder.LE1;
+using AppearanceModMenuBuilder.LE2;
 
 string game = args.Length > 0 ? args[0] : "";
 string mode = args.Length > 1 ? args[1] : "";
@@ -9,6 +10,8 @@ switch (game)
         LE1Build.RunBuild(mode);
         break;
     case "LE2":
+        LE2Build.RunBuild(mode);
+        break;
     case "LE3":
     case "ME1":
     case "OT1":
