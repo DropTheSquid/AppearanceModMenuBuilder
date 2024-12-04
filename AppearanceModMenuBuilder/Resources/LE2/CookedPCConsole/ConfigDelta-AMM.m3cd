@@ -1,5 +1,5 @@
 [BioUI.ini Engine.BioSFManager]
 ; when removing vanilla lines, you must match them exactly, including whitespce like the tabs here
-; -HandlerLibrary=(Tag=Personalization,		ZOrder=210,	HandlerClass="SFXGame.SFXSFHandler_PCPersonalization",	PanelResource="GUI_SF_Personalization.Personalization", bRequiresScaling=true)
-; +HandlerLibrary=(Tag=Personalization,ZOrder=210,HandlerClass="AppearanceModMenu.SFXSFHandler_Personalization_AMM",PanelResource="GUI_SF_Personalization_AMM.Personalization", bRequiresScaling=true)
++-HandlerLibrary=(Tag=Personalization,		ZOrder=210,	HandlerClass="SFXGame.SFXSFHandler_PCPersonalization",	PanelResource="GUI_SF_Personalization.Personalization", bRequiresScaling=true)
++HandlerLibrary=(Tag=Personalization,ZOrder=210,HandlerClass="Startup_Mod_AMM.SFXSFHandler_Personalization_AMM",PanelResource="GUI_SF_Personalization_AMM.Personalization", bRequiresScaling=true)
 ; +HandlerLibrary=(Tag=AMM,ZOrder=211,HandlerClass="AppearanceModMenu.AppearanceModMenu",PanelResource="GUI_SF_Choice_AMM.Choice", bRequiresScaling=true)

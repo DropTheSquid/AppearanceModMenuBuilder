@@ -1,11 +1,11 @@
-﻿using AppearanceModMenuBuilder.LE1;
-using MassEffectModBuilder.LEXHelpers;
+﻿using MassEffectModBuilder.LEXHelpers;
 using MassEffectModBuilder.MergeTasks;
 using MassEffectModBuilder.UtilityTasks;
 using MassEffectModBuilder;
 using LegendaryExplorerCore.Packages;
 using static MassEffectModBuilder.LEXHelpers.LooseClassCompile;
 using MassEffectModBuilder.DLCTasks;
+
 namespace AppearanceModMenuBuilder.LE2
 {
     public static class MergeBuild
@@ -41,6 +41,8 @@ namespace AppearanceModMenuBuilder.LE2
                 .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "SFXSaveGame.LoadMorphHead", @"Resources\LE2\Functions\SFXSaveGame.LoadMorphHead.uc"))
                 // add hook to SaveMorphHead
                 .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "SFXSaveGame.SaveMorphHead", @"Resources\LE2\Functions\SFXSaveGame.SaveMorphHead.uc"))
+                // add hook to UpdateAppearance
+                .AddTask(new UpdateFunction("SFXGame.pcc", MergeModName, "SFXPawn_Player.UpdateAppearance", @"Resources\LE2\Functions\SFXPawn_Player.UpdateAppearance.uc"))
                 // TODO add more hooks, such as UpdateAppearance
                 // generate the actual json for the merge mod
                 .AddTask(new GenerateMergeJson())
