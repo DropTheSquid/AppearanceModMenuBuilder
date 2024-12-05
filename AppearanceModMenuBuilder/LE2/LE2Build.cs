@@ -14,26 +14,30 @@ namespace AppearanceModMenuBuilder.LE2
                 ModDLCName = "DLC_MOD_AMM",
                 ModOutputPathBase = @$"{Config.LibraryRootPath}\LE2\Appearance Modification Menu",
                 StartupName = "Startup_MOD_AMM.pcc",
-                ModuleNumber = 2555
+                ModuleNumber = 2555,
+                LocalizationStringref = 1865980
             };
 
             switch (mode)
             {
+                // builds only the merge portion of the mod
                 case "merge":
                     LE2ModBuilder.AddMergeTasks();
+                    LE2ModBuilder.OutputConfigAndTlk = false;
                     break;
+                // builds only the dlc portion of the mod
                 case "dlc":
                     LE2ModBuilder.AddDlcTasks();
                     break;
+                // builds both the 
                 case "full":
                     LE2ModBuilder
                         .AddMergeTasks()
-                        .AddDlcTasks();
+                        .AddDlcTasks()
+                        .AddTask(new InstallModTask(false));
                     break;
                 case "quick":
                     LE2ModBuilder
-                        // TODO remove this from the thing once the merge mod is well established
-                        .AddMergeTasks()
                         .AddDlcTasks(skipNonEssential: true)
                         .AddTask(new InstallModTask(false));
                     break;

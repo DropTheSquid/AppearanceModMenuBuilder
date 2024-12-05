@@ -18,17 +18,23 @@ namespace AppearanceModMenuBuilder.LE1
 
             switch (mode)
             {
+                // build the merge stuff only
                 case "merge":
                     LE1ModBuilder.AddMergeTasks();
+                    LE1ModBuilder.OutputConfigAndTlk = false;
                     break;
+                // build the DLC stuff only
                 case "dlc":
                     LE1ModBuilder.AddDlcTasks();
                     break;
+                // build both merge and DLC and install the mod
                 case "full":
                     LE1ModBuilder
                         .AddMergeTasks()
-                        .AddDlcTasks();
+                        .AddDlcTasks()
+                        .AddTask(new InstallModTask(false));
                     break;
+                // build just the dlc and install the mod; assumes you have previously built the merge or the full mod, but if you are not changing the merge, it is faster to build and isntall
                 case "quick":
                     LE1ModBuilder
                         .AddDlcTasks(skipNonEssential: true)

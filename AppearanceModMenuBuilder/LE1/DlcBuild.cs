@@ -10,58 +10,58 @@ namespace AppearanceModMenuBuilder.LE1
     {
         public static ModBuilderWithCustomContext<LE1CustomContext> AddDlcTasks(this ModBuilderWithCustomContext<LE1CustomContext> builder, bool skipNonEssential = false)
         {
-            var intermediate = builder
+            var intermediate = builder.AddTasks([
                 // clean the DLC directory
-                .AddTask(new CleanDlcDirectory())
+                new CleanDlcDirectory(),
                 // copy the moddesc
-                .AddTask(new CopyFiles(@"Resources\LE1\Root", context => context.ModOutputPathBase))
+                new CopyFiles(@"Resources\LE1\Root", context => context.ModOutputPathBase),
                 // copy the autoload
-                .AddTask(new CopyFiles(@"Resources\LE1\dlc", context => context.DLCBaseFolder))
+                new CopyFiles(@"Resources\LE1\dlc", context => context.DLCBaseFolder),
                 // copy anything else that goes in the cookedPCConsole, such as config merges
-                .AddTask(new CopyFiles(@"Resources\LE1\cookedPCConsole", context => context.CookedPCConsoleFolder))
+                new CopyFiles(@"Resources\LE1\cookedPCConsole", context => context.CookedPCConsoleFolder),
                 // build images for the mod settings submenu
-                .AddTask(new BuildMenuImages())
+                new BuildMenuImages(),
                 // build the startup file
-                .AddTask(new BuildStartupFile())
+                new BuildStartupFile(),
                 // build the file with the actual menu in it
-                .AddTask(new BuildMenuFile())
+                new BuildMenuFile(),
                 // build submenus
-                .AddTask(new BuildSubmenuFile())
+                new BuildSubmenuFile(),
                 // actually populate the outfit menus
-                .AddTask(new OutfitMenuBuilder())
+                new OutfitMenuBuilder(),
                 // populate the outfit/headgear spec lists
-                .AddTask(new OutfitSpecListBuilder())
+                new OutfitSpecListBuilder(),
                 // build the inventory file
-                .AddTask(new BuildInventoryHandlerTask())
+                new BuildInventoryHandlerTask(),
                 // build UI world
-                .AddTask(new BuildUIWorldTask())
+                new BuildUIWorldTask(),
                 // build a few NOR files for the armor locker
-                //.AddTask(new BuildNor10_09_Files())
+                //new BuildNor10_09_Files(),
                 // add some new conditionals we need
-                .AddTask(new BuildPlotManagerFile());
+                new BuildPlotManagerFile(),
+            ]);
 
             if (!skipNonEssential)
             {
-                intermediate = intermediate
+                intermediate = intermediate.AddTasks(
                     // build some template files
-                    .AddTask(new BuildTemplateFiles())
+                    new BuildTemplateFiles(),
                     // doing some testing of the framework
-                    .AddTask(new FrameworkTest());
+                    new FrameworkTest()
+                );
             }
 
             intermediate
-                // output any config merge files we worked on
-                .AddTask(new OutputConfigMerge())
-                // compile tlks
-                .AddTask(new ImportGame1TlkLocaliazation(MELocalization.INT, @"Resources\LE1\tlk\GlobalTlk_tlk.xml"))
-                .AddTask(new ImportGame1TlkLocaliazation(MELocalization.DEU, @"Resources\LE1\tlk\GlobalTlk_tlk_DE.xml"))
-                .AddTask(new ImportGame1TlkLocaliazation(MELocalization.ESN, @"Resources\LE1\tlk\GlobalTlk_tlk_ES.xml"))
-                .AddTask(new ImportGame1TlkLocaliazation(MELocalization.POL, @"Resources\LE1\tlk\GlobalTlk_tlk_PL_M.xml", @"Resources\LE1\tlk\GlobalTlk_tlk_PL.xml"))
-                .AddTask(new ImportGame1TlkLocaliazation(MELocalization.RUS, @"Resources\LE1\tlk\GlobalTlk_tlk_RU.xml"))
-                .AddTask(new ImportGame1TlkLocaliazation(MELocalization.FRA, @"Resources\LE1\tlk\GlobalTlk_tlk_FR.xml"))
-                .AddTask(new ImportGame1TlkLocaliazation(MELocalization.ITA, @"Resources\LE1\tlk\GlobalTlk_tlk_IT.xml"))
-                //.AddTask(new ImportGame1TlkLocaliazation(MELocalization.JPN, @"Resources\LE1\tlk\GlobalTlk_tlk_JA.xml"))
-                .AddTask(new OutputTlk());
+                .AddTasks([
+                    new ImportGame1TlkLocaliazation(MELocalization.INT, @"Resources\LE1\tlk\GlobalTlk_tlk.xml"),
+                    new ImportGame1TlkLocaliazation(MELocalization.DEU, @"Resources\LE1\tlk\GlobalTlk_tlk_DE.xml"),
+                    new ImportGame1TlkLocaliazation(MELocalization.ESN, @"Resources\LE1\tlk\GlobalTlk_tlk_ES.xml"),
+                    new ImportGame1TlkLocaliazation(MELocalization.POL, @"Resources\LE1\tlk\GlobalTlk_tlk_PL_M.xml", @"Resources\LE1\tlk\GlobalTlk_tlk_PL.xml"),
+                    new ImportGame1TlkLocaliazation(MELocalization.RUS, @"Resources\LE1\tlk\GlobalTlk_tlk_RU.xml"),
+                    new ImportGame1TlkLocaliazation(MELocalization.FRA, @"Resources\LE1\tlk\GlobalTlk_tlk_FR.xml"),
+                    new ImportGame1TlkLocaliazation(MELocalization.ITA, @"Resources\LE1\tlk\GlobalTlk_tlk_IT.xml"),
+                    //new ImportGame1TlkLocaliazation(MELocalization.JPN, @"Resources\LE1\tlk\GlobalTlk_tlk_JA.xml")]
+                ]);
 
             return intermediate;
         }

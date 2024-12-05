@@ -2,4 +2,18 @@
 ; when removing vanilla lines, you must match them exactly, including whitespce like the tabs here
 +-HandlerLibrary=(Tag=Personalization,		ZOrder=210,	HandlerClass="SFXGame.SFXSFHandler_PCPersonalization",	PanelResource="GUI_SF_Personalization.Personalization", bRequiresScaling=true)
 +HandlerLibrary=(Tag=Personalization,ZOrder=210,HandlerClass="Startup_Mod_AMM.SFXSFHandler_Personalization_AMM",PanelResource="GUI_SF_Personalization_AMM.Personalization", bRequiresScaling=true)
-; +HandlerLibrary=(Tag=AMM,ZOrder=211,HandlerClass="AppearanceModMenu.AppearanceModMenu",PanelResource="GUI_SF_Choice_AMM.Choice", bRequiresScaling=true)
++HandlerLibrary=(Tag=AMM,ZOrder=211,HandlerClass="AppearanceModMenu.AppearanceModMenu",PanelResource="GUI_SF_Choice_AMM.Choice", bRequiresScaling=true)
+
+
+[BioEngine.ini SFXGame.SFXEngine]
+; ; submenus
++DynamicLoadMapping=(ObjectName="SFXGameContent_AMM.SFXGuiData_AMM_Root",SeekFreePackageName="AMM_Submenus")
+
+[BioUI.ini SFXGameContent_AMM.SFXGuiData_AMM_Root]
+m_srTitle = 1865982
++appearanceItems=(ChoiceEntry=(srChoiceName=1865986),submenuClassName="SFXGameContent_AMM.SFXGuiData_AMM_Settings",)
++appearanceItems=(ChoiceEntry=(srChoiceName=1865983),submenuClassName="SFXGameContent_AMM.SFXGuiData_AMM_Presets",)
++appearanceItems=(ChoiceEntry=(srChoiceName=1865987),submenuClassName="SFXGameContent_AMM.SFXGuiData_AMM_Head",)
++appearanceItems=(ChoiceEntry=(srChoiceName=1865987),submenuClassName="SFXGameContent_AMM.SFXGuiData_AMM_Skin",)
++appearanceItems=(ChoiceEntry=(srChoiceName=163339),submenuClassName="SFXGameContent_AMM.SFXGuiData_AMM_Hair",)
++appearanceItems=(ChoiceEntry=(srChoiceName=1865988),submenuClassName="SFXGameContent_AMM.SFXGuiData_AMM_Experiments",)

@@ -5,14 +5,14 @@
     <String id="1865979">DLC_2555</String>
     <String id="1865980">en-us</String>
     <String id="1865981">Male</String>
-    <String id="1865982">Customize Face</String>
-    <!-- <String id="1865983">Presets</String>
-    <String id="1865984">Preset &lt;CUSTOM0&gt;</String>
-    <String id="1865985">Iconic Shepard</String>
+    <String id="1865982">Customize Appearance</String>
+    <String id="1865983">Presets</String>
+    <!-- <String id="1865984">Preset &lt;CUSTOM0&gt;</String> -->
+    <!-- <String id="1865985">Iconic Shepard</String> -->
     <String id="1865986">Settings</String>
     <String id="1865987">Skin</String>
     <String id="1865988">Experiments</String>
-    <String id="1865989">Adjust &lt;CUSTOM1&gt;</String> -->
+    <!-- <String id="1865989">Adjust &lt;CUSTOM1&gt;</String> -->
     <!--Male entries section end-->
     <!--Female entries section begin-->
     <String id="1865981">Female</String>

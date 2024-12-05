@@ -19,6 +19,8 @@ namespace AppearanceModMenuBuilder.LE2.DLCBuildSteps
                 [
                     LooseClassCompile.GetClassFromFile(@"Resources\LE2\UScript\Startup_MOD_AMM\AMM_AppearanceUpdater.uc"),
                     LooseClassCompile.GetClassFromFile(@"Resources\LE2\UScript\Startup_MOD_AMM\SFXSFHandler_Personalization_AMM.uc"),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE2\UScript\AppearanceModMenu\AppearanceModMenu.uc", ["AppearanceModMenu"]),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE2\UScript\AppearanceModMenu\AppearanceSubMenuBase.uc", ["AppearanceModMenu"]),
                     ])
                 .RunModTask(context);
             // add an instance of the handler class at a hardercoded location, add it to the object referencer
