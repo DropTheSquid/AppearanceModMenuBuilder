@@ -2,18 +2,18 @@ Class AppearanceSubMenuBase extends SFXGameChoiceGUIData
     abstract
     config(UI);
 
-struct AppearanceItemData 
+struct AppearanceItemData
 {
-    struct PlotIntSetting 
+    struct PlotIntSetting
     {
         var int PlotIntValue;
         var int PlotIntId;
     };
-    struct MaterialSpecificOverride 
-    {
-        var string mesh;
-        var string materialIndex;
-    };
+    // struct MaterialSpecificOverride 
+    // {
+    //     var string mesh;
+    //     var string materialIndex;
+    // };
     var string submenuClassName;
     var SFXChoiceEntry ChoiceEntry;
     var AppearanceDelta delta;
@@ -38,16 +38,16 @@ struct AppearanceItemData
     
     structdefaultproperties
     {
-        ChoiceEntry = {eResource = None}
+        // ChoiceEntry = {eResource = None}
     }
 };
 struct AppearanceDelta 
 {
     struct TextureParameterDelta 
     {
-        var Name Name;
+        var Name parameterName;
         var Name Texture;
-        var bool Remove;
+        var bool bRemove;
     };
     struct ColorDelta 
     {
@@ -59,14 +59,14 @@ struct AppearanceDelta
     struct VectorParameterDelta 
     {
         var ColorDelta Value;
-        var Name Name;
-        var bool Remove;
+        var Name parameterName;
+        var bool bRemove;
     };
     struct ScalarParameterDelta 
     {
-        var Name Name;
+        var Name parameterName;
         var string Value;
-        var bool Remove;
+        var bool bRemove;
     };
     struct vectorDelta 
     {
@@ -77,21 +77,21 @@ struct AppearanceDelta
     struct OffsetBoneDelta 
     {
         var vectorDelta Offset;
-        var Name Name;
-        var bool Remove;
+        var Name boneName;
+        var bool bRemove;
     };
     struct MorphFeatureDelta 
     {
         var Name Feature;
         var string Offset;
-        var bool Remove;
+        var bool bRemove;
     };
     struct MeshDelta 
     {
-        var Name Name;
-        var bool Remove;
+        var Name meshOrSpecName;
+        var bool bRemove;
     };
-    var array<MeshDelta> AccessoryMeshDeltas;
+    // var array<MeshDelta> AccessoryMeshDeltas;
     var array<OffsetBoneDelta> OffsetBoneDeltas;
     var array<MorphFeatureDelta> MorphFeatureDeltas;
     var array<ScalarParameterDelta> ScalarParameterDeltas;
@@ -101,8 +101,8 @@ struct AppearanceDelta
     var MeshDelta HeadMesh;
     // var MeshDelta CombatHairMesh;
     // var MeshDelta BodyMesh;
-    var MeshDelta HelmetMesh;
-    var MeshDelta BreatherHelmetMesh;
+    // var MeshDelta HelmetMesh;
+    // var MeshDelta BreatherHelmetMesh;
     var bool ClearAll;
 };
 enum EGender
@@ -129,12 +129,12 @@ enum EHelmetAppearance
 var config array<AppearanceItemData> appearanceItems;
 var transient array<AppearanceItemData> shownItems;
 var config stringref srOpenSubmenu;
-var string menuParam;
+var transient string menuParam;
 
-var config string m_sTitle;
-var config string m_sSubTitle;
-var config string m_sAText;
-var config string m_sBText;
+// var config string m_sTitle;
+// var config string m_sSubTitle;
+// var config string m_sAText;
+// var config string m_sBText;
 
 public function bool SetupMenu()
 {

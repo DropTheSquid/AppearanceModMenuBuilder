@@ -1,12 +1,12 @@
-﻿using AppearanceModMenuBuilder.LE1.UScriptModels;
+﻿using AppearanceModMenuBuilder.LE1.UScriptStructs;
 using MassEffectModBuilder.Models;
-using static AppearanceModMenuBuilder.LE1.UScriptModels.AppearanceItemData;
+using static AppearanceModMenuBuilder.LE1.UScriptStructs.AppearanceItemData;
 
-namespace AppearanceModMenuBuilder.LE1.Models
+namespace AppearanceModMenuBuilder.LE1.UScriptClasses
 {
     public class AppearanceSubmenu : ModConfigClass
     {
-        public AppearanceSubmenu(string classFullPath) : base(classFullPath, "BioUI.ini") {}
+        public AppearanceSubmenu(string classFullPath) : base(classFullPath, "BioUI.ini") { }
 
         public static AppearanceSubmenu GetOrAddSubmenu(string classFullPath, ModConfigMergeFile configFile)
         {
@@ -39,7 +39,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
             bool? disableIfBreatherLocked = null,
             string[]? displayVars = null)
         {
-            var result =  new AppearanceItemData()
+            var result = new AppearanceItemData()
             {
                 InlineSubmenu = inline ? true : null,
                 SrCenterText = srCenterText == 0 ? null : srCenterText,
@@ -56,7 +56,7 @@ namespace AppearanceModMenuBuilder.LE1.Models
             };
             if (displayInt.HasValue)
             {
-                result.DisplayInt = new AppearanceItemData.PlotIntSetting(displayInt.Value.id, displayInt.Value.value);
+                result.DisplayInt = new PlotIntSetting(displayInt.Value.id, displayInt.Value.value);
             }
             return result;
         }

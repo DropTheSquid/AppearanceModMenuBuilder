@@ -17,7 +17,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="LE2\UScriptModels\" />
+	  <Folder Include="LE2\Models\" />
 	</ItemGroup>
 
 	<Target Name="RealClean" AfterTargets="Clean">

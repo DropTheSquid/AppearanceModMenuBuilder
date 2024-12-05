@@ -1,4 +1,4 @@
-﻿namespace AppearanceModMenuBuilder.LE1.UScriptModels
+﻿namespace AppearanceModMenuBuilder.LE1.UScriptStructs
 {
     internal class LoadedSpecItem : SpecItemBase
     {

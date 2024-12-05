@@ -1,6 +1,8 @@
 Class SFXSFHandler_Personalization_AMM extends SFXSFHandler_PCPersonalization
     config(UI);
 
+var transient GFxMovieInfo movieInfo;
+
 // called from the ActionScript when you push the new button
 public function CustomizeFace()
 {
@@ -11,8 +13,15 @@ public function CustomizeFace()
     panel = MassEffectGuiManager(oPanel.oParentManager).CreatePanel('AMM', TRUE);
     panel.bFullScreen = TRUE;
     AppearanceModMenu(panel.GetDefaultHandler()).SetExternalCallback_OnComplete(OnAMMExit);
-    // LogInternal("The new button has been pressed!");
 }
+
+public event function OnPanelAdded()
+{
+    Super.OnPanelAdded();
+    // just hold onto this for as long as the handler is alive, it prevents textures from being garbage collected
+    movieInfo = GFXMovieInfo(FindObject("GUI_SF_Personalization_AMM.Personalization", class'GFxMovieInfo'));
+}
+
 public function OnPanelRemoved()
 {
     PlayGuiSound('PersonalizeExit');
@@ -34,17 +43,19 @@ public function OnPanelRemoved()
     }
     ClearDelegates();
 }
+
 public function SetEnabledAndVisible(bool bVal)
 {
     oPanel.SetInputDisabled(!bVal);
     oPanel.IsVisible = bVal;
 }
+
 public function OnAMMExit()
 {
-    LogInternal("The thing was called", );
     SetEnabledAndVisible(TRUE);
     InitializeUIWorld();
 }
+
 public function ApplyChangesNoSave()
 {
     local SFXPawn_Player oUIPawn;

@@ -1,4 +1,4 @@
-﻿using AppearanceModMenuBuilder.LE1.Models;
+﻿using AppearanceModMenuBuilder.LE1.UScriptClasses;
 using LegendaryExplorerCore.Coalesced;
 using LegendaryExplorerCore.Packages;
 using LegendaryExplorerCore.Unreal;
@@ -177,7 +177,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 PreloadPawn = false
             };
 
-            CharacterSelectSubmenuConfig.AddMenuEntry(new UScriptModels.AppearanceItemData()
+            CharacterSelectSubmenuConfig.AddMenuEntry(new UScriptStructs.AppearanceItemData()
             {
                 SCenterText = uniqueName,
                 SubMenuClassName = $"AMM_{uniqueName}.AppearanceSubmenu_{uniqueName}"
@@ -197,7 +197,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.ASA_OutfitSpec");
                     pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.ASA_HelmetSpec");
                     pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.ASA_BreatherSpec");
-                    submenuConfig.AddMenuEntry(new UScriptModels.AppearanceItemData()
+                    submenuConfig.AddMenuEntry(new UScriptStructs.AppearanceItemData()
                     {
                         InlineSubmenu = true,
                         SubMenuClassName = casual ? "AMM_Submenus.Asari.AppearanceSubmenu_Asari_CasualOutfits" : "AMM_Submenus.Asari.AppearanceSubmenu_Asari_CombatOutfits"
@@ -209,7 +209,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.HMF_OutfitSpec");
                     pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.HMF_HelmetSpec");
                     pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.HMF_BreatherSpec");
-                    submenuConfig.AddMenuEntry(new UScriptModels.AppearanceItemData()
+                    submenuConfig.AddMenuEntry(new UScriptStructs.AppearanceItemData()
                     {
                         InlineSubmenu = true,
                         SubMenuClassName = casual ? "AMM_Submenus.HumanFemale.AppearanceSubmenu_HumanFemale_CasualOutfits" : "AMM_Submenus.HumanFemale.AppearanceSubmenu_HumanFemale_CombatOutfits"
@@ -227,7 +227,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.TUR_OutfitSpec");
                 pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.TUR_HelmetSpec");
                 pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.TUR_BreatherSpec");
-                submenuConfig.AddMenuEntry(new UScriptModels.AppearanceItemData()
+                submenuConfig.AddMenuEntry(new UScriptStructs.AppearanceItemData()
                 {
                     InlineSubmenu = true,
                     SubMenuClassName = casual ? "AMM_Submenus.Turian.AppearanceSubmenu_Turian_CasualOutfits" : "AMM_Submenus.Turian.AppearanceSubmenu_Turian_CombatOutfits"
@@ -241,7 +241,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.ASA_OutfitSpec");
                 pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.ASA_HelmetSpec");
                 pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.ASA_BreatherSpec");
-                submenuConfig.AddMenuEntry(new UScriptModels.AppearanceItemData()
+                submenuConfig.AddMenuEntry(new UScriptStructs.AppearanceItemData()
                 {
                     InlineSubmenu = true,
                     SubMenuClassName = "AMM_Submenus.Asari.AppearanceSubmenu_Asari_CombatOutfits"
@@ -253,7 +253,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.KRO_OutfitSpec");
                 pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.KRO_HelmetSpec");
                 pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.KRO_BreatherSpec");
-                submenuConfig.AddMenuEntry(new UScriptModels.AppearanceItemData()
+                submenuConfig.AddMenuEntry(new UScriptStructs.AppearanceItemData()
                 {
                     InlineSubmenu = true,
                     SubMenuClassName = casual ? "AMM_Submenus.Krogan.AppearanceSubmenu_Krogan_CasualOutfits" : "AMM_Submenus.Krogan.AppearanceSubmenu_Krogan_CombatOutfits"
@@ -265,7 +265,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.SAL_OutfitSpec");
                 pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.SAL_HelmetSpec");
                 pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.SAL_BreatherSpec");
-                submenuConfig.AddMenuEntry(new UScriptModels.AppearanceItemData()
+                submenuConfig.AddMenuEntry(new UScriptStructs.AppearanceItemData()
                 {
                     InlineSubmenu = true,
                     SubMenuClassName = casual ? "AMM_Submenus.Salarian.AppearanceSubmenu_Salarian_CasualOutfits" : "AMM_Submenus.Salarian.AppearanceSubmenu_Salarian_CombatOutfits"
@@ -277,7 +277,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.HMM_OutfitSpec");
                 pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.HMM_HelmetSpec");
                 pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.HMM_BreatherSpec");
-                submenuConfig.AddMenuEntry(new UScriptModels.AppearanceItemData()
+                submenuConfig.AddMenuEntry(new UScriptStructs.AppearanceItemData()
                 {
                     InlineSubmenu = true,
                     SubMenuClassName = casual ? "AMM_Submenus.HumanMale.AppearanceSubmenu_HumanMale_CasualOutfits" : "AMM_Submenus.HumanMale.AppearanceSubmenu_HumanMale_CombatOutfits"

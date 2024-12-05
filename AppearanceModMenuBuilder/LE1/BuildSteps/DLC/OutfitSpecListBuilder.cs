@@ -1,5 +1,5 @@
-﻿using AppearanceModMenuBuilder.LE1.Models;
-using AppearanceModMenuBuilder.LE1.UScriptModels;
+﻿using AppearanceModMenuBuilder.LE1.UScriptClasses;
+using AppearanceModMenuBuilder.LE1.UScriptStructs;
 using MassEffectModBuilder;
 using MassEffectModBuilder.DLCTasks;
 using MassEffectModBuilder.Models;

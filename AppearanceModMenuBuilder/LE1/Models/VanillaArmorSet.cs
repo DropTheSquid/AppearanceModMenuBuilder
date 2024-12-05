@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using static AppearanceModMenuBuilder.LE1.Models.VanillaArmorSet.ArmorVariant;
 using static AppearanceModMenuBuilder.LE1.Models.VanillaMeshUtilities;
-using static AppearanceModMenuBuilder.LE1.UScriptModels.AppearanceItemData;
+using static AppearanceModMenuBuilder.LE1.UScriptStructs.AppearanceItemData;
 
 namespace AppearanceModMenuBuilder.LE1.Models
 {

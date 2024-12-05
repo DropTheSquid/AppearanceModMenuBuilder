@@ -7,7 +7,7 @@ using MassEffectModBuilder;
 using static AppearanceModMenuBuilder.LE1.BuildSteps.DLC.BuildSubmenuFile;
 using static AppearanceModMenuBuilder.LE1.Models.VanillaArmorSet;
 using static AppearanceModMenuBuilder.LE1.Models.VanillaMeshUtilities;
-using AppearanceModMenuBuilder.LE1.UScriptModels;
+using AppearanceModMenuBuilder.LE1.UScriptStructs;
 using static AppearanceModMenuBuilder.LE1.Models.VanillaArmorSet.ArmorVariant;
 
 namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC

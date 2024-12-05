@@ -399,13 +399,13 @@ public function AMM_AppearanceRecord ApplyClearDelta(AMM_AppearanceRecord record
 }
 public function AMM_AppearanceRecord ApplyHairMeshDelta(AMM_AppearanceRecord record, AppearanceDelta delta)
 {
-    if (delta.HairMesh.Remove)
+    if (delta.HairMesh.bRemove)
     {
         record.MorphHead.HairMesh = 'None';
     }
-    else if (IsNonDefaultName(delta.HairMesh.Name))
+    else if (IsNonDefaultName(delta.HairMesh.meshOrSpecName))
     {
-        record.MorphHead.HairMesh = delta.HairMesh.Name;
+        record.MorphHead.HairMesh = delta.HairMesh.meshOrSpecName;
     }
     return record;
 }
@@ -418,14 +418,14 @@ public function AMM_AppearanceRecord ApplyVectorDelta(AMM_AppearanceRecord recor
     
     foreach delta.VectorParameterDeltas(vectorDelta, )
     {
-        foundIndex = record.MorphHead.VectorParameters.Find('Name', vectorDelta.Name);
-        if (vectorDelta.Remove)
+        foundIndex = record.MorphHead.VectorParameters.Find('Name', vectorDelta.parameterName);
+        if (vectorDelta.bRemove)
         {
             if (foundIndex != -1)
             {
                 record.MorphHead.VectorParameters.Remove(foundIndex, 1);
             }
-            if (vectorDelta.Name == '*')
+            if (vectorDelta.parameterName == '*')
             {
                 record.MorphHead.VectorParameters.Length = 0;
             }
@@ -439,12 +439,12 @@ public function AMM_AppearanceRecord ApplyVectorDelta(AMM_AppearanceRecord recor
         }
         else
         {
-            color = GetColorParamValue(vectorDelta.Name);
+            color = GetColorParamValue(vectorDelta.parameterName);
             vectorRecord.Value.R = ApplyFloatDelta(color.R, vectorDelta.Value.R, 0.0, 1.0);
             vectorRecord.Value.G = ApplyFloatDelta(color.G, vectorDelta.Value.G, 0.0, 1.0);
             vectorRecord.Value.B = ApplyFloatDelta(color.B, vectorDelta.Value.B, 0.0, 1.0);
             vectorRecord.Value.A = ApplyFloatDelta(color.A, vectorDelta.Value.A, 0.0, 1.0);
-            vectorRecord.Name = vectorDelta.Name;
+            vectorRecord.Name = vectorDelta.parameterName;
             record.MorphHead.VectorParameters.AddItem(vectorRecord);
         }
     }
@@ -494,14 +494,14 @@ public function AMM_AppearanceRecord ApplyScalarDelta(AMM_AppearanceRecord recor
     
     foreach delta.ScalarParameterDeltas(scalarDelta, )
     {
-        foundIndex = record.MorphHead.ScalarParameters.Find('Name', scalarDelta.Name);
-        if (scalarDelta.Remove)
+        foundIndex = record.MorphHead.ScalarParameters.Find('Name', scalarDelta.parameterName);
+        if (scalarDelta.bRemove)
         {
             if (foundIndex != -1)
             {
                 record.MorphHead.ScalarParameters.Remove(foundIndex, 1);
             }
-            if (scalarDelta.Name == '*')
+            if (scalarDelta.parameterName == '*')
             {
                 foreach record.MorphHead.ScalarParameters(scalarRecord, )
                 {
@@ -519,9 +519,9 @@ public function AMM_AppearanceRecord ApplyScalarDelta(AMM_AppearanceRecord recor
         }
         else
         {
-            scalar = GetScalarParamValue(scalarDelta.Name);
+            scalar = GetScalarParamValue(scalarDelta.parameterName);
             scalarRecord.Value = ApplyFloatDelta(scalar, scalarDelta.Value, -100000000.0, 9999999.0);
-            scalarRecord.Name = scalarDelta.Name;
+            scalarRecord.Name = scalarDelta.parameterName;
             record.MorphHead.ScalarParameters.AddItem(scalarRecord);
         }
     }
@@ -535,14 +535,14 @@ public static function AMM_AppearanceRecord ApplyTextureDelta(AMM_AppearanceReco
     
     foreach delta.TextureParameterDeltas(textureDelta, )
     {
-        foundIndex = record.MorphHead.TextureParameters.Find('Name', textureDelta.Name);
-        if (textureDelta.Remove)
+        foundIndex = record.MorphHead.TextureParameters.Find('Name', textureDelta.parameterName);
+        if (textureDelta.bRemove)
         {
             if (foundIndex != -1)
             {
                 record.MorphHead.TextureParameters.Remove(foundIndex, 1);
             }
-            if (textureDelta.Name == '*')
+            if (textureDelta.parameterName == '*')
             {
                 record.MorphHead.TextureParameters.Length = 0;
             }
@@ -553,7 +553,7 @@ public static function AMM_AppearanceRecord ApplyTextureDelta(AMM_AppearanceReco
         }
         else
         {
-            textureRecord.Name = textureDelta.Name;
+            textureRecord.Name = textureDelta.parameterName;
             textureRecord.Texture = textureDelta.Texture;
             record.MorphHead.TextureParameters.AddItem(textureRecord);
         }
@@ -569,7 +569,7 @@ public static function AMM_AppearanceRecord ApplyMorphDelta(AMM_AppearanceRecord
     foreach delta.MorphFeatureDeltas(featureDelta, )
     {
         foundIndex = record.MorphHead.MorphFeatures.Find('Feature', featureDelta.Feature);
-        if (featureDelta.Remove)
+        if (featureDelta.bRemove)
         {
             if (foundIndex != -1)
             {
@@ -616,9 +616,9 @@ public static function AMM_AppearanceRecord ApplyBoneDelta(AMM_AppearanceRecord 
     
     foreach delta.OffsetBoneDeltas(boneDelta, )
     {
-        if (boneDelta.Remove)
+        if (boneDelta.bRemove)
         {
-            if (boneDelta.Name == '*')
+            if (boneDelta.boneName == '*')
             {
                 for (foundIndex = record.MorphHead.MorphFeatures.Length - 1; foundIndex >= 0; foundIndex--)
                 {
@@ -630,17 +630,17 @@ public static function AMM_AppearanceRecord ApplyBoneDelta(AMM_AppearanceRecord 
             }
             else
             {
-                foundIndex = record.MorphHead.MorphFeatures.Find('Feature', Name("bone_" $ boneDelta.Name $ "_x"));
+                foundIndex = record.MorphHead.MorphFeatures.Find('Feature', Name("bone_" $ boneDelta.boneName $ "_x"));
                 if (foundIndex != -1)
                 {
                     record.MorphHead.MorphFeatures.Remove(foundIndex, 1);
                 }
-                foundIndex = record.MorphHead.MorphFeatures.Find('Feature', Name("bone_" $ boneDelta.Name $ "_y"));
+                foundIndex = record.MorphHead.MorphFeatures.Find('Feature', Name("bone_" $ boneDelta.boneName $ "_y"));
                 if (foundIndex != -1)
                 {
                     record.MorphHead.MorphFeatures.Remove(foundIndex, 1);
                 }
-                foundIndex = record.MorphHead.MorphFeatures.Find('Feature', Name("bone_" $ boneDelta.Name $ "_z"));
+                foundIndex = record.MorphHead.MorphFeatures.Find('Feature', Name("bone_" $ boneDelta.boneName $ "_z"));
                 if (foundIndex != -1)
                 {
                     record.MorphHead.MorphFeatures.Remove(foundIndex, 1);
@@ -651,7 +651,7 @@ public static function AMM_AppearanceRecord ApplyBoneDelta(AMM_AppearanceRecord 
         {
             if (boneDelta.Offset.X != "")
             {
-                foundIndex = record.MorphHead.MorphFeatures.Find('Feature', Name("bone_" $ boneDelta.Name $ "_x"));
+                foundIndex = record.MorphHead.MorphFeatures.Find('Feature', Name("bone_" $ boneDelta.boneName $ "_x"));
                 if (foundIndex != -1)
                 {
                     record.MorphHead.MorphFeatures[foundIndex].Offset = ApplyFloatDelta(record.MorphHead.MorphFeatures[foundIndex].Offset, boneDelta.Offset.X, -100000000.0, 9999999.0);
@@ -659,13 +659,13 @@ public static function AMM_AppearanceRecord ApplyBoneDelta(AMM_AppearanceRecord 
                 else
                 {
                     featureRecord.Offset = ApplyFloatDelta(0.0, boneDelta.Offset.X, -100000000.0, 9999999.0);
-                    featureRecord.Feature = Name("bone_" $ boneDelta.Name $ "_x");
+                    featureRecord.Feature = Name("bone_" $ boneDelta.boneName $ "_x");
                     record.MorphHead.MorphFeatures.AddItem(featureRecord);
                 }
             }
             if (boneDelta.Offset.Y != "")
             {
-                foundIndex = record.MorphHead.MorphFeatures.Find('Feature', Name("bone_" $ boneDelta.Name $ "_y"));
+                foundIndex = record.MorphHead.MorphFeatures.Find('Feature', Name("bone_" $ boneDelta.boneName $ "_y"));
                 if (foundIndex != -1)
                 {
                     record.MorphHead.MorphFeatures[foundIndex].Offset = ApplyFloatDelta(record.MorphHead.MorphFeatures[foundIndex].Offset, boneDelta.Offset.Y, -100000000.0, 9999999.0);
@@ -673,13 +673,13 @@ public static function AMM_AppearanceRecord ApplyBoneDelta(AMM_AppearanceRecord 
                 else
                 {
                     featureRecord.Offset = ApplyFloatDelta(0.0, boneDelta.Offset.Y, -100000000.0, 9999999.0);
-                    featureRecord.Feature = Name("bone_" $ boneDelta.Name $ "_y");
+                    featureRecord.Feature = Name("bone_" $ boneDelta.boneName $ "_y");
                     record.MorphHead.MorphFeatures.AddItem(featureRecord);
                 }
             }
             if (boneDelta.Offset.Z != "")
             {
-                foundIndex = record.MorphHead.MorphFeatures.Find('Feature', Name("bone_" $ boneDelta.Name $ "_z"));
+                foundIndex = record.MorphHead.MorphFeatures.Find('Feature', Name("bone_" $ boneDelta.boneName $ "_z"));
                 if (foundIndex != -1)
                 {
                     record.MorphHead.MorphFeatures[foundIndex].Offset = ApplyFloatDelta(record.MorphHead.MorphFeatures[foundIndex].Offset, boneDelta.Offset.Z, -100000000.0, 9999999.0);
@@ -687,7 +687,7 @@ public static function AMM_AppearanceRecord ApplyBoneDelta(AMM_AppearanceRecord 
                 else
                 {
                     featureRecord.Offset = ApplyFloatDelta(0.0, boneDelta.Offset.Z, -100000000.0, 9999999.0);
-                    featureRecord.Feature = Name("bone_" $ boneDelta.Name $ "_z");
+                    featureRecord.Feature = Name("bone_" $ boneDelta.boneName $ "_z");
                     record.MorphHead.MorphFeatures.AddItem(featureRecord);
                 }
             }
@@ -704,61 +704,61 @@ public static function AMM_AppearanceRecord ApplyAccessoryDelta(AMM_AppearanceRe
     local Name combatHair;
     local Name baseHead;
     
-    foreach delta.AccessoryMeshDeltas(accessoryDelta, )
-    {
-        foundIndex = record.MorphHead.AccessoryMeshes.Find(accessoryDelta.Name);
-        if (accessoryDelta.Remove)
-        {
-            if (accessoryDelta.Name == '*')
-            {
-                foreach record.MorphHead.AccessoryMeshes(accessory, i)
-                {
-                    if (Right(string(accessory), 11) == "|CombatHair")
-                    {
-                        combatHair = accessory;
-                    }
-                    if (Right(string(accessory), 9) == "|BaseHead")
-                    {
-                        baseHead = accessory;
-                    }
-                }
-                record.MorphHead.AccessoryMeshes.Length = 0;
-                if (combatHair != 'None')
-                {
-                    record.MorphHead.AccessoryMeshes.AddItem(combatHair);
-                }
-                if (baseHead != 'None')
-                {
-                    record.MorphHead.AccessoryMeshes.AddItem(baseHead);
-                }
-                for (i = record.MorphHead.ScalarParameters.Length - 1; i > 0; i--)
-                {
-                    if (InStr(string(record.MorphHead.ScalarParameters[i].Name), "AccessoryCombat|", , , ) != -1 || InStr(string(record.MorphHead.ScalarParameters[i].Name), "AccessoryCasual|", , , ) != -1 || InStr(string(record.MorphHead.ScalarParameters[i].Name), "AccessoryTint|", , , ) != -1)
-                    {
-                        record.MorphHead.ScalarParameters.Remove(i, 1);
-                    }
-                }
-            }
-            else
-            {
-                for (i = record.MorphHead.ScalarParameters.Length - 1; i > 0; i--)
-                {
-                    if (InStr(string(record.MorphHead.ScalarParameters[i].Name), string(accessoryDelta.Name), , TRUE, ) != -1)
-                    {
-                        record.MorphHead.ScalarParameters.Remove(i, 1);
-                    }
-                }
-                if (foundIndex != -1)
-                {
-                    record.MorphHead.AccessoryMeshes.Remove(foundIndex, 1);
-                }
-            }
-        }
-        else if (foundIndex == -1)
-        {
-            record.MorphHead.AccessoryMeshes.AddItem(accessoryDelta.Name);
-        }
-    }
+    // foreach delta.AccessoryMeshDeltas(accessoryDelta, )
+    // {
+    //     foundIndex = record.MorphHead.AccessoryMeshes.Find(accessoryDelta.meshOrSpecName);
+    //     if (accessoryDelta.bRemove)
+    //     {
+    //         if (accessoryDelta.meshOrSpecName == '*')
+    //         {
+    //             foreach record.MorphHead.AccessoryMeshes(accessory, i)
+    //             {
+    //                 if (Right(string(accessory), 11) == "|CombatHair")
+    //                 {
+    //                     combatHair = accessory;
+    //                 }
+    //                 if (Right(string(accessory), 9) == "|BaseHead")
+    //                 {
+    //                     baseHead = accessory;
+    //                 }
+    //             }
+    //             record.MorphHead.AccessoryMeshes.Length = 0;
+    //             if (combatHair != 'None')
+    //             {
+    //                 record.MorphHead.AccessoryMeshes.AddItem(combatHair);
+    //             }
+    //             if (baseHead != 'None')
+    //             {
+    //                 record.MorphHead.AccessoryMeshes.AddItem(baseHead);
+    //             }
+    //             for (i = record.MorphHead.ScalarParameters.Length - 1; i > 0; i--)
+    //             {
+    //                 if (InStr(string(record.MorphHead.ScalarParameters[i].Name), "AccessoryCombat|", , , ) != -1 || InStr(string(record.MorphHead.ScalarParameters[i].Name), "AccessoryCasual|", , , ) != -1 || InStr(string(record.MorphHead.ScalarParameters[i].Name), "AccessoryTint|", , , ) != -1)
+    //                 {
+    //                     record.MorphHead.ScalarParameters.Remove(i, 1);
+    //                 }
+    //             }
+    //         }
+    //         else
+    //         {
+    //             for (i = record.MorphHead.ScalarParameters.Length - 1; i > 0; i--)
+    //             {
+    //                 if (InStr(string(record.MorphHead.ScalarParameters[i].Name), string(accessoryDelta.Name), , TRUE, ) != -1)
+    //                 {
+    //                     record.MorphHead.ScalarParameters.Remove(i, 1);
+    //                 }
+    //             }
+    //             if (foundIndex != -1)
+    //             {
+    //                 record.MorphHead.AccessoryMeshes.Remove(foundIndex, 1);
+    //             }
+    //         }
+    //     }
+    //     else if (foundIndex == -1)
+    //     {
+    //         record.MorphHead.AccessoryMeshes.AddItem(accessoryDelta.Name);
+    //     }
+    // }
     return record;
 }
 public static function AMM_AppearanceRecord ApplyHeadMeshDelta(AMM_AppearanceRecord record, AppearanceDelta delta)
@@ -767,7 +767,7 @@ public static function AMM_AppearanceRecord ApplyHeadMeshDelta(AMM_AppearanceRec
     local int i;
     local Name accessory;
     
-    if (IsNonDefaultName(delta.HeadMesh.Name))
+    if (IsNonDefaultName(delta.HeadMesh.meshOrSpecName))
     {
         currentHeadMeshIndex = -1;
         foreach record.MorphHead.AccessoryMeshes(accessory, i)
@@ -777,7 +777,7 @@ public static function AMM_AppearanceRecord ApplyHeadMeshDelta(AMM_AppearanceRec
                 currentHeadMeshIndex = i;
             }
         }
-        if (delta.HeadMesh.Remove)
+        if (delta.HeadMesh.bRemove)
         {
             if (currentHeadMeshIndex != -1)
             {
@@ -786,11 +786,11 @@ public static function AMM_AppearanceRecord ApplyHeadMeshDelta(AMM_AppearanceRec
         }
         else if (currentHeadMeshIndex != -1)
         {
-            record.MorphHead.AccessoryMeshes[currentHeadMeshIndex] = Name(delta.HeadMesh.Name $ "|BaseHead");
+            record.MorphHead.AccessoryMeshes[currentHeadMeshIndex] = Name(delta.HeadMesh.meshOrSpecName $ "|BaseHead");
         }
         else
         {
-            record.MorphHead.AccessoryMeshes.AddItem(Name(delta.HeadMesh.Name $ "|BaseHead"));
+            record.MorphHead.AccessoryMeshes.AddItem(Name(delta.HeadMesh.meshOrSpecName $ "|BaseHead"));
         }
     }
     return record;

@@ -1,6 +1,6 @@
 ﻿using MassEffectModBuilder.Models;
 
-namespace AppearanceModMenuBuilder.LE1.UScriptModels
+namespace AppearanceModMenuBuilder.LE1.UScriptStructs
 {
     public class AppearanceMeshPaths : StructCoalesceValue
     {

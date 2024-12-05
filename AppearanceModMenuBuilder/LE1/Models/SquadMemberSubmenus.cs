@@ -1,4 +1,5 @@
-﻿using AppearanceModMenuBuilder.LE1.UScriptModels;
+﻿using AppearanceModMenuBuilder.LE1.UScriptClasses;
+using AppearanceModMenuBuilder.LE1.UScriptStructs;
 using LegendaryExplorerCore.Packages;
 using static AppearanceModMenuBuilder.LE1.BuildSteps.DLC.BuildSubmenuFile;
 using static LegendaryExplorerCore.Unreal.UnrealFlags;

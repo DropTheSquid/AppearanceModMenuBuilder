@@ -1,4 +1,4 @@
-﻿namespace AppearanceModMenuBuilder.LE1.UScriptModels
+﻿namespace AppearanceModMenuBuilder.LE1.UScriptStructs
 {
     public class SimpleBreatherSpecItem : SpecItemBase
     {
