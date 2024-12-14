@@ -65,7 +65,7 @@ var config float startingHeight;
 var config float controllerZoomSpeed;
 var config bool debugCamera;
 
-public final function SetDisplayText(string title, string subTitle, string aText, string bText)
+public function SetDisplayText(string title, string subTitle, string aText, string bText)
 {
     local ASParams stParam;
     local array<ASParams> lstParams;
@@ -995,7 +995,7 @@ public event function OnPanelAdded()
     SetInputDelegate(ChoiceGUIInputPressed);
     PushMenu("SFXGameContent_AMM.SFXGuiData_AMM_Root", "");
 }
-public function onExIntDoInitialize()
+public function ExASLoaded()
 {
     oPanel.SetVariableBool("_root.handleScrollEvents", TRUE);
     InitializeUIWorld();

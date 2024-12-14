@@ -11,7 +11,7 @@ namespace AppearanceModMenuBuilder.LE2
         public static ModBuilderWithCustomContext<LE2CustomContext> AddDlcTasks(this ModBuilderWithCustomContext<LE2CustomContext> builder, bool skipNonEssential = false)
         {
             var intermediate = builder
-                .AddTasks(
+                .AddTasks([
                     // clean the DLC directory
                     new CleanDlcDirectory(),
                     // copy the moddesc
@@ -21,8 +21,8 @@ namespace AppearanceModMenuBuilder.LE2
                     // build the startup file
                     new BuildStartupFile(),
                     // build the submenus file
-                    new BuildSubmenuFile()
-                );
+                    //new BuildSubmenuFile()
+                ]);
 
             if (!skipNonEssential)
             {
@@ -30,9 +30,9 @@ namespace AppearanceModMenuBuilder.LE2
             }
 
             intermediate
-                .AddTasks(
+                .AddTasks([
                     // add the tlks
-                    new ImportGame23TlkLocaliazation(MELocalization.INT, @"Resources\LE2\tlk\DLC_2555_INT.xml")
+                    new ImportGame23TlkLocaliazation(MELocalization.INT, @"Resources\LE2\tlk\DLC_2555_INT.xml"),
                     //new ImportGame23TlkLocaliazation(MELocalization.DEU, @"Resources\LE2\tlk\DLC_2555_DEU.xml"),
                     //new ImportGame23TlkLocaliazation(MELocalization.ESN, @"Resources\LE2\tlk\DLC_2555_ESN.xml"),
                     //new ImportGame23TlkLocaliazation(MELocalization.POL, @"Resources\LE2\tlk\DLC_2555_POL.xml"),
@@ -40,7 +40,7 @@ namespace AppearanceModMenuBuilder.LE2
                     //new ImportGame23TlkLocaliazation(MELocalization.FRA, @"Resources\LE2\tlk\DLC_2555_FRA.xml"),
                     //new ImportGame23TlkLocaliazation(MELocalization.ITA, @"Resources\LE2\tlk\DLC_2555_ITA.xml"),
                     //new ImportGame23TlkLocaliazation(MELocalization.JPN, @"Resources\LE2\tlk\DLC_2555_JPN.xml"),
-                );
+                ]);
 
             return intermediate;
         }

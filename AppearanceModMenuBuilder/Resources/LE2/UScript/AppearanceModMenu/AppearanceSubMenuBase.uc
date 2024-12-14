@@ -131,8 +131,8 @@ var transient array<AppearanceItemData> shownItems;
 var config stringref srOpenSubmenu;
 var transient string menuParam;
 
-// var config string m_sTitle;
-// var config string m_sSubTitle;
+var config string m_sTitle;
+var config string m_sSubTitle;
 // var config string m_sAText;
 // var config string m_sBText;
 

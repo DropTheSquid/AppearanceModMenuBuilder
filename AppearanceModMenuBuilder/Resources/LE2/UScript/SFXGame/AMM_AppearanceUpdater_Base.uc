@@ -5,7 +5,7 @@ public static function bool IsMergeModInstalled(out AMM_AppearanceUpdater_Base b
 	basegamgeInstance = AMM_AppearanceUpdater_Base(FindObject("SFXGame.AMM_AppearanceUpdater_Base_0", Class'Object'));
 	// this lives in SFXGame, so if it is not found, the user has reverted the basegame changes or they were not applied
 	// and the mod will not work
-	LogInternal("IsMergeModInstalled?"@basegamgeInstance != None);
+	// LogInternal("IsMergeModInstalled?"@basegamgeInstance != None);
 	return basegamgeInstance != None;
 }
 
@@ -14,7 +14,7 @@ public static function bool IsDlcModInstalled(out AMM_AppearanceUpdater_Base dlc
 	dlcInstance = AMM_AppearanceUpdater_Base(FindObject("Startup_MOD_AMM.AMM_AppearanceUpdater_0", Class'Object'));
 	// this lives in the startup file, so if it if not found, the DLC mod is not installed
 	// or hasn't loaded yet, and we should do nothing.
-	LogInternal("IsDlcModInstalled?"@dlcInstance != None);
+	// LogInternal("IsDlcModInstalled?"@dlcInstance != None);
 	return dlcInstance != None;
 }
 
@@ -23,12 +23,12 @@ protected final static function bool GetInstance(out AMM_AppearanceUpdater_Base 
 	// Return the appropriate instance depending on the state of things
 	if (IsDlcModInstalled(instance))
 	{
-		LogInternal("GetInstance DLC"@PathName(instance));
+		// LogInternal("GetInstance DLC"@PathName(instance));
 		return true;
 	}
 	if (IsMergeModInstalled(instance))
 	{
-		LogInternal("GetInstance Basegame"@PathName(instance));
+		// LogInternal("GetInstance Basegame"@PathName(instance));
 		return true;
 	}
 	// I don't even know how this would happen

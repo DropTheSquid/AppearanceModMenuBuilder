@@ -1,4 +1,5 @@
-﻿using MassEffectModBuilder.Models;
+﻿using LegendaryExplorerCore.Unreal.Classes;
+using MassEffectModBuilder.Models;
 
 namespace AppearanceModMenuBuilder.LE2.UScriptStructs
 {
@@ -16,10 +17,28 @@ namespace AppearanceModMenuBuilder.LE2.UScriptStructs
             set => SetBool(nameof(BDisabled), value);
         }
 
+        public string? SChoiceName
+        {
+            get => GetString(nameof(SChoiceName));
+            set => SetString(nameof(SChoiceName), value);
+        }
+
         public bool? BNested
         {
             get => GetBool(nameof(BNested));
             set => SetBool(nameof(BNested), value);
+        }
+
+        public int? SrActionText
+        {
+            get => GetInt(nameof(SrActionText));
+            set => SetInt(nameof(SrActionText), value);
+        }
+
+        public string? SActionText
+        {
+            get => GetString(nameof(SActionText));
+            set => SetString(nameof(SActionText), value);
         }
 
         // TODO add more of these as I need them

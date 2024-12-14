@@ -31,19 +31,11 @@ namespace AppearanceModMenuBuilder.LE2.DLCBuildSteps
                 GetClassFromFile(@"Resources\LE2\UScript\AppearanceModMenu\AppearanceSubMenuBase.uc", ["AppearanceModMenu"]),
                 ]);
 
-            var rootMenu = new AppearanceSubMenuBase("Root");
-            rootMenu.SrTitleWithComment = (1865982, @"""Customize Appearance""");
-            rootMenu.Comment = "testing class comment output";
-            rootMenu.AddMenuEntry(new AppearanceItemData("Testing array entry comment ouput")
+            var rootMenu = new AppearanceSubMenuBase("Root")
             {
-                SubMenuClassName = "SFXGameContent_AMM.SFXGuiData_AMM_Settings",
-                ChoiceEntry = new()
-                {
-                    // "Settings"
-                    SrChoiceName = 1865986
-                }
-            });
-
+                Comment = "root menu",
+                SrTitleWithComment = (1865982, @"""Customize Appearance"""),
+            };
 
             // make sure the class gets compiled and added to the file
             classes.Add(rootMenu.GetClassToCompile());
@@ -53,6 +45,38 @@ namespace AppearanceModMenuBuilder.LE2.DLCBuildSteps
             AddDynamicLoadMapping(engineConfig, rootMenu.ClassFullPath, "AMM_Submenus");
 
             // TODO add more classes
+
+            //var testMenu = new AppearanceSubMenuBase("Test")
+            //{
+            //    Comment = "testing submenu",
+
+            //};
+
+            //// make sure the class gets compiled and added to the file
+            //classes.Add(testMenu.GetClassToCompile());
+            //// make sure we output the config
+            //configMergeFile.AddOrMergeClassConfig(testMenu);
+            //// make sure this class gets added to the dynamic load mapping
+            //AddDynamicLoadMapping(engineConfig, testMenu.ClassFullPath, "AMM_Submenus");
+
+            rootMenu.AddMenuEntry(new AppearanceItemData("submenu to test all my changes work correctly")
+            {
+                //SubMenuClassName = "SFXGameContent_AMM.SFXGuiData_AMM_Test",
+                ChoiceEntry = new()
+                {
+                    SChoiceName = "testing nested",
+                    BNested = true,
+                }
+            });
+            rootMenu.AddMenuEntry(new AppearanceItemData("submenu to test all my changes work correctly")
+            {
+                //SubMenuClassName = "SFXGameContent_AMM.SFXGuiData_AMM_Test",
+                ChoiceEntry = new()
+                {
+                    SChoiceName = "testing action text",
+                    SActionText = "Applied",
+                }
+            });
 
 
             // compile all the classes I have collected

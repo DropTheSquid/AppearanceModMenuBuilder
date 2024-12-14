@@ -12,7 +12,7 @@ public function bool LoadMorphHead(out PlayerSaveRecord ThePlayerRecord, out Bio
     local TextureParameter TextureParam;
     local array<int> BuffersToRefresh;
 
-    LogInternal("DLC LoadMorphHead is running");
+    // LogInternal("DLC LoadMorphHead is running");
     
     if (ThePlayerRecord.Appearance.bHasMorphHead)
     {
@@ -85,7 +85,7 @@ public function bool SaveMorphHead(BioMorphFace Morph, out MorphHeadSaveRecord R
     local int Idx;
     local BioMaterialOverride MatOverride;
     
-    LogInternal("DLC SaveMorphHead is running");
+    // LogInternal("DLC SaveMorphHead is running");
 
     if (Morph != None)
     {
@@ -142,7 +142,7 @@ public function bool SaveMorphHead(BioMorphFace Morph, out MorphHeadSaveRecord R
 
 public function bool UpdatePlayerAppearance(SFXPawn_Player target, bool part2, out bool callSuper)
 {
-    LogInternal("DLC UpdatePlayerAppearance is running");
+    // LogInternal("DLC UpdatePlayerAppearance is running");
     if (!part2)
     {
         target.ValidateAppearanceIDs();

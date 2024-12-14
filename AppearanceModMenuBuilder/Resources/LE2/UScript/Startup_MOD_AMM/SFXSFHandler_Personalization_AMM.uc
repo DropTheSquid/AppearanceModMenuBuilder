@@ -12,7 +12,7 @@ public function CustomizeFace()
     SetEnabledAndVisible(FALSE);
     panel = MassEffectGuiManager(oPanel.oParentManager).CreatePanel('AMM', TRUE);
     panel.bFullScreen = TRUE;
-    AppearanceModMenu(panel.GetDefaultHandler()).SetExternalCallback_OnComplete(OnAMMExit);
+    ModHandler_Base(panel.GetDefaultHandler()).SetExternalCallback_OnComplete(OnAMMExit);
 }
 
 public event function OnPanelAdded()

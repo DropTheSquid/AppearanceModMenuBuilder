@@ -18,6 +18,13 @@ namespace AppearanceModMenuBuilder.LE2.UScriptClasses
             return new ClassToCompile(ClassName, $"Class {ClassName} extends AppearanceSubMenuBase;", ["SFXGameContent_AMM"]);
         }
 
+        public string? M_sTitle
+        {
+            get => GetStringValue(nameof(M_sTitle));
+            set => SetStringValue(nameof(M_sTitle), value);
+        }
+
+
         public int? M_srTitle
         {
             get => GetIntValue(nameof(M_srTitle));
@@ -41,6 +48,5 @@ namespace AppearanceModMenuBuilder.LE2.UScriptClasses
             item.DoubleType = "+";
             AddArrayEntries("appearanceItems", item);
         }
-
     }
 }
