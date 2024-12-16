@@ -42,7 +42,7 @@ public function ExASLoaded()
     ASSetAux2ButtonActive(true);
     ASSetAux2ButtonText("50");
     ASSetBackButtonActive(true);
-    ASSetBackButtonText("100");
+    ASSetBackButtonText("10");
     ASSetDescription(generateLines(5000));
     ASSetRightTitle("5000");
 }
@@ -76,8 +76,8 @@ public function ExBackPressed()
 {
     LogInternal("back pressed");
     // ASSetBackButtonActive(false);
-    ASSetDescription(generateLines(100));
-    ASSetRightTitle("100");
+    ASSetDescription(generateLines(10));
+    ASSetRightTitle("10");
 }
 
 public function ExAuxPressed(int index)
