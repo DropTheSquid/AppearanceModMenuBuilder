@@ -17,7 +17,7 @@ class com.bioware.masseffect.views.ChoiceGUI extends com.bioware.masseffect.view
    var listCount;
    var numItems;
    var bControllsSetUp = false;
-   var mouseListener = new Object();
+   // var mouseListener = new Object();
    var PlatformId = 0;
    var _bShowOptionalPane = false;
    var m_InitialSelection = 0;
@@ -46,7 +46,7 @@ class com.bioware.masseffect.views.ChoiceGUI extends com.bioware.masseffect.view
                concatArgs = concatArgs + "," + arguments[i].toString();
             }
          }
-         flash.external.ExternalInterface.call("LogFromAS", concatArgs);
+         flash.external.ExternalInterface.call("ExLog", concatArgs);
       }
 	}
    function setTitle(sTitle)
@@ -115,11 +115,8 @@ class com.bioware.masseffect.views.ChoiceGUI extends com.bioware.masseffect.view
       this.PCbutton3._visible = bActive && !this.bUsingGamepad;
       this.PCbutton3.enabled = bActive;
    }
-   // TODO make various buttons active or not via functions
    function onLoad()
    {
-      var listOwner = this.vList;
-      var ignoreScroll = false;
       com.SFXScreen.RegisterCallback_HandleInputConfigurations(this,this.OnHandleInputConfigurations);
       this.m_RightPanel = _root.mcPanelRight;
       this.m_ChoiceImageLoader = com.bioware.masseffect.controls.TextureLoader(this.rightPaneInfo.screenShotLoader);
@@ -135,40 +132,25 @@ class com.bioware.masseffect.views.ChoiceGUI extends com.bioware.masseffect.view
       this.PCbutton2.addEventListener("SFXButton_onPress",mx.utils.Delegate.create(this,this.onButtonX));
       this.PCbutton3.addEventListener("SFXButton_onPress",mx.utils.Delegate.create(this,this.onButtonY));
       this.PCBackButton.addEventListener("SFXButton_onRelease",mx.utils.Delegate.create(this,this.onButtonB));
-      this.mouseListener.onKeyDown = function()
+      Key.addListener(this);
+   }
+   function onKeyDown()
+   {
+      switch(Key.getCode())
       {
-         if(!handleScrollEvents)
-         {
-            return undefined;
-         }
-         if(ignoreScroll)
-         {
-            ignoreScroll = false;
-            return undefined;
-         }
-         switch(Key.getCode())
-         {
-            // page down
-            case 34:
-               ignoreScroll = true;
-               if(listOwner.selectedIndex < listOwner.dataProvider.length - 1)
-               {
-                  listOwner.selectedIndex += 1;
-                  fscommand(com.UnrealMessages.PlaySound,"SaveLoadMove");
-               }
-               break;
-            // page up
-            case 33:
-               ignoreScroll = true;
-               if(listOwner.selectedIndex > 0)
-               {
-                  listOwner.selectedIndex--;
-                  fscommand(com.UnrealMessages.PlaySound,"SaveLoadMove");
-                  break;
-               }
-         }
-      };
-      Key.addListener(this.mouseListener);
+         // scroll wheel down
+         case 34:
+            var overRightPane = this.rightPaneInfo.hitTest(_root._xmouse,_root._ymouse,true);
+            var overList = this.vList.listHolder.hitTest(_root._xmouse,_root._ymouse,false) || this.vList.scrollBarMC.hitTest(_root._xmouse,_root._ymouse,false);
+            flash.external.ExternalInterface.call("ExOnScrollWheel",1,overRightPane,overList);
+            break;
+         // scroll wheel up
+         case 33:
+            var overRightPane = this.rightPaneInfo.hitTest(_root._xmouse,_root._ymouse,true);
+            var overList = this.vList.listHolder.hitTest(_root._xmouse,_root._ymouse,false) || this.vList.scrollBarMC.hitTest(_root._xmouse,_root._ymouse,false);
+            flash.external.ExternalInterface.call("ExOnScrollWheel",-1,overRightPane,overList);
+            break;
+      }
    }
    function SetPlatformLayout(iPlatformId)
    {
@@ -302,7 +284,6 @@ class com.bioware.masseffect.views.ChoiceGUI extends com.bioware.masseffect.view
    // better one that sets the initial state of all the items to be empty so they can be set up and updated in place
    function initializeList(p_numItems)
    {
-      // this.LogFromAS("initializeList", p_numItems);
       this.resetListState();
       this.listCount = 0;
       this.numItems = p_numItems;
@@ -316,7 +297,6 @@ class com.bioware.masseffect.views.ChoiceGUI extends com.bioware.masseffect.view
    // internal only; don't call this from UScript
    function addMenuEntry(p_index, s_leftText, s_centerText, s_rightText, s_secondaryText, b_Disabled, b_Nested)
    {
-      // this.LogFromAS("addMenuEntry", p_index, s_leftText, s_centerText, s_rightText, s_secondaryText, b_Disabled, b_Nested);
       var _loc2_ = com.bioware.masseffect.controls.vlistcontrols.ChoiceVListItem(this.vList.addEntry(p_index, s_leftText, s_centerText, s_rightText, s_secondaryText, b_Disabled, b_Nested));
 
       this.listCount += 1;
@@ -371,7 +351,7 @@ class com.bioware.masseffect.views.ChoiceGUI extends com.bioware.masseffect.view
    // note that these don't filter out disabled; you need to do that in UScript; you can call onInvalidInput to play the error sound if you want, or you can do something else
    function onItemDoubleClick(p_event)
    {
-      flash.external.ExternalInterface.call("OnItemDoubleClicked",this.vList.selectedIndex);
+      flash.external.ExternalInterface.call("ExOnItemDoubleClicked",this.vList.selectedIndex);
    }
    function onButtonA(p_event)
    {
@@ -521,6 +501,10 @@ class com.bioware.masseffect.views.ChoiceGUI extends com.bioware.masseffect.view
    function ScrollInfoText(nScroll)
    {
       this.m_ActiveScrollingWidget.scrollByTime(nScroll >= 0 ? com.bioware.masseffect.controls.Marquee.SCROLL_CONTENT_DOWN : com.bioware.masseffect.controls.Marquee.SCROLL_CONTENT_UP,Math.abs(nScroll));
+   }
+   function ScrollInfoTextDiscrete(nSteps)
+   {
+      this.m_ActiveScrollingWidget.scrollBar.doScrollBy(nSteps);
    }
    function StopInfoScroll()
    {

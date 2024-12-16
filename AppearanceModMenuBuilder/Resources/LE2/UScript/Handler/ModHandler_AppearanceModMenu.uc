@@ -14,59 +14,84 @@ public function ExASLoaded()
 {
     Super.ExASLoaded();
     LogInternal("AS loaded");
-    SetTitle("test title");
-    SetSubtitle("test subtitle");
+    ASSetTitle("test title");
+    ASSetSubtitle("test subtitle");
 
     // set the initial list size to 10
-    InitializeList(10);
+    ASInitializeList(10);
     // int index, string leftText, string centerText, string rightText, string secondaryText, bool showPlus, bool disabled
-    updateMenuEntry(0, "left text", "", "", "", false, false);
-    updateMenuEntry(1, "", "center text", "", "", false, false);
-    updateMenuEntry(2, "", "", "right text", "", false, false);
-    updateMenuEntry(3, "", "", "", "secondary", false, false);
-    updateMenuEntry(4, "disabled", "", "", "", true, false);
-    updateMenuEntry(5, "nested", "", "", "", false, true);
-    updateMenuEntry(6, "nested disabled", "", "", "", true, true);
-    updateMenuEntry(7, "left", "", "right", "test", false, false);
-    updateMenuEntry(8, "", "center", "", "test1", false, false);
+    ASupdateMenuEntry(0, "left text", "", "", "", false, false);
+    ASupdateMenuEntry(1, "", "center text", "", "", false, false);
+    ASupdateMenuEntry(2, "", "", "right text", "", false, false);
+    ASupdateMenuEntry(3, "", "", "", "secondary", false, false);
+    ASupdateMenuEntry(4, "disabled", "", "", "", true, false);
+    ASupdateMenuEntry(5, "nested", "", "", "", false, true);
+    ASupdateMenuEntry(6, "nested disabled", "", "", "", true, true);
+    ASupdateMenuEntry(7, "left", "", "right", "test", false, false);
+    ASupdateMenuEntry(8, "", "center", "", "test1", false, false);
     // purposely leaving off 9 for testing what happens
 
-    SetSelectedIndex(0);
-    SetScrollPosition(1, true);
+    ASSetSelectedIndex(0);
+    ASSetScrollPosition(1, true);
 
     // set up the buttons
-    SetActionButtonActive(true);
-    SetActionButtonText("action");
-    SetAuxButtonActive(true);
-    SetAuxButtonText("aux");
-    SetAux2ButtonActive(true);
-    SetAux2ButtonText("aux2");
-    SetBackButtonActive(true);
-    SetBackButtonText("back");
-    SetDescription("test description\ntest description\ntest description\ntest description\ntest description\ntest description\ntest description\ntest description\ntest description\ntest description\ntest description\ntest description\ntest description\ntest description\ntest description\ntest description\ntest description\ntest description\ntest description\ntest description\ntest description\n");
-    SetRightTitle("test right title");
+    ASSetActionButtonActive(true);
+    ASSetActionButtonText("5000");
+    ASSetAuxButtonActive(true);
+    ASSetAuxButtonText("1000");
+    ASSetAux2ButtonActive(true);
+    ASSetAux2ButtonText("50");
+    ASSetBackButtonActive(true);
+    ASSetBackButtonText("100");
+    ASSetDescription(generateLines(5000));
+    ASSetRightTitle("5000");
+}
+
+private function string generateLines(int lineCount)
+{
+    local int i;
+    local string result;
+
+    result = "";
+    for (i = 0; i < lineCount; i++)
+    {
+        result $= i;
+        if (i != lineCount - 1)
+        {
+            result $= "\n";
+        }
+    }
+    return result;
 }
 
 public function ExActionPressed(int index)
 {
     LogInternal("action pressed"@index);
-    SetActionButtonActive(false);
+    // ASSetActionButtonActive(false);
+    ASSetDescription(generateLines(5000));
+    ASSetRightTitle("5000");
 }
 
 public function ExBackPressed()
 {
     LogInternal("back pressed");
-    SetBackButtonActive(false);
+    // ASSetBackButtonActive(false);
+    ASSetDescription(generateLines(100));
+    ASSetRightTitle("100");
 }
 
 public function ExAuxPressed(int index)
 {
     LogInternal("Aux pressed");
-    SetAuxButtonActive(false);
+    // ASSetAuxButtonActive(false);
+    ASSetDescription(generateLines(1000));
+    ASSetRightTitle("1000");
 }
 
 public function ExAux2Pressed(int index)
 {
     LogInternal("Aux 2 pressed");
-    SetAux2ButtonActive(false);
+    // ASSetAux2ButtonActive(false);
+    ASSetDescription(generateLines(50));
+    ASSetRightTitle("50");
 }

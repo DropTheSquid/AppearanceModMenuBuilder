@@ -2,18 +2,21 @@ class ModHandler_ModMenuBase extends ModHandler_base
     abstract
     config(UI);
 
+var transient bool m_bStopScroll;
+var config float controllerDeadzone;
+
 public function ExASLoaded()
 {
     // called when the actionscript is loaded and ready to work with
     HandleButtonRefresh(oPanel.bUsingGamepad);
 }
 
-public function LogFromAS(string message)
+public function ExLog(string message)
 {
     LogInternal("AS LOG:"@message);
 }
 
-public function SetTitle(string title)
+public function ASSetTitle(string title)
 {
     local ASParams Param;
     local array<ASParams> Parameters;
@@ -24,7 +27,7 @@ public function SetTitle(string title)
     oPanel.InvokeMethodArgs("ChoiceGuiInstance.setTitle", Parameters);
 }
 
-public function SetSubtitle(string subtitle)
+public function ASSetSubtitle(string subtitle)
 {
     local ASParams Param;
     local array<ASParams> Parameters;
@@ -36,7 +39,7 @@ public function SetSubtitle(string subtitle)
 }
 
 // must be called before you add or update any items
-public function InitializeList(int size)
+public function ASInitializeList(int size)
 {
     local ASParams Param;
     local array<ASParams> Parameters;
@@ -47,7 +50,7 @@ public function InitializeList(int size)
     oPanel.InvokeMethodArgs("ChoiceGuiInstance.initializeList", Parameters);
 }
 
-public function updateMenuEntry(int index, string leftText, string centerText, string rightText, string secondaryText, bool disabled, bool showPlus)
+public function ASUpdateMenuEntry(int index, string leftText, string centerText, string rightText, string secondaryText, bool disabled, bool showPlus)
 {
     local ASParams Param;
     local array<ASParams> Parameters;
@@ -73,19 +76,19 @@ public function updateMenuEntry(int index, string leftText, string centerText, s
 }
 
 // TODO need to hook this up, return a bool to handle it?
-public function OnItemHovered(int index)
+public function ExOnItemHovered(int index)
 {
     // item hovered with a mouse
     LogInternal("item"@index@"hovered");
 }
 
-public function OnItemSelected(int index)
+public function ExOnItemSelected(int index)
 {
     // item single clicked with a mouse, or reached by navigating with controller/up down buttons/scrolling
     LogInternal("item"@index@"selected");
 }
 
-public function OnItemDoubleClicked(int index)
+public function ExOnItemDoubleClicked(int index)
 {
     // double clicked; by default will go to PC action
     LogInternal("item"@index@"double clicked");
@@ -116,7 +119,7 @@ public function ExBackPressed()
     LogInternal("back");
 }
 
-public function SetActionButtonText(string actionText)
+public function ASSetActionButtonText(string actionText)
 {
     local ASParams Param;
     local array<ASParams> Parameters;
@@ -127,7 +130,7 @@ public function SetActionButtonText(string actionText)
     oPanel.InvokeMethodArgs("ChoiceGuiInstance.setAText", Parameters);
 }
 
-public function SetActionButtonActive(bool active)
+public function ASSetActionButtonActive(bool active)
 {
     local ASParams Param;
     local array<ASParams> Parameters;
@@ -138,7 +141,7 @@ public function SetActionButtonActive(bool active)
     oPanel.InvokeMethodArgs("ChoiceGuiInstance.setAActive", Parameters);
 }
 
-public function SetAuxButtonText(string auxText)
+public function ASSetAuxButtonText(string auxText)
 {
     local ASParams Param;
     local array<ASParams> Parameters;
@@ -149,7 +152,7 @@ public function SetAuxButtonText(string auxText)
     oPanel.InvokeMethodArgs("ChoiceGuiInstance.setXText", Parameters);
 }
 
-public function SetAuxButtonActive(bool active)
+public function ASSetAuxButtonActive(bool active)
 {
     local ASParams Param;
     local array<ASParams> Parameters;
@@ -160,7 +163,7 @@ public function SetAuxButtonActive(bool active)
     oPanel.InvokeMethodArgs("ChoiceGuiInstance.setXActive", Parameters);
 }
 
-public function SetAux2ButtonText(string aux2Text)
+public function ASSetAux2ButtonText(string aux2Text)
 {
     local ASParams Param;
     local array<ASParams> Parameters;
@@ -171,7 +174,7 @@ public function SetAux2ButtonText(string aux2Text)
     oPanel.InvokeMethodArgs("ChoiceGuiInstance.setYText", Parameters);
 }
 
-public function SetAux2ButtonActive(bool active)
+public function ASSetAux2ButtonActive(bool active)
 {
     local ASParams Param;
     local array<ASParams> Parameters;
@@ -182,7 +185,7 @@ public function SetAux2ButtonActive(bool active)
     oPanel.InvokeMethodArgs("ChoiceGuiInstance.setYActive", Parameters);
 }
 
-public function SetBackButtonText(string backText)
+public function ASSetBackButtonText(string backText)
 {
     local ASParams Param;
     local array<ASParams> Parameters;
@@ -193,7 +196,7 @@ public function SetBackButtonText(string backText)
     oPanel.InvokeMethodArgs("ChoiceGuiInstance.setBText", Parameters);
 }
 
-public function SetBackButtonActive(bool active)
+public function ASSetBackButtonActive(bool active)
 {
     local ASParams Param;
     local array<ASParams> Parameters;
@@ -204,7 +207,7 @@ public function SetBackButtonActive(bool active)
     oPanel.InvokeMethodArgs("ChoiceGuiInstance.setBActive", Parameters);
 }
 
-public function SetDescription(string description)
+public function ASSetDescription(string description)
 {
     local ASParams Param;
     local array<ASParams> Parameters;
@@ -215,7 +218,7 @@ public function SetDescription(string description)
     oPanel.InvokeMethodArgs("ChoiceGuiInstance.SetDescription", Parameters);
 }
 
-public function SetRightTitle(string rightTitle)
+public function ASSetRightTitle(string rightTitle)
 {
     local ASParams Param;
     local array<ASParams> Parameters;
@@ -237,13 +240,7 @@ public event function HandleButtonRefresh(bool usingGamepad)
     SetMouseShown(!usingGamepad);
     oPanel.InvokeMethodArgs("ChoiceGuiInstance.RefreshButtonHelp", Parameters);
 }
-// public function ScrollText(float fValue)
-// {
-//     if (oPanel.bUsingGamepad)
-//     {
-//         Super.ScrollText(fValue);
-//     }
-// }
+
 public function OnPanelAdded()
 {
     oPanel.SetExternalInterface(Self);
@@ -251,7 +248,7 @@ public function OnPanelAdded()
     Super.OnPanelAdded();
 }
 
-public function SetSelectedIndex(int selectedIndex)
+public function ASSetSelectedIndex(int selectedIndex)
 {
     local ASParams Param;
     local array<ASParams> Parameters;
@@ -262,7 +259,7 @@ public function SetSelectedIndex(int selectedIndex)
     oPanel.InvokeMethodArgs("ChoiceGuiInstance.setSelectedIndex", Parameters);
 }
 
-public function SetScrollPosition(int scrollPosition, bool skipAnimate)
+public function ASSetScrollPosition(int scrollPosition, bool skipAnimate)
 {
     local ASParams Param;
     local array<ASParams> Parameters;
@@ -277,7 +274,7 @@ public function SetScrollPosition(int scrollPosition, bool skipAnimate)
 }
 
 // down is > 0, up is < 0
-public function ScrollList(int dir)
+public function ASScrollList(int dir)
 {
     local ASParams Param;
     local array<ASParams> Parameters;
@@ -288,27 +285,119 @@ public function ScrollList(int dir)
     oPanel.InvokeMethodArgs("ChoiceGuiInstance.scrollList", Parameters);
 }
 
-public function PageList(int dir)
+// public function ASPageList(int dir)
+// {
+//     local ASParams Param;
+//     local array<ASParams> Parameters;
+
+//     Param.Type = ASParamTypes.ASParam_Integer;
+//     Param.nVar = dir;
+//     Parameters.AddItem(Param);
+//     oPanel.InvokeMethodArgs("ChoiceGuiInstance.pageList", Parameters);
+// }
+
+
+public function ASScrollInfoTextDiscrete(int steps)
 {
     local ASParams Param;
     local array<ASParams> Parameters;
 
     Param.Type = ASParamTypes.ASParam_Integer;
-    Param.nVar = dir;
+    // number of lines to scroll
+    Param.nVar = steps * -1;
     Parameters.AddItem(Param);
-    oPanel.InvokeMethodArgs("ChoiceGuiInstance.pageList", Parameters);
+    oPanel.InvokeMethodArgs("ChoiceGuiInstance.ScrollInfoTextDiscrete", Parameters);
 }
 
-public function int GetScrollPosition()
+public function ASScrollDetailText(float scroll)
+{
+    local ASParams Param;
+    local array<ASParams> Parameters;
+
+    Param.Type = ASParamTypes.ASParam_Float;
+    Param.fVar = scroll;
+    Parameters.AddItem(Param);
+    oPanel.InvokeMethodArgs("ChoiceGuiInstance.ScrollInfoText", Parameters);
+}
+
+public function ASStopScrollDetailText()
+{
+    oPanel.InvokeMethod("ChoiceGuiInstance.StopInfoScroll");
+}
+
+public function int ASGetScrollPosition()
 {
     return int(oPanel.InvokeMethodReturn("ChoiceGuiInstance.getScrollPosition"));
 }
 
-public function int GetSelectedIndex()
+public function int ASGetSelectedIndex()
 {
     return int(oPanel.InvokeMethodReturn("ChoiceGuiInstance.getSelectedIndex"));
 }
 
+public function ScrollText(float fValue)
+{
+    if (Abs(fValue) <= controllerDeadzone)
+    {
+        if (m_bStopScroll)
+        {
+            ASStopScrollDetailText();
+            m_bStopScroll = FALSE;
+        }
+        return;
+    }
+    ASScrollDetailText(fValue * float(2));
+    m_bStopScroll = TRUE;
+}
+
+public function HandleInputEvent(BioGuiEvents Event, optional float fValue = 1.0)
+{
+    switch (Event)
+    {
+        case BioGuiEvents.BIOGUI_EVENT_AXIS_RSTICK_Y:
+            // the game imposes a truly ridiculous deadzone on the input; this bit of code gets around it for much more sensitivity
+            fValue = BioPlayerInput(BioWorldInfo(oWorldInfo).GetLocalPlayerController().PlayerInput).AxisBuffer[3];
+            if (Abs(fValue) < controllerDeadzone)
+            {
+                fValue = 0;
+            }
+            OnRStickY(fValue);
+            break;
+        case BioGuiEvents.BIOGUI_EVENT_AXIS_RSTICK_X:
+            // the game imposes a truly ridiculous deadzone on the input; this bit of code gets around it for much more sensitivity
+            fValue = BioPlayerInput(BioWorldInfo(oWorldInfo).GetLocalPlayerController().PlayerInput).AxisBuffer[2];
+            if (Abs(fValue) < controllerDeadzone)
+            {
+                fValue = 0;
+            }
+            OnRStickX(fValue);
+            break;
+        default:
+            Super.HandleInputEvent(Event, fValue);
+            return;
+    }
+}
+
+public function OnRStickY(float val)
+{
+    ScrollText(-val);
+}
+
+public function OnRStickX(float val)
+{
+}
+
+public function ExOnScrollWheel(int dir, bool overRightPane, bool overList)
+{
+    if (overList)
+    {
+        ASScrollList(dir);
+    }
+    else if (overRightPane)
+    {
+        ASScrollInfoTextDiscrete(dir);
+    }
+}
 
 
 
@@ -321,3 +410,8 @@ public function int GetSelectedIndex()
 
 // is it worth totally reworking it for those? I can make choiceGUI work with minor adjustments
 // honestly, yeah. I will need to tweak more things for AMM. I will do it. 
+
+defaultproperties
+{
+    controllerDeadzone = 0.1
+}
