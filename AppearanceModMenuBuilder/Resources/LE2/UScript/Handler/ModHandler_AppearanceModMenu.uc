@@ -31,7 +31,7 @@ public function ExASLoaded()
     ASupdateMenuEntry(8, "", "center", "", "test1", false, false);
     // purposely leaving off 9 for testing what happens
 
-    ASSetSelectedIndex(0);
+    ASSetSelectedIndex(0, true);
     ASSetScrollPosition(1, true);
 
     // set up the buttons

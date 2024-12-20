@@ -76,47 +76,54 @@ public function ASUpdateMenuEntry(int index, string leftText, string centerText,
 }
 
 // TODO need to hook this up, return a bool to handle it?
-public function ExOnItemHovered(int index)
+public function ExOnItemHover(int index)
 {
     // item hovered with a mouse
-    LogInternal("item"@index@"hovered");
+    // LogInternal("item"@index@"hovered");
+}
+
+public function ExOnItemUnHover(int index)
+{
+    // mouse leaves an item it was hovering
+    // LogInternal("item"@index@"un hovered");
 }
 
 public function ExOnItemSelected(int index)
 {
     // item single clicked with a mouse, or reached by navigating with controller/up down buttons/scrolling
-    LogInternal("item"@index@"selected");
+    // LogInternal("item"@index@"selected");
 }
 
 public function ExOnItemDoubleClicked(int index)
 {
     // double clicked; by default will go to PC action
-    LogInternal("item"@index@"double clicked");
+    // LogInternal("item"@index@"double clicked");
     ExActionPressed(index);
 }
 
 public function ExActionPressed(int index)
 {
     // PC action button or controller A pressed while this item is selected
-    LogInternal("item"@index@"action");
+    // LogInternal("item"@index@"action");
 }
 
 public function ExAuxPressed(int index)
 {
     // PC button 2/controller X
-    LogInternal("item"@index@"aux");
+    // LogInternal("item"@index@"aux");
 }
 
 public function ExAux2Pressed(int index)
 {
     // PC button 3/controller Y
-    LogInternal("item"@index@"aux2");
+    // LogInternal("item"@index@"aux2");
 }
 
 public function ExBackPressed()
 {
     // when the back/controller B button is pressed
-    LogInternal("back");
+    // be default, close the UI
+    MassEffectGuiManager(oPanel.oParentManager).RemovePanel(oPanel);
 }
 
 public function ASSetActionButtonText(string actionText)
@@ -248,13 +255,16 @@ public function OnPanelAdded()
     Super.OnPanelAdded();
 }
 
-public function ASSetSelectedIndex(int selectedIndex)
+public function ASSetSelectedIndex(int selectedIndex, bool skipAnimation)
 {
     local ASParams Param;
     local array<ASParams> Parameters;
 
     Param.Type = ASParamTypes.ASParam_Integer;
     Param.nVar = selectedIndex;
+    Parameters.AddItem(Param);
+    Param.Type = ASParamTypes.ASParam_Boolean;
+    Param.bVar = skipAnimation;
     Parameters.AddItem(Param);
     oPanel.InvokeMethodArgs("ChoiceGuiInstance.setSelectedIndex", Parameters);
 }

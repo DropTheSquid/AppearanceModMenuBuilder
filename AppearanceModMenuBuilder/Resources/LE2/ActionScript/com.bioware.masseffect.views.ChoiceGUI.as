@@ -20,7 +20,6 @@ class com.bioware.masseffect.views.ChoiceGUI extends com.bioware.masseffect.view
    // var mouseListener = new Object();
    var PlatformId = 0;
    var _bShowOptionalPane = false;
-   var m_InitialSelection = 0;
    var m_MenuAdvanceSwapped = false;
    var handleScrollEvents = true;
    var enableLogging = true;
@@ -187,7 +186,9 @@ class com.bioware.masseffect.views.ChoiceGUI extends com.bioware.masseffect.view
          this.xConnection.addEventListener("onDPadLeft",mx.utils.Delegate.create(this,this.onInvalidInput));
          this.xConnection.addEventListener("onDPadRight",mx.utils.Delegate.create(this,this.onInvalidInput));
          this.xConnection.addEventListener("onInvalidInput",mx.utils.Delegate.create(this,this.onInvalidInput));
-         // this.vList.addEventListener("onChange",mx.utils.Delegate.create(this,this.updateChoiceView));
+         this.vList.addEventListener("onChange",mx.utils.Delegate.create(this,this.onSelectionChange));
+         this.vList.addEventListener("onHover",mx.utils.Delegate.create(this,this.onHover));
+         this.vList.addEventListener("onUnHover",mx.utils.Delegate.create(this,this.onUnHover));
          this.bControllsSetUp = true;
       }
       this.xConnection._xController.setButtonActive("X",false);
@@ -273,21 +274,12 @@ class com.bioware.masseffect.views.ChoiceGUI extends com.bioware.masseffect.view
    {
       this.rightPaneInfo.titleTxt.text = sRightTitle;
    }
-   // leave this for compatiblity with native ChoiceGui handler
-   // function SetInitialListSize(p_numItems)
-   // {
-   //    this.resetListState();
-   //    this.listCount = 0;
-   //    this.numItems = p_numItems;
-   //    this.m_InitialSelection = 0;
-   // }
    // better one that sets the initial state of all the items to be empty so they can be set up and updated in place
    function initializeList(p_numItems)
    {
       this.resetListState();
       this.listCount = 0;
       this.numItems = p_numItems;
-      // this.m_InitialSelection = 0;
       var index = 0;
       for (index = 0; index < this.numItems; index++)
       {
@@ -302,27 +294,6 @@ class com.bioware.masseffect.views.ChoiceGUI extends com.bioware.masseffect.view
       this.listCount += 1;
       if(_loc2_ != null)
       {
-         // _loc2_.SetText(p_ChoiceName,p_ActionText);
-         // if(this.PlatformId == com.XPlatform.PC && !this.bUsingGamepad)
-         // {
-         //    _loc2_.SetActionButtonVisible(false);
-         // }
-         // if(p_DefaultSelection != false)
-         // {
-         //    this.m_InitialSelection = this.listCount - 1;
-         // }
-         // if(this.listCount == this.numItems)
-         // {
-         //    this.updateController();
-         //    this.vList.selectedIndex = this.m_InitialSelection;
-         //    _loc2_.BottomArrowVisible = false;
-         // }
-         // if(this.listCount == 1)
-         // {
-         //    _loc2_.TopArrowVisible = false;
-         // }
-         // _loc2_.MenuAdvanceSwapped = this.m_MenuAdvanceSwapped;
-         // TODO set separate double click callback
          _loc2_.SetDoubleClickCallback(this,this.onItemDoubleClick);
       }
    }
@@ -369,12 +340,17 @@ class com.bioware.masseffect.views.ChoiceGUI extends com.bioware.masseffect.view
    {
       flash.external.ExternalInterface.call("ExAux2Pressed",this.vList.selectedIndex);
    }
-   function setSelectedIndex(index)
+   function setSelectedIndex(index, skipAnimation)
    {
+      this.LogFromAS("choiceGui setSelectedIndex", index, skipAnimation)
       // check for out of bounds at the bottom
       if (index >= this.vList.GetListCount())
       {
          index = this.vList.GetListCount() - 1;
+      }
+      if (skipAnimation)
+      {
+         this.vList.skipNextSelectionAnimation();
       }
       this.vList.selectedIndex = index;
    }
@@ -409,10 +385,6 @@ class com.bioware.masseffect.views.ChoiceGUI extends com.bioware.masseffect.view
          this.vList.selectedIndex -= 8;
       }
    }
-   // function isMouseOverList()
-   // {
-
-   // }
    function onDPadUp(p_event)
    {
       if(this.vList.selectedIndex > 0)
@@ -428,6 +400,18 @@ class com.bioware.masseffect.views.ChoiceGUI extends com.bioware.masseffect.view
          this.vList.selectedIndex += 1;
          this.updateController();
       }
+   }
+   function onSelectionChange(p_event)
+   {
+      flash.external.ExternalInterface.call("ExOnItemSelected",this.vList.selectedIndex);
+   }
+   function onHover(p_event)
+   {
+      flash.external.ExternalInterface.call("ExOnItemHover",p_event.data.index);
+   }
+   function onUnHover(p_event)
+   {
+      flash.external.ExternalInterface.call("ExOnItemUnHover",p_event.data.index);
    }
    // This is used to update the right pane and buttons when a new item is selected
    // function updateChoiceView(p_event)

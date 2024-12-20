@@ -1,0 +1,50 @@
+[BioUI.ini Engine.BioSFManager]
+; mod settings menu entry
++HandlerLibrary=(Tag=MSM,ZOrder=212,HandlerClass="Handler.ModHandler_ModSettingsMenu",PanelResource="ModMenu.ModMenu", bRequiresScaling=true)
+
+[BioUI.ini ModSettings_Submenus_MSM.ModSettingsSubmenu_Root]
+sTitle=Mod Settings Menu
+sSubtitle=Select a mod to configure
+++menuItems=(sCenterText="item 1")
+++menuItems=(sCenterText="item 2")
+++menuItems=(sCenterText="item 3")
+++menuItems=(sCenterText="item 4")
+++menuItems=(sCenterText="item 5")
+++menuItems=(sCenterText="item 6")
+++menuItems=(sCenterText="item 7")
+++menuItems=(sCenterText="item 8")
+++menuItems=(sCenterText="item 9")
+++menuItems=(sCenterText="testing menu",SubMenuClassName="ModSettings_Submenus_MSM.ModSettingsSubmenu_Example1")
+++menuItems=(sCenterText="example menu",SubMenuClassName="ModSettings_Submenus_MSM.ModSettingsSubmenu_Example2")
+++menuItems=(sCenterText="item 10")
+++menuItems=(sCenterText="item 11")
+++menuItems=(sCenterText="item 12")
+++menuItems=(sCenterText="item 13")
+++menuItems=(sCenterText="item 14")
+++menuItems=(sCenterText="item 15")
+++menuItems=(sCenterText="item 16")
+
+[BioUI.ini ModSettings_Submenus_MSM.ModSettingsSubmenu_Example1]
+sTitle=Example menu
+sSubtitle=Example subtitle
+; test all the text fields on the item itself
+++menuItems=(sLeftText="left text",sCenterText="center text", sRightText="right text", sSecondaryText="secondary")
+; test disabled
+++menuItems=(sCenterText="this one should be disabled", disabled=true)
+; testing hiding an item
+++menuItems=(sCenterText="this one should be hidden", hidden=true)
+; test enough items to scroll to see if we can reset the scroll position
+++menuItems=(sCenterText="item 3")
+++menuItems=(sCenterText="item 4")
+++menuItems=(sCenterText="item 5")
+++menuItems=(sCenterText="item 6")
+++menuItems=(sCenterText="item 7")
+++menuItems=(sCenterText="item 8")
+++menuItems=(sCenterText="item 9")
+++menuItems=(sCenterText="item 10")
+++menuItems=(sCenterText="item 11")
+++menuItems=(sCenterText="item 12")
+++menuItems=(sCenterText="item 13")
+++menuItems=(sCenterText="item 14")
+++menuItems=(sCenterText="item 15")
+++menuItems=(sCenterText="item 16")

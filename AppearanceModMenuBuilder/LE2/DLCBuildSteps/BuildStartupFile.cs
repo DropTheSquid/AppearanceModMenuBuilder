@@ -20,8 +20,14 @@ namespace AppearanceModMenuBuilder.LE2.DLCBuildSteps
                     LooseClassCompile.GetClassFromFile(@"Resources\LE2\UScript\Startup_MOD_AMM\AMM_AppearanceUpdater.uc"),
                     LooseClassCompile.GetClassFromFile(@"Resources\LE2\UScript\Startup_MOD_AMM\SFXSFHandler_Personalization_AMM.uc"),
                     LooseClassCompile.GetClassFromFile(@"Resources\LE2\UScript\Mod_GameContent\ModHandler_Base.uc", ["Mod_GameContent"]),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE2\UScript\Mod_GameContent\ModSettingsSubmenu.uc", ["Mod_GameContent"]),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE2\UScript\Mod_GameContent\ModSettingsSubmenu_Root.uc", ["ModSettings_Submenus_MSM"]),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE2\UScript\Mod_GameContent\ModSettingsSubmenu_Example1.uc", ["ModSettings_Submenus_MSM"]),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE2\UScript\Mod_GameContent\ModSettingsSubmenu_Example2.uc", ["ModSettings_Submenus_MSM"]),
+
                     LooseClassCompile.GetClassFromFile(@"Resources\LE2\UScript\Handler\ModHandler_ModMenuBase.uc", ["Handler"]),
                     LooseClassCompile.GetClassFromFile(@"Resources\LE2\UScript\Handler\ModHandler_AppearanceModMenu.uc", ["Handler"]),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE2\UScript\Handler\ModHandler_ModSettingsMenu.uc", ["Handler"]),
                     //LooseClassCompile.GetClassFromFile(@"Resources\LE2\UScript\AppearanceModMenu\AppearanceModMenu.uc", ["AppearanceModMenu"]),
                     //LooseClassCompile.GetClassFromFile(@"Resources\LE2\UScript\AppearanceModMenu\AppearanceSubMenuBase.uc", ["AppearanceModMenu"]),
                     ])

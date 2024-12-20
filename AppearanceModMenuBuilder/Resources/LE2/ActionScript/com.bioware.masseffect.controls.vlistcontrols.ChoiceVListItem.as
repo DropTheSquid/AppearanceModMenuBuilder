@@ -2,39 +2,33 @@ class com.bioware.masseffect.controls.vlistcontrols.ChoiceVListItem extends com.
 {
    var _data;
    var info;
-   // var Action;
-   // var Arrows;
    var m_disabled = false;
    var m_Nested = false;
-   var enableLogging = true;
+   var _skipNextSelectionAnimation = false;
    function ChoiceVListItem()
    {
       super();
    }
    function LogFromAS()
-	{
-      if (this.enableLogging)
+   {
+      // takes any number of args
+      var concatArgs = "";
+      var i = 0;
+      for (i = 0; i < arguments.length; i++)
       {
-         // takes any number of args
-         var concatArgs = "";
-         var i = 0;
-         for (i = 0; i < arguments.length; i++)
+         if (concatArgs == "")
          {
-            if (concatArgs == "")
-            {
-               concatArgs = arguments[i].toString();
-            }
-            else
-            {
-               concatArgs = concatArgs + "," + arguments[i].toString();
-            }
+            concatArgs = arguments[i].toString();
          }
-         flash.external.ExternalInterface.call("LogFromAS", concatArgs);
+         else
+         {
+            concatArgs = concatArgs + "," + arguments[i].toString();
+         }
       }
-	}
+      flash.external.ExternalInterface.call("ExLog", concatArgs);
+   }
    function updateItemFromData(p_data)
    {
-      // this.LogFromAS("updateItemFromData", p_data.Nested);
       this.SetLeftText(p_data.LeftText);
       this.SetCenterText(p_data.CenterText);
       this.SetRightText(p_data.RightText);
@@ -87,7 +81,6 @@ class com.bioware.masseffect.controls.vlistcontrols.ChoiceVListItem extends com.
    }
    function set Nested(bVal)
    {
-      // this.LogFromAS("set Nested", bVal, this.info.nestedPlus);
       this.m_Nested = bVal;
       this.info.nestedPlus._visible = bVal;
    }
@@ -111,66 +104,82 @@ class com.bioware.masseffect.controls.vlistcontrols.ChoiceVListItem extends com.
    {
       this.info.secondaryTxt.text = s_text;
    }
-   // function SetText(i_infoText, i_navText)
-   // {
-   //    this.info.infoTxt.text = i_infoText;
-   //    this.Action.Text.text = i_navText;
-   //    if(!this.m_disabled)
-   //    {
-   //       this.SetActionButtonVisible(i_navText != "" ? true : false);
-   //    }
-   // }
-   // function SetTextVerticalAutoSize(alignment)
-   // {
-   //    this.info.infoTxt.verticalAutoSize = alignment;
-   // }
-   // function SetActionButtonVisible(i_val)
-   // {
-   //    this.Action._visible = i_val;
-   // }
-   // function get TopArrowVisible()
-   // {
-   //    return this.Arrows.ArrowUp._visible;
-   // }
-   // function set TopArrowVisible(i_val)
-   // {
-   //    this.Arrows.ArrowUp._visible = i_val;
-   // }
-   // function get BottomArrowVisible()
-   // {
-   //    return this.Arrows.ArrowDown._visible;
-   // }
-   // function set BottomArrowVisible(i_val)
-   // {
-   //    this.Arrows.ArrowDown._visible = i_val;
-   // }
-   // function get NestedArrowVisible()
-   // {
-   //    return this.info.ArrowNested._visible;
-   // }
-   // function set NestedArrowVisible(i_val)
-   // {
-   //    
-   // }
+   function onRollOut()
+   {
+      super.onRollOut();
+      if(!com.bioware.masseffect.controls.VListItem.SuppressEvents)
+      {
+         this.dispatchEvent({type:"onUnHover",data:this._data});
+      }
+   }
+   function onRollOver()
+   {
+      super.onRollOver();
+      if(!com.bioware.masseffect.controls.VListItem.SuppressEvents)
+      {
+         this.dispatchEvent({type:"onHover",data:this._data});
+      }
+   }
+   function skipNextSelectionAnimation()
+   {
+      this.LogFromAS("ChoiceVListItem skipNextSelectionAnimation", this.data.index);
+      this._skipNextSelectionAnimation = true;
+   }
+   function get active()
+   {
+      return this._active;
+   }
+   function set active(p_active)
+   {
+      this.LogFromAS("ChoiceVListItem set active", this.data.index, p_active);
+      if(this._active == p_active)
+      {
+         return;
+      }
+      this._active = p_active;
+      if(this.SelectedFrame != null && this.UnSelectedFrame != null)
+      {
+         if(this._active)
+         {
+            this.gotoAndPlay(this.SelectedFrame);
+         }
+         else
+         {
+            this.gotoAndPlay(this.UnSelectedFrame);
+         }
+      }
+      if(this._active)
+      {
+         if(!com.bioware.masseffect.controls.VListItem.SuppressEvents)
+         {
+            this.dispatchEvent({type:"onChange",data:this._data});
+         }
+         MovieClip(super).useHandCursor = true;
+      }
+      this._skipNextSelectionAnimation = false;
+   }
    function get NormalFrame()
    {
       return !!this.m_disabled ? "normalGrey" : "normal";
    }
    function get SelectedFrame()
    {
+      if (this._skipNextSelectionAnimation)
+      {
+         return !!this.m_disabled ? "inGreyFinish" : "inFinish";
+      }
       return !!this.m_disabled ? "inGrey" : "in";
    }
    function get UnSelectedFrame()
    {
+      if (this._skipNextSelectionAnimation)
+      {
+         return !!this.m_disabled ? "outGreyFinish" : "outFinish";
+      }
       return !!this.m_disabled ? "outGrey" : "out";
    }
    function get PressFrame()
    {
       return !!this.m_disabled ? "pressGrey" : "press";
    }
-   // function set MenuAdvanceSwapped(iVal)
-   // {
-   //    this.Action.mcButtonAorB.mcButtonA._alpha = !iVal ? 100 : 0;
-   //    this.Action.mcButtonAorB.mcButtonB._alpha = !iVal ? 0 : 100;
-   // }
 }

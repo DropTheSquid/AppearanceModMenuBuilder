@@ -1,0 +1,1 @@
+class ModSettingsSubmenu_Root extends ModSettingsSubmenu config(UI);

@@ -1,0 +1,1 @@
+class ModSettingsSubmenu_Example2 extends ModSettingsSubmenu config(UI);
