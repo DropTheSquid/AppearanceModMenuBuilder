@@ -275,7 +275,7 @@ class com.bioware.masseffect.views.ChoiceGUI extends com.bioware.masseffect.view
       this.rightPaneInfo.titleTxt.text = sRightTitle;
    }
    // better one that sets the initial state of all the items to be empty so they can be set up and updated in place
-   function initializeList(p_numItems)
+   function initializeList(p_numItems, initialScrollPosition, initialSelection)
    {
       this.resetListState();
       this.listCount = 0;
@@ -284,6 +284,14 @@ class com.bioware.masseffect.views.ChoiceGUI extends com.bioware.masseffect.view
       for (index = 0; index < this.numItems; index++)
       {
          this.addMenuEntry(index, "", "", "", "", false, false);
+      }
+      if (initialScrollPosition >= 0)
+      {
+         this.setScrollPosition(initialScrollPosition, true);
+      }
+      if (initialSelection >= 0)
+      {
+         this.setSelectedIndex(initialSelection, true);
       }
    }
    // internal only; don't call this from UScript

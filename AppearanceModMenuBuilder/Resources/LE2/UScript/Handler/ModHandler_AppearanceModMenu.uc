@@ -18,7 +18,7 @@ public function ExASLoaded()
     ASSetSubtitle("test subtitle");
 
     // set the initial list size to 10
-    ASInitializeList(10);
+    ASInitializeList(10, 0, 0);
     // int index, string leftText, string centerText, string rightText, string secondaryText, bool showPlus, bool disabled
     ASupdateMenuEntry(0, "left text", "", "", "", false, false);
     ASupdateMenuEntry(1, "", "center text", "", "", false, false);
@@ -31,8 +31,8 @@ public function ExASLoaded()
     ASupdateMenuEntry(8, "", "center", "", "test1", false, false);
     // purposely leaving off 9 for testing what happens
 
-    ASSetSelectedIndex(0, true);
-    ASSetScrollPosition(1, true);
+    // ASSetSelectedIndex(0, true);
+    // ASSetScrollPosition(1, true);
 
     // set up the buttons
     ASSetActionButtonActive(true);

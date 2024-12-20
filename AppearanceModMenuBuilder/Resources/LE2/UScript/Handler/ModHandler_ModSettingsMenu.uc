@@ -11,6 +11,7 @@ var stringref srCycleImages;
 var transient array<ModSettingItemData> currentDisplayItems;
 var transient array<ModSettingsSubmenu> submenuStack;
 var string rootSubmenuPath;
+var transient int imageIndex;
 
 public function OnPanelAdded()
 {
@@ -204,7 +205,7 @@ public function RenderMenu()
     currentSubmenu = GetCurrentSubmenu();
     ASSetTitle(GetString(currentSubmenu.sTitle, currentSubmenu.srTitle));
     ASSetSubTitle(GetString(currentSubmenu.sSubtitle, currentSubmenu.srSubtitle));
-    ASInitializeList(currentDisplayItems.Length);
+    ASInitializeList(currentDisplayItems.Length, currentSubmenu.scrollIndex, currentSubmenu.selectedIndex);
     // sortDisplayItems();
     for (i = 0; i < currentDisplayItems.Length; i++)
     {
@@ -218,8 +219,8 @@ public function RenderMenu()
             GetString(item.sSecondaryText, item.srSecondaryText),
             item.disabled, GetSubmenuFromItem(item) != None);
     }
-    ASSetSelectedIndex(currentSubmenu.selectedIndex, true);
-    ASSetScrollPosition(currentSubmenu.scrollIndex, TRUE);
+    // ASSetSelectedIndex(currentSubmenu.selectedIndex, true);
+    // ASSetScrollPosition(currentSubmenu.scrollIndex, TRUE);
     ASSetBackButtonText(string(submenuStack.Length > 1 ? srBack : srClose));
 }
 
@@ -272,11 +273,53 @@ public function ExOnItemSelected(int selectedIndex)
 {
     local ModSettingsSubmenu currentSubmenu;
     local ModSettingItemData selectedItem;
+    local string actionText;
 
     currentSubmenu = GetCurrentSubmenu();
     currentSubMenu.selectedIndex = selectedIndex;
     selectedItem = currentDisplayItems[selectedIndex];
-    // TODO update the other display stuff on the right pane and the buttons for this item
+    ASSetDescription(GetString(selectedItem.sDescriptionText, selectedItem.srDescriptionText));
+    ASSetRightTitle(GetString(selectedItem.sDescriptionTitleText, selectedItem.srDescriptionTitleText));
+    // TODO set image and set cycle image button if applicable
+    imageIndex = 0;
+    if (selectedItem.Images.length > 0)
+    {
+        ASSetImage(selectedItem.Images[imageIndex]);
+    }
+    else
+    {
+        // TODO some default image or else get rid of the image box in this ccase???
+        ASSetImage("");
+    }
+    if (!selectedItem.disabled)
+    {
+        if (GetSubmenuFromItem(selectedItem) != None)
+        {
+            actionText = string(srOpenSubmenu);
+        }
+        else
+        {
+            // default action text for anything in the menu
+            actionText = string(srApply);
+            // default action text from the submenu
+            if (currentSubMenu.srDefaultActionText != 0 || currentSubMenu.sDefaultActionText != "")
+            {
+                actionText = GetString(currentSubMenu.sDefaultActionText, currentSubMenu.srDefaultActionText);
+            }
+            // override from the item
+            if (selectedItem.srActionText != 0 || selectedItem.sActionText != "")
+            {
+                actionText = GetString(selectedItem.sActionText, selectedItem.srActionText);
+            }
+        }
+        
+        ASSetActionButtonText(actionText);
+        ASSetActionButtonActive(true);
+    }
+    else
+    {
+        ASSetActionButtonActive(false);
+    }
 }
 
 public function ApplyItem(ModSettingItemData item)

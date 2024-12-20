@@ -39,13 +39,18 @@ public function ASSetSubtitle(string subtitle)
 }
 
 // must be called before you add or update any items
-public function ASInitializeList(int size)
+// setting the scroll and initial selection here avoid seeing a single frame of the top of the list
+public function ASInitializeList(int size, optional int initialScrollPosition = -1, optional int initialSelection = -1)
 {
     local ASParams Param;
     local array<ASParams> Parameters;
 
     Param.Type = ASParamTypes.ASParam_Integer;
     Param.nVar = size;
+    Parameters.AddItem(Param);
+    Param.nVar = initialScrollPosition;
+    Parameters.AddItem(Param);
+    Param.nVar = initialSelection;
     Parameters.AddItem(Param);
     oPanel.InvokeMethodArgs("ChoiceGuiInstance.initializeList", Parameters);
 }
@@ -407,6 +412,18 @@ public function ExOnScrollWheel(int dir, bool overRightPane, bool overList)
     {
         ASScrollInfoTextDiscrete(dir);
     }
+}
+
+public function ASSetImage(string imagePath)
+{
+    local ASParams Param;
+    local array<ASParams> Parameters;
+
+    Param.Type = ASParamTypes.ASParam_String;
+    Param.sVar = imagePath;
+    Parameters.AddItem(Param);
+    oPanel.InvokeMethodArgs("ChoiceGuiInstance.DisplayImageForChoice", Parameters);
+    
 }
 
 

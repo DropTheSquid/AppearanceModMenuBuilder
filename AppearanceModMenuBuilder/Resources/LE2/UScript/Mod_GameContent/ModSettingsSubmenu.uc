@@ -24,7 +24,7 @@ struct ModSettingItemData
     // var int EnableConditional;
     // var int EnableBool;
     // var PlotIntSetting EnableInt;
-    // var array<string> Images;
+    var array<string> Images;
     var string SubMenuClassName;
     var Class<ModSettingsSubmenu> SubmenuClass;
     var ModSettingsSubmenu submenuInstance;
@@ -40,7 +40,8 @@ var config stringref srTitle;
 var config string sTitle;
 var config stringref srSubtitle;
 var config string sSubtitle;
-var config stringref defaultActionText;
+var config string sDefaultActionText;
+var config stringref srDefaultActionText;
 var config array<ModSettingItemData> menuItems;
 var transient int selectedIndex;
 var transient int scrollIndex;
