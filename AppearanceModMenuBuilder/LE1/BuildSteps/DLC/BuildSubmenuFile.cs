@@ -20,10 +20,13 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             public AppearanceSubmenu Casual;
             public AppearanceSubmenu Combat;
             public AppearanceSubmenu Armor;
+            public AppearanceSubmenu VanillaArmor;
             public AppearanceSubmenu? NonArmor;
             public AppearanceSubmenu ArmorHeadgear;
+            public AppearanceSubmenu VanillaArmorHeadgear;
             public AppearanceSubmenu? NonArmorHeadgear;
             public AppearanceSubmenu Breather;
+            public AppearanceSubmenu VanillaBreathers;
             public AppearanceSubmenu[] CasualOutfitMenus;
         }
 
@@ -101,10 +104,13 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     Casual = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_CasualOutfits", configMergeFile),
                     Combat = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_CombatOutfits", configMergeFile),
                     Armor = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.Armor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_ArmorOutfits", configMergeFile),
+                    VanillaArmor = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.Armor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_VanillaArmors", configMergeFile),
                     NonArmor = skipNonArmor ? null : AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_NonArmorOutfits", configMergeFile),
+                    VanillaArmorHeadgear = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.Armor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_VanillaHelmets", configMergeFile),
                     ArmorHeadgear = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.Armor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_Headgear_Armor", configMergeFile),
                     NonArmorHeadgear = skipNonArmor ? null : AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.NonArmor.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_Headgear_NonArmor", configMergeFile),
-                    Breather = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_Breather", configMergeFile)
+                    Breather = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_Breather", configMergeFile),
+                    VanillaBreathers = AppearanceSubmenu.GetOrAddSubmenu($"AMM_Submenus.{bodyType}.{SquadMemberSubmenus.AppearanceSubmenuClassPrefix}{bodyType}_VanillaBreathers", configMergeFile)
                 };
 
                 // do not check applied through these submenus
@@ -188,10 +194,13 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_CasualOutfits", [bodyType]));
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_CombatOutfits", [bodyType]));
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_ArmorOutfits", [bodyType, "Armor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_VanillaArmors", [bodyType, "Armor"]));
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_NonArmorOutfits", [bodyType, "NonArmor"]));
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_Headgear_Armor", [bodyType, "Armor"]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_VanillaHelmets", [bodyType, "Armor"]));
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_Headgear_NonArmor", [bodyType, "NonArmor"]));
                 classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_Breather", [bodyType]));
+                classes.Add(SquadMemberSubmenus.GetSubmenuClass($"{bodyType}_VanillaBreathers", [bodyType]));
 
                 // there should always be a default outfit option at the top and root of the casual menu
                 menus.Casual.AddMenuEntry(new AppearanceItemData()
@@ -303,6 +312,24 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                         ANotApplicableAppearanceTypes = ["Combat"],
                         Comment = "\"Equipped Armor\" entry for the whole squad within the armor menu in any appearance type besides combat"
                     });
+
+                    //if (menus.NonArmor != null)
+                    //{
+                    //    // for whole squad, when accessing armor menu under casual, add Equipped Armor option that forces equipped armor
+                    //    menus.NonArmor.AddMenuEntry(new AppearanceItemData()
+                    //    {
+                    //        // "Default Casual Appearance"
+                    //        // TODO stringref
+                    //        SCenterText = "Default Casual Appearance",
+                    //        // force default casual
+                    //        ApplyOutfitId = -3,
+                    //        // restrict this to entire squad
+                    //        AApplicableCharacters = squad,
+                    //        // only for the combat submenu
+                    //        AApplicableAppearanceTypes = ["Combat"],
+                    //        Comment = "a way to apply the default casual as the combat appearance"
+                    //    });
+                    //}
                 }
 
                 if (menus.NonArmor != null && menus.NonArmorHeadgear != null)
@@ -350,7 +377,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
                 menus.Armor.AddMenuEntry(menus.ArmorHeadgear.GetEntryPoint(210210237, hideIfHeadgearSuppressed: true, disableIfHeadgearLocked: true));
 
-
                 menus.ArmorHeadgear.CameraPosition = "head";
                 // "Helmets"
                 menus.ArmorHeadgear.SrSubtitle = 210210237;
@@ -391,6 +417,22 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
                 menus.ArmorHeadgear.AddMenuEntry(menus.Breather.GetEntryPoint(210210244, hideIfBreatherSuppressed: true, disableIfBreatherLocked: true));
 
+                // add the vanilla armors/helmets/breathers, either inline or as an explicit submenu
+                if (bodyType == "Quarian" || bodyType == "Salarian")
+                {
+                    menus.Armor.AddMenuEntry(menus.VanillaArmor.GetInlineEntryPoint());
+                    menus.ArmorHeadgear.AddMenuEntry(menus.VanillaArmorHeadgear.GetInlineEntryPoint());
+                }
+                else
+                {
+                    // "Standard Armors"
+                    menus.Armor.AddMenuEntry(menus.VanillaArmor.GetEntryPoint(210210324));
+                    menus.VanillaArmor.SrSubtitle = 210210324;
+                    // "Standard Helmets"
+                    menus.ArmorHeadgear.AddMenuEntry(menus.VanillaArmorHeadgear.GetEntryPoint(210210325));
+                    menus.VanillaArmorHeadgear.SrSubtitle = 210210325;
+                }
+
                 menus.Breather.CameraPosition = "face";
                 // "Breather"
                 menus.Breather.SrSubtitle = 210210244;
@@ -413,6 +455,18 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     ApplyBreatherId = -1,
                     Comment = "Always present default breather option"
                 });
+
+                // human/Asari get a submenu for breathers
+                if (bodyType == "HumanMale" || bodyType == "HumanFemale" || bodyType == "Asari")
+                {
+                    // "Standard Breathers"
+                    menus.Breather.AddMenuEntry(menus.VanillaBreathers.GetEntryPoint(210210326));
+                }
+                // everyone else gets inline
+                else
+                {
+                    menus.Breather.AddMenuEntry(menus.VanillaBreathers.GetInlineEntryPoint());
+                }
 
             }
             SetupMenu("HumanFemale", HumanFemaleOutfitMenus);

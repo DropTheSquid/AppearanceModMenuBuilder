@@ -477,4 +477,30 @@ Romance</data>
 		<id>210210320</id>
 		<data>Uniforme táctico</data>
 	</string>
+	<!-- same as 210210238-210210240 in English, but applied to helmets rather than armors; allows for gender variation in other languages, such as Spanish -->
+	<string>
+		<id>210210321</id>
+		<data>Ligero</data>
+	</string>
+	<string>
+		<id>210210322</id>
+		<data>Medio</data>
+	</string>
+	<string>
+		<id>210210323</id>
+		<data>Pesado</data>
+	</string>
+	<!-- submenu name for vanilla LE1 armors -->
+	<string>
+		<id>210210324</id>
+		<data>Armadura Estándar</data>
+	</string>
+	<string>
+		<id>210210325</id>
+		<data>Cascos Estándar</data>
+	</string>
+	<string>
+		<id>210210326</id>
+		<data>Respiradores Estándar</data>
+	</string>
 </tlkFile>

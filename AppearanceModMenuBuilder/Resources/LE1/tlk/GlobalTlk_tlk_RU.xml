@@ -527,4 +527,30 @@
 		<id>210210320</id>
 		<data>Полевая</data>
 	</string>
+	<!-- same as 210210238-210210240 in English, but applied to helmets rather than armors; allows for gender variation in other languages, such as Spanish -->
+	<string>
+		<id>210210321</id>
+		<data>Легкая</data>
+	</string>
+	<string>
+		<id>210210322</id>
+		<data>Средняя</data>
+	</string>
+	<string>
+		<id>210210323</id>
+		<data>Тяжелая</data>
+	</string>
+	<!-- submenu name for vanilla LE1 armors -->
+	<string>
+		<id>210210324</id>
+		<data>Стандартная броня</data>
+	</string>
+	<string>
+		<id>210210325</id>
+		<data>Стандартные шлемы</data>
+	</string>
+	<string>
+		<id>210210326</id>
+		<data>Стандартная Респираторы</data>
+	</string>
 </tlkFile>

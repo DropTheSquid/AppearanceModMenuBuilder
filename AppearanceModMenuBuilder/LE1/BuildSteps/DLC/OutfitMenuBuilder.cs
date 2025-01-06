@@ -394,38 +394,38 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             static void HumanIshCommonBreathers(SpeciesOutfitMenus menu)
             {
-                menu.Breather.AddMenuEntry(new AppearanceItemData()
+                menu.VanillaBreathers.AddMenuEntry(new AppearanceItemData()
                 {
                     // "Special Forces Breather" (Shepard's
                     SrCenterText = 210210308,
                     ApplyBreatherId = -11
                 });
-                menu.Breather.AddMenuEntry(new AppearanceItemData()
+                menu.VanillaBreathers.AddMenuEntry(new AppearanceItemData()
                 {
                     // "Soldier Breather" (Ashley's)
                     SrCenterText = 210210309,
                     ApplyBreatherId = -13,
                 });
-                menu.Breather.AddMenuEntry(new AppearanceItemData()
+                menu.VanillaBreathers.AddMenuEntry(new AppearanceItemData()
                 {
                     // "Adept Breather" (Liara)
                     SrCenterText = 210210311,
                     ApplyBreatherId = -12,
                 });
-                menu.Breather.AddMenuEntry(new AppearanceItemData()
+                menu.VanillaBreathers.AddMenuEntry(new AppearanceItemData()
                 {
                     // will resolve to "Liara - Light Variant"
                     SrCenterText = 210210307,
                     ApplyBreatherId = -16,
                     DisplayVars = ["$210210311"]
                 });
-                menu.Breather.AddMenuEntry(new AppearanceItemData()
+                menu.VanillaBreathers.AddMenuEntry(new AppearanceItemData()
                 {
                     // "Sentinel Breather" (Kaidan's)
                     SrCenterText = 210210310,
                     ApplyBreatherId = -14,
                 });
-                menu.Breather.AddMenuEntry(new AppearanceItemData()
+                menu.VanillaBreathers.AddMenuEntry(new AppearanceItemData()
                 {
                     // "Faceplate"
                     SrCenterText = 210210245,
@@ -438,7 +438,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             HumanIshCommonBreathers(asariOutfitMenus);
 
             // default Turian LGT and HVY breather
-            turianOutfitMenus.Breather.AddMenuEntry(new AppearanceItemData()
+            turianOutfitMenus.VanillaBreathers.AddMenuEntry(new AppearanceItemData()
             {
                 // "Turian"
                 SrCenterText = 165651,
@@ -521,7 +521,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                             // "<ArmorName> - <Weight>"
                             SrCenterText = 210210236,
                             ApplyHelmetId = ammAppearanceId,
-                            DisplayVars = [$"${armorSet.SrArmorName}", $"${GetArmorTypeStringRef(armorType)}"],
+                            DisplayVars = [$"${armorSet.SrArmorName}", $"${GetHelmetTypeStringRef(armorType)}"],
                             DisplayInt = variant.DisplayInt,
                             AApplicableCharacters = variant.ApplicableCharacters
                         };
@@ -529,48 +529,48 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 }
                 if (variant.LGT != null)
                 {
-                    submenu.Armor.AddMenuEntry(
+                    submenu.VanillaArmor.AddMenuEntry(
                         GetOutfitMenuEntry(EArmorType.LGT, variant.LGT.AmmAppearanceId)
                     );
                     if (!skipHelmets)
                     {
-                        submenu.ArmorHeadgear.AddMenuEntry(
+                        submenu.VanillaArmorHeadgear.AddMenuEntry(
                             GetHelmetMenuEntry(EArmorType.LGT, variant.LGT.AmmAppearanceId)
                         );
                     }
                 }
                 if (variant.MED != null)
                 {
-                    submenu.Armor.AddMenuEntry(
+                    submenu.VanillaArmor.AddMenuEntry(
                         GetOutfitMenuEntry(EArmorType.MED, variant.MED.AmmAppearanceId)
                     );
                     if (!skipHelmets)
                     {
-                        submenu.ArmorHeadgear.AddMenuEntry(
+                        submenu.VanillaArmorHeadgear.AddMenuEntry(
                             GetHelmetMenuEntry(EArmorType.MED, variant.MED.AmmAppearanceId)
                         );
                     }
                 }
                 if (variant.HVY != null)
                 {
-                    submenu.Armor.AddMenuEntry(
+                    submenu.VanillaArmor.AddMenuEntry(
                         GetOutfitMenuEntry(EArmorType.HVY, variant.HVY.AmmAppearanceId)
                     );
                     if (!skipHelmets)
                     {
-                        submenu.ArmorHeadgear.AddMenuEntry(
+                        submenu.VanillaArmorHeadgear.AddMenuEntry(
                             GetHelmetMenuEntry(EArmorType.HVY, variant.HVY.AmmAppearanceId)
                         );
                     }
                 }
                 if (variant.AllWeights != null)
                 {
-                    submenu.Armor.AddMenuEntry(
+                    submenu.VanillaArmor.AddMenuEntry(
                         GetOutfitMenuEntry(EArmorType.All, variant.AllWeights.AmmAppearanceId)
                     );
                     if (!skipHelmets)
                     {
-                        submenu.ArmorHeadgear.AddMenuEntry(
+                        submenu.VanillaArmorHeadgear.AddMenuEntry(
                             GetHelmetMenuEntry(EArmorType.All, variant.AllWeights.AmmAppearanceId)
                         );
                     }
@@ -580,7 +580,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 {
                     if (!skipHelmets)
                     {
-                        submenu.ArmorHeadgear.AddMenuEntry(
+                        submenu.VanillaArmorHeadgear.AddMenuEntry(
                             new AppearanceItemData()
                             {
                                 // "<ArmorName> - Classic - <Weight>"
@@ -589,7 +589,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                                 DisplayVars = [$"${srColossusClassic}", $"${GetArmorTypeStringRef(EArmorType.LGT)}", $"${armorSet.SrArmorName}"]
                             }
                         );
-                        submenu.ArmorHeadgear.AddMenuEntry(
+                        submenu.VanillaArmorHeadgear.AddMenuEntry(
                             new AppearanceItemData()
                             {
                                 // "<ArmorName> - Classic - <Weight>"
@@ -598,7 +598,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                                 DisplayVars = [$"${srColossusClassic}", $"${GetArmorTypeStringRef(EArmorType.MED)}", $"${armorSet.SrArmorName}"]
                             }
                         );
-                        submenu.ArmorHeadgear.AddMenuEntry(
+                        submenu.VanillaArmorHeadgear.AddMenuEntry(
                             new AppearanceItemData()
                             {
                                 // "<ArmorName> - Classic - <Weight>"
@@ -608,7 +608,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                             }
                         );
                     }
-                    submenu.Armor.AddMenuEntry(
+                    submenu.VanillaArmor.AddMenuEntry(
                         new AppearanceItemData()
                         {
                             // "<ArmorName> - Classic - <Weight>"
@@ -617,7 +617,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                             DisplayVars = [$"${srColossusClassic}", $"${GetArmorTypeStringRef(EArmorType.LGT)}", $"${armorSet.SrArmorName}"]
                         }
                     );
-                    submenu.Armor.AddMenuEntry(
+                    submenu.VanillaArmor.AddMenuEntry(
                         new AppearanceItemData()
                         {
                             // "<ArmorName> - Classic - <Weight>"
@@ -626,7 +626,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                             DisplayVars = [$"${srColossusClassic}", $"${GetArmorTypeStringRef(EArmorType.MED)}", $"${armorSet.SrArmorName}"]
                         }
                     );
-                    submenu.Armor.AddMenuEntry(
+                    submenu.VanillaArmor.AddMenuEntry(
                         new AppearanceItemData()
                         {
                             // "<ArmorName> - Classic - <Weight>"
@@ -651,6 +651,20 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 // "Heavy"
                 EArmorType.HVY => 210210240,
                 _ => throw new Exception("invalid armor type"),
+            };
+        }
+
+        private static int GetHelmetTypeStringRef(EArmorType type)
+        {
+            return type switch
+            {
+                // "Light"
+                EArmorType.LGT => 210210321,
+                // "Medium"
+                EArmorType.MED => 210210322,
+                // "Heavy"
+                EArmorType.HVY => 210210323,
+                _ => throw new Exception("invalid helemt type"),
             };
         }
 

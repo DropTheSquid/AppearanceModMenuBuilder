@@ -477,4 +477,30 @@ Wygląd romansowy</data>
 		<id>210210320</id>
 		<data>Mundur polowy</data>
 	</string>
+	<!-- same as 210210238-210210240 in English, but applied to helmets rather than armors; allows for gender variation in other languages, such as Spanish -->
+	<string>
+		<id>210210321</id>
+		<data>Lekki</data>
+	</string>
+	<string>
+		<id>210210322</id>
+		<data>Średni</data>
+	</string>
+	<string>
+		<id>210210323</id>
+		<data>Ciężki</data>
+	</string>
+	<!-- submenu name for vanilla LE1 armors -->
+	<string>
+		<id>210210324</id>
+		<data>Standardowa Zbroja</data>
+	</string>
+	<string>
+		<id>210210325</id>
+		<data>Standardowe Kaski</data>
+	</string>
+	<string>
+		<id>210210326</id>
+		<data>Standardowe Maski Tlenowe</data>
+	</string>
 </tlkFile>

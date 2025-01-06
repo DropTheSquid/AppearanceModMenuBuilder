@@ -500,4 +500,30 @@ Romance</data>
 		<id>210210320</id>
 		<data>Tenue de travail</data>
 	</string>
+	<!-- same as 210210238-210210240 in English, but applied to helmets rather than armors; allows for gender variation in other languages, such as Spanish -->
+	<string>
+		<id>210210321</id>
+		<data>Légère</data>
+	</string>
+	<string>
+		<id>210210322</id>
+		<data>Intermédiaire</data>
+	</string>
+	<string>
+		<id>210210323</id>
+		<data>Lourde</data>
+	</string>
+	<!-- submenu name for vanilla LE1 armors -->
+	<string>
+		<id>210210324</id>
+		<data>Armure Standard</data>
+	</string>
+	<string>
+		<id>210210325</id>
+		<data>Casques Standards</data>
+	</string>
+	<string>
+		<id>210210326</id>
+		<data>Respirateurs Standards</data>
+	</string>
 </tlkFile>
