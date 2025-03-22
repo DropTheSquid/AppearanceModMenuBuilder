@@ -313,23 +313,20 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                         Comment = "\"Equipped Armor\" entry for the whole squad within the armor menu in any appearance type besides combat"
                     });
 
-                    //if (menus.NonArmor != null)
-                    //{
-                    //    // for whole squad, when accessing armor menu under casual, add Equipped Armor option that forces equipped armor
-                    //    menus.NonArmor.AddMenuEntry(new AppearanceItemData()
-                    //    {
-                    //        // "Default Casual Appearance"
-                    //        // TODO stringref
-                    //        SCenterText = "Default Casual Appearance",
-                    //        // force default casual
-                    //        ApplyOutfitId = -3,
-                    //        // restrict this to entire squad
-                    //        AApplicableCharacters = squad,
-                    //        // only for the combat submenu
-                    //        AApplicableAppearanceTypes = ["Combat"],
-                    //        Comment = "a way to apply the default casual as the combat appearance"
-                    //    });
-                    //}
+                    // for whole squad, when accessing armor menu under casual, add Default Casual Outfit option that applies their default casual outfit even when they are in combat
+                    menus.NonArmor?.AddMenuEntry(new AppearanceItemData()
+                    {
+                        // "Default Casual Appearance"
+                        // TODO stringref
+                        SCenterText = "Default Casual Appearance",
+                        // force default casual
+                        ApplyOutfitId = -3,
+                        // restrict this to entire squad
+                        AApplicableCharacters = squad,
+                        // only for the combat submenu
+                        AApplicableAppearanceTypes = ["Combat"],
+                        Comment = "a way to apply the default casual as the combat appearance"
+                    });
                 }
 
                 if (menus.NonArmor != null && menus.NonArmorHeadgear != null)

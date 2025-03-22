@@ -6,6 +6,9 @@ protected function bool GetVariant(BioPawn targetPawn, out int armorType, out in
 {
     local BioPawnType pawnType;
 
+    // TODO need to get the spawned pawn type for the pawn, even if it is different from this one (for example, Normandy vs Virmire version)
+    // also need to make this respect overridden default casual
+
     pawnType = Class'AMM_Utilities'.static.GetPawnType(targetPawn);
 
     if (pawnType == None)
