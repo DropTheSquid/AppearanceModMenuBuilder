@@ -288,7 +288,7 @@ public function ExOnItemSelected(int selectedIndex)
     }
     else
     {
-        // TODO some default image or else get rid of the image box in this ccase???
+        // TODO some default image or else get rid of the image box in this case???
         ASSetImage("");
     }
     if (!selectedItem.disabled)
