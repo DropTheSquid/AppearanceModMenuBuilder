@@ -565,29 +565,50 @@ public function Update(float fDeltaT)
 			switch (currentState)
 			{
 				case FrameworkStreamState.visible:
-					// LogInternal("streaming request for"@currentRequest.frameworkFileName@"is visible"@currentRequest.timeoutSet);
-					// add a timer here so that we pause even if the live event never fires
-					if (!streamingRequests[i].timeoutSet)
+					if (currentRequest.frameworkLiveEventName == "")
 					{
-						if (_outerMenu.oWorldInfo.bPlayersOnly)
+						// TODO handle this case
+						foreach currentRequest.PawnIds(currentPawnId)
 						{
-							// LogInternal("unpausing to wait for live event"@currentRequest.frameworkLiveEventName);
-							_outerMenu.oWorldInfo.bPlayersOnly = false;
+							if (FindStreamedInPawn(currentPawnId.tag, currentRequest.FrameworkFileName, pawn))
+							{
+								// LogInternal("Adding a new pawn to the thing"@currentPawnId.tag@currentPawnId.appearanceType@currentRequest.FrameworkFileName);
+								newRecord.Tag = currentPawnId.tag;
+								newRecord.appearanceType = currentPawnId.appearanceType;
+								newRecord.Pawn = pawn;
+								// don't destroy pawns that are streamed in
+								newRecord.shouldBeDestroyed = false;
+								pawnRecords.AddItem(newRecord);
+								_outerMenu.UpdateAsyncPawnLoadingState(currentPawnId.tag, currentPawnId.appearanceType, PawnLoadState.loaded);
+								streamingRequests[i].completed = true;
+							}
 						}
-						streamingRequests[i].timeoutSet = true;
-						sequenceTimer = SequenceTimeoutLimit;
 					}
-
-					// now that the level is visible, we need to wait for the kismet to run.
-					// if this file was already visible when we started, we need to start listening for the live event and send the poll event
-					if (currentRequest.originalState == FrameworkStreamState.visible && !currentRequest.pollSent)
+					else
 					{
-						// LogInternal("starting to listen + firing poll event for already loaded file"@currentRequest.frameworkFileName);
-						class'ModSeqEvent_RemoteEvent_Dynamic'.static.RegisterRemoteEvent(Name(currentRequest.frameworkLiveEventName), None, class'ModSeqEvent_RemoteEvent_AMM');
-						_outerMenu.EmitRemoteEvent(currentRequest.frameworkPollEventName);
-						streamingRequests[i].pollSent = true;
+						// LogInternal("streaming request for"@currentRequest.frameworkFileName@"is visible"@currentRequest.timeoutSet);
+						// add a timer here so that we pause even if the live event never fires
+						if (!streamingRequests[i].timeoutSet)
+						{
+							if (_outerMenu.oWorldInfo.bPlayersOnly)
+							{
+								// LogInternal("unpausing to wait for live event"@currentRequest.frameworkLiveEventName);
+								_outerMenu.oWorldInfo.bPlayersOnly = false;
+							}
+							streamingRequests[i].timeoutSet = true;
+							sequenceTimer = SequenceTimeoutLimit;
+						}
+
+						// now that the level is visible, we need to wait for the kismet to run.
+						// if this file was already visible when we started, we need to start listening for the live event and send the poll event
+						if (currentRequest.originalState == FrameworkStreamState.visible && !currentRequest.pollSent)
+						{
+							// LogInternal("starting to listen + firing poll event for already loaded file"@currentRequest.frameworkFileName);
+							class'ModSeqEvent_RemoteEvent_Dynamic'.static.RegisterRemoteEvent(Name(currentRequest.frameworkLiveEventName), None, class'ModSeqEvent_RemoteEvent_AMM');
+							_outerMenu.EmitRemoteEvent(currentRequest.frameworkPollEventName);
+							streamingRequests[i].pollSent = true;
+						}
 					}
-					
 					break;
 				case FrameworkStreamState.BecomingVisible:
 				case FrameworkStreamState.loading:
