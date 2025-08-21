@@ -90,6 +90,11 @@ private function bool FrameworkMatch(BioPawn targetPawn)
 	local AppearanceIdLookups currentLookup;
 	local string frameworkFileName;
 
+	if (!TagMatch(TargetPawn))
+	{
+		return false;
+	}
+
 	frameworkFileName = string(targetPawn.GetPackageName());
 	if (frameworkFileName ~= "BIOG_UIWORLD")
 	{
@@ -98,7 +103,7 @@ private function bool FrameworkMatch(BioPawn targetPawn)
 
 	foreach AppearanceIdLookupsList(currentLookup)
 	{
-		if (currentLookup.FrameworkFileName ~= frameworkFileName && TagMatch(TargetPawn))
+		if (currentLookup.FrameworkFileName ~= frameworkFileName)
 		{
 			return true;
 		}
@@ -115,11 +120,11 @@ private function bool TagMatch(BioPawn targetPawn)
 	pawnTag = string(targetPawn.Tag);
 	if (pawnTag ~= "None" || pawnTag == "")
 	{
+		if (string(targetPawn.uniqueTag) ~= "None" || string(targetPawn.uniqueTag) == "")
+		{
+			return false;
+		}
 		pawnTag = string(targetPawn.uniqueTag);
-	}
-	if (pawnTag ~= "None" || pawnTag == "")
-	{
-		return false;
 	}
 	if (pawnTag ~= Tag)
 	{
@@ -143,6 +148,23 @@ public function SpecialHandling(BioPawn targetPawn);
 // there are also special appearance types for the character creator
 public function string GetAppearanceType(BioPawn targetPawn)
 {
+	local AppearanceIdLookups currentLookup;
+	local string frameworkFileName;
+
+	// default implementation will try to match an appearance id lookup
+	frameworkFileName = string(targetPawn.GetPackageName());
+	if (frameworkFileName ~= "BIOG_UIWORLD")
+	{
+		frameworkFileName = string(targetPawn.UniqueTag);
+	}
+
+	foreach AppearanceIdLookupsList(currentLookup)
+	{
+		if (currentLookup.FrameworkFileName ~= frameworkFileName)
+		{
+			return currentLookup.appearanceType;
+		}
+	}
 	return "";
 }
 
