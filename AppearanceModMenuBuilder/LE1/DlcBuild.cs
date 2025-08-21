@@ -37,6 +37,8 @@ namespace AppearanceModMenuBuilder.LE1
                 new BuildUIWorldTask(),
                 // build a few NOR files for the armor locker
                 //new BuildNor10_09_Files(),
+                // menus and outfit lists for for NPCs
+                new BuildAuxilliaryMenus(),
                 // add some new conditionals we need
                 new BuildPlotManagerFile(),
             ]);

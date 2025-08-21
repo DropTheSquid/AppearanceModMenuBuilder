@@ -26,11 +26,11 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             HVY
         }
 
-        private const string OutfitSpecListClassTemplate = "Class {0} extends OutfitSpecListBase config(Game);";
-        private const string HelmetSpecListClassTemplate = "Class {0} extends HelmetSpecListBase config(Game);";
-        private const string BreatherSpecListClassTemplate = "Class {0} extends BreatherSpecListBase config(Game);";
+        public const string OutfitSpecListClassTemplate = "Class {0} extends OutfitSpecListBase config(Game);";
+        public const string HelmetSpecListClassTemplate = "Class {0} extends HelmetSpecListBase config(Game);";
+        public const string BreatherSpecListClassTemplate = "Class {0} extends BreatherSpecListBase config(Game);";
         private const string ConfigMergeName = "outfits";
-        private const string containingPackage = "OutfitSpecs";
+        public const string containingPackage = "OutfitSpecs";
         private readonly List<ClassToCompile> classes = [];
         private readonly List<ModConfigClass> configs = [];
         public void RunModTask(ModBuilderContext context)
