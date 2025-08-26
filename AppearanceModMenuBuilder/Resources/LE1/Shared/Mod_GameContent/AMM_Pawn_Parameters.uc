@@ -68,11 +68,12 @@ var config int defaultBodyAppearanceId;
 var config int defaultHelmetAppearanceId;
 var config int defaultBreatherAppearanceId;
 
+// all us to scale a create up or down in the preview only so they fit within the lights and the camera stuff
+var config float pawnScale;
+
 // Returns true if a given pawn should be controlled by these params
 public function bool matchesPawn(BioPawn targetPawn)
 {
-    local string altTag;
-
 	if (requiresFramework)
 	{
 		if (!class'AMM_Common'.static.IsFrameworkInstalled())
@@ -346,4 +347,5 @@ defaultproperties
 	canChangeHelmetState=true
 	// this is true by default; for most pawns it will require the framework to support previewing them
 	requiresFramework=true
+	pawnScale=1.0
 }

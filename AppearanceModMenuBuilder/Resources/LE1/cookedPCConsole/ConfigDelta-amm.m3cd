@@ -130,7 +130,7 @@ breatherSpecListPath=OutfitSpecs.HMM_BreatherSpec
 +AppearanceIdLookupsList=(appearanceType="casual", bodyAppearanceLookup=(plotIntId=1584), helmetAppearanceLookup=(plotIntId=1585), breatherAppearanceLookup=(plotIntId=1586), appearanceFlagsLookup=(plotIntId=1587), FrameworkFileName="BIONPC_Jenkins_Normandy", FrameworkLiveEventName="Live_NPC_Jenkins_Normandy", FrameworkPollEventName="Poll_NPC_Jenkins_Normandy")
 +AppearanceIdLookupsList=(appearanceType="combat", bodyAppearanceLookup=(plotIntId=1588), helmetAppearanceLookup=(plotIntId=1589), breatherAppearanceLookup=(plotIntId=1590), appearanceFlagsLookup=(plotIntId=1591))
 
-; a few speicies are especially tall and so need a higher camera height in the preview
+; a few species are especially tall and so need a higher camera height in the preview
 [BioGame.ini OutfitSpecs.KRO_OutfitSpec]
 PreviewCameraMaxHeight=105
 
@@ -151,3 +151,17 @@ PreviewCameraMaxHeight=97
 +cameraPositions=(cameraPositionName="body",zoom=0,height=1,rotation=0,transitionTime=1)
 +cameraPositions=(cameraPositionName="head",zoom=0.4,height=1,rotation=0,transitionTime=1)
 +cameraPositions=(cameraPositionName="face",zoom=0.5,height=1,rotation=0,transitionTime=1)
+
+[BioGame.ini OutfitSpecs.Hanar_OutfitSpec]
+; makes Hanar actually fit on screen. This scale works nicely. 
+pawnScale=0.75
+
+[BioGame.ini OutfitSpecs.Volus_OutfitSpec]
+; pawnScale=1.25
+
+[BioGame.ini OutfitSpecs.Elcor_OutfitSpec]
+; makes elcor fit both on the screen and within the lighting
+pawnScale=0.55
+; scale down the max camera height to match the decreased size
+PreviewCameraMaxHeight=50
+

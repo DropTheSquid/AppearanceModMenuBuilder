@@ -33,6 +33,7 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 	local bool applyingVanillaOutfit;
 	local Array<Object> eventObjectParams;
 	local Array<string> eventStringParams;
+	local float previewScale;
 
 	RegisterListener();
 	UpdateOuterWorldInfo();
@@ -72,6 +73,17 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 			if (specLists.outfitSpecs == None)
 			{
 				return;
+			}
+			if (IsTargetUIWorldPawn(target))
+			{
+				previewScale = 1.0;
+				// apply the scale that is on the params (used for unique characters like Rachni Queen)
+				previewScale *= params.pawnScale;
+				// apply the scale that is on the outfit spec list (used for species like Elcor)
+				previewScale *= specLists.outfitSpecs.pawnScale;
+				// TODO maybe at some point in the future allow an outfit to scale things also
+				// apply the scale to UI world previews
+				target.SetScale(previewScale);
 			}
 			if (specLists.outfitSpecs.DelegateToOutfitSpecById(target, specLists, appearanceIds, pawnAppearance))
 			{

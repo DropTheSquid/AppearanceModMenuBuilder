@@ -47,6 +47,8 @@ struct presetCameraPosition
 var config array<OutfitSpecItem> outfitSpecs;
 // the max camera height for this body type in the menu
 var config float PreviewCameraMaxHeight;
+// all us to scale a create up or down in the preview only so they fit within the lights and the camera stuff
+var config float pawnScale;
 
 var config array<presetCameraPosition> cameraPositions;
 
@@ -172,4 +174,6 @@ defaultproperties
 {
 	// good enough for most characters, but too short for Turian or Krogan
 	PreviewCameraMaxHeight = 87
+	// most body types we do not want to scale at all
+	pawnScale = 1.0
 }
