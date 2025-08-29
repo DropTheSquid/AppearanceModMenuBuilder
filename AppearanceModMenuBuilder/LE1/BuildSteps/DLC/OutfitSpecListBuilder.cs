@@ -49,8 +49,6 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             GenerateKROSpecs();
             GenerateQRNSpecs();
             GenerateSALSpecs();
-            // TODO other ones to possibly add:
-            // Female Turian, Volus, Elcor, Hanar, male Quarian, Vorcha, Drell, Batarian
 
             var compileClassesTask = new AddClassesToFile(_ => startup, classes);
             compileClassesTask.RunModTask(context);

@@ -41,11 +41,12 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 	{
 		return;
 	}
+	// actually don't ignore it, BioACtorFactory spawns pawns that look like this, and we can identify them other ways. 
 	// this pawn is not yet fully initialized; ignore it
-	if (target.Tag == 'BioPawn')
-    {
-        return;
-    }
+	// if (target.Tag == 'BioPawn')
+    // {
+    //     return;
+    // }
 	if (target.GetPackageName() == 'EntryMenu')
 	{
 		// no point in updating these ones

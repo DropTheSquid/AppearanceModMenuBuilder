@@ -138,6 +138,5 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             var compileStartupClassesTask = new AddClassesToFile(context => context.GetStartupFile(), startupClasses);
             compileStartupClassesTask.RunModTask(context);
         }
-
     }
 }
