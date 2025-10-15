@@ -99,7 +99,16 @@ public static function int EncodeAppearanceSettings(AppearanceSettings settings)
 
 public static function bool IsFrameworkInstalled()
 {
-	return DynamicLoadObject("DLC_MOD_Framework_GlobalTlk.GlobalTlk_tlk", Class'Object') != None;
+	// local BioWorldInfo bwi;
+
+	// bwi = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo());
+	// return bwi.CheckConditional(2102);
+
+	// hack until I get a proper conditional in there
+	local stringref sr;
+
+	sr = $200083;
+	return string(sr) != "";
 }
 
 public static function bool DoesLevelExist(coerce string levelName)

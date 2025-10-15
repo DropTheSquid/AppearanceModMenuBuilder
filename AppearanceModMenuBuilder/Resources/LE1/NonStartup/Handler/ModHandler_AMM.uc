@@ -209,6 +209,7 @@ public function UpdateAsyncPawnLoadingState(string tag, string appearanceType, P
 		{
 			cameraHandler.ResetCameraForCharacter(tag);
 			pawnHandler.DisplayPawn(tag, appearanceType);
+			pawnHandler.ForceAppearanceType(menuState.armorOverrideState);
 			RefreshHelmetButton();
 		}
 		// TODO get rid of the loading spinner here

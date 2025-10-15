@@ -8,8 +8,6 @@ var transient name menuTagOverride;
 var transient name menuFrameworkFileOverride;
 var config bool ExtraCharacterModulesPresent;
 var transient bool InEquippedArmorLookup;
-// disabled as I do not currently need this
-// var transient array<string> handledPawns;
 var transient bool bInConversationMode;
 var transient bool bInCinematicMode;
 
@@ -41,7 +39,7 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 	{
 		return;
 	}
-	// actually don't ignore it, BioACtorFactory spawns pawns that look like this, and we can identify them other ways. 
+	// actually don't ignore it, BioActorFactory spawns pawns that look like this, and we can identify them other ways. 
 	// this pawn is not yet fully initialized; ignore it
 	// if (target.Tag == 'BioPawn')
     // {
@@ -57,10 +55,6 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 		// skip this; it will sometimes do incorrect things before the pawn is fully initialized, and it will be called again from SpawnPlayer
 		return;
 	}
-	// if (target.GetPackageName() != 'BIOG_UIWorld')
-	// {
-	// 	handledPawns.AddItem(PathName(target));
-	// }
 	UpdatePreviewTags(target);
 	if (paramHandler.GetPawnParams(target, params))
 	{
@@ -89,7 +83,6 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 			if (specLists.outfitSpecs.DelegateToOutfitSpecById(target, specLists, appearanceIds, pawnAppearance))
 			{
 				attachments = GetAttachmentsToTransfer(target);
-				// CheckIfAppearanceDiffersFromDefaults(target, appearanceIds, pawnAppearance);
 				class'AMM_Utilities'.static.ApplyPawnAppearance(target, pawnAppearance);
 
 				// check for any of the "vanilla" outfit specs
@@ -240,6 +233,12 @@ private function UpdatePreviewTags(BioPawn target)
 	// this is usually bad and we want to fix it before we update the appearance
 	if (IsTargetUIWorldPawn(target) && menuTagOverride != 'None')
 	{
+		// LogInternal("updatePreviewTags"@PathName(target)@target.tag);
+		// testing this out
+		if (target.Tag == 'BioPawn')
+		{
+		    return;
+		}
 		// do not overwrite these ones; it will destroy our info about the player's gender
 		if (target.tag == 'Human_Male' || target.tag == 'Human_Female')
 		{
