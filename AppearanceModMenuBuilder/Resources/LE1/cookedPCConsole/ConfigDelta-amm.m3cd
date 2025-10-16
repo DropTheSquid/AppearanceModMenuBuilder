@@ -50,11 +50,13 @@ menuRootPath=amm_submenus.Kaidan.AppearanceSubmenu_Kaidan
 outfitSpecListPath=outfitSpecs.HMM_OutfitSpec
 helmetSpecListPath=OutfitSpecs.HMM_HelmetSpec
 breatherSpecListPath=OutfitSpecs.HMM_BreatherSpec
-+AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1524), helmetAppearanceLookup=(plotIntId=1525), breatherAppearanceLookup=(plotIntId=1526), appearanceFlagsLookup=(plotIntId=1527), FrameworkFileName="BIONPC_Kaidan_Normandy", FrameworkLiveEventName="Live_NPC_Kaidan_Normandy", FrameworkPollEventName="Poll_NPC_Kaidan_Normandy")
-+AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1528), helmetAppearanceLookup=(plotIntId=1529), breatherAppearanceLookup=(plotIntId=1530), appearanceFlagsLookup=(plotIntId=1531))
-+AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1532), helmetAppearanceLookup=(plotIntId=1533), breatherAppearanceLookup=(plotIntId=1534), appearanceFlagsLookup=(plotIntId=1535), FrameworkFileName="BIONPC_Kaidan_Romance", FrameworkLiveEventName="Live_NPC_Kaidan_Romance", FrameworkPollEventName="Poll_NPC_Kaidan_Romance")
++AppearanceIdLookupsList=(appearanceType="casual",  bodyAppearanceLookup=(plotIntId=1512), helmetAppearanceLookup=(plotIntId=1513), breatherAppearanceLookup=(plotIntId=1514), appearanceFlagsLookup=(plotIntId=1515), FrameworkFileName="BIONPC_Kaidan_Normandy", FrameworkLiveEventName="Live_NPC_Kaidan_Normandy", FrameworkPollEventName="Poll_NPC_Kaidan_Normandy")
++AppearanceIdLookupsList=(appearanceType="combat",  bodyAppearanceLookup=(plotIntId=1516), helmetAppearanceLookup=(plotIntId=1517), breatherAppearanceLookup=(plotIntId=1518), appearanceFlagsLookup=(plotIntId=1519))
++AppearanceIdLookupsList=(appearanceType="romance", bodyAppearanceLookup=(plotIntId=1520), helmetAppearanceLookup=(plotIntId=1521), breatherAppearanceLookup=(plotIntId=1522), appearanceFlagsLookup=(plotIntId=1523), FrameworkFileName="BIONPC_Kaidan_Romance", FrameworkLiveEventName="Live_NPC_Kaidan_Romance", FrameworkPollEventName="Poll_NPC_Kaidan_Romance")
 ; default Kaidan to the fixed up version of his breather that doesn't have his eyelashes weirdly visible through it, and correctly hides his head/hair to avoid clipping issues
 defaultBreatherAppearanceId=-14
+
+; intentionally leaving plot ints 1524-1536 open; That range is used by LE1 Datapad Collection.
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Ashley]
 Tag=Hench_HumanFemale
