@@ -1,6 +1,7 @@
 Class AMM_OriginalOutfit;
 
 var string targetPath;
+var name tag;
 var SkeletalMesh originalSkeletalMesh;
 var array<MaterialInterface> originalMaterials;
 
@@ -23,6 +24,7 @@ public static function StoreOutfit(BioPawn target)
     {
         outfit = new Class'AMM_OriginalOutfit';
         outfit.targetPath = PathName(target);
+        outfit.tag = target.tag;
         outfit.originalSkeletalMesh = target.Mesh.SkeletalMesh;
         i = 0;
         // get materials until we get a None material. this should deal with incorrectly set up SMCs and get the materials from the skeletal mesh itself. 
@@ -64,17 +66,45 @@ public static function bool GetOutfit(BioPawn target, out AMM_OriginalOutfit out
     local Name Package;
     local BioWorldInfo localWI;
     local Object obj;
+    local string localTargetPath;
     
     Package = target.GetPackageName();
+    localTargetPath = PathName(target);
+    if (Package == 'BIOG_UIWORLD')
+    {
+        Package = target.UniqueTag;
+        localTargetPath = "";
+    }
     localWI = BioWorldInfo(FindObject(Package $ ".TheWorld.PersistentLevel.BioWorldInfo_0", Class'BioWorldInfo'));
     if (localWI != None)
     {
         foreach localWI.ClientDestroyedActorContent(obj, )
         {
             outfit = AMM_OriginalOutfit(obj);
-            if (outfit != None && outfit.targetPath == PathName(target))
+            if (outfit != None)
             {
-                return TRUE;
+                if (localTargetPath != "")
+                {
+                    if (outfit.targetPath == localTargetPath)
+                    {
+                        return TRUE;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    if (outfit.tag == target.tag)
+                    {
+                        return TRUE;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
             }
         }
     }
