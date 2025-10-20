@@ -2,7 +2,6 @@
 using LegendaryExplorerCore.Coalesced;
 using LegendaryExplorerCore.Packages;
 using LegendaryExplorerCore.Unreal;
-using LegendaryExplorerCore.Unreal.ObjectInfo;
 using MassEffectModBuilder;
 using MassEffectModBuilder.DLCTasks;
 using MassEffectModBuilder.LEXHelpers;
@@ -13,12 +12,9 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 {
     public class FrameworkTest : IModBuilderTask
     {
-        private static bool IndividualPawns = true;
-        private static int currentPlotInt = 1700;
-        private static ModConfigMergeFile ConfigMergeFile;
-
-        private static AppearanceSubmenu CharacterSelectSubmenuConfig = new("AMM_Submenus.AppearanceSubmenu_CharacterSelect");
-        private static ModConfigClass PawnParamHandlerConfig = new("Mod_GameContent.Pawn_Parameter_Handler", "BioGame.ini");
+        private static bool IndividualPawns = false;
+        private static int currentPlotInt = 2400;
+        private static bool requiresFramework = true;
 
         public void RunModTask(ModBuilderContext context)
         {
@@ -28,23 +24,19 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             Console.WriteLine("generating framework test content");
 
             Directory.CreateDirectory(Path.Combine(context.CookedPCConsoleFolder, "FrameworkTest"));
-            ConfigMergeFile = context.GetOrCreateConfigMergeFile("ConfigDelta-FrameworkTest.m3cd");
-            var frameworkLibraryDir = Path.Combine(Directory.GetParent(context.DLCBaseFolder).Parent.FullName, @"LE1 Framework\DLC_MOD_Framework\CookedPCConsole");
+
+            var frameworkLibraryDir = Path.Combine(Directory.GetParent(context.DLCBaseFolder).Parent.FullName, @"LE1 Community Patch\DLC_MOD_LE1CP\CookedPCConsole\NPCs");
             foreach (var file in Directory.EnumerateFiles(frameworkLibraryDir, "BIONPC_*", SearchOption.AllDirectories))
             {
                 CheckBioNPCFile(file, context);
             }
-
-            // sort the entries to make it easier to find them
-            CharacterSelectSubmenuConfig["menuItems"] = new CoalesceProperty("menuItems", [.. CharacterSelectSubmenuConfig["menuItems"].OrderBy(x => x.Value)]);
-            ConfigMergeFile.AddOrMergeClassConfig(PawnParamHandlerConfig);
-            ConfigMergeFile.AddOrMergeClassConfig(CharacterSelectSubmenuConfig);
         }
 
         private static void CheckBioNPCFile(string filename, ModBuilderContext context)
         {
-            // skip squadmates, player; they are already handled
-            if (filename.Contains("Ashley")
+            if (
+                   // skip squadmates, player; they are already handled
+                   filename.Contains("Ashley")
                 || filename.Contains("Kaidan")
                 || filename.Contains("Garrus")
                 || filename.Contains("Tali")
@@ -52,10 +44,47 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 || filename.Contains("Liara")
                 || filename.Contains("Jenkins")
                 || filename.Contains("Shep_Romance")
-                // special case handling for his skin tone
+                // has 2+ appearances, handled somewhat manually
                 || filename.Contains("Anderson")
-                // already handled in an example
-                || filename.Contains("Joker"))
+                || filename.Contains("Helena")
+                || filename.Contains("Jenna")
+                || filename.Contains("Saren")
+                || filename.Contains("Shiala")
+                || filename.Contains("Chellick")
+                || filename.Contains("Chorban")
+                || filename.Contains("Consort")
+                || filename.Contains("Tevos")
+                || filename.Contains("Sparatus")
+                || filename.Contains("Valern")
+                || filename.Contains("Emily")
+                // has 2+ BioNPC files that get coalesced into a single appearance
+                || filename.Contains("Avina")
+                || filename.Contains("Keeper")
+                // counted as Normandy Crew, though they are technically named
+                || filename.Contains("Fredricks")
+                || filename.Contains("Jaz")
+                || filename.Contains("Nick")
+                // has things that need to be manually fixed/edited
+                // name stringref is wrong
+                || filename.Contains("Lidanya")
+                || filename.Contains("AscensionNavigator")
+                // dies early, needs to disappear from the menu
+                || filename.Contains("Nihlus")
+                // name, hats
+                || filename.Contains("Joker")
+                // outfit constraints
+                || filename.Contains("Mira")
+                || filename.Contains("ExoGeniVI")
+                // big, unique, need scaling
+                || filename.Contains("RachniQueen")
+                || filename.Contains("Sovereign")
+                // missing name stringref
+                || filename.Contains("Hymes")
+                || filename.Contains("Mendel")
+                || filename.Contains("Montoya")
+                || filename.Contains("Slajs")
+                || filename.Contains("FluxBouncer")
+                )
             {
                 return;
             }
@@ -137,7 +166,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // this one has two pawns in it, both without tags hardcoded. It assigns a tag to the correct one according to the mod setting for the appearance (from LE1CP)
             if (pawn.FileRef.FileNameNoExtension == "BIONPC_SalarianCSec")
             {
-                tag = "sta60_css_response";
+                tag = "BIONPC_SalarianCSec";
                 altTags = ["sta60_css_response", .. altTags];
             }
             else
@@ -145,42 +174,68 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 tag = GetPawnTag(pawn);
             }
 
-            var pcc = MEPackageHandler.CreateAndOpenPackage(Path.Combine(context.CookedPCConsoleFolder, "FrameworkTest", $"AMM_{uniqueName}.pcc"), context.Game);
+            // this one has two pawns in it, both without tags hardcoded. It assigns a tag to the correct one according to the mod setting for the appearance (from LE1CP)
+            if (pawn.FileRef.FileNameNoExtension == "BIONPC_Morlan")
+            {
+                tag = "BIONPC_Morlan";
+                altTags = ["sta60_black_market", .. altTags];
+            }
+            else
+            {
+                tag = GetPawnTag(pawn);
+            }
 
-            // need to add pawn Params, submenu class
-            pcc.GetOrCreateObjectReferencer();
+            int srName = 0;
+            var behavior = GetObjectProperty(pawn, "m_oBehavior");
+            var actorType = GetOptionalObjectProperty(behavior, "m_oActorType");
+
+            if (actorType == null)
+            {
+                Console.WriteLine("pawn did not have an actor type. weird");
+            }
+            else
+            {
+                var gameNameStringRef = actorType.GetProperty<StringRefProperty>("ActorGameNameStrRef");
+                if (gameNameStringRef == null)
+                {
+                    Console.WriteLine("warning: pawn does not have a name stringref");
+                }
+                srName = gameNameStringRef?.Value ?? 0;
+            }
 
             // pawn params config
             var pawnParamsConfig = new ModConfigClass($"AMM_{uniqueName}.AMM_Pawn_Parameters_{uniqueName}", "BioGame.ini");
+            if (requiresFramework)
+            {
+                pawnParamsConfig.SetBoolValue("RequiresFramework", true);
+            }
             pawnParamsConfig.SetStringValue("Tag", uniqueName);
 
             pawnParamsConfig.AddArrayEntries("alternateTags", altTags);
 
-            ConfigMergeFile.AddOrMergeClassConfig(pawnParamsConfig);
+            ModConfigClass PawnParamHandlerConfig = new("Mod_GameContent.Pawn_Parameter_Handler", "BioGame.ini");
 
             // add the pawn params into the master list
             var paramLoaderCoalescValue = new StructCoalesceValue() { { "parameterPath", new StringCoalesceValue($"AMM_{uniqueName}.AMM_Pawn_Parameters_{uniqueName}") } }.OutputValue();
             PawnParamHandlerConfig.AddEntry(new CoalesceProperty("pawnParamSpecs", new CoalesceValue(paramLoaderCoalescValue, CoalesceParseAction.AddUnique)));
-
-            //var paramLoader = new StructCoalesceValue();
-            //paramLoader.SetString("parameterPath", $"AMM_{uniqueName}.AMM_Pawn_Parameters_{uniqueName}");
-            //PawnParamHandlerConfig.AddEntry(new CoalesceProperty("pawnParamSpecs", ((ModBuilderCoalesceValue)paramLoader).ToCoalesceValue()));
 
             // inner menu
             var submenuConfig = new AppearanceSubmenu($"AMM_{uniqueName}.AppearanceSubmenu_{uniqueName}")
             {
                 PawnTag = uniqueName,
                 ArmorOverride = "overridden",
-                STitle = uniqueName,
+                SrTitle = srName,
                 SrSubtitle = 210210256,
                 UseTitleForChildMenus = true,
                 PreloadPawn = false
             };
 
+            AppearanceSubmenu CharacterSelectSubmenuConfig = new("AMM_Submenus.AppearanceSubmenu_CharacterSelect");
             CharacterSelectSubmenuConfig.AddMenuEntry(new UScriptStructs.AppearanceItemData()
             {
-                SCenterText = uniqueName,
-                SubMenuClassName = $"AMM_{uniqueName}.AppearanceSubmenu_{uniqueName}"
+                SrCenterText = srName,
+                SubMenuClassName = $"AMM_{uniqueName}.AppearanceSubmenu_{uniqueName}",
+                RequiresFramework = requiresFramework,
             });
 
             string meshPath = (GetOptionalObjectProperty(GetOptionalObjectProperty(pawn, "Mesh"), "SkeletalMesh")?.InstancedFullPath ?? "").ToLower();
@@ -188,11 +243,13 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             // assume anyone in a default cth or nkd outfit is casual, otherwise combat
             var casual = meshPath.Contains("cth") || meshPath.Contains("nkd");
+            var subfolder = "";
 
             if (meshPath.Contains("hmf"))
             {
                 if (headMeshPath.Contains("asa"))
                 {
+                    subfolder = "asa";
                     // asa stuff
                     pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.ASA_OutfitSpec");
                     pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.ASA_HelmetSpec");
@@ -206,6 +263,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 else
                 {
                     // hmf stuff
+                    subfolder = "hmf";
                     pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.HMF_OutfitSpec");
                     pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.HMF_HelmetSpec");
                     pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.HMF_BreatherSpec");
@@ -219,6 +277,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             else if (meshPath.Contains("tur") || meshPath.Contains("Sar") || meshPath.Contains("cbt_end"))
             {
                 // TUR stuff
+                subfolder = "tur";
                 // Saren on his flyer should also be armor
                 if (meshPath.Contains("cbt_end"))
                 {
@@ -238,6 +297,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             {
                 casual = false;
                 // asa stuff
+                subfolder = "asa";
                 pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.ASA_OutfitSpec");
                 pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.ASA_HelmetSpec");
                 pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.ASA_BreatherSpec");
@@ -250,6 +310,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             else if (meshPath.Contains("kro"))
             {
                 // KRO stuff
+                subfolder = "kro";
                 pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.KRO_OutfitSpec");
                 pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.KRO_HelmetSpec");
                 pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.KRO_BreatherSpec");
@@ -262,6 +323,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             else if (meshPath.Contains("sal"))
             {
                 // sal stuff
+                subfolder = "sal";
                 pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.SAL_OutfitSpec");
                 pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.SAL_HelmetSpec");
                 pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.SAL_BreatherSpec");
@@ -271,9 +333,16 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     SubMenuClassName = casual ? "AMM_Submenus.Salarian.AppearanceSubmenu_Salarian_CasualOutfits" : "AMM_Submenus.Salarian.AppearanceSubmenu_Salarian_CombatOutfits"
                 });
             }
-            else
+            else if (meshPath.Contains("hmm"))
             {
-                // default to hmm for anything else
+                if (headMeshPath.Contains("bat_hed"))
+                {
+                    subfolder = "bat";
+                }
+                else
+                {
+                    subfolder = "hmm";
+                }
                 pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.HMM_OutfitSpec");
                 pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.HMM_HelmetSpec");
                 pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.HMM_BreatherSpec");
@@ -283,6 +352,57 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     SubMenuClassName = casual ? "AMM_Submenus.HumanMale.AppearanceSubmenu_HumanMale_CasualOutfits" : "AMM_Submenus.HumanMale.AppearanceSubmenu_HumanMale_CombatOutfits"
                 });
             }
+            else if (meshPath.Contains("fac_vol"))
+            {
+                subfolder = "volus";
+                pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.Volus_OutfitSpec");
+                pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.Volus_HelmetSpec");
+                pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.Volus_BreatherSpec");
+                submenuConfig.AddMenuEntry(new UScriptStructs.AppearanceItemData()
+                {
+                    InlineSubmenu = true,
+                    SubMenuClassName = "AMM_Submenus_Aux.Volus.AppearanceSubmenu_Volus_Outfits"
+                });
+            }
+            else if (meshPath.Contains("elc"))
+            {
+                subfolder = "elcor";
+                pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.Elcor_OutfitSpec");
+                pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.Elcor_HelmetSpec");
+                pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.Elcor_BreatherSpec");
+                submenuConfig.AddMenuEntry(new UScriptStructs.AppearanceItemData()
+                {
+                    InlineSubmenu = true,
+                    SubMenuClassName = "AMM_Submenus_Aux.Elcor.AppearanceSubmenu_Elcor_Outfits"
+                });
+            }
+            else if (meshPath.Contains("han"))
+            {
+                subfolder = "hanar";
+                pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.Hanar_OutfitSpec");
+                pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.Hanar_HelmetSpec");
+                pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.Hanar_BreatherSpec");
+                submenuConfig.AddMenuEntry(new UScriptStructs.AppearanceItemData()
+                {
+                    InlineSubmenu = true,
+                    SubMenuClassName = "AMM_Submenus_Aux.Hanar.AppearanceSubmenu_Hanar_Outfits"
+                });
+            }
+            else
+            {
+                subfolder = "misc";
+                pawnParamsConfig.SetStringValue("outfitSpecListPath", "outfitSpecs.Misc_OutfitSpec");
+                pawnParamsConfig.SetStringValue("helmetSpecListPath", "OutfitSpecs.Misc_HelmetSpec");
+                pawnParamsConfig.SetStringValue("breatherSpecListPath", "OutfitSpecs.Misc_BreatherSpec");
+                submenuConfig.AddMenuEntry(new UScriptStructs.AppearanceItemData()
+                {
+                    Comment = "default outfit",
+                    SrCenterText = 210210283,
+                    ApplyOutfitId = -1
+                });
+            }
+
+            subfolder = "";
 
             // these are the corpses on X57 that don't have heads under there
             // set it to full with no way to change it
@@ -293,7 +413,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 pawnParamsConfig.SetStringValue("defaultHelmetState", "full");
             }
 
-            // others that default to on just for the aestetic
+            // others that default to on just for the aesthetic
             if (tag == "sta60_assassin" || tag == "sp120_toombs")
             {
                 pawnParamsConfig.SetBoolValue("GiveFullHelmetControl", false);
@@ -304,7 +424,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             // Durand is on a planet with no atmosphere, but she does have a head
             // same with Elanos Haliat
             // Tonn Actus is just wearing full helmet inside because he wants to
-            // could include Duranr and Elanos in the must stay on camp
+            // could include Durand and Elanos in the must stay on camp
             // it would be even better if it forced it on via sequence, but alas
             if (tag == "UNC73_ELT_AllianceLieutenantDurand" || tag == "UNC53_Elanos" || tag == "NPCH_TonnActus")
             {
@@ -316,19 +436,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             appearanceIdLookups.SetString("appearanceType", casual ? "casual" : "combat");
             appearanceIdLookups.SetString("FrameworkFileName", pawn.FileRef.FileNameNoExtension);
             var shortName = BioNPCName.Replace("BIONPC_", "");
-            // a few have variants that use the same live/poll name
-            shortName = shortName switch
-            {
-                "Helena_Citadel" => "Helena",
-                "Chorban_Markets" => "Chorban",
-                "Sparatus_Holo" => "Sparatus",
-                "Valern_Holo" => "Valern",
-                "Tevos_Holo" => "Tevos",
-                "Emily_Tower" => "Emily",
-                "Jenna_Flux" => "Jenna",
-                "Chellick_Casual" => "Chellick",
-                _ => shortName
-            };
+            
             appearanceIdLookups.SetString("FrameworkLiveEventName", $"Live_NPC_{shortName}");
             appearanceIdLookups.SetString("FrameworkPollEventName", $"Poll_NPC_{shortName}");
             appearanceIdLookups.SetStruct("bodyAppearanceLookup", new StructCoalesceValue { { "plotIntId", new IntCoalesceValue(currentPlotInt++) } });
@@ -337,8 +445,15 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             appearanceIdLookups.SetStruct("appearanceFlagsLookup", new StructCoalesceValue { { "plotIntId", new IntCoalesceValue(currentPlotInt++) } });
             pawnParamsConfig.SetStructValue("AppearanceIdLookupsList", appearanceIdLookups);
 
-            var pawnParamsClass = new ClassToCompile($"AMM_Pawn_Parameters_{uniqueName}", $"Class AMM_Pawn_Parameters_{uniqueName} extends AMM_Pawn_Parameters config(Game); public function string GetAppearanceType(BioPawn targetPawn){{return \"{(casual ? "casual" : "combat")}\";}}");
+            var pawnParamsClass = new ClassToCompile($"AMM_Pawn_Parameters_{uniqueName}", $"Class AMM_Pawn_Parameters_{uniqueName} extends AMM_Pawn_Parameters config(Game);");
             var normalSubmenu = new ClassToCompile($"AppearanceSubmenu_{uniqueName}", $"Class AppearanceSubmenu_{uniqueName} extends AppearanceSubmenu config(UI);");
+
+            var folderPath = Path.Combine(context.CookedPCConsoleFolder, "..\\..\\FrameworkTest", subfolder);
+            Directory.CreateDirectory(folderPath);
+            var pcc = MEPackageHandler.CreateAndOpenPackage(Path.Combine(folderPath, $"AMM_{uniqueName}.pcc"), context.Game);
+
+            // need to add pawn Params, submenu class
+            pcc.GetOrCreateObjectReferencer();
 
             // add a few classes
             var classTask = new AddClassesToFile(
@@ -352,136 +467,144 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
 
             submenuConfig.PawnAppearanceType = casual ? "casual" : "combat";
 
+            var ConfigMergeFile = context.GetOrCreateConfigMergeFile(Path.Combine(folderPath, $"ConfigDelta-AMM_{shortName}.m3cd"));
+
+            var appearanceUpdaterConfig = new ModConfigClass("Startup_MOD_AMM.AMM_AppearanceUpdater", "BioGame.ini");
+            appearanceUpdaterConfig.SetBoolValue("ExtraCharacterModulesPresent",true);
+            ConfigMergeFile.AddOrMergeClassConfig(appearanceUpdaterConfig);
+            ConfigMergeFile.AddOrMergeClassConfig(PawnParamHandlerConfig);
+            ConfigMergeFile.AddOrMergeClassConfig(CharacterSelectSubmenuConfig);
             ConfigMergeFile.AddOrMergeClassConfig(submenuConfig);
+            ConfigMergeFile.AddOrMergeClassConfig(pawnParamsConfig);
         }
 
-        private static bool CheckBioPawn(ExportEntry pawn)
-        {
-            // things I need to check for any possibly fix:
-            // body/helmet meshes are not what is pointed to by the params
-            // material parents are not what is pointed to by params
-            // there are extra material params that affect the armor on the pawn
+        //private static bool CheckBioPawn(ExportEntry pawn)
+        //{
+        //    // things I need to check for any possibly fix:
+        //    // body/helmet meshes are not what is pointed to by the params
+        //    // material parents are not what is pointed to by params
+        //    // there are extra material params that affect the armor on the pawn
 
 
-            var tag = pawn.GetProperty<NameProperty>("Tag");
-            if (tag != null)
-            {
-                Console.WriteLine($"checking pawn {tag.Value} in file {pawn.FileRef.FileNameNoExtension}");
-            }
-            else
-            {
-                // this is an issue for AMM, but probably not a general problem
-                Console.WriteLine($"detected a problem in {pawn.FileRef.FileNameNoExtension}; pawn at {pawn.InstancedFullPath} has no tag.");
-                return false;
-            }
+        //    var tag = pawn.GetProperty<NameProperty>("Tag");
+        //    if (tag != null)
+        //    {
+        //        Console.WriteLine($"checking pawn {tag.Value} in file {pawn.FileRef.FileNameNoExtension}");
+        //    }
+        //    else
+        //    {
+        //        // this is an issue for AMM, but probably not a general problem
+        //        Console.WriteLine($"detected a problem in {pawn.FileRef.FileNameNoExtension}; pawn at {pawn.InstancedFullPath} has no tag.");
+        //        return false;
+        //    }
 
-            var behavior = GetObjectProperty(pawn, "m_oBehavior");
-            var actorType = GetOptionalObjectProperty(behavior, "m_oActorType");
+        //    var behavior = GetObjectProperty(pawn, "m_oBehavior");
+        //    var actorType = GetOptionalObjectProperty(behavior, "m_oActorType");
 
-            if (actorType == null)
-            {
-                // this is more likely to be a general problem, but I am not sure; only some of the keepers seem to have this problem so far. It will cause issues spawning a preview and maybe doing a native appearance update, but I am unsure beyond that
-                Console.WriteLine($"detected a problem in {pawn.FileRef.FileNameNoExtension}; pawn at {pawn.InstancedFullPath} has no actorType.");
-                return false;
-            }
+        //    if (actorType == null)
+        //    {
+        //        // this is more likely to be a general problem, but I am not sure; only some of the keepers seem to have this problem so far. It will cause issues spawning a preview and maybe doing a native appearance update, but I am unsure beyond that
+        //        Console.WriteLine($"detected a problem in {pawn.FileRef.FileNameNoExtension}; pawn at {pawn.InstancedFullPath} has no actorType.");
+        //        return false;
+        //    }
 
-            // config which determines which meshes get loaded for any given settings
-            var appearanceConfig = GetObjectProperty(actorType, "m_oAppearance");
-            var bodyConfig = GetObjectProperty(appearanceConfig, "Body");
+        //    // config which determines which meshes get loaded for any given settings
+        //    var appearanceConfig = GetObjectProperty(actorType, "m_oAppearance");
+        //    var bodyConfig = GetObjectProperty(appearanceConfig, "Body");
 
-            int armorType = 0;
-            int meshVariant = 0;
-            int materialVariant = 0;
+        //    int armorType = 0;
+        //    int meshVariant = 0;
+        //    int materialVariant = 0;
 
-            // the actual settings, ie which specific outfit to apply
-            // the default is just all default settings for both
-            var appearanceSettings = GetOptionalObjectProperty(actorType, "m_oAppearanceSettings");
-            if (appearanceSettings != null)
-            {
-                ExportEntry? bodySettings = GetOptionalObjectProperty(appearanceSettings, "m_oBodySettings");
-                if (bodySettings != null)
-                {
-                    armorType = GetEnumPropertyInt(bodySettings, "m_eArmorType");
-                    meshVariant = GetIntProp(bodySettings, "m_nModelVariant");
-                    materialVariant = GetIntProp(bodySettings, "m_nMaterialConfig");
-                }
-            }
+        //    // the actual settings, ie which specific outfit to apply
+        //    // the default is just all default settings for both
+        //    var appearanceSettings = GetOptionalObjectProperty(actorType, "m_oAppearanceSettings");
+        //    if (appearanceSettings != null)
+        //    {
+        //        ExportEntry? bodySettings = GetOptionalObjectProperty(appearanceSettings, "m_oBodySettings");
+        //        if (bodySettings != null)
+        //        {
+        //            armorType = GetEnumPropertyInt(bodySettings, "m_eArmorType");
+        //            meshVariant = GetIntProp(bodySettings, "m_nModelVariant");
+        //            materialVariant = GetIntProp(bodySettings, "m_nMaterialConfig");
+        //        }
+        //    }
 
-            if (!GetExpectedMesh(armorType, meshVariant, materialVariant, bodyConfig, out var expectedMesh, out var expectedMats))
-            {
-                return false;
-            }
+        //    if (!GetExpectedMesh(armorType, meshVariant, materialVariant, bodyConfig, out var expectedMesh, out var expectedMats))
+        //    {
+        //        return false;
+        //    }
 
-            var mesh = GetObjectProperty(pawn, "Mesh");
+        //    var mesh = GetObjectProperty(pawn, "Mesh");
 
-            var actualMesh = GetObjectProperty(mesh, "SkeletalMesh").InstancedFullPath;
+        //    var actualMesh = GetObjectProperty(mesh, "SkeletalMesh").InstancedFullPath;
 
-            if (actualMesh != expectedMesh)
-            {
-                Console.WriteLine($"Expected mesh: {expectedMesh}; actual mesh: {actualMesh}");
-            }
+        //    if (actualMesh != expectedMesh)
+        //    {
+        //        Console.WriteLine($"Expected mesh: {expectedMesh}; actual mesh: {actualMesh}");
+        //    }
 
-            
-            var mats = mesh.GetProperty<ArrayProperty<ObjectProperty>>("Materials");
-            string[] actualMaterials = new string[mats.Count];
 
-            for (int i = 0; i < mats.Count; i++)
-            {
-                var mat = mats[i].ResolveToEntry(pawn.FileRef);
-                if (mat != null && mat.Parent == pawn && mat is ExportEntry entry)
-                {
-                    mat = entry.GetProperty<ObjectProperty>("Parent")?.ResolveToEntry(mat.FileRef);
-                }
-                actualMaterials[i] = mat?.InstancedFullPath ?? "null";
-            }
+        //    var mats = mesh.GetProperty<ArrayProperty<ObjectProperty>>("Materials");
+        //    string[] actualMaterials = new string[mats.Count];
 
-            for (int i = 0; i < expectedMats.Length; i++)
-            {
-                if (actualMaterials.Length > i && !string.Equals(actualMaterials[i], expectedMats[i], StringComparison.OrdinalIgnoreCase))
-                {
-                    Console.WriteLine($"expected material {i} {expectedMats[i]}; actual {actualMaterials[i]}");
-                }
-            }
-            return true;
-        }
+        //    for (int i = 0; i < mats.Count; i++)
+        //    {
+        //        var mat = mats[i].ResolveToEntry(pawn.FileRef);
+        //        if (mat != null && mat.Parent == pawn && mat is ExportEntry entry)
+        //        {
+        //            mat = entry.GetProperty<ObjectProperty>("Parent")?.ResolveToEntry(mat.FileRef);
+        //        }
+        //        actualMaterials[i] = mat?.InstancedFullPath ?? "null";
+        //    }
 
-        private static bool GetExpectedMesh(int armorType, int meshVariant, int materialVariant, ExportEntry bodyConfig, out string expectedMesh, out string[] expectedMaterials)
-        {
-            expectedMesh = "";
-            expectedMaterials = [];
+        //    for (int i = 0; i < expectedMats.Length; i++)
+        //    {
+        //        if (actualMaterials.Length > i && !string.Equals(actualMaterials[i], expectedMats[i], StringComparison.OrdinalIgnoreCase))
+        //        {
+        //            Console.WriteLine($"expected material {i} {expectedMats[i]}; actual {actualMaterials[i]}");
+        //        }
+        //    }
+        //    return true;
+        //}
 
-            var appearancePrefix = bodyConfig.GetProperty<StrProperty>("AppearancePrefix");
-            var armorEntry = bodyConfig.GetProperty<ArrayProperty<StructProperty>>("Armor")?[armorType];
+        //private static bool GetExpectedMesh(int armorType, int meshVariant, int materialVariant, ExportEntry bodyConfig, out string expectedMesh, out string[] expectedMaterials)
+        //{
+        //    expectedMesh = "";
+        //    expectedMaterials = [];
 
-            if (armorEntry == null)
-            {
-                Console.WriteLine("unable to get armor configs");
-                return false;
-            }
-            var meshPackageName = armorEntry.GetProp<NameProperty>("m_meshPackageName");
-            var materialPackageName = armorEntry.GetProp<NameProperty>("m_materialPackageName");
+        //    var appearancePrefix = bodyConfig.GetProperty<StrProperty>("AppearancePrefix");
+        //    var armorEntry = bodyConfig.GetProperty<ArrayProperty<StructProperty>>("Armor")?[armorType];
 
-            var variants = armorEntry.GetProp<ArrayProperty<StructProperty>>("Variations");
-            if (variants.Count < meshVariant + 1)
-            {
-                Console.WriteLine("missing variants");
-                return false;
-            }
-            var meshVariantSpecs = variants[meshVariant];
-            var materialsPerVariant = meshVariantSpecs.GetProp<IntProperty>("MaterialsPerVariation")?.Value ?? 0;
+        //    if (armorEntry == null)
+        //    {
+        //        Console.WriteLine("unable to get armor configs");
+        //        return false;
+        //    }
+        //    var meshPackageName = armorEntry.GetProp<NameProperty>("m_meshPackageName");
+        //    var materialPackageName = armorEntry.GetProp<NameProperty>("m_materialPackageName");
 
-            var variantString = $"{GetArmorTypeName(armorType)}{CharFromInt(meshVariant)}";
+        //    var variants = armorEntry.GetProp<ArrayProperty<StructProperty>>("Variations");
+        //    if (variants.Count < meshVariant + 1)
+        //    {
+        //        Console.WriteLine("missing variants");
+        //        return false;
+        //    }
+        //    var meshVariantSpecs = variants[meshVariant];
+        //    var materialsPerVariant = meshVariantSpecs.GetProp<IntProperty>("MaterialsPerVariation")?.Value ?? 0;
 
-            expectedMesh = $"{meshPackageName}.{variantString}.{appearancePrefix}_{variantString}_MDL";
+        //    var variantString = $"{GetArmorTypeName(armorType)}{CharFromInt(meshVariant)}";
 
-            expectedMaterials =  new string[materialsPerVariant];
+        //    expectedMesh = $"{meshPackageName}.{variantString}.{appearancePrefix}_{variantString}_MDL";
 
-            for (int i = 0; i < materialsPerVariant; i++)
-            {
-                expectedMaterials[i] = $"{materialPackageName}.{variantString}.{appearancePrefix}_{variantString}_MAT_{materialVariant + 1}{CharFromInt(i)}";
-            }
-            return true;
-        }
+        //    expectedMaterials =  new string[materialsPerVariant];
+
+        //    for (int i = 0; i < materialsPerVariant; i++)
+        //    {
+        //        expectedMaterials[i] = $"{materialPackageName}.{variantString}.{appearancePrefix}_{variantString}_MAT_{materialVariant + 1}{CharFromInt(i)}";
+        //    }
+        //    return true;
+        //}
 
         private static ExportEntry GetObjectProperty(ExportEntry entry, string propName)
         {
@@ -500,42 +623,42 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
             return (ExportEntry?)entry?.GetProperty<ObjectProperty>(propName)?.ResolveToEntry(entry.FileRef);
         }
 
-        private static int GetIntProp(ExportEntry entry, string propName)
-        {
-            return entry.GetProperty<IntProperty>(propName)?.Value ?? 0;
-        }
+        //private static int GetIntProp(ExportEntry entry, string propName)
+        //{
+        //    return entry.GetProperty<IntProperty>(propName)?.Value ?? 0;
+        //}
 
-        private static int GetEnumPropertyInt(ExportEntry entry, string propName)
-        {
-            var enumProp = entry.GetProperty<EnumProperty>(propName);
-            if (enumProp == null)
-            {
-                return 0;
-            }
-            var enumValues = GlobalUnrealObjectInfo.GetEnumValues(entry.FileRef.Game, enumProp.EnumType);
-            return enumValues.IndexOf(enumProp.Value);
-        }
+        //private static int GetEnumPropertyInt(ExportEntry entry, string propName)
+        //{
+        //    var enumProp = entry.GetProperty<EnumProperty>(propName);
+        //    if (enumProp == null)
+        //    {
+        //        return 0;
+        //    }
+        //    var enumValues = GlobalUnrealObjectInfo.GetEnumValues(entry.FileRef.Game, enumProp.EnumType);
+        //    return enumValues.IndexOf(enumProp.Value);
+        //}
 
-        private static string GetArmorTypeName(int armorType)
-        {
-            return armorType switch
-            {
-                0 => "NKD",
-                1 => "CTH",
-                2 => "LGT",
-                3 => "MED",
-                4 => "HVY",
-                _ => throw new Exception($"Invalid armor type {armorType}")
-            };
-        }
+        //private static string GetArmorTypeName(int armorType)
+        //{
+        //    return armorType switch
+        //    {
+        //        0 => "NKD",
+        //        1 => "CTH",
+        //        2 => "LGT",
+        //        3 => "MED",
+        //        4 => "HVY",
+        //        _ => throw new Exception($"Invalid armor type {armorType}")
+        //    };
+        //}
 
-        private static char CharFromInt(int value)
-        {
-            if (value < 0 || value > 25)
-            {
-                throw new IndexOutOfRangeException();
-            }
-            return (char)(value + 'a');
-        }
+        //private static char CharFromInt(int value)
+        //{
+        //    if (value < 0 || value > 25)
+        //    {
+        //        throw new IndexOutOfRangeException();
+        //    }
+        //    return (char)(value + 'a');
+        //}
     }
 }
