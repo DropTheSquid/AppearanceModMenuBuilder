@@ -173,16 +173,10 @@ public function bool F2513(BioWorldInfo bioWorld, int Argument)
 	return !class'AMM_Pawn_Parameters_Liara'.default.LiaraWearsArmorOnVirmire;
 }
 
+public function bool F2514(BioWorldInfo bioWorld, int Argument)
+{
+	local AMM_AppearanceUpdater_Base instance;
 
-// overall logic:
-// Pre recruit/Casual
-// !recruited && !Liara wears armor
-
-// casual
-// recruited || Liara Wears armor
-
-// pre recruit/Combat
-// !recruited && Liara wears armor
-
-// combat
-// !recruited || !Liara wears armor
+	// used to determine if AMM is properly installed and functioning.
+	return class'AMM_AppearanceUpdater'.static.IsMergeModInstalled(instance) && class'AMM_AppearanceUpdater'.static.IsDlcModInstalled(instance);
+}
