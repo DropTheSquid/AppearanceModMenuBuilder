@@ -24,10 +24,10 @@ private function BreatherSpecBase GetDelegateSpec(BioPawn target, SpecLists spec
         delegateSpec = BreatherSpecBase(params.GetOverrideDefaultBreatherSpec(target));
 	}
 
-    // else use vanilla breather spec
+    // else use original breather spec
     if (delegateSpec == None)
     {
-        delegateSpec = new Class'VanillaBreatherSpec';
+        delegateSpec = new Class'OriginalBreatherSpec';
     }
 
     return delegateSpec;

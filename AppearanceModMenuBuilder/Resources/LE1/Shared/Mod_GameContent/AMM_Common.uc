@@ -38,7 +38,7 @@ struct PawnAppearanceIds
         var eHelmetDisplayState helmetDisplayState;
 		// for non squad characters, by default their helmet visibility will be locked to default
 		// if this is turned on, then it will respect the setting above
-		var bool bOverridedefaultHeadgearVisibility;
+		var bool bOverrideDefaultHeadgearVisibility;
     };
 };
 
@@ -67,7 +67,7 @@ public static function AppearanceSettings DecodeAppearanceSettings(int flags)
     }
 
 	// if the 4 bit AKA 0100 is set, this is true
-	settings.bOverridedefaultHeadgearVisibility = (flags & 4) != 0;
+	settings.bOverrideDefaultHeadgearVisibility = (flags & 4) != 0;
 
 	// TODO decode more flags here later
 	return settings;

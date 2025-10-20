@@ -21,6 +21,8 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                     LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AMM_Pawn_Parameters.uc", ["Mod_GameContent"]),
                     LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\AMM_Utilities.uc", ["Mod_GameContent"]),
                     LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\OriginalOutfitSpec.uc", ["Mod_GameContent"]),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\OriginalHelmetSpec.uc", ["Mod_GameContent"]),
+                    LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\OriginalBreatherSpec.uc", ["Mod_GameContent"]),
                     LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\OutfitSpecBase.uc", ["Mod_GameContent"]),
                     LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\helmetSpecBase.uc", ["Mod_GameContent"]),
                     LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\breatherSpecBase.uc", ["Mod_GameContent"]),

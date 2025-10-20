@@ -2,16 +2,17 @@ Class AMM_OriginalOutfit;
 
 var string targetPath;
 var name tag;
-var SkeletalMesh originalSkeletalMesh;
-var array<MaterialInterface> originalMaterials;
+var AppearanceMesh originalBody;
+var AppearanceMesh originalHeadgear;
+var AppearanceMesh originalVisor;
+var AppearanceMesh originalBreather;
 
 public static function StoreOutfit(BioPawn target)
 {
     local Name Package;
     local BioWorldInfo localWI;
     local AMM_OriginalOutfit outfit;
-    local MaterialInterface mat;
-    local int i;
+
     
     if (GetOutfit(target, outfit))
     {
@@ -25,24 +26,34 @@ public static function StoreOutfit(BioPawn target)
         outfit = new Class'AMM_OriginalOutfit';
         outfit.targetPath = PathName(target);
         outfit.tag = target.tag;
-        outfit.originalSkeletalMesh = target.Mesh.SkeletalMesh;
-        i = 0;
-        // get materials until we get a None material. this should deal with incorrectly set up SMCs and get the materials from the skeletal mesh itself. 
-        //LogInternal("mat" @ i @ target.Mesh.GetMaterial(i) @ target.Mesh.GetBaseMaterial(i) @ target.Mesh.Materials[i], );
-        for (; TRUE; i++)
-        {
-            mat = target.Mesh.GetBaseMaterial(i);
-            if (mat == None)
-            {
-                break;
-            }
-            outfit.originalMaterials.AddItem(CleanMat(mat, target));
-        }
-        // LogInternal("saving original mesh for actor" @ PathName(target) @ outfit.originalSkeletalMesh @ outfit.originalMaterials.Length, );
+        // save all the meshes AMM might overwrite
+        outfit.originalBody = SaveMesh(target.Mesh, target);
+        outfit.originalHeadgear = SaveMesh(target.m_oHeadGearMesh, target);
+        outfit.originalVisor = SaveMesh(target.m_oVisorMesh, target);
+        outfit.originalBreather = SaveMesh(target.m_oFacePlateMesh, target);
         localWI.ClientDestroyedActorContent.InsertItem(0, outfit);
     }
 }
-private static final function MaterialInterface CleanMat(MaterialInterface mat, BioPawn target)
+private static function AppearanceMesh SaveMesh(SkeletalMeshComponent smc, BioPawn target)
+{
+    local AppearanceMesh savedMesh;
+    local MaterialInterface mat;
+    local int i;
+
+    savedMesh.Mesh = smc.SkeletalMesh;
+    // get materials until we get a None material. this should deal with incorrectly set up SMCs and get the materials from the skeletal mesh itself. 
+    for (i = 0; TRUE; i++)
+    {
+        mat = smc.GetBaseMaterial(i);
+        if (mat == None)
+        {
+            break;
+        }
+        savedMesh.Materials.AddItem(CleanMat(mat, target));
+    }
+    return savedMesh;
+}
+private static function MaterialInterface CleanMat(MaterialInterface mat, BioPawn target)
 {
     local MaterialInstanceConstant mic;
     local MaterialInstanceConstant newMIC;
