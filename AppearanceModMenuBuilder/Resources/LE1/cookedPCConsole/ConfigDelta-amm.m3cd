@@ -56,7 +56,7 @@ breatherSpecListPath=OutfitSpecs.HMM_BreatherSpec
 ; default Kaidan to the fixed up version of his breather that doesn't have his eyelashes weirdly visible through it, and correctly hides his head/hair to avoid clipping issues
 defaultBreatherAppearanceId=-14
 
-; intentionally leaving plot ints 1524-1536 open; That range is used by LE1 Datapad Collection.
+; intentionally leaving plot ints 1524-1535 open; That range is used by LE1 Datapad Collection.
 
 [BioGame.ini PawnParams.AMM_Pawn_Parameters_Ashley]
 Tag=Hench_HumanFemale

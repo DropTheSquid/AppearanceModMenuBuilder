@@ -44,8 +44,8 @@ private function OutfitSpecBase GetDelegateSpec(BioPawn target, SpecLists specLi
 
         if (delegateSpec == None)
         {
-            // otherwise, defer to vanilla behavior
-            delegateSpec = new Class'VanillaOutfitSpec';
+            // otherwise, defer to original outfit
+            delegateSpec = new Class'OriginalOutfitSpec';
         }
 
         return delegateSpec;

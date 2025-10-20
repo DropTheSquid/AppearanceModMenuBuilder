@@ -80,6 +80,7 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 				// apply the scale to UI world previews
 				target.SetScale(previewScale);
 			}
+			Class'AMM_OriginalOutfit'.static.StoreOutfit(target);
 			if (specLists.outfitSpecs.DelegateToOutfitSpecById(target, specLists, appearanceIds, pawnAppearance))
 			{
 				attachments = GetAttachmentsToTransfer(target);

@@ -30,6 +30,7 @@ namespace AppearanceModMenuBuilder.LE1.BuildSteps.DLC
                 _ => ammPackageFile,
                 // the handler inheritance tree
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\Startup\AMM_AppearanceUpdater.uc", ["Startup_MOD_AMM"]),
+                LooseClassCompile.GetClassFromFile(@"Resources\LE1\Startup\AMM_OriginalOutfit.uc", ["Startup_MOD_AMM"]),
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\Shared\Mod_GameContent\CustomUIHandlerInterface.uc", ["Mod_GameContent"]),
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\NonStartup\Handler\ModMenuBase.uc", ["Handler"]),
                 LooseClassCompile.GetClassFromFile(@"Resources\LE1\NonStartup\Handler\ModHandler_AMM.uc", ["Handler"]),
