@@ -6,6 +6,8 @@ var AppearanceMesh originalBody;
 var AppearanceMesh originalHeadgear;
 var AppearanceMesh originalVisor;
 var AppearanceMesh originalBreather;
+var AppearanceMesh originalHead;
+var AppearanceMesh originalHair;
 
 public static function StoreOutfit(BioPawn target)
 {
@@ -46,6 +48,9 @@ public static function StoreOutfit(BioPawn target)
         outfit.originalHeadgear = SaveMesh(target.m_oHeadGearMesh, target);
         outfit.originalVisor = SaveMesh(target.m_oVisorMesh, target);
         outfit.originalBreather = SaveMesh(target.m_oFacePlateMesh, target);
+        // save a few more that might not show up correctly in the UI world preview
+        outfit.originalHead = SaveMesh(target.m_oHeadMesh, target);
+        outfit.originalHair = SaveMesh(target.m_oHairMesh, target);
         localWI.ClientDestroyedActorContent.InsertItem(0, outfit);
     }
 }

@@ -60,6 +60,7 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 	{
 		params.SpecialHandling(target);
 		RemoveAIControllerFromPreviews(target);
+		FixPreviewPawnMeshes(target);
 		// LogInternal("appearance update for target"@PathName(target)@Target.Tag@Target.UniqueTag@"from source"@source);
 		// LogInternal("target is in appearance type"@params.GetAppearanceType(target));
 		if (params.GetCurrentAppearanceIds(target, appearanceIds))
@@ -128,6 +129,17 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 	// {
 	// 	LogInternal("appearance update with no params for target"@PathName(target)@Target.Tag@Target.UniqueTag@"from source"@source);
 	// }
+}
+
+private function FixPreviewPawnMeshes(BioPawn target)
+{
+	local AMM_OriginalOutfit outfit;
+
+	if (target.GetPackageName() == 'BIOG_UIWorld' && class'AMM_Utilities'.static.GetMorphHead(target) == None && Class'AMM_OriginalOutfit'.static.GetOutfit(target, outfit))
+    {
+		class'AMM_Utilities'.static.replaceMesh(target, target.m_oHeadMesh, outfit.originalHead);
+		class'AMM_Utilities'.static.replaceMesh(target, target.m_oHairMesh, outfit.originalHair);
+    }
 }
 
 struct AttachmentToTransfer
