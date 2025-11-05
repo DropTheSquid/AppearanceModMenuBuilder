@@ -29,6 +29,8 @@ enum FrameworkStreamState
 	NotPresent,
 	// it is present in the list, but not currently streamed in
     StreamedOut,
+	// it is trying to load synchronously, but hasn't started doing it yet. this happens sometimes and causes big delays
+	LoadPending,
 	// it is in the early process of loading
     Loading,
 	// it is loaded, but not visible, and is not progressing further at the moment
@@ -69,6 +71,7 @@ struct StreamInRequest
 	var DesiredStreamingState desiredState;
 
 	var bool completed;
+	var bool background;
 };
 
 struct PawnId
@@ -190,8 +193,9 @@ public function Cleanup()
 				// LogInternal("hard streaming out"@currentStreamRequest.frameworkFileName);
 				SetLevelStreamingStatus(currentStreamRequest.frameworkFileName, DesiredStreamingState.NotPresent);
 				break;
-			case FrameworkStreamState.Loaded:
+			case FrameworkStreamState.LoadPending:
 			case FrameworkStreamState.loading:
+			case FrameworkStreamState.Loaded:
 				// LogInternal("unloading out"@currentStreamRequest.frameworkFileName);
 				SetLevelStreamingStatus(currentStreamRequest.frameworkFileName, DesiredStreamingState.Loaded);
 				break;
@@ -267,7 +271,7 @@ public function PawnLoadState LoadPawn(string tag, string appearanceType, option
 		// next try streaming the pawn in
 		if (params.GetFrameworkFileForAppearanceType(appearanceType, frameworkFileName, frameworkLiveEvent, frameworkPollEvent))
 		{
-			if (LoadFrameworkFile(tag, appearanceType, frameworkFileName, frameworkLiveEvent, frameworkPollEvent))
+			if (LoadFrameworkFile(tag, appearanceType, frameworkFileName, frameworkLiveEvent, frameworkPollEvent, avoidSlowdown))
 			{
 				return PawnLoadState.loaded;
 			}
@@ -404,7 +408,7 @@ public function BioPawn GetUIWorldPawn()
 }
 
 // returns true if it is already loaded, false if it is happening asynchronously
-private function bool LoadFrameworkFile(string tag, string appearanceType, string fileName, string liveEvent, string pollEvent)
+private function bool LoadFrameworkFile(string tag, string appearanceType, string fileName, string liveEvent, string pollEvent, optional bool background = false)
 {
 	local StreamInRequest request;
 	local PawnId pawnId;
@@ -418,7 +422,11 @@ private function bool LoadFrameworkFile(string tag, string appearanceType, strin
 	{
 		// there is already a request in progress. See if it already has the requested tag and appearance type
 		// log("There is an in progress/finished request for framework file"@fileName);
-		
+		// if this was previously a background request and we now want it not background, update that. 
+		if (request.background && !background)
+		{
+			request.background = false;
+		}
 		// if this exactly matches an already loaded one, let it keep loading or say it is done
 		foreach request.pawnIds(pawnId)
 		{
@@ -463,6 +471,7 @@ private function bool LoadFrameworkFile(string tag, string appearanceType, strin
 	request.completed = false;
 	request.pollSent = false;
 	request.timeoutSet = false;
+	request.background = background;
 	streamingRequests.AddItem(request);
 	return false;
 }
@@ -500,14 +509,18 @@ private final function FrameworkStreamState GetFileStreamingState(string fileNam
             }
             else if (tempLevelStreaming.bShouldBeLoaded)
             {
-                if (tempLevelStreaming.bHasLoadRequestPending || tempLevelStreaming.LoadedLevel == None)
-                {
-                    return FrameworkStreamState.Loading;
-                }
-                else
-                {
+				if (tempLevelStreaming.LoadedLevel != None)
+				{
                     return FrameworkStreamState.Loaded;
+				}
+                else if (tempLevelStreaming.bHasLoadRequestPending)
+                {
+					return FrameworkStreamState.Loading;
                 }
+				else
+				{
+					return FrameworkStreamState.LoadPending;
+				}
             }
             // LogInternal("File" @ fileName @ "is not streamed in, but hypothetically could be", );
             return FrameworkStreamState.StreamedOut;
@@ -567,7 +580,6 @@ public function Update(float fDeltaT)
 				case FrameworkStreamState.visible:
 					if (currentRequest.frameworkLiveEventName == "")
 					{
-						// TODO handle this case
 						foreach currentRequest.PawnIds(currentPawnId)
 						{
 							if (FindStreamedInPawn(currentPawnId.tag, currentRequest.FrameworkFileName, pawn))
@@ -588,7 +600,7 @@ public function Update(float fDeltaT)
 					{
 						// LogInternal("streaming request for"@currentRequest.frameworkFileName@"is visible"@currentRequest.timeoutSet);
 						// add a timer here so that we pause even if the live event never fires
-						if (!streamingRequests[i].timeoutSet)
+						if (!currentRequest.timeoutSet)
 						{
 							if (_outerMenu.oWorldInfo.bPlayersOnly)
 							{
@@ -608,6 +620,14 @@ public function Update(float fDeltaT)
 							_outerMenu.EmitRemoteEvent(currentRequest.frameworkPollEventName);
 							streamingRequests[i].pollSent = true;
 						}
+					}
+					break;
+				case FrameworkStreamState.LoadPending:
+					// allow it to do a blocking load if this is not a background request
+					if (!currentRequest.background)
+					{
+						LogInternal("allowing"@currentRequest.frameworkFileName@"to load synchronously");
+						tempLevelStreaming.bShouldBlockOnLoad = true;
 					}
 					break;
 				case FrameworkStreamState.BecomingVisible:
@@ -695,8 +715,8 @@ private final function SetLevelStreamingStatus(coerce Name packageName, DesiredS
 			LogInternal("warning: unknown desired streaming state"@desiredState);
 			break;
 	}
-	// LogInternal("SetLevelStreamingStatus"@packageName@desiredState@bShouldBeLoaded@bShouldBeVisible);
-	// actually make the internal request	
+	// LogInternal("SetLevelStreamingStatus"@packageName@desiredState);
+	// actually make the internal request
     foreach _outerMenu.oWorldInfo.AllControllers(Class'PlayerController', PC)
     {
 		// LogInternal("Calling internal set status on"@PathName(PC));
@@ -709,11 +729,13 @@ private function HardUnload(coerce string fileName)
     local int i;
     local LevelStreaming tempLevelStreaming;
     
+	// LogInternal("hard unloading"@fileName);
     for (i = 0; i < _outerMenu.oWorldInfo.StreamingLevels.Length; i++)
     {
         tempLevelStreaming = _outerMenu.oWorldInfo.StreamingLevels[i];
         if (string(tempLevelStreaming.packageName) ~= fileName)
         {
+			// LogInternal("found LSK to hard unload");
             SetLevelStreamingStatus(tempLevelStreaming.packageName, DesiredStreamingState.Unloaded);
 			_outerMenu.oWorldInfo.StreamingLevels.Remove(i, 1);
             return;
