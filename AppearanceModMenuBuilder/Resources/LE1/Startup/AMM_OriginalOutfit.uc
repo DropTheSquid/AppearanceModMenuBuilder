@@ -72,7 +72,7 @@ public static function StoreOutfit(BioPawn target)
 }
 private static function bool DoesMeshMatch(SkeletalMeshComponent smc, AppearanceMesh originalMesh, AppearanceMesh lastAppliedMesh)
 {
-    if (smc.SkeletalMesh != originalMesh.Mesh || smc.SkeletalMesh != lastAppliedMesh.Mesh)
+    if (smc.SkeletalMesh != originalMesh.Mesh && smc.SkeletalMesh != lastAppliedMesh.Mesh)
     {
         return false;
     }

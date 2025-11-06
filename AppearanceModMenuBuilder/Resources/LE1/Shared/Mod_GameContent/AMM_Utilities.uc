@@ -770,7 +770,7 @@ public static function ApplyPawnAppearance(BioPawn target, pawnAppearance appear
 {
     local AMM_OriginalOutfit outfit;
 
-    if (class'AMM_OriginalOutfit'.static.GetOutfit(target, outfit))
+    if (target.GetPackageName() != 'BIOG_UIWORLD' && class'AMM_OriginalOutfit'.static.GetOutfit(target, outfit))
     {
         outfit.lastAppliedBody = appearance.bodyMesh;
         outfit.lastAppliedHeadgear = appearance.HelmetMesh;
