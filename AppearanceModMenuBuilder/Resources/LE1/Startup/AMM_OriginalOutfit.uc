@@ -6,8 +6,10 @@ var AppearanceMesh originalBody;
 var AppearanceMesh originalHeadgear;
 var AppearanceMesh originalVisor;
 var AppearanceMesh originalBreather;
-var AppearanceMesh originalHead;
-var AppearanceMesh originalHair;
+var AppearanceMesh lastAppliedBody;
+var AppearanceMesh lastAppliedHeadgear;
+var AppearanceMesh lastAppliedVisor;
+var AppearanceMesh lastAppliedBreather;
 
 public static function StoreOutfit(BioPawn target)
 {
@@ -15,7 +17,7 @@ public static function StoreOutfit(BioPawn target)
     local BioWorldInfo localWI;
     local AMM_OriginalOutfit outfit;
     local BioWorldInfo bwi;
-    local MemberData tempsquadMember;
+    local MemberData tempSquadMember;
     
     // we actually want dynamically spawned pawns like the player and active squadmates to not use this system, as it messes up the whole armor override system
     // and doesn't make sense with dynamically spawned pawns anyway.
@@ -25,16 +27,32 @@ public static function StoreOutfit(BioPawn target)
         return;
     }
     bwi = Class'AMM_AppearanceUpdater'.static.GetOuterWorldInfo();
-    foreach bwi.m_playerSquad.Members(tempsquadMember, )
+    foreach bwi.m_playerSquad.Members(tempSquadMember, )
     {
-        if (tempsquadMember.SquadMember == target)
+        if (tempSquadMember.SquadMember == target)
         {
             return;
         }
     }
     if (GetOutfit(target, outfit))
     {
-        // TODO store an updated outfit here in some cases?
+        // there is already a record here, but it might need to be updated if something else updated it
+        if (!DoesMeshMatch(target.Mesh, outfit.originalBody, outfit.lastAppliedBody))
+        {
+            outfit.originalBody = SaveMesh(target.Mesh, target);
+        }
+        if (!DoesMeshMatch(target.m_oHeadGearMesh, outfit.originalHeadgear, outfit.lastAppliedHeadgear))
+        {
+            outfit.originalHeadgear = SaveMesh(target.m_oHeadGearMesh, target);
+        }
+        if (!DoesMeshMatch(target.m_oVisorMesh, outfit.originalVisor, outfit.lastAppliedVisor))
+        {
+            outfit.originalVisor = SaveMesh(target.m_oVisorMesh, target);
+        }
+        if (!DoesMeshMatch(target.m_oFacePlateMesh, outfit.originalBreather, outfit.lastAppliedBreather))
+        {
+            outfit.originalBreather = SaveMesh(target.m_oFacePlateMesh, target);
+        }
         return;
     }
     localWI = BioWorldInfo(FindObject(Package $ ".TheWorld.PersistentLevel.BioWorldInfo_0", Class'BioWorldInfo'));
@@ -48,13 +66,20 @@ public static function StoreOutfit(BioPawn target)
         outfit.originalHeadgear = SaveMesh(target.m_oHeadGearMesh, target);
         outfit.originalVisor = SaveMesh(target.m_oVisorMesh, target);
         outfit.originalBreather = SaveMesh(target.m_oFacePlateMesh, target);
-        // save a few more that might not show up correctly in the UI world preview
-        outfit.originalHead = SaveMesh(target.m_oHeadMesh, target);
-        outfit.originalHair = SaveMesh(target.m_oHairMesh, target);
+        // save this in a place where we can find it again but we are not holding a reference that will break things, and it will go out of memory at the same time as the pawn
         localWI.ClientDestroyedActorContent.InsertItem(0, outfit);
     }
 }
-private static final function AppearanceMesh SaveMesh(SkeletalMeshComponent smc, BioPawn target)
+private static function bool DoesMeshMatch(SkeletalMeshComponent smc, AppearanceMesh originalMesh, AppearanceMesh lastAppliedMesh)
+{
+    if (smc.SkeletalMesh != originalMesh.Mesh || smc.SkeletalMesh != lastAppliedMesh.Mesh)
+    {
+        return false;
+    }
+    // TODO check for materials matching as well
+    return true;
+}
+public static final function AppearanceMesh SaveMesh(SkeletalMeshComponent smc, BioPawn target)
 {
     local AppearanceMesh savedMesh;
     local MaterialInterface mat;
@@ -69,11 +94,11 @@ private static final function AppearanceMesh SaveMesh(SkeletalMeshComponent smc,
         {
             break;
         }
-        savedMesh.Materials.AddItem(CleanMat(mat, target));
+        savedMesh.Materials.AddItem(CleanMat(mat, target, smc));
     }
     return savedMesh;
 }
-private static final function MaterialInterface CleanMat(MaterialInterface mat, BioPawn target)
+private static final function MaterialInterface CleanMat(MaterialInterface mat, BioPawn target, SkeletalMeshComponent smc)
 {
     local MaterialInstanceConstant mic;
     local MaterialInstanceConstant newMIC;
@@ -81,7 +106,7 @@ private static final function MaterialInterface CleanMat(MaterialInterface mat, 
     // if we save a material that has the target as the outer, it'll get cleared and recycled
     // so instead we make a new mat with the same parent and params and save that
     mic = MaterialInstanceConstant(mat);
-    if (mic == None || mic.Outer != target)
+    if (mic == None || (mic.Outer != target && mic.outer != smc))
     {
         return mat;
     }
@@ -137,9 +162,4 @@ public static function bool GetOutfit(BioPawn target, out AMM_OriginalOutfit out
         }
     }
     return FALSE;
-}
-
-//class default properties can be edited in the Properties tab for the class's Default__ object.
-defaultproperties
-{
 }

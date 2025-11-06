@@ -82,8 +82,8 @@ public static function UpdatePawnMaterialParameters(BioPawn targetPawn, bool app
     // if it is any other outfit, we only apply the skin params
     ApplyBioMaterialOverride(targetPawn, GetPawnType(targetPawn).m_oMaterialOverrides, !applyingDefaultOutfit);
     ApplyBioMaterialOverride(targetPawn, BioInterface_Appearance_Pawn(targetPawn.m_oBehavior.m_oAppearanceType).m_pMaterialParameters, !applyingDefaultOutfit);
-    // finally, if there is a morph head, we apply those params. For this one, we want skin params only unless if it the default outfit
-    ApplyMorphHeadParamsToPawn(targetPawn, GetMorphHead(targetPawn), !applyingDefaultOutfit);
+    // finally, if there is a morph head, we apply those params. Apply this to all meshes so that things like hair color look correct
+    ApplyMorphHeadParamsToPawn(targetPawn, GetMorphHead(targetPawn), false);
 }
 
 public static function bool LoadEquipmentOnly(string tag, out BioPawnType pawnType, out int armorType, out int meshVariant, out int materialVariant)
@@ -514,7 +514,9 @@ private static final function EnsureMICs(BioPawn targetPawn)
                 CurrentMaterial = MeshCmpt.GetBaseMaterial(MaterialIndex);
                 if (CurrentMaterial != None)
                 {
-                    if (CurrentMaterial.Outer == targetPawn)
+                    // vanilla pawn materials have the pawn as the outer.
+                    // some modded changed on the fly materials have the mesh component as the outer. both are problematic
+                    if (CurrentMaterial.Outer == targetPawn || CurrentMaterial.Outer == MeshCmpt)
                     {
                         MIC = MaterialInstanceConstant(CurrentMaterial);
                     }
@@ -588,10 +590,10 @@ private static final function ApplyVectorParameterToAllMICs(VectorParameterValue
     
     foreach targetPawn.ComponentList(Class'SkeletalMeshComponent', smc)
     {
-        if (smc == targetPawn.m_oHeadMesh)
-        {
-            continue;
-        }
+        // if (smc == targetPawn.m_oHeadMesh || smc == targetPawn.m_oHairMesh)
+        // {
+        //     continue;
+        // }
         if (smc != None)
         {
             for (i = 0; i < smc.GetNumElements(); i++)
@@ -613,10 +615,10 @@ private static final function ApplyScalarParameterToAllMICs(ScalarParameterValue
     
     foreach targetPawn.ComponentList(Class'SkeletalMeshComponent', smc)
     {
-        if (smc == targetPawn.m_oHeadMesh)
-        {
-            continue;
-        }
+        // if (smc == targetPawn.m_oHeadMesh || smc == targetPawn.m_oHairMesh)
+        // {
+        //     continue;
+        // }
         if (smc != None)
         {
             for (i = 0; i < smc.GetNumElements(); i++)
@@ -638,10 +640,10 @@ private static final function ApplyTextureParameterToAllMICs(TextureParameterVal
     
     foreach targetPawn.ComponentList(Class'SkeletalMeshComponent', smc)
     {
-        if (smc == targetPawn.m_oHeadMesh)
-        {
-            continue;
-        }
+        // if (smc == targetPawn.m_oHeadMesh || smc == targetPawn.m_oHairMesh)
+        // {
+        //     continue;
+        // }
         if (smc != None)
         {
             for (i = 0; i < smc.GetNumElements(); i++)
@@ -766,6 +768,15 @@ public static function ApplyMaterialOverrides(SkeletalMeshComponent smc, Materia
 
 public static function ApplyPawnAppearance(BioPawn target, pawnAppearance appearance)
 {
+    local AMM_OriginalOutfit outfit;
+
+    if (class'AMM_OriginalOutfit'.static.GetOutfit(target, outfit))
+    {
+        outfit.lastAppliedBody = appearance.bodyMesh;
+        outfit.lastAppliedHeadgear = appearance.HelmetMesh;
+        outfit.lastAppliedVisor = appearance.VisorMesh;
+        outfit.lastAppliedBreather = appearance.BreatherMesh;
+    }
 	replaceMesh(target, target.Mesh, appearance.bodyMesh);
 	if (target.m_oHairMesh != None)
     {
@@ -820,10 +831,6 @@ public static function ApplyPawnAppearance(BioPawn target, pawnAppearance appear
     target.m_oFacePlateMesh.TranslucencySortPriority = -1;
 
     CheckForFaceMelting(target);
-
-	// This call is very important to prevent all kinds of weirdness
-	// for example bone melting and materials misbehaving, and possibly even crashing
-	target.ForceUpdateComponents(FALSE, FALSE);
 }
 
 public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc, AppearanceMesh AppearanceMesh)
@@ -856,8 +863,10 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
 
 		// I need to do this entirely based around the methods I think. idk why, but that's the next thing to try
         MIC = MaterialInstanceConstant(smc.Materials[i]);
-        if (MIC != None && MIC.outer == targetPawn)
+
+        if (MIC != None && (MIC.outer == targetPawn || MIC.outer == smc))
         {
+            // LogInternal("reusing MIC"@PathName(MIC));
 			MIC.ClearParameterValues();
             MIC.SetParent(parent);
 			// trying to do this even though it should already be there
@@ -867,6 +876,7 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
 		{
 			// if they do not have a suitable MIC, make one and point it at the right parent.
 			MIC = new (targetPawn) Class'BioMaterialInstanceConstant';
+            // LogInternal("making new MIC"@PathName(MIC));
 			MIC.SetParent(parent);
 			smc.SetMaterial(i, MIC);
 		}
@@ -876,11 +886,15 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
 public static function CheckForFaceMelting(BioPawn target)
 {
     // this is checking for the conditions that lead to face melting and correcting them (with a warning)
+    // TODO also do this for hair mesh, as those can also melt it turns out. 
+    local int bodyLODs;
+
+    bodyLODs = target.Mesh.SkeletalMesh.LodInfo.Length;
 
     if (// they have a head mesh
         target.m_oHeadMesh != None
         // and the number of LODs on the head mesh is less than the number of LODs on the main mesh (can happen if you replace the head mesh with a new one)
-        && target.m_oHeadMesh.skeletalMesh.LODInfo.Length < target.Mesh.SkeletalMesh.LodInfo.Length
+        && target.m_oHeadMesh.skeletalMesh.LODInfo.Length < bodyLODs
         // and the min LOD level set on the actorType is not 0
         && BioPawnType(target.m_oBehavior.m_oActorType).m_nMinAutoLODLevel > 0)
     {

@@ -134,11 +134,13 @@ public function UpdatePawnAppearance(BioPawn target, string source)
 private function FixPreviewPawnMeshes(BioPawn target)
 {
 	local AMM_OriginalOutfit outfit;
+	local BioPawn realWorldPawn;
 
-	if (target.GetPackageName() == 'BIOG_UIWorld' && class'AMM_Utilities'.static.GetMorphHead(target) == None && Class'AMM_OriginalOutfit'.static.GetOutfit(target, outfit))
+	if (IsTargetUIWorldPawn(target) && Class'AMM_OriginalOutfit'.static.GetOutfit(target, outfit))
     {
-		class'AMM_Utilities'.static.replaceMesh(target, target.m_oHeadMesh, outfit.originalHead);
-		class'AMM_Utilities'.static.replaceMesh(target, target.m_oHairMesh, outfit.originalHair);
+		realWorldPawn = FindObject(outfit.targetPath, class'BioPawn');
+		class'AMM_Utilities'.static.replaceMesh(target, target.m_oHeadMesh, outfit.SaveMesh(realWorldPawn.m_oHeadMesh, realWorldPawn));
+		class'AMM_Utilities'.static.replaceMesh(target, target.m_oHairMesh, outfit.SaveMesh(realWorldPawn.m_oHairMesh, realWorldPawn));
     }
 }
 
