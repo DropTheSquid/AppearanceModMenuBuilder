@@ -34,8 +34,27 @@ public function bool LoadHelmet(BioPawn target, SpecLists specLists, out PawnApp
 		}
 		else
 		{
-			LogInternal("acould not get breather spec");
+			LogInternal("could not get breather spec");
 		}
 	}
 	return true;
+}
+
+public function bool LocksBreatherSelection(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds)
+{
+	// TODO can I actually determine this with modded outfits?
+    return false;
+}
+
+public function BreatherSpecBase GetBreatherSpec(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds)
+{
+    local BreatherSpecBase delegateBreatherSpec;
+    local AMM_Pawn_Parameters params;
+
+    if (appearanceIds.breatherAppearanceId == 0 || appearanceIds.breatherAppearanceId == -1)
+    {
+        return new class'OriginalBreatherSpec';
+    }
+
+    return super.GetBreatherSpec(target, specLists, appearanceIds);
 }

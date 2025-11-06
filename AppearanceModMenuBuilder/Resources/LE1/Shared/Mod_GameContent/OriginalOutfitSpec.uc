@@ -37,3 +37,25 @@ public function bool LoadOutfit(BioPawn target, specLists specLists, out PawnApp
     }
     return TRUE;
 }
+
+public function HelmetSpecBase GetHelmetSpec(BioPawn target, SpecLists specLists, out PawnAppearanceIds appearanceIds)
+{
+    if (appearanceIds.helmetAppearanceId == 0 || appearanceIds.helmetAppearanceId == -1)
+    {
+        return new class'OriginalHelmetSpec';
+    }
+
+    return super.GetHelmetSpec(target, specLists, appearanceIds);
+}
+
+public function bool LocksBreatherSelection(BioPawn target, SpecLists specLists, PawnAppearanceIds appearanceIds)
+{
+	local HelmetSpecBase delegateSpec;
+
+	delegateSpec = GetHelmetSpec(target, specLists, appearanceIds);
+	if (delegateSpec == None)
+	{
+		return false;
+	}
+	return delegateSpec.LocksBreatherSelection(target, SpecLists, appearanceIds);
+}
