@@ -99,16 +99,10 @@ public static function int EncodeAppearanceSettings(AppearanceSettings settings)
 
 public static function bool IsFrameworkInstalled()
 {
-	// local BioWorldInfo bwi;
+	local BioWorldInfo bwi;
 
-	// bwi = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo());
-	// return bwi.CheckConditional(2102);
-
-	// hack until I get a proper conditional in there
-	local stringref sr;
-
-	sr = $200083;
-	return string(sr) != "";
+	bwi = BioWorldInfo(Class'Engine'.static.GetCurrentWorldInfo());
+	return bwi.CheckConditional(2102);
 }
 
 public static function bool DoesLevelExist(coerce string levelName)
