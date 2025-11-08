@@ -30,8 +30,8 @@ srSubtitle=210210222
 
 ; allow romance appearance customization
 ; hide unless framework is installed
-+menuItems=(srLeftText=210210271, srRightText=200054, srDescriptionText=210210273, srDescriptionTitleText=210210271, srActionText=200008, DisplayInt=(Id=1596,Value=0), ApplySettingInts=((Id=1596,Value=1)), Images=(), displayRequiredPackageExports=("DLC_MOD_Framework_GlobalTlk.GlobalTlk_tlk"))
-+menuItems=(srLeftText=210210271, srRightText=200053, srDescriptionText=210210272, srDescriptionTitleText=210210271, srActionText=200009, DisplayInt=(Id=1596,Value=1), ApplySettingInts=((Id=1596,Value=0)), Images=(), displayRequiredPackageExports=("DLC_MOD_Framework_GlobalTlk.GlobalTlk_tlk"))
++menuItems=(srLeftText=210210271, srRightText=200054, srDescriptionText=210210273, srDescriptionTitleText=210210271, srActionText=200008, DisplayInt=(Id=1596,Value=0), ApplySettingInts=((Id=1596,Value=1)), Images=(), DisplayConditional=2102)
++menuItems=(srLeftText=210210271, srRightText=200053, srDescriptionText=210210272, srDescriptionTitleText=210210271, srActionText=200009, DisplayInt=(Id=1596,Value=1), ApplySettingInts=((Id=1596,Value=0)), Images=(), DisplayConditional=2102)
 
 ; allow pre recruitment appearance customization
 +menuItems=(srLeftText=210210274, srRightText=200054, srDescriptionText=210210276, srDescriptionTitleText=210210274, srActionText=200008, DisplayInt=(Id=1597,Value=0), ApplySettingInts=((Id=1597,Value=1)), Images=("ModSetting_Images_AMM.pre_recruit_off"))
