@@ -37,19 +37,19 @@ public static function StoreOutfit(BioPawn target)
     if (GetOutfit(target, outfit))
     {
         // there is already a record here, but it might need to be updated if something else updated it
-        if (!DoesMeshMatch(target.Mesh, outfit.originalBody, outfit.lastAppliedBody))
+        if (!DoesMeshMatch(target.Mesh, outfit.originalBody, outfit.lastAppliedBody, target))
         {
             outfit.originalBody = SaveMesh(target.Mesh, target);
         }
-        if (!DoesMeshMatch(target.m_oHeadGearMesh, outfit.originalHeadgear, outfit.lastAppliedHeadgear))
+        if (!DoesMeshMatch(target.m_oHeadGearMesh, outfit.originalHeadgear, outfit.lastAppliedHeadgear, target))
         {
             outfit.originalHeadgear = SaveMesh(target.m_oHeadGearMesh, target);
         }
-        if (!DoesMeshMatch(target.m_oVisorMesh, outfit.originalVisor, outfit.lastAppliedVisor))
+        if (!DoesMeshMatch(target.m_oVisorMesh, outfit.originalVisor, outfit.lastAppliedVisor, target))
         {
             outfit.originalVisor = SaveMesh(target.m_oVisorMesh, target);
         }
-        if (!DoesMeshMatch(target.m_oFacePlateMesh, outfit.originalBreather, outfit.lastAppliedBreather))
+        if (!DoesMeshMatch(target.m_oFacePlateMesh, outfit.originalBreather, outfit.lastAppliedBreather, target))
         {
             outfit.originalBreather = SaveMesh(target.m_oFacePlateMesh, target);
         }
@@ -70,13 +70,47 @@ public static function StoreOutfit(BioPawn target)
         localWI.ClientDestroyedActorContent.InsertItem(0, outfit);
     }
 }
-private static function bool DoesMeshMatch(SkeletalMeshComponent smc, AppearanceMesh originalMesh, AppearanceMesh lastAppliedMesh)
+private static function bool DoesMeshMatch(SkeletalMeshComponent smc, AppearanceMesh originalMesh, AppearanceMesh lastAppliedMesh, BioPawn target)
 {
+    local int numMats;
+    local int i;
+    local MaterialInstanceConstant currentMat;
+
+    // if the skeletal mesh is neither the last thing applied by AMM or the currently saved original mesh, something else has changed it
+    // and we need to save the new one
     if (smc.SkeletalMesh != originalMesh.Mesh && smc.SkeletalMesh != lastAppliedMesh.Mesh)
     {
         return false;
     }
-    // TODO check for materials matching as well
+    // we also need to try to detect changes to the materials
+    numMats = smc.GetNumElements();
+    if (numMats != originalMesh.Materials.Length && numMats != lastAppliedMesh.Materials.Length)
+    {
+        return false;
+    }
+    for (i = 0; i < numMats; i++)
+    {
+        currentMat = MaterialInstanceConstant(smc.GetBaseMaterial(i));
+        if (currentMat == None)
+        {
+            return false;
+        }
+        // if the outer of the current material is the target, this is a vanilla or applied by AMM
+        if (currentMat.Outer == target)
+        {
+            if (currentMat.parent != lastAppliedMesh.Materials[i])
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if (currentMat != originalMesh.Materials[i])
+            {
+                return false;
+            }
+        }
+    }
     return true;
 }
 public static final function AppearanceMesh SaveMesh(SkeletalMeshComponent smc, BioPawn target)
@@ -106,7 +140,7 @@ private static final function MaterialInterface CleanMat(MaterialInterface mat, 
     // if we save a material that has the target as the outer, it'll get cleared and recycled
     // so instead we make a new mat with the same parent and params and save that
     mic = MaterialInstanceConstant(mat);
-    if (mic == None || (mic.Outer != target && mic.outer != smc))
+    if (mic == None || mic.Outer != target)
     {
         return mat;
     }

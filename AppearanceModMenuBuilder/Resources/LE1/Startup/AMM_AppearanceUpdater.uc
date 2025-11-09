@@ -139,6 +139,11 @@ private function FixPreviewPawnMeshes(BioPawn target)
 	if (IsTargetUIWorldPawn(target) && Class'AMM_OriginalOutfit'.static.GetOutfit(target, outfit))
     {
 		realWorldPawn = FindObject(outfit.targetPath, class'BioPawn');
+		// this messes up the pawn's face matching the player
+		if (realWorldPawn.Tag == 'Human_Male_Naked' || realWorldPawn.tag == 'Human_Female_Naked')
+		{
+			return;
+		}
 		class'AMM_Utilities'.static.replaceMesh(target, target.m_oHeadMesh, outfit.SaveMesh(realWorldPawn.m_oHeadMesh, realWorldPawn));
 		class'AMM_Utilities'.static.replaceMesh(target, target.m_oHairMesh, outfit.SaveMesh(realWorldPawn.m_oHairMesh, realWorldPawn));
     }

@@ -503,20 +503,34 @@ private static final function EnsureMICs(BioPawn targetPawn)
     local int MaterialIndex;
     local MaterialInterface CurrentMaterial;
     local MaterialInstanceConstant MIC;
+    local Array<MaterialInterface> mats;
     
     foreach targetPawn.ComponentList(Class'SkeletalMeshComponent', MeshCmpt)
     {
         if (MeshCmpt != None)
         {
-            for (MaterialIndex = 0; MaterialIndex < MeshCmpt.GetNumElements(); MaterialIndex++)
+            MaterialIndex = 0;
+            mats.length = 0;
+            while(true)
             {
-                // GetBaseMaterial returns from SMC Materials array or falls back to SM material
-                CurrentMaterial = MeshCmpt.GetBaseMaterial(MaterialIndex);
+                CurrentMaterial = MeshCmpt.GetBaseMaterial(MaterialIndex++);
                 if (CurrentMaterial != None)
                 {
-                    // vanilla pawn materials have the pawn as the outer.
-                    // some modded changed on the fly materials have the mesh component as the outer. both are problematic
-                    if (CurrentMaterial.Outer == targetPawn || CurrentMaterial.Outer == MeshCmpt)
+                    mats.AddItem(CurrentMaterial);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            for (MaterialIndex = 0; MaterialIndex < mats.length; MaterialIndex++)
+            {
+                // GetBaseMaterial returns from SMC Materials array or falls back to SM material
+                CurrentMaterial = mats[MaterialIndex];
+                if (CurrentMaterial != None)
+                {
+                    // vanilla pawn materials have the pawn as the outer, and this is also how AMM modifies it
+                    if (CurrentMaterial.Outer == targetPawn)
                     {
                         MIC = MaterialInstanceConstant(CurrentMaterial);
                     }
@@ -769,15 +783,18 @@ public static function ApplyMaterialOverrides(SkeletalMeshComponent smc, Materia
 public static function ApplyPawnAppearance(BioPawn target, pawnAppearance appearance)
 {
     local AMM_OriginalOutfit outfit;
+    local bool isUIworld;
 
-    if (target.GetPackageName() != 'BIOG_UIWORLD' && class'AMM_OriginalOutfit'.static.GetOutfit(target, outfit))
+    isUIworld = target.GetPackageName() == 'BIOG_UIWORLD';
+
+    if (!isUIworld && class'AMM_OriginalOutfit'.static.GetOutfit(target, outfit))
     {
         outfit.lastAppliedBody = appearance.bodyMesh;
         outfit.lastAppliedHeadgear = appearance.HelmetMesh;
         outfit.lastAppliedVisor = appearance.VisorMesh;
         outfit.lastAppliedBreather = appearance.BreatherMesh;
     }
-	replaceMesh(target, target.Mesh, appearance.bodyMesh);
+	replaceMesh(target, target.Mesh, appearance.bodyMesh, isUIworld);
 	if (target.m_oHairMesh != None)
     {
 		// hide head also implies hiding the hair
@@ -796,7 +813,7 @@ public static function ApplyPawnAppearance(BioPawn target, pawnAppearance appear
         target.m_oHeadGearMesh.SetLightEnvironment(target.Mesh.LightEnvironment);
         target.AttachComponent(target.m_oHeadGearMesh);
     }
-	replaceMesh(target, target.m_oHeadGearMesh, appearance.HelmetMesh);
+	replaceMesh(target, target.m_oHeadGearMesh, appearance.HelmetMesh, isUIworld);
 	target.m_oHeadGearMesh.SetHidden(appearance.HelmetMesh.Mesh == None);
 	target.m_oHeadGearMesh.CastShadow = appearance.HelmetMesh.Mesh != None;
     // makes glowy visors not flicker with the hair; have not found any downside yet. 
@@ -810,7 +827,7 @@ public static function ApplyPawnAppearance(BioPawn target, pawnAppearance appear
         target.m_oVisorMesh.SetLightEnvironment(target.Mesh.LightEnvironment);
         target.AttachComponent(target.m_oVisorMesh);
     }
-    replaceMesh(target, target.m_oVisorMesh, appearance.VisorMesh);
+    replaceMesh(target, target.m_oVisorMesh, appearance.VisorMesh, isUIworld);
     target.m_oVisorMesh.SetHidden(appearance.VisorMesh.Mesh == None);
 	target.m_oVisorMesh.CastShadow = appearance.VisorMesh.Mesh != None;
     // stops eyelash flickering with visors
@@ -824,7 +841,7 @@ public static function ApplyPawnAppearance(BioPawn target, pawnAppearance appear
         target.m_oFacePlateMesh.SetLightEnvironment(target.Mesh.LightEnvironment);
         target.AttachComponent(target.m_oFacePlateMesh);
     }
-    replaceMesh(target, target.m_oFacePlateMesh, appearance.BreatherMesh);
+    replaceMesh(target, target.m_oFacePlateMesh, appearance.BreatherMesh, isUIworld);
     target.m_oFacePlateMesh.SetHidden(appearance.BreatherMesh.Mesh == None);
 	target.m_oFacePlateMesh.CastShadow = appearance.BreatherMesh.Mesh != None;
     // stops eyelash flickering with visors
@@ -833,7 +850,7 @@ public static function ApplyPawnAppearance(BioPawn target, pawnAppearance appear
     CheckForFaceMelting(target);
 }
 
-public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc, AppearanceMesh AppearanceMesh)
+public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc, AppearanceMesh AppearanceMesh, optional bool keepAnimations = false)
 {
     local int i;
     local MaterialInstanceConstant MIC;
@@ -845,7 +862,7 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
 	{
 		return;
 	}
-    smc.SetSkeletalMesh(AppearanceMesh.Mesh);
+    smc.SetSkeletalMesh(AppearanceMesh.Mesh, keepAnimations);
 
     for (i = 0; i < AppearanceMesh.Materials.Length; i++)
     {
@@ -864,7 +881,7 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
 		// I need to do this entirely based around the methods I think. idk why, but that's the next thing to try
         MIC = MaterialInstanceConstant(smc.Materials[i]);
 
-        if (MIC != None && (MIC.outer == targetPawn || MIC.outer == smc))
+        if (MIC != None && MIC.outer == targetPawn)
         {
             // LogInternal("reusing MIC"@PathName(MIC));
 			MIC.ClearParameterValues();

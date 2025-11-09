@@ -65,7 +65,6 @@ public function SetComponentMesh(BioPawn InPawn, SkeletalMeshComponent InCompone
     local MaterialInstanceConstant MIC;
     local int idx;
     
-    LogInternal("SetComponentMesh" @ InPawn.Tag @ InComponent @ InMesh @ InMaterials.Length, );
     for (idx = 0; idx < InComponent.GetNumElements(); ++idx)
     {
         InComponent.SetMaterial(idx, None);
@@ -77,11 +76,9 @@ public function SetComponentMesh(BioPawn InPawn, SkeletalMeshComponent InCompone
         {
             MIC = new (InComponent) Class'MaterialInstanceConstant';
             MIC.SetParent(InComponent.SkeletalMesh.Materials[idx]);
-            LogInternal("setting parent to" @ InComponent.SkeletalMesh.Materials[idx], );
             if (InMaterials[idx] != None)
             {
                 MIC.SetParent(InMaterials[idx]);
-                LogInternal("setting parent to" @ InMaterials[idx], );
             }
             ApplyBasicOverrides(InPawn, MIC);
             InComponent.SetMaterial(idx, MIC);
