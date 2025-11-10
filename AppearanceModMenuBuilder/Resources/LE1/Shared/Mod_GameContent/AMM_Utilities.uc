@@ -862,7 +862,8 @@ public static function replaceMesh(BioPawn targetPawn, SkeletalMeshComponent smc
 	{
 		return;
 	}
-    smc.SetSkeletalMesh(AppearanceMesh.Mesh, keepAnimations);
+    // Tried this as the keepAnimation bool. It does make applying outfits smoother, except when it crashes the game with ported outfits. 
+    smc.SetSkeletalMesh(AppearanceMesh.Mesh, false);
 
     for (i = 0; i < AppearanceMesh.Materials.Length; i++)
     {
